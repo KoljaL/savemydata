@@ -1,0 +1,6 @@
+{
+    "require": {
+        "firebase/php-jwt": "^6.0",
+        "rakibtg/sleekdb": "^2.13"
+    }
+}
