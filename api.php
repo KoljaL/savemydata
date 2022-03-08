@@ -123,6 +123,16 @@ function userlogin($request)
 
 
 
+        // $user1 = $userStore->where('username', '=', $request['username'])->where('password', '=', $request['password'])->fetch();
+
+        $user1 = $userStore
+        ->createQueryBuilder()
+        ->where([ "username", "=", $request['username'] ])
+        ->where([ "password", "=", $request['password'] ])
+        ->getQuery()
+        ->fetch();
+        $data['data']['user1'] = $user1;
+
         $user = $userStore->findBy([[["username", "=", $request['username']],],"AND",[["password", "=", $request['password']],]])[0];
 
         if ($user) {
