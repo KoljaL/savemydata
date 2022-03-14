@@ -1,0 +1,320 @@
+<style>
+    main {
+        overflow-x: hidden;
+    }
+    
+    #registration-page {
+        /* height: 99%; */
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        /* overflow-y: scroll; */
+        /* overflow: hidden; */
+    }
+    
+    .signup-form {
+        flex: 1;
+        max-width: 600px;
+        border-radius: 10px;
+        background-color: var(--bg_2);
+        border: 1px solid var(--border_0);
+    }
+    
+    .signup-form h1 {
+        padding-top: .5em;
+        padding-left: 1em;
+    }
+    /* FORM BODY */
+    
+    .form-body {
+        background-color: var(--bg_2);
+        padding: 5px 10px;
+    }
+    
+    .row {
+        display: flex;
+    }
+    
+    .input-group {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        margin: 10px 5px;
+    }
+    /* FORM BODY - Gender & Hobbies */
+    
+    .radio-group,
+    .checkbox-group {
+        display: flex;
+    }
+    
+    .radio-group div,
+    .checkbox-group div {
+        flex: 1;
+    }
+    
+    .radio-group label,
+    .checkbox-group label {
+        color: var(--font_0);
+        cursor: pointer;
+    }
+    /* FORM BODY - Source of Income & Income */
+    
+    .range-group {
+        display: flex;
+    }
+    
+    .range-group input {
+        flex: 1;
+    }
+    
+    .range-group label {
+        margin-left: 10px;
+        background-color: var(--fontBlue);
+        color: var(--font_0);
+        border-radius: 5px;
+        padding: 5px;
+        font-size: 17px;
+        text-align: center;
+    }
+    /* MOBILE VIEW */
+    
+    @media only screen and (max-width: 36em) {
+        .row {
+            flex-direction: column;
+        }
+        .btn {
+            flex: 1;
+        }
+    }
+    /* FORM FOTTER */
+    
+    .form-footer {
+        display: flex;
+        justify-content: flex-end;
+        padding: 10px;
+    }
+    
+    .btn {
+        padding: 10px 20px;
+        background-color: var(--fontBlue);
+        font-size: 17px;
+        border: none;
+        border-radius: 5px;
+        color: var(--font_0);
+        cursor: pointer;
+    }
+    /* INPUT*/
+    
+    label {
+        color: var(--fontBlue);
+        font-size: 17px;
+        font-weight: 500;
+    }
+    
+    .fakefile input,
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="file"],
+    input[type="number"],
+    select,
+    textarea {
+        width: 100%;
+        font-size: 18px;
+        height: 34px;
+        padding-left: 10px;
+        padding-right: 10px;
+        color: var(--font_0);
+        border: 1px solid var(--border_0);
+        border-radius: 4px;
+        background: var(--bg_3);
+        outline: none;
+    }
+    
+    textarea {
+        resize: none;
+        height: 100px;
+    }
+    
+    div.fileinputs {
+        position: relative;
+    }
+    
+    div.fakefile {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        z-index: 1;
+    }
+    
+    input.file {
+        position: relative;
+        text-align: right;
+        -moz-opacity: 0;
+        opacity: 0;
+        opacity: 0;
+        z-index: 2;
+    }
+</style>
+<section id="registration-page">
+    <form class="signup-form">
+        <h1>Testform</h1>
+
+        <!-- FORM BODY -->
+        <div class="form-body">
+            <div class="row">
+                <div class="input-group">
+                    <label>First name </label>
+                    <input type="text" placholder="Enter your first name">
+                </div>
+                <div class="input-group">
+                    <label>Last name</label>
+                    <input type="text" placholder="Enter your last name">
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Email </label>
+                    <input type="email" placholder="Enter your email address">
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Password </label>
+                    <input type="password" placholder="Enter your your password">
+                </div>
+                <div class="input-group">
+                    <label>Confirm Password</label>
+                    <input type="password" placholder="Enter your password again">
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Gender </label>
+
+                    <div class="radio-group">
+                        <div>
+                            <label for="male">
+                                <input type="radio" name="gender" id="male">
+                                Male
+                            </label>
+                        </div>
+                        <div>
+                            <label for="female">
+                                <input type="radio" name="gender" id="female">
+                                Female
+                            </label>
+                        </div>
+                        <div>
+                            <label for="other">
+                                <input type="radio" name="gender" id="other"> Other
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Hobbies</label>
+                    <div class="checkbox-group">
+                        <div>
+                            <label for="music">
+                                <input type="checkbox" name="hobbies" id="music">
+                                Music
+                            </label>
+                        </div>
+
+                        <div>
+                            <label for="cooking">
+                                <input type="checkbox" name="cooking" id="cooking">
+                                Cook
+                            </label>
+                        </div>
+
+                        <div>
+                            <label for="travel">
+                                <input type="checkbox" name="travel" id="travel">
+                                Travel
+                            </label>
+                        </div>
+
+                        <div>
+                            <label for="movies">
+                                <input type="checkbox" name="movies" id="movies">
+                                Movie
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label for="">Source of Income</label>
+                    <select name="" id="">
+                        <option>Employed</option>
+                        <option>Self-Employed</option>
+                        <option>Unemployed</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Income</label>
+                    <div class="range-group">
+                        <input type="range" onChange="document.getElementById('rangeSliderLabel').innerText = this.value + ' K'" min="20" max="200" step="5" value="20">
+                        <label id="rangeSliderLabel">20 K</label>
+                    </div>
+                </div>
+            </div>
+            <!-- Upload Profile Picure & Age -->
+            <div class="row">
+                <div class="input-group">
+                    <!-- <label>Upload Profile Picture</label><input type="file"> -->
+                    <div class="fileinputs">
+                        <input type="file" class="file" />
+                        <div class="fakefile">
+                            <label>Upload Profile Picture</label>
+                            <input />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="input-group">
+                    <label>Age</label>
+                    <input type="number">
+                </div>
+            </div>
+
+            <!--  Bio   -->
+            <div class="row">
+                <div class="input-group">
+                    <label for="">Bio</label>
+                    <textarea> </textarea>
+                </div>
+            </div>
+            <!--  Bio   -->
+            <div class="row">
+                <div class="input-group">
+                    <label for="">Bio</label>
+                    <textarea> </textarea>
+                </div>
+            </div>
+            <!--  Bio   -->
+            <div class="row">
+                <div class="input-group">
+                    <label for="">Bio</label>
+                    <textarea> </textarea>
+                </div>
+            </div>
+            <!--  Bio   -->
+            <div class="row">
+                <div class="input-group">
+                    <label for="">Bio</label>
+                    <textarea> </textarea>
+                </div>
+            </div>
+        </div>
+        <!--  FORM FOOTER   -->
+        <div class="form-footer">
+            <button class="btn">Create</button>
+        </div>
+    </form>
+</section>

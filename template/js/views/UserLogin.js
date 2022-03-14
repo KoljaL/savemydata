@@ -3,7 +3,6 @@ import Functions from '../Functions.js';
 let UserLogin = {
     render: async() => {
         Functions.pageTitle(`Login`)
-        await Functions.setInnerHTML('sidebar', '');
         await Style();
         await Content();
         await Login();
@@ -79,7 +78,7 @@ let Content = async() => {
             </fieldset>
             <div id="T_UserLoginFormError" class="template hide"></div>
         </div>`;
-    await Functions.setInnerHTML('content', innerHTML);
+    await Functions.setInnerHTML('main', innerHTML);
 }
 
 

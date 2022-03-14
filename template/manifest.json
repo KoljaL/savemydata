@@ -1,0 +1,58 @@
+{
+    "name": "Progressive Responsive Layout",
+    "short_name": "PRL",
+    "theme_color": "#aaa",
+    "background_color": "#aaa",
+    "display": "fullScreen",
+    "orientation": "portrait",
+    "scope": "/",
+    "start_url": "/",
+    "icons": [{
+            "src": "img/browser/icon-72x72.png",
+            "sizes": "72x72",
+            "type": "image/png"
+        },
+        {
+            "src": "img/browser/icon-96x96.png",
+            "sizes": "96x96",
+            "type": "image/png"
+        },
+        {
+            "src": "img/browser/icon-128x128.png",
+            "sizes": "128x128",
+            "type": "image/png"
+        },
+        {
+            "src": "img/browser/icon-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        },
+        {
+            "src": "img/browser/icon-152x152.png",
+            "sizes": "152x152",
+            "type": "image/png"
+        },
+        {
+            "src": "img/browser/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "img/browser/icon-384x384.png",
+            "sizes": "384x384",
+            "type": "image/png"
+        },
+        {
+            "src": "img/browser/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "screenshots": [{
+        "src": "img/screenshot.png",
+        "sizes": "1372x1042",
+        "type": "image/png",
+        "platform": "wide",
+        "label": "Fullscreen with sample form."
+    }]
+}

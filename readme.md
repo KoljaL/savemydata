@@ -1,10 +1,33 @@
 # save my data
-<sub>(draft title)</sub>
----
+
+## <sub>(draft title)</sub>
 
 a simple framework to save various data based on users
 
 ## dependencies
-- **CSS**: [Bulma](https://github.com/jgthms/bulma)
-- **database**:  [SleekDB](https://github.com/rakibtg/SleekDB)
-- **Auth**: [PHP-JWT](https://github.com/firebase/php-jwt)
+
+-   **Auth**: [PHP-JWT](https://github.com/firebase/php-jwt)
+
+## links
+
+**SQLite**
+
+-   https://github.com/vielhuber/dbhelper
+-   https://github.com/nivunkpv/Sqlite-Wrapper
+-   https://github.com/tommyknocker/pdo-database-class
+
+**import css with js**
+
+```JS
+(async function () {
+
+	// Polyfill for older browsers
+	if (CSS["paintWorklet"] === undefined) {
+		await import("https://unpkg.com/css-paint-polyfill");
+	}
+
+	// Looking for the source of the Paint Worklet?
+	// ~> Go check out https://github.com/bramus/css-houdini-circles
+	CSS.paintWorklet.addModule('https://unpkg.com/css-houdini-circles/dist/circles.js');
+})();
+```
