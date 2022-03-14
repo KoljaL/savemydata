@@ -12,6 +12,44 @@ $JWT_key = 'example_key';
 
 /*
 //
+//  ########  ########     #### ##    ## #### ########
+//  ##     ## ##     ##     ##  ###   ##  ##     ##
+//  ##     ## ##     ##     ##  ####  ##  ##     ##
+//  ##     ## ########      ##  ## ## ##  ##     ##
+//  ##     ## ##     ##     ##  ##  ####  ##     ##
+//  ##     ## ##     ##     ##  ##   ###  ##     ##
+//  ########  ########     #### ##    ## ####    ##
+//
+*/
+
+// require __DIR__.'/sqlite_wrapper.php';
+
+$db_path = 'db/sqlite11e111.db';
+
+if ( !file_exists( $db_path ) ) {
+    $db = new PDO( 'sqlite:'.$db_path );
+    // create user table
+    $db->exec( 'CREATE TABLE user(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    password INTEGER NOT NULL,
+    email TEXT NOT NULL,
+    role TEXT NOT NULL,
+    permission TEXT NOT NULL,
+    date TEXT NOT NULL)'
+    );
+    // create first users
+    $admin = ['username' => 'admin', 'password' => 'password', 'email' => 'admin@admin.org', 'role' => '0', 'permission' => '0'];
+    $user  = ['username' => 'user', 'password' => 'password', 'email' => 'user@user.org', 'role' => '1', 'permission' => '0'];
+    create_user( $admin );
+    create_user( $user );
+
+} else {
+    $db = new PDO( 'sqlite:'.$db_path );
+}
+
+/*
+//
 //  ######## ##    ## ########  ########   #######  #### ##    ## ########  ######
 //  ##       ###   ## ##     ## ##     ## ##     ##  ##  ###   ##    ##    ##    ##
 //  ##       ####  ## ##     ## ##     ## ##     ##  ##  ####  ##    ##    ##
@@ -30,6 +68,14 @@ $endpoint = end( $uri );
 // echo $endpoint;
 
 $request = json_decode( file_get_contents( 'php://input' ), true );
+if ( $request ) {
+    $keys = preg_replace( '/[^a-z0-9_]+/i', '', array_keys( $request ) );
+}
+
+if ( 'login' === $endpoint ) {
+    userlogin( $request );
+    exit;
+}
 
 switch ( $endpoint ) {
 case 'user':
@@ -57,43 +103,6 @@ default:
 
 /*
 //
-//  ########  ########     #### ##    ## #### ########
-//  ##     ## ##     ##     ##  ###   ##  ##     ##
-//  ##     ## ##     ##     ##  ####  ##  ##     ##
-//  ##     ## ########      ##  ## ## ##  ##     ##
-//  ##     ## ##     ##     ##  ##  ####  ##     ##
-//  ##     ## ##     ##     ##  ##   ###  ##     ##
-//  ########  ########     #### ##    ## ####    ##
-//
-*/
-
-require __DIR__.'/sqlite_wrapper.php';
-
-$db_path = 'db/sqlite1111.db';
-
-if ( !file_exists( $db_path ) ) {
-    $db = new PDO( 'sqlite:'.$db_path );
-    // create user table
-    $db->exec( 'CREATE TABLE user(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    password INTEGER NOT NULL,
-    email TEXT NOT NULL,
-    role TEXT NOT NULL,
-    date TEXT NOT NULL)'
-    );
-    // create first users
-    $admin = ['name' => 'admin', 'password' => 'password', 'email' => 'admin@admin.org', 'role' => '0'];
-    $user  = ['name' => 'user', 'password' => 'password', 'email' => 'user@user.org', 'role' => '1'];
-    create_user( $admin );
-    create_user( $user );
-
-} else {
-    $db = new PDO( 'sqlite:'.$db_path );
-}
-
-/*
-//
 //  ######## ##     ## ##    ##  ######  ######## ####  #######  ##    ##  ######
 //  ##       ##     ## ###   ## ##    ##    ##     ##  ##     ## ###   ## ##    ##
 //  ##       ##     ## ####  ## ##          ##     ##  ##     ## ####  ## ##
@@ -110,12 +119,12 @@ if ( !file_exists( $db_path ) ) {
  */
 function create_user( $param ) {
     global $db;
-    $insert = $db->prepare( 'INSERT INTO user (`name`, `password`, `email`, `role`, `date`) VALUES (:name, :password, :email, :role, :date)' );
-    print_r( $insert );
-    $insert->bindValue( ':name', $param['name'] );
+    $insert = $db->prepare( 'INSERT INTO user (`username`, `password`, `email`, `role`, `permission`, `date`) VALUES (:username, :password, :email, :role,:permission, :date)' );
+    $insert->bindValue( ':username', $param['username'] );
     $insert->bindValue( ':password', md5( $param['password'] ) );
     $insert->bindValue( ':email', $param['email'] );
     $insert->bindValue( ':role', $param['role'] );
+    $insert->bindValue( ':permission', $param['permission'] );
     $insert->bindValue( ':date', date( 'd.m.Y H:i:s' ) );
 
     if ( $insert->execute() ) {
@@ -124,41 +133,58 @@ function create_user( $param ) {
     }
 }
 
-// print_r( $db );
-
-exit;
-
+/**
+ * This function is used to login a user. It takes in a username and password, and checks if the user
+ * exists in the database. If the user exists, it generates a JWT token and returns it
+ * @param request - The request object.
+ */
 function userlogin( $request ) {
-    if ( $request ) {
-        global $JWT_key;
+    global $db, $JWT_key;
 
-        if ( $user ) {
-            $data['code']         = 200;
-            $data['data']['user'] = $user;
-            $data['message']      = $user['username'].' logged in';
+    $user_name = $request['username'];
+    $password  = md5( $request['password'] );
 
-            $token_payload = [
-                '_id'      => $user['_id'],
-                'username' => $user['username'],
-                'role'     => $user['role']
-            ];
-            $jwt                   = JWT::encode( $token_payload, $JWT_key, 'HS256' );
-            $data['data']['token'] = $jwt;
-            $data['data']['user']  = $token_payload;
-        } else {
-            $data['code']    = 400;
-            $data['message'] = 'no user found';
-        }
+    // find useer & pw in table
+    $stmt = $db->prepare( "SELECT * FROM user WHERE username =? AND password =?" );
+    $stmt->execute( [$user_name, $password] );
+    $results = $stmt->fetchAll( PDO::FETCH_ASSOC );
+
+    // if found user, create data
+    if ( $results ) {
+        $user = $results[0];
+
+        // generate token payload
+        $token_payload = [
+            'id'         => $user['id'],
+            'username'   => $user['username'],
+            'role'       => $user['role'],
+            'permission' => $user['permission']
+        ];
+
+        $response['code']          = 200;
+        $response['message']       = $user['username'].' logged in';
+        $response['data']['token'] = JWT::encode( $token_payload, $JWT_key, 'HS256' );
+        $response['data']['user']  = $token_payload;
+    } else {
+        $response['code']    = 400;
+        $response['message'] = 'no user found';
     }
-    returnJSON( $data );
+
+    // return response
+    returnJSON( $response );
 }
 
-// FUNCTIONS
-
-function returnJSON( $data ) {
-    global $request;
-    header( 'Content-Type: application/json' );
-    $data['request'] = $request;
-
-    echo json_encode( $data );
+/**
+ * This function will return a JSON object to the client
+ * @param data - The data to be returned.
+ */
+function returnJSON( $response ) {
+    // global $request;
+    // $response['request'] = $request;
+    header( 'Access-Control-Allow-Origin: *' );
+    header( 'Content-Type: application/json; charset=UTF-8' );
+    header( 'Access-Control-Allow-Methods: POST' );
+    header( 'Access-Control-Max-Age: 3600' );
+    header( 'Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With' );
+    echo json_encode( $response );
 }

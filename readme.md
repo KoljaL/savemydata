@@ -11,7 +11,7 @@ a simple framework to save various data based on users
 ## links
 
 **SQLite**
-
+- 	https://openwritings.net/pg/php/php-using-pdo-sqlite
 -   https://github.com/vielhuber/dbhelper
 -   https://github.com/nivunkpv/Sqlite-Wrapper
 -   https://github.com/tommyknocker/pdo-database-class

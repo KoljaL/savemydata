@@ -67,7 +67,7 @@ let Content = async() => {
                 <form id="loginForm" action="" method="post" autocomplete="off">
                     <div class="InputElement">
                         <label class=isTop>Name</label>
-                        <input type="text" name="username" placeholder="Deinen Namen bitte" value="Admin" />
+                        <input type="text" name="username" placeholder="Deinen Namen bitte" value="admin" />
                     </div>
                     <div class="InputElement">
                         <label class=isTop>Password</label>
