@@ -24,26 +24,11 @@ $JWT_key = 'example_key';
 
 // require __DIR__.'/sqlite_wrapper.php';
 
-$db_path = 'db/sqlite11e111.db';
+$db_path = 'db/sqlite11e1111.db';
 
 if ( !file_exists( $db_path ) ) {
     $db = new PDO( 'sqlite:'.$db_path );
-    // create user table
-    $db->exec( 'CREATE TABLE user(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT NOT NULL,
-    password INTEGER NOT NULL,
-    email TEXT NOT NULL,
-    role TEXT NOT NULL,
-    permission TEXT NOT NULL,
-    date TEXT NOT NULL)'
-    );
-    // create first users
-    $admin = ['username' => 'admin', 'password' => 'password', 'email' => 'admin@admin.org', 'role' => '0', 'permission' => '0'];
-    $user  = ['username' => 'user', 'password' => 'password', 'email' => 'user@user.org', 'role' => '1', 'permission' => '0'];
-    create_user( $admin );
-    create_user( $user );
-
+    init_usertable();
 } else {
     $db = new PDO( 'sqlite:'.$db_path );
 }
@@ -60,23 +45,36 @@ if ( !file_exists( $db_path ) ) {
 //
 */
 
-$uri = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
-$uri = explode( '/', $uri );
-// print_r($uri);
-// get last value of $uri
+//
+// get endpoint out of URI
+$uri      = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+$uri      = explode( '/', $uri );
 $endpoint = end( $uri );
-// echo $endpoint;
 
+//
+// handle request
 $request = json_decode( file_get_contents( 'php://input' ), true );
 if ( $request ) {
     $keys = preg_replace( '/[^a-z0-9_]+/i', '', array_keys( $request ) );
 }
 
+/*
+ *
+ * This is a simple way to check if the endpoint is `login`.
+ * If it is, it will call the `userlogin` function.
+ *
+*/
 if ( 'login' === $endpoint ) {
     userlogin( $request );
     exit;
 }
 
+/*
+ *
+ * A switch statement. It will check what the endpoint is.
+ * Then it will call the corresponding function.
+ *
+ */
 switch ( $endpoint ) {
 case 'user':
     echo 'user';
@@ -103,6 +101,7 @@ default:
 
 /*
 //
+//
 //  ######## ##     ## ##    ##  ######  ######## ####  #######  ##    ##  ######
 //  ##       ##     ## ###   ## ##    ##    ##     ##  ##     ## ###   ## ##    ##
 //  ##       ##     ## ####  ## ##          ##     ##  ##     ## ####  ## ##
@@ -111,11 +110,14 @@ default:
 //  ##       ##     ## ##   ### ##    ##    ##     ##  ##     ## ##   ### ##    ##
 //  ##        #######  ##    ##  ######     ##    ####  #######  ##    ##  ######
 //
+//
 */
 
 /**
+ *
  * Create a new user in the database
  * @param param - The parameter array that is passed to the function.
+ *
  */
 function create_user( $param ) {
     global $db;
@@ -127,16 +129,26 @@ function create_user( $param ) {
     $insert->bindValue( ':permission', $param['permission'] );
     $insert->bindValue( ':date', date( 'd.m.Y H:i:s' ) );
 
+    $response = [];
     if ( $insert->execute() ) {
-        print_r( 'Location: nachrichten.php?eingetragen' );
-        // exit;
+        $response['code']    = 200;
+        $response['message'] = 'user '.$param['username'].' created';
+
+    } else {
+        $response['code']    = 400;
+        $response['message'] = 'no user created';
     }
+
+    // return response
+    returnJSON( $response );
 }
 
 /**
+ *
  * This function is used to login a user. It takes in a username and password, and checks if the user
  * exists in the database. If the user exists, it generates a JWT token and returns it
  * @param request - The request object.
+ *
  */
 function userlogin( $request ) {
     global $db, $JWT_key;
@@ -150,6 +162,7 @@ function userlogin( $request ) {
     $results = $stmt->fetchAll( PDO::FETCH_ASSOC );
 
     // if found user, create data
+    $response = [];
     if ( $results ) {
         $user = $results[0];
 
@@ -175,8 +188,42 @@ function userlogin( $request ) {
 }
 
 /**
+ *
+ * Create a user table in the database
+ *
+ */
+function init_usertable() {
+    global $db;
+    // create user table
+    $db->exec( 'CREATE TABLE user(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT NOT NULL,
+            password INTEGER NOT NULL,
+            email TEXT NOT NULL,
+            role TEXT NOT NULL,
+            permission TEXT NOT NULL,
+            date TEXT NOT NULL
+        )' );
+
+    // create first users
+    $admin = ['username' => 'admin', 'password' => 'password', 'email' => 'admin@admin.org', 'role' => '0', 'permission' => '0'];
+    $user  = ['username' => 'user', 'password' => 'password', 'email' => 'user@user.org', 'role' => '1', 'permission' => '0'];
+
+    create_user( $admin );
+    create_user( $user );
+
+    // send response
+    $response['code']    = 200;
+    $response['message'] = 'usertable created';
+
+    returnJSON( $response );
+}
+
+/**
+ *
  * This function will return a JSON object to the client
  * @param data - The data to be returned.
+ *
  */
 function returnJSON( $response ) {
     // global $request;
