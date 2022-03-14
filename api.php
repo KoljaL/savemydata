@@ -1,183 +1,164 @@
 <?php
 
-require __DIR__ . '/vendor/autoload.php';
-
-// JWT namespaces
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
-//SleekDB namespaces
-use SleekDB\Query;
-use SleekDB\Store;
+ini_set( 'display_errors', 1 );
+ini_set( 'display_startup_errors', 1 );
+error_reporting( E_ALL );
 
 // JWT config
-$JWT_key = "example_key";
+require __DIR__.'/vendor/autoload.php';
+use Firebase\JWT\JWT;
 
-// SleekDB config
-$DBdir = __DIR__ . "/database";
+$JWT_key = 'example_key';
 
-// applying the store configuration is optional
-$DBconf = [
-    "auto_cache" => true,
-    "cache_lifetime" => null,
-    "timeout" => false,
-    "primary_key" => "_id",
-    "search" => [
-        "min_length" => 2,
-        "mode" => "or",
-        "score_key" => "scoreKey",
-        "algorithm" => Query::SEARCH_ALGORITHM["hits"],
-    ],
-];
+/*
+//
+//  ######## ##    ## ########  ########   #######  #### ##    ## ########  ######
+//  ##       ###   ## ##     ## ##     ## ##     ##  ##  ###   ##    ##    ##    ##
+//  ##       ####  ## ##     ## ##     ## ##     ##  ##  ####  ##    ##    ##
+//  ######   ## ## ## ##     ## ########  ##     ##  ##  ## ## ##    ##     ######
+//  ##       ##  #### ##     ## ##        ##     ##  ##  ##  ####    ##          ##
+//  ##       ##   ### ##     ## ##        ##     ##  ##  ##   ###    ##    ##    ##
+//  ######## ##    ## ########  ##         #######  #### ##    ##    ##     ######
+//
+*/
 
-// init userStore
-$userStore = new Store("userssas", $DBdir, $DBconf);
-
-// print_r($userStore);
-
-// create first user on init
-$firstUser = $userStore->findById(1);
-if (!$firstUser) {
-    $newUser = [
-        "username" => 'Admin',
-        "password" => 'password',
-        "role" => ['admin'],
-        "address" => [
-            "street" => 'down street',
-            "streetNumber" => 12,
-            "postalCode" => '8174',
-        ],
-    ];
-    
-    $newUser = $userStore->insert($newUser);
-}
-// $firstUser = $userStore->findById(1);
-// print_r($firstUser);
-// print_r($firstUser['password']);
-
-
-
-
-
-// $payload = array(
-//     "iss" => "http://example.org",
-//     "aud" => "http://example.com",
-//     "iat" => 1356999524,
-//     "nbf" => 1357000000,
-// );
- 
-// $jwt = JWT::encode($payload, $JWT_key, 'HS256');
-// $decoded = JWT::decode($jwt, new Key($JWT_key, 'HS256'));
-
-// print_r($jwt);
-// print_r($decoded);
-
-
-// exit;
-
-
-
-
-
-
-// ENDPOINTS
-
-$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$uri = explode('/', $uri);
+$uri = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+$uri = explode( '/', $uri );
 // print_r($uri);
 // get last value of $uri
-$endpoint = end($uri);
+$endpoint = end( $uri );
 // echo $endpoint;
 
-$request = json_decode(file_get_contents('php://input'), true);
+$request = json_decode( file_get_contents( 'php://input' ), true );
 
-switch ($endpoint) {
-    case 'user':
-        echo "user";
-        break;
-    
-    case 'login':
-        userlogin($request);
-        break;
-    
-    case '':
-        // echo "test";
-        // header("Location: template/index.html");
-        // include('index.html');
+switch ( $endpoint ) {
+case 'user':
+    echo 'user';
+    break;
 
-        break;
-    default:
-        echo "Endpoint <b>".$endpoint.'</b> not found';
-        break;
+case 'login':
+    userlogin( $request );
+    break;
+
+case 'admin':
+    require __DIR__.'/php/sqladmin.php';
+    break;
+
+case '':
+    // echo "test";
+    // header("Location: template/index.html");
+    // include('index.html');
+
+    break;
+default:
+    // echo 'Endpoint <b>'.$endpoint.'</b> not found';
+    break;
 }
+
+/*
+//
+//  ########  ########     #### ##    ## #### ########
+//  ##     ## ##     ##     ##  ###   ##  ##     ##
+//  ##     ## ##     ##     ##  ####  ##  ##     ##
+//  ##     ## ########      ##  ## ## ##  ##     ##
+//  ##     ## ##     ##     ##  ##  ####  ##     ##
+//  ##     ## ##     ##     ##  ##   ###  ##     ##
+//  ########  ########     #### ##    ## ####    ##
+//
+*/
+
+require __DIR__.'/sqlite_wrapper.php';
+
+$db_path = 'db/sqlite1111.db';
+
+if ( !file_exists( $db_path ) ) {
+    $db = new PDO( 'sqlite:'.$db_path );
+    // create user table
+    $db->exec( 'CREATE TABLE user(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    password INTEGER NOT NULL,
+    email TEXT NOT NULL,
+    role TEXT NOT NULL,
+    date TEXT NOT NULL)'
+    );
+    // create first users
+    $admin = ['name' => 'admin', 'password' => 'password', 'email' => 'admin@admin.org', 'role' => '0'];
+    $user  = ['name' => 'user', 'password' => 'password', 'email' => 'user@user.org', 'role' => '1'];
+    create_user( $admin );
+    create_user( $user );
+
+} else {
+    $db = new PDO( 'sqlite:'.$db_path );
+}
+
+/*
+//
+//  ######## ##     ## ##    ##  ######  ######## ####  #######  ##    ##  ######
+//  ##       ##     ## ###   ## ##    ##    ##     ##  ##     ## ###   ## ##    ##
+//  ##       ##     ## ####  ## ##          ##     ##  ##     ## ####  ## ##
+//  ######   ##     ## ## ## ## ##          ##     ##  ##     ## ## ## ##  ######
+//  ##       ##     ## ##  #### ##          ##     ##  ##     ## ##  ####       ##
+//  ##       ##     ## ##   ### ##    ##    ##     ##  ##     ## ##   ### ##    ##
+//  ##        #######  ##    ##  ######     ##    ####  #######  ##    ##  ######
+//
+*/
+
+/**
+ * Create a new user in the database
+ * @param param - The parameter array that is passed to the function.
+ */
+function create_user( $param ) {
+    global $db;
+    $insert = $db->prepare( 'INSERT INTO user (`name`, `password`, `email`, `role`, `date`) VALUES (:name, :password, :email, :role, :date)' );
+    print_r( $insert );
+    $insert->bindValue( ':name', $param['name'] );
+    $insert->bindValue( ':password', md5( $param['password'] ) );
+    $insert->bindValue( ':email', $param['email'] );
+    $insert->bindValue( ':role', $param['role'] );
+    $insert->bindValue( ':date', date( 'd.m.Y H:i:s' ) );
+
+    if ( $insert->execute() ) {
+        print_r( 'Location: nachrichten.php?eingetragen' );
+        // exit;
+    }
+}
+
+// print_r( $db );
 
 exit;
 
+function userlogin( $request ) {
+    if ( $request ) {
+        global $JWT_key;
 
-
-
-
-function userlogin($request)
-{
-    if ($request) {
-        global $userStore,$JWT_key;
-
-
-
-        // $user1 = $userStore->where('username', '=', $request['username'])->where('password', '=', $request['password'])->fetch();
-
-        $user1 = $userStore
-        ->createQueryBuilder()
-        ->where([ "username", "=", $request['username'] ])
-        ->where([ "password", "=", $request['password'] ])
-        ->getQuery()
-        ->fetch();
-        $data['data']['user1'] = $user1;
-
-        $user = $userStore->findBy([[["username", "=", $request['username']],],"AND",[["password", "=", $request['password']],]])[0];
-
-        if ($user) {
-            $data['code'] = 200;
+        if ( $user ) {
+            $data['code']         = 200;
             $data['data']['user'] = $user;
-            $data['message'] = $user['username']." logged in";
+            $data['message']      = $user['username'].' logged in';
 
-            $token_payload = array(
-                '_id' => $user['_id'],
+            $token_payload = [
+                '_id'      => $user['_id'],
                 'username' => $user['username'],
-                'role' => $user['role']
-            );
-            $jwt = JWT::encode($token_payload, $JWT_key, 'HS256');
+                'role'     => $user['role']
+            ];
+            $jwt                   = JWT::encode( $token_payload, $JWT_key, 'HS256' );
             $data['data']['token'] = $jwt;
-            $data['data']['user'] = $token_payload;
-            
-        // $decoded = JWT::decode($jwt, new Key($JWT_key, 'HS256'));
-            // $data['data']['decoded'] = $decoded;
+            $data['data']['user']  = $token_payload;
         } else {
-            $data['code'] = 400;
-            $data['message'] = "no user found";
+            $data['code']    = 400;
+            $data['message'] = 'no user found';
         }
     }
-    returnJSON($data);
+    returnJSON( $data );
 }
-
- 
-
-
-
-
-
-
-
-
-
 
 // FUNCTIONS
 
-function returnJSON($data)
-{
+function returnJSON( $data ) {
     global $request;
-    header("Content-Type: application/json");
+    header( 'Content-Type: application/json' );
     $data['request'] = $request;
 
-    echo json_encode($data);
+    echo json_encode( $data );
 }
-// eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IkFkbWluIiwicGFzc3dvcmQiOiJwYXNzd29yZCIsInJvbGUiOlsiYWRtaW4iXSwiYWRkcmVzcyI6eyJzdHJlZXQiOiJkb3duIHN0cmVldCIsInN0cmVldE51bWJlciI6MTIsInBvc3RhbENvZGUiOiI4MTc0In0sIl9pZCI6MX0.RUl23ZQUD_4cM9I5oo7WWjxIRLRYFzC9c_Ee5DPZBXM
