@@ -1,8 +1,16 @@
 let Functions = {
-    // render: async() => {
-    //     Style();
-    // },
 
+    /*
+    //  
+    //   ######  ########  ########    ###    ######## ########     ######  ######## ##    ## ##       ########
+    //  ##    ## ##     ## ##         ## ##      ##    ##          ##    ##    ##     ##  ##  ##       ##
+    //  ##       ##     ## ##        ##   ##     ##    ##          ##          ##      ####   ##       ##
+    //  ##       ########  ######   ##     ##    ##    ######       ######     ##       ##    ##       ######
+    //  ##       ##   ##   ##       #########    ##    ##                ##    ##       ##    ##       ##
+    //  ##    ## ##    ##  ##       ##     ##    ##    ##          ##    ##    ##       ##    ##       ##
+    //   ######  ##     ## ######## ##     ##    ##    ########     ######     ##       ##    ######## ########
+    //  
+    */
     createStyle: async(styleID, styleTags) => {
         if (!document.getElementById(styleID + 'Style')) {
             var style = document.createElement('style');
@@ -13,6 +21,17 @@ let Functions = {
         }
     },
 
+    /*
+    //  
+    //   ######  ######## ########    #### ##    ## ##    ## ######## ########  ##     ## ######## ##     ## ##
+    //  ##    ## ##          ##        ##  ###   ## ###   ## ##       ##     ## ##     ##    ##    ###   ### ##
+    //  ##       ##          ##        ##  ####  ## ####  ## ##       ##     ## ##     ##    ##    #### #### ##
+    //   ######  ######      ##        ##  ## ## ## ## ## ## ######   ########  #########    ##    ## ### ## ##
+    //        ## ##          ##        ##  ##  #### ##  #### ##       ##   ##   ##     ##    ##    ##     ## ##
+    //  ##    ## ##          ##        ##  ##   ### ##   ### ##       ##    ##  ##     ##    ##    ##     ## ##
+    //   ######  ########    ##       #### ##    ## ##    ## ######## ##     ## ##     ##    ##    ##     ## ########
+    //  
+    */
     setInnerHTML: async(el, innerHTML) => {
         let element = document.getElementById(el);
         element.classList.remove('visible');
@@ -75,6 +94,7 @@ let Functions = {
     ##     ## ##    ##  ##     ## ##    ##     ##       ##       ##       ##     ## ##       ##   ###    ##
     ########  ##     ## ##     ##  ######      ######## ######## ######## ##     ## ######## ##    ##    ##
     */
+    /* This is a JavaScript function that allows you to drag an element on the screen. */
     dragElement: (drag, hold) => {
         let dragElement = document.getElementById(drag);
         let holdElement = document.getElementById(hold);
@@ -202,12 +222,15 @@ let Functions = {
     //  ########  #######   ######  ##     ## ########  ######     ##     #######  ##     ## ##     ##    ##    ########
     //  
     */
+    /* This is a function that sets a local storage item. */
     setLocal: (key, value) => {
         localStorage.setItem('DF_' + key, value);
     },
+    /* This is a function that gets the value of a key from local storage. */
     getLocal: (key) => {
         return localStorage.getItem('DF_' + key);
     },
+    /* Removing all the data from the local storage. */
     flushLocal: () => {
         var arr = [];
         for (var i = 0; i < localStorage.length; i++) {
@@ -220,9 +243,36 @@ let Functions = {
             localStorage.removeItem(arr[i]);
         }
         // window.location.hash = '';
-        history.pushState("", document.title, window.location.pathname);
+        history.pushState('', document.title, window.location.pathname);
         location.reload();
-    }
+    },
+
+    /*
+    //  
+    //   ######   ######## ########    ###    ########  #### ########     ###    ########    ###
+    //  ##    ##  ##          ##      ## ##   ##     ##  ##  ##     ##   ## ##      ##      ## ##
+    //  ##        ##          ##     ##   ##  ##     ##  ##  ##     ##  ##   ##     ##     ##   ##
+    //  ##   #### ######      ##    ##     ## ########   ##  ##     ## ##     ##    ##    ##     ##
+    //  ##    ##  ##          ##    ######### ##         ##  ##     ## #########    ##    #########
+    //  ##    ##  ##          ##    ##     ## ##         ##  ##     ## ##     ##    ##    ##     ##
+    //   ######   ########    ##    ##     ## ##        #### ########  ##     ##    ##    ##     ##
+    //  
+    */
+    /* This code is fetching the data from the API and returning it. */
+    getAPIdata: async(URL, FormId) => {
+        let formData = new FormData(FormId);
+        formData = JSON.stringify(Object.fromEntries(formData));
+        const response = await fetch(URL, {
+            method: 'POST',
+            credentials: 'same-origin',
+            body: formData,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        const data = await response.json();
+        return data;
+    },
 };
 
 export default Functions;

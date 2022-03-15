@@ -94,7 +94,8 @@ let Content = async() => {
 let Login = async() => {
     document.getElementById('loginSubmit').addEventListener('click', async function(event) {
         event.preventDefault();
-        getAPIdata('login', loginForm)
+        // getAPIdata (endpoint, formID)
+        Functions.getAPIdata('login', loginForm)
             .then((res) => {
                 deb(res);
                 if (res.code === 200) {
@@ -123,20 +124,7 @@ let Login = async() => {
 
 
 
-async function getAPIdata(URL, FormId) {
-    let formData = new FormData(FormId);
-    formData = JSON.stringify(Object.fromEntries(formData));
-    const response = await fetch(URL, {
-        method: 'POST',
-        credentials: 'same-origin',
-        body: formData,
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    })
-    const data = await response.json();
-    return data;
-}
+
 
 
 //         localStorage.setItem('TC_token', res.token);
