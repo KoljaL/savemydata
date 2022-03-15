@@ -100,17 +100,21 @@ let Login = async() => {
                 deb(res);
                 if (res.code === 200) {
                     const user = res.data.user;
-                    document.getElementById('T_UserLoginFormError').innerHTML = /*HTML*/ `<span id=userLogout>logout</span>`;
-                    document.getElementById('staffName').innerHTML = user.username;
-                    document.getElementById('staffAvatar').style.backgroundColor = 'transparent';
-                    document.getElementById('staffAvatar').classList.remove('user_icon');
-                    document.getElementById('staffAvatar').innerHTML = /*HTML*/ `<img src="uploads/avatars/${user.username}.png">`;
+                    // document.getElementById('T_UserLoginFormError').innerHTML = /*HTML*/ `<span id=userLogout>logout</span>`;
+                    document.querySelector('li[data-link="userprofile"] span.link_text').innerHTML = /*HTML*/ `
+                        <span class="icon" style="background-color:transparent"><img src="uploads/avatars/${user.username}.png"></span>${user.username}
+                        <span id=userLogout class="logout_icon"></span>
+                        `;
+
                     // save userdata in localStorage
                     Functions.setLocal('username', user.username);
                     Functions.setLocal('id', user.id);
                     Functions.setLocal('role', user.role);
                     Functions.setLocal('permission', user.permission);
                     Functions.setLocal('token', res.data.token);
+
+                    //  redirect to userprofile
+                    window.location.hash = '#userprofile';
                 } else {
                     document.getElementById('T_UserLoginFormError').innerHTML = res.message;
                 }

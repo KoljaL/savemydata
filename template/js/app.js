@@ -6,6 +6,7 @@ import Functions from './Functions.js';
 
 // VIEWS
 import UserLogin from './views/UserLogin.js';
+import UserProfile from './views/UserProfile.js';
 
 
 // COMPONENTS
@@ -21,6 +22,9 @@ async function router() {
     switch (request.page) {
         case 'login':
             await UserLogin.render();
+            break;
+        case 'userprofile':
+            await UserProfile.render();
             break;
 
         default:

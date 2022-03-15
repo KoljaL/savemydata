@@ -260,7 +260,16 @@ let Functions = {
     */
     /* This code is fetching the data from the API and returning it. */
     getAPIdata: async(URL, FormId) => {
-        let formData = new FormData(FormId);
+        deb(FormId)
+        var formData;
+        if (FormId.tagName) {
+            formData = new FormData(FormId);
+
+        } else {
+            formData = FormId;
+        }
+
+
         formData = JSON.stringify(Object.fromEntries(formData));
         const response = await fetch(URL, {
             method: 'POST',

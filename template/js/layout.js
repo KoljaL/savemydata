@@ -15,7 +15,7 @@ navLinks.forEach(function(nav_links) {
         // run only if there is a data-link inside the tag
         if (link.dataset.link) {
             window.location.hash = link.dataset.link;
-            demoContent(link.dataset.link);
+            // demoContent(link.dataset.link);
 
             // document.querySelector('main h3').innerHTML = link.dataset.link;
             if ('small' === screenSize) {

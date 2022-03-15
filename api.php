@@ -67,6 +67,8 @@ if ( $request ) {
 if ( 'login' === $endpoint ) {
     userlogin( $request );
     exit;
+} else {
+
 }
 
 /*
@@ -76,8 +78,9 @@ if ( 'login' === $endpoint ) {
  *
  */
 switch ( $endpoint ) {
-case 'user':
-    echo 'user';
+case 'userprofile':
+    userprofile( $request );
+
     break;
 
 case 'login':
@@ -114,6 +117,28 @@ default:
 */
 
 // https://phpdelusions.net/pdo_examples/select
+
+function userprofile( $param ) {
+    global $db;
+    $response = [];
+
+    $stmt = $db->prepare( "SELECT * FROM user WHERE id=?" );
+    $stmt->execute( [$param['id']] );
+    $user = $stmt->fetch( PDO::FETCH_ASSOC );
+    unset( $user['password'] );
+
+    if ( $user ) {
+        $response['code'] = 200;
+        $response['data'] = $user;
+
+    } else {
+        $response['code']    = 400;
+        $response['message'] = 'no user found';
+    }
+
+    // return response
+    returnJSON( $response );
+}
 
 /**
  *

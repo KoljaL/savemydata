@@ -27,7 +27,7 @@
     <meta name="description" content="Classic but progressive template for data-driven pages." />
     <meta name="author" content="KoljaL" />
     <meta name="copyright" content="MIT" />
-
+    <!-- <base href="http://127.0.0.1:5501/" /> -->
     <link rel="manifest" href="template/manifest.json">
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="icon" href="template/img/browser/icon.svg" type="image/svg+xml">
@@ -40,7 +40,7 @@
 <body>
     <div id="PRL">
         <header>
-            <img src="template/img/browser/icon.svg" alt="RPL" />
+            <a href="http://localhost/savemydata/"><img src="template/img/browser/icon.svg" alt="RPL" /></a>
             <h1 class="page_name">P-R-L</h1>
         </header>
 
@@ -52,8 +52,8 @@
             </div>
             <div class="sidebar_body">
                 <ul>
-                    <li data-link="user">
-                        <span class="link_text"><span id=staffAvatar class="icon user_icon"></span><span id="staffName">User</span></span>
+                    <li data-link="userprofile">
+                        <span class="link_text"><span class="icon user_icon"></span>User</span>
                     </li>
                     <li data-link="solar">
                         <span class="link_text"><span class="icon speech_icon"></span>Solarsystem</span>
@@ -92,22 +92,22 @@
     <script src="template/js/layout.js"></script>
     <script type="module" src="template/js/app.js"></script>
     <script>
-        function demoContent(file) {
-            fetch('demo/' + file + '.html')
-                .then(function(response) {
-                    if (response.ok) {
-                        return response.text()
-                    } else {
-                        throw Error(response.statusText);
-                    }
-                    return response;
-                }).then(function(response) {
-                    document.getElementById('main').innerHTML = response;
-                }).catch(function(error) {
-                    deb(error)
-                    document.getElementById('main').innerHTML = "<h1>no file <small style='font-size: .5em'> just a demo</small></h1>";
-                });
-        }
+        // function demoContent(file) {
+        //     fetch('demo/' + file + '.html')
+        //         .then(function(response) {
+        //             if (response.ok) {
+        //                 return response.text()
+        //             } else {
+        //                 throw Error(response.statusText);
+        //             }
+        //             return response;
+        //         }).then(function(response) {
+        //             document.getElementById('main').innerHTML = response;
+        //         }).catch(function(error) {
+        //             deb(error)
+        //             document.getElementById('main').innerHTML = "<h1>no file <small style='font-size: .5em'> just a demo</small></h1>";
+        //         });
+        // }
         // demoContent('flex')
     </script>
 </body>
