@@ -72,6 +72,10 @@ if ( 'login' === $endpoint ) {
 
     $TOKEN = JWT::decode( $request['token'], new Key( $JWT_key, 'HS256' ) );
     $TOKEN = json_decode( json_encode( $TOKEN ), true );
+
+    if ( $request['id'] === $TOKEN['id'] || "0" === $TOKEN['role'] ) {
+        $myselforadmin = true;
+    }
     // print_r( $TOKEN['id'] );
     // returnJSON( [$request['id']] );
     // exit;
@@ -126,8 +130,8 @@ default:
 // https://phpdelusions.net/pdo_examples/select
 
 function userprofile( $param ) {
-    global $TOKEN;
-    if ( $param['id'] === $TOKEN['id'] || "0" === $TOKEN['role'] ) {
+    global $TOKEN, $myselforadmin;
+    if ( $myselforadmin ) {
 
         global $db;
         $response = [];
