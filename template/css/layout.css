@@ -305,9 +305,11 @@ header .page_name {
 //  
 */
 
+
+/* 
 main {
-    /* overflow: scroll; */
-}
+    overflow: scroll;
+} */
 
 main h1:first-of-type,
 main h2:first-of-type {

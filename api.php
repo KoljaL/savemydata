@@ -7,6 +7,7 @@ error_reporting( E_ALL );
 // JWT config
 require __DIR__.'/vendor/autoload.php';
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 $JWT_key = 'example_key';
 
@@ -69,6 +70,12 @@ if ( 'login' === $endpoint ) {
     exit;
 } else {
 
+    $TOKEN = JWT::decode( $request['token'], new Key( $JWT_key, 'HS256' ) );
+    $TOKEN = json_decode( json_encode( $TOKEN ), true );
+    // print_r( $TOKEN['id'] );
+    // returnJSON( [$request['id']] );
+    // exit;
+
 }
 
 /*
@@ -119,25 +126,33 @@ default:
 // https://phpdelusions.net/pdo_examples/select
 
 function userprofile( $param ) {
-    global $db;
-    $response = [];
+    global $TOKEN;
+    if ( $param['id'] === $TOKEN['id'] || "0" === $TOKEN['role'] ) {
 
-    $stmt = $db->prepare( "SELECT * FROM user WHERE id=?" );
-    $stmt->execute( [$param['id']] );
-    $user = $stmt->fetch( PDO::FETCH_ASSOC );
-    unset( $user['password'] );
+        global $db;
+        $response = [];
 
-    if ( $user ) {
-        $response['code'] = 200;
-        $response['data'] = $user;
+        $stmt = $db->prepare( "SELECT * FROM user WHERE id=?" );
+        $stmt->execute( [$param['id']] );
+        $user = $stmt->fetch( PDO::FETCH_ASSOC );
+        unset( $user['password'] );
 
+        if ( $user ) {
+            $response['code'] = 200;
+            $response['data'] = $user;
+
+        } else {
+            $response['code']    = 400;
+            $response['message'] = 'no user found';
+        }
+
+        // return response
+        returnJSON( $response );
     } else {
         $response['code']    = 400;
-        $response['message'] = 'no user found';
+        $response['message'] = 'vorbidden';
+        returnJSON( $response );
     }
-
-    // return response
-    returnJSON( $response );
 }
 
 /**
