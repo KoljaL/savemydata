@@ -73,9 +73,6 @@ if ( 'login' === $endpoint ) {
     $TOKEN = JWT::decode( $request['token'], new Key( $JWT_key, 'HS256' ) );
     $TOKEN = json_decode( json_encode( $TOKEN ), true );
 
-    if ( $request['id'] === $TOKEN['id'] || "0" === $TOKEN['role'] ) {
-        $myselforadmin = true;
-    }
     // print_r( $TOKEN['id'] );
     // returnJSON( [$request['id']] );
     // exit;
@@ -112,7 +109,12 @@ default:
     // echo 'Endpoint <b>'.$endpoint.'</b> not found';
     break;
 }
-
+function isAllowed( $action = '' ) {
+    global $TOKEN, $request;
+    if ( $request['id'] === $TOKEN['id'] || "0" === $TOKEN['role'] ) {
+        return true;
+    }
+}
 /*
 //
 //
@@ -130,8 +132,7 @@ default:
 // https://phpdelusions.net/pdo_examples/select
 
 function userprofile( $param ) {
-    global $TOKEN, $myselforadmin;
-    if ( $myselforadmin ) {
+    if ( isAllowed() ) {
 
         global $db;
         $response = [];
