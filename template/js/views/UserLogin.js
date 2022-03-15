@@ -66,8 +66,8 @@ let Content = async() => {
                 <legend>Staff Login</legend>
                 <form id="loginForm" action="" method="post" autocomplete="off">
                     <div class="InputElement">
-                        <label class=isTop>Name</label>
-                        <input type="text" name="username" placeholder="Deinen Namen bitte" value="admin" />
+                        <label class=isTop>Name or Mail</label>
+                        <input type="text" name="userlogin" placeholder="Deinen Namen bitte" value="admin" />
                     </div>
                     <div class="InputElement">
                         <label class=isTop>Password</label>
@@ -95,10 +95,28 @@ let Login = async() => {
     document.getElementById('loginSubmit').addEventListener('click', async function(event) {
         event.preventDefault();
         getAPIdata('login', loginForm)
-            .then(data => {
-                deb(data)
-
+            .then((res) => {
+                deb(res);
+                if (res.code === 200) {
+                    const user = res.data.user;
+                    document.getElementById('T_UserLoginFormError').innerHTML = /*HTML*/ `<span id=userLogout>logout</span>`;
+                    document.getElementById('staffName').innerHTML = user.username;
+                    document.getElementById('staffAvatar').style.backgroundColor = 'transparent';
+                    document.getElementById('staffAvatar').classList.remove('user_icon');
+                    document.getElementById('staffAvatar').innerHTML = /*HTML*/ `<img src="uploads/avatars/${user.username}.png">`;
+                    // save userdata in localStorage
+                    Functions.setLocal('username', user.username);
+                    Functions.setLocal('id', user.id);
+                    Functions.setLocal('role', user.role);
+                    Functions.setLocal('permission', user.permission);
+                    Functions.setLocal('token', res.data.token);
+                } else {
+                    document.getElementById('T_UserLoginFormError').innerHTML = res.message;
+                }
             })
+            .then(() => {
+                document.getElementById('userLogout').addEventListener('click', Functions.flushLocal);
+            });
     });
 }
 

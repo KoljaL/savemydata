@@ -15,12 +15,11 @@ let Functions = {
 
     setInnerHTML: async(el, innerHTML) => {
         let element = document.getElementById(el);
-        element.classList.remove('visible')
+        element.classList.remove('visible');
         setTimeout(function() {
-            element.classList.add('visible')
+            element.classList.add('visible');
         }, 500);
         element.innerHTML = innerHTML;
-
     },
 
     /*
@@ -111,7 +110,6 @@ let Functions = {
         }
     },
 
-
     /*
     ########  #######  ########  ##     ## ########     ###    ########    ###
     ##       ##     ## ##     ## ###   ### ##     ##   ## ##      ##      ## ##
@@ -129,9 +127,8 @@ let Functions = {
     },
 
     pageTitle: (string) => {
-        document.title = ` ${string}`
+        document.title = ` ${string}`;
     },
-
 
     /*
     ##        #######     ###    ########  #### ##    ##  ######   ########   #######  ########  ######
@@ -146,11 +143,11 @@ let Functions = {
     loadingDots: (divID, OnOff) => {
         const parentDIV = document.getElementById(divID);
         if (OnOff) {
-            const spinnerFrame = document.createElement("div");
-            spinnerFrame.id = "spinnerFrame";
+            const spinnerFrame = document.createElement('div');
+            spinnerFrame.id = 'spinnerFrame';
             parentDIV.appendChild(spinnerFrame);
             // create stylesheet
-            var style = document.createElement("style");
+            var style = document.createElement('style');
             style.innerHTML = /*CSS*/ `
                 .dots {--circle: 40px;--dot: 10px; position: absolute;border-radius: 100%;}
                 .dots { width: var(--dot);height: var(--dot);top: calc(50% - var(--dot) / 2);right: calc(50% - var(--dot) / 2);}
@@ -161,21 +158,21 @@ let Functions = {
             // circle & color vars
             const CoordX = [0, 0.5, 0.866, 1, 0.866, 0.5, 0, -0.5, -0.866, -1, -0.866, -0.5];
             const CoordY = [-1, -0.866, -0.5, 0, 0.5, 0.866, 1, 0.866, 0.5, 0, -0.5, -0.866];
-            const color = ["#be5046", "#e06c75", "#d19a66", "#e6c07b", "#98c379", "#56b6c2", "#61aeee", "#c678dd"];
+            const color = ['#be5046', '#e06c75', '#d19a66', '#e6c07b', '#98c379', '#56b6c2', '#61aeee', '#c678dd'];
             // create circle
             let wait = 0;
-            let lastRand = "";
+            let lastRand = '';
             // while (OnOff === true) {
             for (let j = 0; j < 100; j++) {
                 for (let i = 0; i < 12; i++) {
                     window.setTimeout(function() {
-                        if (document.getElementById("dotID_" + i)) {
-                            spinnerFrame.removeChild(document.getElementById("dotID_" + i));
+                        if (document.getElementById('dotID_' + i)) {
+                            spinnerFrame.removeChild(document.getElementById('dotID_' + i));
                         }
 
-                        let dot = document.createElement("div");
-                        dot.id = "dotID_" + i;
-                        dot.classList.add("dots");
+                        let dot = document.createElement('div');
+                        dot.id = 'dotID_' + i;
+                        dot.classList.add('dots');
 
                         let rand = Math.floor(Math.random() * 7);
                         if (rand === lastRand) {
@@ -183,22 +180,48 @@ let Functions = {
                         }
                         lastRand = rand;
 
-                        dot.style =
-                            "background: " +
-                            color[rand] +
-                            "; transform: translate(calc(var(--circle) * " +
-                            CoordX[i] +
-                            "), calc(var(--circle) * " +
-                            CoordY[i] +
-                            "))";
+                        dot.style = 'background: ' + color[rand] + '; transform: translate(calc(var(--circle) * ' + CoordX[i] + '), calc(var(--circle) * ' + CoordY[i] + '))';
                         spinnerFrame.appendChild(dot);
                     }, wait);
                     wait += 150;
                 }
             }
         } else {
-            parentDIV.removeChild(document.getElementById("spinnerFrame"));
+            parentDIV.removeChild(document.getElementById('spinnerFrame'));
         }
+    },
+
+    /*
+    //  
+    //  ##        #######   ######     ###    ##        ######  ########  #######  ########     ###    ######## ########
+    //  ##       ##     ## ##    ##   ## ##   ##       ##    ##    ##    ##     ## ##     ##   ## ##      ##    ##
+    //  ##       ##     ## ##        ##   ##  ##       ##          ##    ##     ## ##     ##  ##   ##     ##    ##
+    //  ##       ##     ## ##       ##     ## ##        ######     ##    ##     ## ########  ##     ##    ##    ######
+    //  ##       ##     ## ##       ######### ##             ##    ##    ##     ## ##   ##   #########    ##    ##
+    //  ##       ##     ## ##    ## ##     ## ##       ##    ##    ##    ##     ## ##    ##  ##     ##    ##    ##
+    //  ########  #######   ######  ##     ## ########  ######     ##     #######  ##     ## ##     ##    ##    ########
+    //  
+    */
+    setLocal: (key, value) => {
+        localStorage.setItem('DF_' + key, value);
+    },
+    getLocal: (key) => {
+        return localStorage.getItem('DF_' + key);
+    },
+    flushLocal: () => {
+        var arr = [];
+        for (var i = 0; i < localStorage.length; i++) {
+            if (localStorage.key(i).substring(0, 3) == 'DF_') {
+                arr.push(localStorage.key(i));
+                // deb(localStorage.key(i))
+            }
+        }
+        for (var i = 0; i < arr.length; i++) {
+            localStorage.removeItem(arr[i]);
+        }
+        // window.location.hash = '';
+        history.pushState("", document.title, window.location.pathname);
+        location.reload();
     }
 };
 

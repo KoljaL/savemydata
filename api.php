@@ -24,7 +24,7 @@ $JWT_key = 'example_key';
 
 // require __DIR__.'/sqlite_wrapper.php';
 
-$db_path = 'db/sqlite11e1111.db';
+$db_path = 'db/sqlite11e11d11.db';
 
 if ( !file_exists( $db_path ) ) {
     $db = new PDO( 'sqlite:'.$db_path );
@@ -113,6 +113,8 @@ default:
 //
 */
 
+// https://phpdelusions.net/pdo_examples/select
+
 /**
  *
  * Create a new user in the database
@@ -123,7 +125,7 @@ function create_user( $param ) {
     global $db;
     $insert = $db->prepare( 'INSERT INTO user (`username`, `password`, `email`, `role`, `permission`, `date`) VALUES (:username, :password, :email, :role,:permission, :date)' );
     $insert->bindValue( ':username', $param['username'] );
-    $insert->bindValue( ':password', md5( $param['password'] ) );
+    $insert->bindValue( ':password', password_hash( $param['password'], PASSWORD_DEFAULT ) );
     $insert->bindValue( ':email', $param['email'] );
     $insert->bindValue( ':role', $param['role'] );
     $insert->bindValue( ':permission', $param['permission'] );
@@ -153,18 +155,17 @@ function create_user( $param ) {
 function userlogin( $request ) {
     global $db, $JWT_key;
 
-    $user_name = $request['username'];
-    $password  = md5( $request['password'] );
+    // check if userlogin is email or name
+    $row = ( filter_var( $request['userlogin'], FILTER_VALIDATE_EMAIL ) ) ? 'email' : 'username';
 
-    // find useer & pw in table
-    $stmt = $db->prepare( "SELECT * FROM user WHERE username =? AND password =?" );
-    $stmt->execute( [$user_name, $password] );
-    $results = $stmt->fetchAll( PDO::FETCH_ASSOC );
+    // find user in table
+    $stmt = $db->prepare( "SELECT * FROM user WHERE $row =?" );
+    $stmt->execute( [$request['userlogin']] );
+    $user = $stmt->fetch();
 
     // if found user, create data
     $response = [];
-    if ( $results ) {
-        $user = $results[0];
+    if ( $user && password_verify( $request['password'], $user['password'] ) ) {
 
         // generate token payload
         $token_payload = [
@@ -226,8 +227,8 @@ function init_usertable() {
  *
  */
 function returnJSON( $response ) {
-    // global $request;
-    // $response['request'] = $request;
+    global $request;
+    $response['request'] = $request;
     header( 'Access-Control-Allow-Origin: *' );
     header( 'Content-Type: application/json; charset=UTF-8' );
     header( 'Access-Control-Allow-Methods: POST' );
