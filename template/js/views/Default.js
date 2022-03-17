@@ -3,14 +3,7 @@ import Functions from '../Functions.js';
 let Default = {
     render: async() => {
 
-        /* Used to redirect to the userprofile page if the user is logged in. */
-        // if (Functions.getLocal('token')) {
-        //     await setUsername(Functions.getLocal('username'))
-        //     document.getElementById('userLogout').addEventListener('click', Functions.flushLocal);
-        //     window.location.hash = '#userprofile';
-        // } else {
-        // }
-        Functions.pageTitle(`Login`)
+        Functions.pageTitle(`Default`)
         await Style();
         await Content();
         // await Login();

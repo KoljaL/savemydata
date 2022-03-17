@@ -5,10 +5,13 @@ import Functions from './Functions.js';
 // import Toast from './Toast.js';
 
 // VIEWS
+import Default from './views/Default.js';
 import UserLogin from './views/UserLogin.js';
 import UserProfile from './views/UserProfile.js';
 import Form from './views/Form.js';
-import Default from './views/Default.js';
+import Form1 from './views/Form1.js';
+import Form2 from './views/Form2.js';
+import Solar from './views/Solar.js';
 
 
 // COMPONENTS
@@ -33,6 +36,15 @@ async function router() {
             break;
         case 'form':
             await Form.render();
+            break;
+        case 'form1':
+            await Form1.render();
+            break;
+        case 'form2':
+            await Form2.render();
+            break;
+        case 'solar':
+            await Solar.render();
             break;
 
         default:

@@ -38,8 +38,8 @@
     --footer_height: 20px;
     --sidebar_full_width: 200px;
     --sidebar_small_width: 50px;
-    --bg_1: #27272b;
-    --bg_2: #232327;
+    --bg_1: #232327;
+    --bg_2: #27272b;
     --bg_3: #2c2c31;
     --font_0: #d6d6d9;
     --font_1: #d7d7d8;
@@ -61,9 +61,9 @@
     --footer_height: 20px;
     --sidebar_full_width: 200px;
     --sidebar_small_width: 50px;
-    --bg_1: #bbbbbb;
+    --bg_1: #757575;
     --bg_2: #868686;
-    --bg_3: #757575;
+    --bg_3: #bbbbbb;
     --font_0: #1e1e1f;
     --font_1: #464647;
     --font_2: #918d8d;
@@ -209,7 +209,7 @@ a {
 
 #PRL>header {
     grid-area: head;
-    background-color: var(--bg_2)
+    background-color: var(--bg_1)
 }
 
 #PRL>nav {
@@ -250,12 +250,13 @@ a {
 
 #PRL>main {
     grid-area: main;
-    padding: 1em
+    padding: 1em;
+    background-color: var(--bg_2);
 }
 
 #PRL>footer {
     grid-area: foot;
-    background-color: var(--bg_2);
+    background-color: var(--bg_1);
     box-shadow: inset 0 1px 0 var(--border_0)
 }
 
@@ -306,11 +307,9 @@ header .page_name {
 //  
 */
 
-
-/* 
 main {
-    overflow: scroll;
-} */
+    overflow-y: scroll;
+}
 
 main h1:first-of-type,
 main h2:first-of-type {

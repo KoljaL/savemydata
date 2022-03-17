@@ -80,7 +80,7 @@ let Style = async() => {
     }
     
     input {
-        width: calc(100% - 10px);
+        width: calc(100% - 50px);
         padding: 5px;
     }
     
@@ -257,7 +257,7 @@ let Style = async() => {
     }
        
     `;
-    Functions.createStyle('Form1_style', styleTags);
+    Functions.createStyle('Form_style', styleTags);
 };
 
 
