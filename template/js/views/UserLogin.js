@@ -1,15 +1,8 @@
 import Functions from '../Functions.js';
+import Form from '../Form.js';
 
 let UserLogin = {
     render: async() => {
-
-        /* Used to redirect to the userprofile page if the user is logged in. */
-        // if (Functions.getLocal('token')) {
-        //     await setUsername(Functions.getLocal('username'))
-        //     document.getElementById('userLogout').addEventListener('click', Functions.flushLocal);
-        //     window.location.hash = '#userprofile';
-        // } else {
-        // }
         Functions.pageTitle(`Login`)
         await Style();
         await Content();
@@ -40,7 +33,6 @@ let Style = async() => {
             height:100vh;
             display:flex;
             justify-content: center;
-            // align-items: center;
         }
         #UserLoginForm {
             position: relative;
@@ -78,18 +70,30 @@ let Content = async() => {
             <form id="loginForm" action="" method="post" autocomplete="off">
 
 
-                <div class="FF-row">
-                    <div class="FF-item" style="flex-basis: 150px; min-width: 100px; max-width: 300px;">
-                        <input id="userlogin" name="userlogin" type="text" placeholder="Username or Email" value="admin" required="">
-                        <label for="userlogin">Login</label>    
-                    </div>
-                </div>
-                <div class="FF-row">
-                    <div class="FF-item" style="flex-basis: 150px; min-width: 100px; max-width: 300px;">
-                        <input id="password" name="password" type="password" placeholder="secret..." value="password" required="">
-                        <label for="password">Password</label>    
-                    </div>
-                </div>
+            <!-- login -->
+            ${Form.inputText({
+                name: "userlogin",
+                type: "text",
+                width: "150px",
+                min: "100px",
+                max: "300px",
+                label: "Login",
+                placeholder: "Username or Email",
+                value: "admin",
+            })}
+
+            <!-- password -->
+            ${Form.inputText({
+                name: "password",
+                type: "password",
+                width: "150px",
+                min: "100px",
+                max: "300px",
+                label: "Password",
+                placeholder: "secret...",
+                value: "password",
+            })}
+
 
                 <div class="FF-row">
                 <div class="FF-item" style="flex-basis: 150px; min-width: 100px; max-width: 300px;">

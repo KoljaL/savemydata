@@ -51,9 +51,7 @@ let Content = async() => {
         <h2>Floating Form</h2>
         <form>
             <div id=insideform class="FF-row">
-
-         
-
+ 
             ${Form.inputText({
                 name: "text",
                 type: "text",
