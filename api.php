@@ -1,14 +1,25 @@
 <?php
 
+/*
+ *
+ * Error handeling
+ * Created on Thu Mar 17 2022 at 02:20:53
+ *
+ */
 ini_set( 'display_errors', 1 );
 ini_set( 'display_startup_errors', 1 );
 error_reporting( E_ALL );
 
-// JWT config
+/*
+ *
+ * JWT config
+ * Created on Thu Mar 17 2022 at 02:21:13
+ *
+ */
+
 require __DIR__.'/vendor/autoload.php';
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-
 $JWT_key = 'example_key';
 
 /*
@@ -23,10 +34,13 @@ $JWT_key = 'example_key';
 //
 */
 
-// require __DIR__.'/sqlite_wrapper.php';
-
 $db_path = 'db/sqlite11e11d11.db';
-
+/*
+ *
+ * This is a way to check if the database exists. If it doesn't exist, it will create it.
+ * Created on Thu Mar 17 2022 at 02:22:51
+ *
+ */
 if ( !file_exists( $db_path ) ) {
     $db = new PDO( 'sqlite:'.$db_path );
     init_usertable();
@@ -35,25 +49,21 @@ if ( !file_exists( $db_path ) ) {
 }
 
 /*
-//
-//  ######## ##    ## ########  ########   #######  #### ##    ## ########  ######
-//  ##       ###   ## ##     ## ##     ## ##     ##  ##  ###   ##    ##    ##    ##
-//  ##       ####  ## ##     ## ##     ## ##     ##  ##  ####  ##    ##    ##
-//  ######   ## ## ## ##     ## ########  ##     ##  ##  ## ## ##    ##     ######
-//  ##       ##  #### ##     ## ##        ##     ##  ##  ##  ####    ##          ##
-//  ##       ##   ### ##     ## ##        ##     ##  ##  ##   ###    ##    ##    ##
-//  ######## ##    ## ########  ##         #######  #### ##    ##    ##     ######
-//
-*/
-
-//
-// get endpoint out of URI
+ *
+ * Splitting the URI into an array to get the endpoint
+ * Created on Thu Mar 17 2022 at 02:22:13
+ *
+ */
 $uri      = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
 $uri      = explode( '/', $uri );
 $endpoint = end( $uri );
 
-//
-// handle request
+/*
+ *
+ * Reading the JSON data from the client and decoding it.
+ * Created on Thu Mar 17 2022 at 02:18:40
+ *
+ */
 $request = json_decode( file_get_contents( 'php://input' ), true );
 if ( $request ) {
     $keys = preg_replace( '/[^a-z0-9_]+/i', '', array_keys( $request ) );
@@ -74,10 +84,22 @@ if ( 'login' === $endpoint ) {
     $TOKEN = json_decode( json_encode( $TOKEN ), true );
 
     // print_r( $TOKEN['id'] );
-    // returnJSON( [$request['id']] );
+    // return_JSON( [$request['id']] );
     // exit;
 
 }
+
+/*
+//
+//  ######## ##    ## ########  ########   #######  #### ##    ## ########  ######
+//  ##       ###   ## ##     ## ##     ## ##     ##  ##  ###   ##    ##    ##    ##
+//  ##       ####  ## ##     ## ##     ## ##     ##  ##  ####  ##    ##    ##
+//  ######   ## ## ## ##     ## ########  ##     ##  ##  ## ## ##    ##     ######
+//  ##       ##  #### ##     ## ##        ##     ##  ##  ##  ####    ##          ##
+//  ##       ##   ### ##     ## ##        ##     ##  ##  ##   ###    ##    ##    ##
+//  ######## ##    ## ########  ##         #######  #### ##    ##    ##     ######
+//
+*/
 
 /*
  *
@@ -87,12 +109,12 @@ if ( 'login' === $endpoint ) {
  */
 switch ( $endpoint ) {
 case 'userprofile':
-    userprofile( $request );
+    get_user_profile( $request );
 
     break;
 
 case 'login':
-    userlogin( $request );
+    login_user( $request );
     break;
 
 case 'admin':
@@ -109,12 +131,7 @@ default:
     // echo 'Endpoint <b>'.$endpoint.'</b> not found';
     break;
 }
-function isAllowed( $action = '' ) {
-    global $TOKEN, $request;
-    if ( $request['id'] === $TOKEN['id'] || "0" === $TOKEN['role'] ) {
-        return true;
-    }
-}
+
 /*
 //
 //
@@ -131,7 +148,28 @@ function isAllowed( $action = '' ) {
 
 // https://phpdelusions.net/pdo_examples/select
 
-function userprofile( $param ) {
+/**
+ * If the user is the owner of the token or the user is an admin, then return true
+ *
+ * @param action The action to be performed.
+ *
+ * @return The return value is a boolean value. If the function is allowed to execute, it will return
+ * true. If it is not allowed to execute, it will return false.
+ */
+function isAllowed( $action = '' ) {
+    global $TOKEN, $request;
+    if ( $request['id'] === $TOKEN['id'] || "0" === $TOKEN['role'] ) {
+        return true;
+    }
+}
+
+/**
+ *
+ * This function is used to get a user profile
+ *
+ *
+ */
+function get_user_profile( $param ) {
     if ( isAllowed() ) {
 
         global $db;
@@ -140,9 +178,9 @@ function userprofile( $param ) {
         $stmt = $db->prepare( "SELECT * FROM user WHERE id=?" );
         $stmt->execute( [$param['id']] );
         $user = $stmt->fetch( PDO::FETCH_ASSOC );
-        unset( $user['password'] );
 
         if ( $user ) {
+            unset( $user['password'] );
             $response['code'] = 200;
             $response['data'] = $user;
 
@@ -152,18 +190,17 @@ function userprofile( $param ) {
         }
 
         // return response
-        returnJSON( $response );
+        return_JSON( $response );
     } else {
         $response['code']    = 400;
         $response['message'] = 'vorbidden';
-        returnJSON( $response );
+        return_JSON( $response );
     }
 }
 
 /**
  *
  * Create a new user in the database
- * @param param - The parameter array that is passed to the function.
  *
  */
 function create_user( $param ) {
@@ -187,7 +224,7 @@ function create_user( $param ) {
     }
 
     // return response
-    returnJSON( $response );
+    return_JSON( $response );
 }
 
 /**
@@ -197,7 +234,7 @@ function create_user( $param ) {
  * @param request - The request object.
  *
  */
-function userlogin( $request ) {
+function login_user( $request ) {
     global $db, $JWT_key;
 
     // check if userlogin is email or name
@@ -230,7 +267,7 @@ function userlogin( $request ) {
     }
 
     // return response
-    returnJSON( $response );
+    return_JSON( $response );
 }
 
 /**
@@ -262,7 +299,7 @@ function init_usertable() {
     $response['code']    = 200;
     $response['message'] = 'usertable created';
 
-    returnJSON( $response );
+    return_JSON( $response );
 }
 
 /**
@@ -271,7 +308,7 @@ function init_usertable() {
  * @param data - The data to be returned.
  *
  */
-function returnJSON( $response ) {
+function return_JSON( $response ) {
     global $request;
     $response['request'] = $request;
     header( 'Access-Control-Allow-Origin: *' );
