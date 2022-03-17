@@ -76,7 +76,7 @@ if ( $request ) {
  *
 */
 if ( 'login' === $endpoint ) {
-    userlogin( $request );
+    login_user( $request );
     exit;
 } else {
 

@@ -24,21 +24,23 @@ export default UserLogin;
 */
 let Style = async() => {
     let styleTags = /*CSS*/ `
-        #T_StaffPreferences {
-            float: right;
+        #T_darkWrapper {
+            position: absolute;
+            top: var(--header_full_height);
+            left: 0;
+            width: 100vw;
+            height:100vh;
+            background: var(--bg_1);
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 5;
         }
         #T_UserLoginForm {
             position: relative;
-            width: 300px;
+            max-width: 300px;
         }
-        #StaffLogOut {
-            color: darkred;
-            padding: 0 4em 0 1em;
-            cursor: pointer;
-        }
-        .loginError {
-            width: 600px;
-        }
+       
     `;
     Functions.createStyle('UserLogin_style', styleTags);
 };
@@ -61,23 +63,30 @@ let Style = async() => {
  */
 let Content = async() => {
     let innerHTML = /*HTML*/ `
-        <div id="T_UserLoginForm" class="template">
+    <div id=T_darkWrapper>
+        <div id="T_UserLoginForm">
             <fieldset>
-                <legend>Staff Login</legend>
-                <form id="loginForm" action="" method="post" autocomplete="off">
-                    <div class="InputElement">
-                        <label class=isTop>Name or Mail</label>
-                        <input type="text" name="userlogin" placeholder="Deinen Namen bitte" value="admin" />
+            <legend>Staff Login</legend>
+            <form id="loginForm" action="" method="post" autocomplete="off">
+                <div class="row">
+                    <div class="u-full-width">
+                        <label for="userlogin">Name or Mail</label>
+                        <input class="u-full-width" type="text"  id="userlogin" name="userlogin" placeholder="Deinen Namen bitte" value="admin">
                     </div>
-                    <div class="InputElement">
-                        <label class=isTop>Password</label>
-                        <input type="password" name="password" placeholder="geheim..." value="password" />
+                </div>
+                <div class="row">
+                    <div class="u-full-width">
+                        <label for="password">Password</label>
+                        <input class="u-full-width" type="password"  id="password" name="password" placeholder="geheim..." value="password">
                     </div>
-                    <button id="loginSubmit" class="button">Login</button>
+                </div>
+                <input class="button-primary" id="loginSubmit"  type="submit" value="Login">
                 </form>
             </fieldset>
+
             <div id="T_UserLoginFormError" class="template hide"></div>
-        </div>`;
+            </div>
+    </div>`;
     await Functions.setInnerHTML('main', innerHTML);
 }
 

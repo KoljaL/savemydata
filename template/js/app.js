@@ -20,7 +20,7 @@ async function router() {
     let request = Functions.parseRequestURL();
     // deb(request);
     switch (request.page) {
-        case 'login':
+        case '/':
             await UserLogin.render();
             break;
         case 'userprofile':
@@ -28,7 +28,7 @@ async function router() {
             break;
 
         default:
-            await UserLogin.render();
+            // await UserLogin.render();
             break;
     }
 }

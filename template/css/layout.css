@@ -142,7 +142,8 @@ body {
 h1,
 h2 {
     font-family: 'Zilla Slab Medium', sans-serif;
-    font-weight: 400
+    font-weight: 400;
+    letter-spacing: .1rem;
 }
 
 a {
@@ -377,6 +378,15 @@ nav ul>li {
     cursor: pointer
 }
 
+nav li ul.subList {
+    margin: 0;
+}
+
+.sidebar nav li.active ul.subList {
+    margin-top: -1rem;
+    padding-bottom: 1rem;
+}
+
 nav li ul.subList li {
     height: 0;
     overflow: hidden;
@@ -387,21 +397,24 @@ nav li ul.subList li {
 }
 
 .sidebar nav li.active ul.subList li {
-    height: 27px
+    height: 29px
 }
 
-.sidebar nav li.allExpanded ul.subList li {
-    height: 27px
+.sidebar nav li.active ul.subList li:last-of-type {
+    padding-bottom: 1rem;
 }
 
 .link_text {
     display: inline-block;
     padding: 12px 0 12px 1em;
-    width: 100%
+    width: 100%;
+    font-family: 'Zilla Slab Medium', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: .1rem;
 }
 
 .subList .link_text {
-    padding: 0 0 0 50px
+    padding: 0 0 0 2rem
 }
 
 nav li .link_text:hover {
