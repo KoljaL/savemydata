@@ -425,7 +425,7 @@ nav li .link_text:hover>.icon {
 }
 
 nav li.active {
-    background: var(--bg_1);
+    background: var(--bg_2);
     box-shadow: inset -1px 0 var(--border_0);
     /* border-right: 1px solid var(--border_0); */
     /* border-top: 1px solid var(--border_0); */

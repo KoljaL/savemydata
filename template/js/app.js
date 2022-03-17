@@ -25,24 +25,30 @@ async function router() {
     Functions.fadeWraper('in', '#darkWrapper', 20);
 
     let request = Functions.parseRequestURL();
-    let page = checkUserloggedin() || request.page;
+    let page = checkUserLoggedIn() || request.page;
     // deb(request);
     switch (page) {
+
         case '/':
             await UserLogin.render();
             break;
+
         case 'userprofile':
             await UserProfile.render();
             break;
+
         case 'form':
             await Form.render();
             break;
+
         case 'form1':
             await Form1.render();
             break;
+
         case 'form2':
             await Form2.render();
             break;
+
         case 'solar':
             await Solar.render();
             break;
@@ -51,7 +57,11 @@ async function router() {
             await Default.render();
             break;
     }
-    Functions.fadeWraper('out', '#darkWrapper', 20);
+
+    // Userlogin has its own fadeWrapper()
+    if ('/' !== page) {
+        Functions.fadeWraper('out', '#darkWrapper', 20);
+    }
 
 }
 
@@ -62,10 +72,10 @@ async function router() {
  * If the user is logged in, then return false. Otherwise, return the URL to the login page
  * @returns A string.
  */
-function checkUserloggedin() {
+function checkUserLoggedIn() {
     if (Functions.getLocal('token')) {
-        // await setUsername(Functions.getLocal('username'))
-        // document.getElementById('userLogout').addEventListener('click', Functions.flushLocal);
+        Functions.setUsername(Functions.getLocal('username'))
+        document.getElementById('userLogout').addEventListener('click', Functions.flushLocal);
         return false;
     } else {
         return '/';

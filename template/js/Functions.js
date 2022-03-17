@@ -311,6 +311,19 @@ let Functions = {
         }
     },
 
+
+
+    /* Setting the username in the navbar. */
+    setUsername: async(username) => {
+        document.querySelector('li[data-link="userprofile"] span.link_text').innerHTML = /*HTML*/ `
+            <span class="icon" style="background-color:transparent">
+                <img src="uploads/avatars/${username}.png"></span>
+                ${username}
+            <span id=userLogout class="logout_icon"></span>
+        `;
+    }
+
+
 };
 
 export default Functions;

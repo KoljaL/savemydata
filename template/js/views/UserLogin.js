@@ -116,12 +116,8 @@ let Login = async() => {
                 // deb(res);
                 if (res.code === 200) {
                     const user = res.data.user;
-                    // document.getElementById('UserLoginFormError').innerHTML = /*HTML*/ `<span id=userLogout>logout</span>`;
-                    // document.querySelector('li[data-link="userprofile"] span.link_text').innerHTML = /*HTML*/ `
-                    //     <span class="icon" style="background-color:transparent"><img src="uploads/avatars/${user.username}.png"></span>${user.username}
-                    //     <span id=userLogout class="logout_icon"></span>
-                    //     `;
-                    setUsername(user.username);
+
+                    Functions.setUsername(user.username);
                     // save userdata in localStorage
                     Functions.setLocal('username', user.username);
                     Functions.setLocal('id', user.id);
@@ -140,15 +136,4 @@ let Login = async() => {
                 document.getElementById('userLogout').addEventListener('click', Functions.flushLocal);
             });
     });
-}
-
-
-
-async function setUsername(username) {
-    document.querySelector('li[data-link="userprofile"] span.link_text').innerHTML = /*HTML*/ `
-    <span class="icon" style="background-color:transparent">
-        <img src="uploads/avatars/${username}.png"></span>
-        ${username}
-    <span id=userLogout class="logout_icon"></span>
-    `;
 }
