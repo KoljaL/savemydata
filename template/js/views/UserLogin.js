@@ -40,10 +40,11 @@ let Style = async() => {
             height:100vh;
             display:flex;
             justify-content: center;
-            align-items: center;
+            // align-items: center;
         }
         #UserLoginForm {
             position: relative;
+            top: 10vh;
             max-width: 300px;
             z-index: 10;
         }
@@ -75,19 +76,29 @@ let Content = async() => {
             <fieldset>
             <legend>Staff Login</legend>
             <form id="loginForm" action="" method="post" autocomplete="off">
-                <div class="row">
-                    <div class="u-full-width">
-                        <label for="userlogin">Name or Mail</label>
-                        <input class="u-full-width" type="text"  id="userlogin" name="userlogin" placeholder="Deinen Namen bitte" value="admin">
+
+
+                <div class="FF-row">
+                    <div class="FF-item" style="flex-basis: 150px; min-width: 100px; max-width: 300px;">
+                        <input id="userlogin" name="userlogin" type="text" placeholder="Username or Email" value="admin" required="">
+                        <label for="userlogin">Login</label>    
                     </div>
                 </div>
-                <div class="row">
-                    <div class="u-full-width">
-                        <label for="password">Password</label>
-                        <input class="u-full-width" type="password"  id="password" name="password" placeholder="geheim..." value="password">
+                <div class="FF-row">
+                    <div class="FF-item" style="flex-basis: 150px; min-width: 100px; max-width: 300px;">
+                        <input id="password" name="password" type="password" placeholder="secret..." value="password" required="">
+                        <label for="password">Password</label>    
                     </div>
                 </div>
-                <input class="button-primary" id="loginSubmit"  type="submit" value="Login">
+
+                <div class="FF-row">
+                <div class="FF-item" style="flex-basis: 150px; min-width: 100px; max-width: 300px;">
+                    <input id="loginSubmit"  type="submit" value="Login">
+                </div>
+            </div>
+              
+
+
                 </form>
             </fieldset>
 

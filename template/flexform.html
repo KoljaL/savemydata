@@ -51,12 +51,12 @@
             border-radius: 5px;
         }
         
-        .container {
+        .FF-row {
             display: flex;
             flex-wrap: wrap;
         }
         
-        .item {
+        .FF-item {
             flex-basis: 100px;
             flex-grow: 1;
             flex-shrink: 1;
@@ -67,7 +67,7 @@
         }
         
         @media screen and (min-width: 320px) {
-            .item {
+            .FF-item {
                 max-width: max-content;
             }
         }
@@ -88,17 +88,17 @@
             line-height: 1.2em;
         }
         
-        div.item {
+        div.FF-item {
             position: relative;
         }
         
-        div.item,
-        div.item>* {
+        div.FF-item,
+        div.FF-item>* {
             font-size: 18px;
             /* font-size: clamp(2vw, 2vw, 3vw); */
         }
         
-        div.item input {
+        div.FF-item input {
             outline: none;
             padding: 0.3em;
             border: 1px solid var(--bg_3);
@@ -106,13 +106,13 @@
             border-radius: 0.2em;
         }
         
-        div.item input:focus {
+        div.FF-item input:focus {
             transition: all 0.5s ease-in-out;
             background: #383838;
             border: 1px solid var(--border_0);
         }
         
-        div.item label {
+        div.FF-item label {
             font-family: 'Zilla Slab Medium', sans-serif;
             font-weight: 400;
             position: absolute;
@@ -126,111 +126,71 @@
             transition: all 0.5s ease-in-out;
         }
         
-        div.item input:valid+label,
-        div.item input:focus+label {
+        div.FF-item input:valid+label,
+        div.FF-item input:focus+label {
             transition: all 0.5s ease-in-out;
             top: -1.5em;
             font-size: 0.8em;
         }
         /* hide placeholder if not in focus */
         
-        div.item input:not(:focus):placeholder-shown::-webkit-input-placeholder {
+        div.FF-item input:not(:focus):placeholder-shown::-webkit-input-placeholder {
             color: transparent;
         }
         
-        div.item input:not(:focus):placeholder-shown:-ms-input-placeholder {
+        div.FF-item input:not(:focus):placeholder-shown:-ms-input-placeholder {
             color: transparent;
         }
         
-        div.item input:not(:focus):placeholder-shown:-ms-input-placeholder {
+        div.FF-item input:not(:focus):placeholder-shown:-ms-input-placeholder {
             color: transparent;
         }
         
-        div.item input:not(:focus):placeholder-shown::-moz-placeholder {
+        div.FF-item input:not(:focus):placeholder-shown::-moz-placeholder {
             color: transparent;
         }
         /* style placeholder */
         
-        div.item input:placeholder-shown::-webkit-input-placeholder {
+        div.FF-item input:placeholder-shown::-webkit-input-placeholder {
             color: grey;
         }
         
-        div.item input:placeholder-shown:-ms-input-placeholder {
+        div.FF-item input:placeholder-shown:-ms-input-placeholder {
             color: grey;
         }
         
-        div.item input:placeholder-shown:-ms-input-placeholder {
+        div.FF-item input:placeholder-shown:-ms-input-placeholder {
             color: grey;
         }
         
-        div.item input:placeholder-shown::-moz-placeholder {
+        div.FF-item input:placeholder-shown::-moz-placeholder {
             color: grey;
         }
     </style>
 </head>
 
 <body>
-    <!-- <div class="container">
-
-        <div class="item">
-            <input id="city" type="text" name="city" required/>
-            <label for="city">City</label>
-        </div>
-        <div class="item">
-            <input id="city" type="text" name="city" required/>
-            <label for="city">City</label>
-        </div>
-        <div class="item">
-            <input id="city" type="text" name="city" required/>
-            <label for="city">City</label>
-        </div>
-        <div class="item">
-            <input id="city" type="text" name="city" required/>
-            <label for="city">City</label>
-        </div>
-        <div class="item" style=" max-width: 100px;">
-            <input id="city" type="text" name="city" required/>
-            <label for="city">City</label>
-        </div>
-        <div class="item">
-            <input id="city" type="text" name="city" required/>
-            <label for="city">City</label>
-        </div>
-        <div class="item">
-            <input id="city" type="text" name="city" required/>
-            <label for="city">City</label>
-        </div>
-        <div class="item">
-            <input id="city" type="text" name="city" required/>
-            <label for="city">City</label>
-        </div>
-        <div class="item">
-            <input id="city" type="text" name="city" required/>
-            <label for="city">City</label>
-        </div>
-
-    </div> -->
 
     <fieldset>
         <legend>Floating Form</legend>
         <form>
-            <div id=insideform class="container">
+            <div id=insideform class="FF-row">
 
             </div>
         </form>
     </fieldset>
-    <button id="values">values</button>
+    <!-- <button onclick="values()">values</button> -->
     <script>
         const form = document.querySelector("form");
         const button = document.querySelector("button");
         const insideform = document.querySelector("#insideform");
 
-        button.addEventListener('click', (e) => {
+        function values() {
             let formData = new FormData(form);
             for (var pair of formData.entries()) {
                 console.log(pair[0] + ' -> ' + pair[1]);
             }
-        })
+        }
 
         function inputText(d) {
             console.log(d)
@@ -261,7 +221,7 @@
 
 
             let input = document.createElement("div");
-            input.classList.add("item");
+            input.classList.add("FF-item");
             input.style.flexBasis = d.width || 'inherit';
             input.style.minWidth = d.min || 'inherit';
             input.style.maxWidth = d.max || 'inherit';
@@ -371,6 +331,7 @@
             label: "Search",
             placeholder: 'looking for...'
         });
+        values()
     </script>
 </body>
 

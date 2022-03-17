@@ -382,8 +382,9 @@ nav li ul.subList {
 }
 
 .sidebar nav li.active ul.subList {
-    margin-top: -1rem;
-    padding-bottom: 1rem;
+    margin-top: -.4rem;
+    padding-bottom: .5rem;
+    margin-left: 1.2em;
 }
 
 nav li ul.subList li {
@@ -408,7 +409,7 @@ nav li ul.subList li {
     padding: 12px 0 12px 1em;
     width: 100%;
     font-family: 'Zilla Slab Medium', sans-serif;
-    font-size: 1.8rem;
+    font-size: 1rem;
     letter-spacing: .1rem;
 }
 

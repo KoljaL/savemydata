@@ -9,7 +9,6 @@ const expandSubLists = document.getElementById('expandSubLists');
 const navLinks = document.querySelectorAll('nav li');
 var screenSize, toggleSubLists;
 
-
 /*
  *
  * Adding an event listener to the navLinks.
