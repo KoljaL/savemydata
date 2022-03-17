@@ -260,7 +260,7 @@ let Functions = {
     */
     /* This code is fetching the data from the API and returning it. */
     getAPIdata: async(URL, FormId) => {
-        deb(FormId)
+        // deb(FormId)
         var formData;
         if (FormId.tagName) {
             formData = new FormData(FormId);
@@ -282,6 +282,35 @@ let Functions = {
         const data = await response.json();
         return data;
     },
+
+
+
+    /* Fading the element in and out. */
+    fadeWraper: (inout = 'out', el, int = 10) => {
+
+        var count = (inout === 'out') ? 1 : 0;
+
+        if (document.querySelector(el)) {
+            var interval = setInterval(() => {
+
+                document.querySelector(el).style.opacity = count;
+
+                if (inout === 'out') {
+                    count = count - .1;
+                    if (count < 0.01) {
+                        clearInterval(interval);
+                        document.querySelector(el).style.display = 'none';
+                    }
+                } else {
+                    count = count + .1;
+                    if (count > 1) {
+                        clearInterval(interval);
+                    }
+                }
+            }, int);
+        }
+    },
+
 };
 
 export default Functions;

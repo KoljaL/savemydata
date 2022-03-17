@@ -34,11 +34,31 @@
     <link rel="stylesheet" href="template/css/skeleton.css">
     <link rel="stylesheet" href="template/css/layout.css">
     <style>
-
+        .darkWrapper {
+            position: absolute;
+            top: var(--header_full_height);
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--bg_1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 5;
+            overflow: hidden;
+            opacity: 1;
+            content: "";
+            transition: all .9s ease-in-out;
+        }
+        
+        body::after {
+            transition: all .2s ease-in-out;
+        }
     </style>
 </head>
 
 <body>
+    <div id="darkWrapper" class="darkWrapper"></div>
     <div id="PRL">
         <header>
             <a href="http://localhost/savemydata/"><img src="template/img/browser/icon.svg" alt="RPL" /></a>

@@ -2,6 +2,14 @@ import Functions from '../Functions.js';
 
 let UserLogin = {
     render: async() => {
+
+        /* Used to redirect to the userprofile page if the user is logged in. */
+        // if (Functions.getLocal('token')) {
+        //     await setUsername(Functions.getLocal('username'))
+        //     document.getElementById('userLogout').addEventListener('click', Functions.flushLocal);
+        //     window.location.hash = '#userprofile';
+        // } else {
+        // }
         Functions.pageTitle(`Login`)
         await Style();
         await Content();
@@ -24,21 +32,20 @@ export default UserLogin;
 */
 let Style = async() => {
     let styleTags = /*CSS*/ `
-        #T_darkWrapper {
+        #UserLoginWrapper {
             position: absolute;
             top: var(--header_full_height);
             left: 0;
             width: 100vw;
             height:100vh;
-            background: var(--bg_1);
             display:flex;
             justify-content: center;
             align-items: center;
-            z-index: 5;
         }
-        #T_UserLoginForm {
+        #UserLoginForm {
             position: relative;
             max-width: 300px;
+            z-index: 10;
         }
        
     `;
@@ -63,8 +70,8 @@ let Style = async() => {
  */
 let Content = async() => {
     let innerHTML = /*HTML*/ `
-    <div id=T_darkWrapper>
-        <div id="T_UserLoginForm">
+    <div id=UserLoginWrapper>
+        <div id="UserLoginForm">
             <fieldset>
             <legend>Staff Login</legend>
             <form id="loginForm" action="" method="post" autocomplete="off">
@@ -84,7 +91,7 @@ let Content = async() => {
                 </form>
             </fieldset>
 
-            <div id="T_UserLoginFormError" class="template hide"></div>
+            <div id="UserLoginFormError" class="template hide"></div>
             </div>
     </div>`;
     await Functions.setInnerHTML('main', innerHTML);
@@ -106,26 +113,27 @@ let Login = async() => {
         // getAPIdata (endpoint, formID)
         Functions.getAPIdata('login', loginForm)
             .then((res) => {
-                deb(res);
+                // deb(res);
                 if (res.code === 200) {
                     const user = res.data.user;
-                    // document.getElementById('T_UserLoginFormError').innerHTML = /*HTML*/ `<span id=userLogout>logout</span>`;
-                    document.querySelector('li[data-link="userprofile"] span.link_text').innerHTML = /*HTML*/ `
-                        <span class="icon" style="background-color:transparent"><img src="uploads/avatars/${user.username}.png"></span>${user.username}
-                        <span id=userLogout class="logout_icon"></span>
-                        `;
-
+                    // document.getElementById('UserLoginFormError').innerHTML = /*HTML*/ `<span id=userLogout>logout</span>`;
+                    // document.querySelector('li[data-link="userprofile"] span.link_text').innerHTML = /*HTML*/ `
+                    //     <span class="icon" style="background-color:transparent"><img src="uploads/avatars/${user.username}.png"></span>${user.username}
+                    //     <span id=userLogout class="logout_icon"></span>
+                    //     `;
+                    setUsername(user.username);
                     // save userdata in localStorage
                     Functions.setLocal('username', user.username);
                     Functions.setLocal('id', user.id);
                     Functions.setLocal('role', user.role);
                     Functions.setLocal('permission', user.permission);
                     Functions.setLocal('token', res.data.token);
+                    Functions.fadeWraper('out', '#darkWrapper', 20);
 
                     //  redirect to userprofile
                     window.location.hash = '#userprofile';
                 } else {
-                    document.getElementById('T_UserLoginFormError').innerHTML = res.message;
+                    document.getElementById('UserLoginFormError').innerHTML = res.message;
                 }
             })
             .then(() => {
@@ -136,14 +144,11 @@ let Login = async() => {
 
 
 
-
-
-
-
-//         localStorage.setItem('TC_token', res.token);
-//         localStorage.setItem('TC_staffID', res.id);
-//         localStorage.setItem('TC_staffName', res.user_display_name);
-//         vt.success(`Logged in as ${res.user_display_name} `);
-
-//         // redirect to StaffData
-//         window.location.hash = '#Staff-data:' + res.id;
+async function setUsername(username) {
+    document.querySelector('li[data-link="userprofile"] span.link_text').innerHTML = /*HTML*/ `
+    <span class="icon" style="background-color:transparent">
+        <img src="uploads/avatars/${username}.png"></span>
+        ${username}
+    <span id=userLogout class="logout_icon"></span>
+    `;
+}
