@@ -1,12 +1,21 @@
+/*
+ *
+ * Page elements
+ *
+ */
 const deb = console.log.bind(window.console);
 const PRL = document.getElementById('PRL');
 const expandSubLists = document.getElementById('expandSubLists');
 const navLinks = document.querySelectorAll('nav li');
-
 var screenSize, toggleSubLists;
 
-//
-// handle SIDEBAR clicks
+
+/*
+ *
+ * Adding an event listener to the navLinks.
+ * Adding classes to the list elements.
+ *
+ */
 navLinks.forEach(function(nav_links) {
     nav_links.addEventListener('click', (el) => {
         let link = el.target.parentElement;
@@ -51,8 +60,11 @@ navLinks.forEach(function(nav_links) {
     });
 });
 
-
-
+/**
+ *
+ * It toggles the class of the navLinks to expand all SubLists.
+ *
+ */
 expandSubLists.addEventListener('click', expandAllSublists);
 
 function expandAllSublists() {
@@ -68,8 +80,11 @@ function expandAllSublists() {
         toggleSubLists = 1;
     }
 }
-//
-// TOGGLE SIDEBAR
+/*
+ *
+ * Adding a class to the body of the page to show the sidebar.
+ *
+ */
 document.getElementById('toggleSidebar').addEventListener('click', (e) => {
     PRL.classList.toggle('sidebar');
 
@@ -89,8 +104,12 @@ document.getElementById('toggleSidebar').addEventListener('click', (e) => {
 });
 
 /**
+ *
  *  The above code is adding a class to the body of the page depending on the width of the browser.
+ *
  */
+toggleView();
+window.addEventListener('resize', toggleView);
 
 function toggleView() {
     const breakpoints = [{
@@ -125,18 +144,19 @@ function toggleView() {
     });
 }
 
-toggleView();
-window.addEventListener('resize', toggleView);
+/**
+ *
+ * The function `toggleTheme` takes the current theme and adds one to it.
+ *
+ */
 
-//
-// COLOR SWITCH
-//
-// const modes = ['sleek', 'github', 'dark', 'light', 'color'];
 const modes = ['dark', 'light'];
+
 // check localStorage for colorStyle
 if (localStorage.getItem('colorStyle')) {
     document.documentElement.setAttribute('data-theme', localStorage.getItem('colorStyle'));
 }
+
 // set default mode (if no :root{})
 else {
     document.documentElement.setAttribute('data-theme', modes[0]);
@@ -150,6 +170,7 @@ function toggleTheme() {
     localStorage.setItem('colorStyle', modes[modeIndex]);
     document.documentElement.setAttribute('data-theme', modes[modeIndex]);
 }
+
 // create toggle button after DOM is loaded
 document.addEventListener('DOMContentLoaded', (event) => {
     let ThemeToggle = document.createElement('span');

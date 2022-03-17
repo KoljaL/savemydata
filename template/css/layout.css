@@ -390,6 +390,10 @@ nav li ul.subList li {
     height: 27px
 }
 
+.sidebar nav li.allExpanded ul.subList li {
+    height: 27px
+}
+
 .link_text {
     display: inline-block;
     padding: 12px 0 12px 1em;
