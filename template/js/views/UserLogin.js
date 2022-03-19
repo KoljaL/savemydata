@@ -74,9 +74,7 @@ let Content = async() => {
             ${Form.inputText({
                 name: "userlogin",
                 type: "text",
-                width: "150px",
-                min: "100px",
-                max: "300px",
+                // widths: "100/150/300", 
                 label: "Login",
                 placeholder: "Username or Email",
                 value: "admin",
@@ -86,9 +84,8 @@ let Content = async() => {
             ${Form.inputText({
                 name: "password",
                 type: "password",
-                width: "150px",
-                min: "100px",
-                max: "300px",
+                widths: "100px/150/300em",
+            
                 label: "Password",
                 placeholder: "secret...",
                 value: "password",

@@ -55,9 +55,7 @@ let Content = async() => {
             ${Form.inputText({
                 name: "Name",
                 type: "text",
-                width: "150px",
-                min: "100px",
-                max: "300px",
+                widths:"100/150/300", 
                 label: "Name",
                 placeholder: "Placeholder",
                 value: "",
@@ -67,9 +65,7 @@ let Content = async() => {
             ${Form.inputText({
                 name: "Lastname",
                 type: "text",
-                width: "150px",
-                min: "100px",
-                max: "300px",
+                widths:"100/150/300",  
                 label: "Lastname",
                 placeholder: "Placeholder",
                 value: "",
@@ -79,9 +75,7 @@ let Content = async() => {
             ${Form.inputText({
                 name: "tel",
                 type: "tel",
-                width: "240px",
-                min: "240px",
-                max: "234px",
+                widths:"100/150/300",  
                 label: "Phone",
                 placeholder: '000-000',
                 value: ''
@@ -91,9 +85,7 @@ let Content = async() => {
             ${Form.inputText({
                 name: "email",
                 type: "email",
-                width: "200px",
-                min: "200px",
-                max: "200px",
+                widths:"100/150/300", 
                 label: "Email",
                 placeholder: "user@domain.org",
                 value: "",
@@ -103,9 +95,7 @@ let Content = async() => {
             ${Form.inputText({
                 name: "password",
                 type: "password",
-                width: "150px",
-                min: "100px",
-                max: "200px",
+                widths:"100/150/300", 
                 label: "Password",
                 placeholder: "top secret",
                 value: "",
@@ -115,9 +105,7 @@ let Content = async() => {
             ${Form.inputText({
                 name: "date",
                 type: "date",
-                width: "180px",
-                min: "180px",
-                max: "180px",
+                widths:"180/180/180", 
                 label: "Date",
             })}
 
@@ -125,9 +113,7 @@ let Content = async() => {
             ${Form.inputText({
                 name: "time",
                 type: "time",
-                width: "110px",
-                min: "110px",
-                max: "110px",
+                widths:"110/110/110", 
                 label: "Time",
             })}
             
@@ -135,9 +121,7 @@ let Content = async() => {
             ${Form.inputText({
                 name: "datetime-local",
                 type: "datetime-local",
-                width: "260px",
-                min: "260px",
-                max: "260px",
+                widths:"260/260/260", 
                 label: "Datetime-local",
                 value: '2022-03-17T14:00'
             })}
@@ -146,9 +130,7 @@ let Content = async() => {
             ${Form.inputText({
                 name: "number",
                 type: "number",
-                width: "60px",
-                min: "40px",
-                max: "84px",
+                widths:"40/60/90",
                 label: "Number",
                 value: '202'
             })}
@@ -157,9 +139,7 @@ let Content = async() => {
             ${Form.inputText({
                 name: "search",
                 type: "search",
-                width: "240px",
-                min: "240px",
-                max: "234px",
+                widths:"100/150/300",  
                 label: "Search",
                 placeholder: 'looking for...'
             })}

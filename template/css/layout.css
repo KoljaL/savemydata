@@ -428,6 +428,13 @@ nav ul {
     margin: 15px;
 }
 
+[data-theme=dark-boxes] li:not(ul.subList li).active,
+[data-theme=light-boxes] li:not(ul.subList li).active {
+    box-shadow: 2px 2px 0 black;
+    transform: translate(2px, 2px);
+    transition: 0.1s;
+}
+
 nav ul>li {
     position: relative;
     list-style: none;
@@ -468,6 +475,11 @@ nav li ul.subList li {
     font-family: 'Zilla Slab Medium', sans-serif;
     font-size: 1rem;
     letter-spacing: .1rem;
+}
+
+[data-theme=dark-boxes] .link_text,
+[data-theme=light-boxes] .link_text {
+    padding: 6px 0 6px 1em;
 }
 
 .subList .link_text {

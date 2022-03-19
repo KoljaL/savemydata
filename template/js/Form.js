@@ -44,17 +44,27 @@ let Forms = {
         // catch undefined value
         if (!d.value) d.value = '';
 
-        // create input element 
-        let width = d.width || 'inherit';
-        let min = d.min || 'inherit';
-        let max = d.max || 'inherit';
-        let input = /*HTML*/ `
-        <div class="FF-item" style="flex-basis:${width};max-width:${max};min-width:${min};">
+        // get the three widths from one value
+        let flexWidth;
+        if (d.widths) {
+            const widths = d.widths.split('/');
+            widths.map(function(el, i) {
+                // check if a width has a size, if not add pixel
+                if (!isNaN(widths[i].slice(-2))) {
+                    widths[i] = widths[i] + 'px';
+                }
+            })
+            flexWidth = /*HTML*/ `min-width:${widths[0]}; flex-basis:${widths[1]}; max-width:${widths[2]};`
+                // deb(flexWidth)
+        }
+
+        // return input element  
+        return /*HTML*/ `
+        <div class="FF-item" style="${flexWidth}">
             <input id=${d.name} name=${d.name} type="${d.type}" placeholder="${d.placeholder}" value="${d.value}" required>
             <label for=${d.name}>${d.label}</label>
         </div>`;
 
-        return input;
     },
 
 };
