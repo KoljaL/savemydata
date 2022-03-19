@@ -10,6 +10,8 @@ let Forms = {
      */
     inputText: (d) => {
         // console.log(d)
+        let flexWidth, hideEdit;
+
 
         // set size for mobile view
         if (576 > window.innerWidth) {
@@ -45,7 +47,6 @@ let Forms = {
         if (!d.value) d.value = '';
 
         // get the three widths from one value
-        let flexWidth;
         if (d.widths) {
             const widths = d.widths.split('/');
             widths.map(function(el, i) {
@@ -58,10 +59,14 @@ let Forms = {
                 // deb(flexWidth)
         }
 
+        if (d.hideEdit) {
+            hideEdit = 'hideEdit'
+        }
+
         // return input element  
         return /*HTML*/ `
         <div class="FF-item" style="${flexWidth}">
-            <input id=${d.name} name=${d.name} type="${d.type}" placeholder="${d.placeholder}" value="${d.value}" required>
+            <input id=${d.name} class="${hideEdit}" name=${d.name} type="${d.type}" placeholder="${d.placeholder}" value="${d.value}" required>
             <label for=${d.name}>${d.label}</label>
         </div>`;
 

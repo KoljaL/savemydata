@@ -69,7 +69,8 @@ div.FF-item>* {
 div.FF-item input {
     outline: none;
     padding: 0.3em .3em .2em .4em;
-    border: 1px solid var(--border_0);
+    border: none;
+    outline: var(--border_0) solid 1px;
     transition: all 0.5s ease-in-out;
     border-radius: 0.2em;
 }
@@ -85,7 +86,8 @@ div.FF-item input {
 div.FF-item input:focus {
     transition: all 0.5s ease-in-out;
     background: #383838;
-    border: 1px solid var(--border_0);
+    border: none;
+    outline: var(--border_0) solid 1px;
     transition: 0.1s;
 }
 
@@ -117,6 +119,14 @@ div.FF-item input:focus+label {
     transition: all 0.5s ease-in-out;
     top: -1.6em;
     font-size: 0.9em;
+}
+
+.FF-item input.hideEdit {
+    background: transparent!important;
+    /* border: 1px solid transparent!important; */
+    box-shadow: 4px 4px 0 transparent!important;
+    outline: none!important;
+    pointer-events: none!important;
 }
 
 

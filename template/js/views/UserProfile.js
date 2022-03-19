@@ -33,13 +33,7 @@ let Style = async() => {
            color: var(--fontBlue);
        }
 
-       .editField.noEdit .FF-item input{
-           background: transparent; 
-           border: none;
-           box-shadow: none;
-           outline: none;
-           pointer-events: none;
-       }
+ 
     `;
     Functions.createStyle('UserLogin_style', styleTags);
 };
@@ -81,27 +75,28 @@ let getUserData = async() => {
                 const user = res.data;
                 let innerHTML = /*HTML*/ `
                      
+                <div id=insideform class="FF-row">
         
 
-                <div class="editField noEdit">
-                ${Form.inputText({
-                    name: "Username",
-                    type: "text",
-                    widths: "100/150/300", 
-                    label: "Username",
-                    value: user.username,
-                })}
-            </div>
+                    ${Form.inputText({
+                        name: "Username",
+                        type: "text",
+                        widths: "100/150/300", 
+                        hideEdit: true,
+                        label: "Username",
+                        value: user.username,
+                    })}
 
-            <div class="editField noEdit">
-            ${Form.inputText({
-                name: "Email",
-                type: "text",
-                widths: "100/150/300", 
-                label: "Email",
-                value: user.email,
-            })}
-        </div>
+                    ${Form.inputText({
+                        name: "Email",
+                        type: "text",
+                        widths: "100/150/300", 
+                        hideEdit: true,
+                        label: "Email",
+                        value: user.email,
+                    })}
+
+                </div>
 
 
 
@@ -122,9 +117,9 @@ let getUserData = async() => {
 let addEditFunction = async() => {
 
     document.getElementById('editButton').addEventListener('click', function() {
-        document.querySelectorAll('#editArea .editField').forEach(el => {
+        document.querySelectorAll('#editArea input').forEach(el => {
             deb(el)
-            el.classList.toggle('noEdit')
+            el.classList.toggle('hideEdit')
         });
 
     })
