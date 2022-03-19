@@ -149,7 +149,7 @@ function toggleView() {
  *
  */
 
-const modes = ['dark', 'light'];
+const modes = ['dark', 'dark-boxes', 'light', 'light-boxes', ];
 
 // check localStorage for colorStyle
 if (localStorage.getItem('colorStyle')) {

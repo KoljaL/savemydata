@@ -53,7 +53,7 @@ let Content = async() => {
             <div id=insideform class="FF-row">
  
             ${Form.inputText({
-                name: "text",
+                name: "Name",
                 type: "text",
                 width: "150px",
                 min: "100px",
@@ -65,7 +65,7 @@ let Content = async() => {
 
 
             ${Form.inputText({
-                name: "text",
+                name: "Lastname",
                 type: "text",
                 width: "150px",
                 min: "100px",

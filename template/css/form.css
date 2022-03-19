@@ -74,10 +74,28 @@ div.FF-item input {
     border-radius: 0.2em;
 }
 
+[data-theme=dark-boxes] div.FF-item input,
+[data-theme=light-boxes] div.FF-item input {
+    border: none;
+    outline: black solid 1px;
+    box-shadow: 4px 4px 0 black;
+    border-radius: 0;
+}
+
 div.FF-item input:focus {
     transition: all 0.5s ease-in-out;
     background: #383838;
     border: 1px solid var(--border_0);
+    transition: 0.1s;
+}
+
+[data-theme=dark-boxes] div.FF-item input:focus,
+[data-theme=light-boxes] div.FF-item input:focus {
+    border: none;
+    outline: black solid 1px;
+    box-shadow: 2px 2px 0 black;
+    transform: translate(2px, 2px);
+    transition: 0.1s;
 }
 
 div.FF-item label {
