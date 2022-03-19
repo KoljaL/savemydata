@@ -103,10 +103,10 @@ div.FF-item input:focus {
 div.FF-item label {
     font-family: 'Zilla Slab Medium', sans-serif;
     font-weight: 400;
+    color: var(--font_0);
     position: absolute;
     background: transparent;
     white-space: nowrap;
-    font-family: serif;
     font-size: 1em;
     padding: 0.3em;
     left: 0.1em;
@@ -119,6 +119,7 @@ div.FF-item input:focus+label {
     transition: all 0.5s ease-in-out;
     top: -1.6em;
     font-size: 0.9em;
+    color: var(--font_2);
 }
 
 .FF-item input.hideEdit {
@@ -127,6 +128,10 @@ div.FF-item input:focus+label {
     box-shadow: 4px 4px 0 transparent!important;
     outline: none!important;
     pointer-events: none!important;
+}
+
+.FF-item input.successEdit {
+    outline: 1px solid var(--fontGreen);
 }
 
 

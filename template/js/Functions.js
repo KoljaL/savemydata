@@ -261,6 +261,10 @@ let Functions = {
     /* This code is fetching the data from the API and returning it. */
     getAPIdata: async(URL, FormId) => {
         // deb(FormId)
+        if (URL !== 'login') {
+            FormId.append('user_id', Functions.getLocal('id'));
+            FormId.append('user_token', Functions.getLocal('token'));
+        }
         var formData;
         if (FormId.tagName) {
             formData = new FormData(FormId);
@@ -269,7 +273,7 @@ let Functions = {
             formData = FormId;
         }
 
-
+        deb(formData)
         formData = JSON.stringify(Object.fromEntries(formData));
         const response = await fetch(URL, {
             method: 'POST',

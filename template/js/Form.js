@@ -10,7 +10,7 @@ let Forms = {
      */
     inputText: (d) => {
         // console.log(d)
-        let flexWidth, hideEdit;
+        let flexWidth, hideEdit, dataDB;
 
 
         // set size for mobile view
@@ -43,8 +43,13 @@ let Forms = {
             d.value = date.toISOString().slice(0, 16);
         }
 
-        // catch undefined value
+        // catch undefined value & placeholder
         if (!d.value) d.value = '';
+        if (!d.placeholder) d.placeholder = '';
+
+        if (d.db) {
+            dataDB = ` data-db="${d.db}" `;
+        }
 
         // get the three widths from one value
         if (d.widths) {
@@ -66,7 +71,15 @@ let Forms = {
         // return input element  
         return /*HTML*/ `
         <div class="FF-item" style="${flexWidth}">
-            <input id=${d.name} class="${hideEdit}" name=${d.name} type="${d.type}" placeholder="${d.placeholder}" value="${d.value}" required>
+            <input 
+            id=${d.name} 
+            class="${hideEdit}" 
+            name=${d.name} 
+            type="${d.type}" 
+            placeholder="${d.placeholder}" 
+            value="${d.value}" 
+            ${dataDB}
+            required>
             <label for=${d.name}>${d.label}</label>
         </div>`;
 

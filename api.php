@@ -75,12 +75,13 @@ if ( $request ) {
  * If it is, it will call the `userlogin` function.
  *
 */
+
 if ( 'login' === $endpoint ) {
     login_user( $request );
     exit;
 } else {
 
-    $TOKEN = JWT::decode( $request['token'], new Key( $JWT_key, 'HS256' ) );
+    $TOKEN = JWT::decode( $request['user_token'], new Key( $JWT_key, 'HS256' ) );
     $TOKEN = json_decode( json_encode( $TOKEN ), true );
 
     // print_r( $TOKEN['id'] );
@@ -121,10 +122,9 @@ case 'admin':
     require __DIR__.'/php/sqladmin.php';
     break;
 
-case '':
-    // echo "test";
-    // header("Location: template/index.html");
-    // include('index.html');
+case 'singleedit':
+    singleedit( $request );
+    break;
 
     break;
 default:
@@ -148,6 +148,36 @@ default:
 
 // https://phpdelusions.net/pdo_examples/select
 
+function singleedit( $param ) {
+    if ( isAllowed() ) {
+
+        global $db;
+        $response = [];
+
+        $sql  = "UPDATE $param[table] SET $param[update]=? WHERE $param[where]=?";
+        $stmt = $db->prepare( $sql );
+        $stmt->execute( [$param['value'], $param['equal']] );
+
+        if ( $stmt ) {
+            $response['code'] = 200;
+            $response['data'] = $stmt;
+
+        } else {
+            $response['code']    = 400;
+            $response['message'] = 'no user found';
+        }
+
+        // return response
+        return_JSON( $response );
+    }
+    // not allowed
+    else {
+        $response['code']    = 400;
+        $response['message'] = 'vorbidden';
+        return_JSON( $response );
+    }
+}
+
 /**
  * If the user is the owner of the token or the user is an admin, then return true
  *
@@ -158,7 +188,7 @@ default:
  */
 function isAllowed( $action = '' ) {
     global $TOKEN, $request;
-    if ( $request['id'] === $TOKEN['id'] || "0" === $TOKEN['role'] ) {
+    if ( $request['user_id'] === $TOKEN['id'] || "0" === $TOKEN['role'] ) {
         return true;
     }
 }
