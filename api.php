@@ -34,7 +34,7 @@ $JWT_key = 'example_key';
 //
 */
 
-$db_path = 'db/sqlite11e11d11.db';
+$db_path = 'db/db.db';
 /*
  *
  * This is a way to check if the database exists. If it doesn't exist, it will create it.
@@ -80,14 +80,8 @@ if ( 'login' === $endpoint ) {
     login_user( $request );
     exit;
 } else {
-
     $TOKEN = JWT::decode( $request['user_token'], new Key( $JWT_key, 'HS256' ) );
     $TOKEN = json_decode( json_encode( $TOKEN ), true );
-
-    // print_r( $TOKEN['id'] );
-    // return_JSON( [$request['id']] );
-    // exit;
-
 }
 
 /*
@@ -112,16 +106,17 @@ switch ( $endpoint ) {
 case 'userprofile':
     get_user_profile( $request );
     break;
+
 case 'userlist':
     get_user_list( $request );
     break;
 
-case 'login':
-    login_user( $request );
+case 'newuser':
+    new_user( $request );
     break;
 
-case 'admin':
-    require __DIR__.'/php/sqladmin.php';
+case 'login':
+    login_user( $request );
     break;
 
 case 'singleedit':
@@ -150,6 +145,32 @@ default:
 
 // https://phpdelusions.net/pdo_examples/select
 
+function new_user( $param ) {
+    if ( isAllowed() ) {
+
+        global $db;
+        $response = [];
+
+        create_user( $param );
+
+    } else {
+        $response['code']    = 400;
+        $response['message'] = 'vorbidden';
+        return_JSON( $response );
+    }
+}
+
+/*
+//
+//  ##     ##  ######  ######## ########  ##       ####  ######  ########
+//  ##     ## ##    ## ##       ##     ## ##        ##  ##    ##    ##
+//  ##     ## ##       ##       ##     ## ##        ##  ##          ##
+//  ##     ##  ######  ######   ########  ##        ##   ######     ##
+//  ##     ##       ## ##       ##   ##   ##        ##        ##    ##
+//  ##     ## ##    ## ##       ##    ##  ##        ##  ##    ##    ##
+//   #######   ######  ######## ##     ## ######## ####  ######     ##
+//
+*/
 function get_user_list( $request ) {
     if ( isAllowed() ) {
 
@@ -184,6 +205,22 @@ function get_user_list( $request ) {
     }
 }
 
+/*
+//
+//   ######  #### ##    ##  ######   ##       ########    ######## ########  #### ########
+//  ##    ##  ##  ###   ## ##    ##  ##       ##          ##       ##     ##  ##     ##
+//  ##        ##  ####  ## ##        ##       ##          ##       ##     ##  ##     ##
+//   ######   ##  ## ## ## ##   #### ##       ######      ######   ##     ##  ##     ##
+//        ##  ##  ##  #### ##    ##  ##       ##          ##       ##     ##  ##     ##
+//  ##    ##  ##  ##   ### ##    ##  ##       ##          ##       ##     ##  ##     ##
+//   ######  #### ##    ##  ######   ######## ########    ######## ########  ####    ##
+//
+*/
+/**
+ *
+ * This function is used to update a single field in a table
+ *
+ */
 function singleedit( $param ) {
     if ( isAllowed() ) {
 
@@ -217,13 +254,21 @@ function singleedit( $param ) {
     }
 }
 
+/*
+//
+//  ####  ######        ###    ##       ##        #######  ##      ## ######## ########
+//   ##  ##    ##      ## ##   ##       ##       ##     ## ##  ##  ## ##       ##     ##
+//   ##  ##           ##   ##  ##       ##       ##     ## ##  ##  ## ##       ##     ##
+//   ##   ######     ##     ## ##       ##       ##     ## ##  ##  ## ######   ##     ##
+//   ##        ##    ######### ##       ##       ##     ## ##  ##  ## ##       ##     ##
+//   ##  ##    ##    ##     ## ##       ##       ##     ## ##  ##  ## ##       ##     ##
+//  ####  ######     ##     ## ######## ########  #######   ###  ###  ######## ########
+//
+*/
 /**
+ *
  * If the user is the owner of the token or the user is an admin, then return true
  *
- * @param action The action to be performed.
- *
- * @return The return value is a boolean value. If the function is allowed to execute, it will return
- * true. If it is not allowed to execute, it will return false.
  */
 function isAllowed( $action = '' ) {
     global $TOKEN, $request;
@@ -232,10 +277,20 @@ function isAllowed( $action = '' ) {
     }
 }
 
+/*
+//
+//   ######   ######## ########    ##     ##  ######  ######## ########     ########  ########   #######  ######## #### ##       ########
+//  ##    ##  ##          ##       ##     ## ##    ## ##       ##     ##    ##     ## ##     ## ##     ## ##        ##  ##       ##
+//  ##        ##          ##       ##     ## ##       ##       ##     ##    ##     ## ##     ## ##     ## ##        ##  ##       ##
+//  ##   #### ######      ##       ##     ##  ######  ######   ########     ########  ########  ##     ## ######    ##  ##       ######
+//  ##    ##  ##          ##       ##     ##       ## ##       ##   ##      ##        ##   ##   ##     ## ##        ##  ##       ##
+//  ##    ##  ##          ##       ##     ## ##    ## ##       ##    ##     ##        ##    ##  ##     ## ##        ##  ##       ##
+//   ######   ########    ##        #######   ######  ######## ##     ##    ##        ##     ##  #######  ##       #### ######## ########
+//
+*/
 /**
  *
  * This function is used to get a user profile
- *
  *
  */
 function get_user_profile( $param ) {
@@ -267,6 +322,17 @@ function get_user_profile( $param ) {
     }
 }
 
+/*
+//
+//   ######  ########  ########    ###    ######## ########    ##     ##  ######  ######## ########
+//  ##    ## ##     ## ##         ## ##      ##    ##          ##     ## ##    ## ##       ##     ##
+//  ##       ##     ## ##        ##   ##     ##    ##          ##     ## ##       ##       ##     ##
+//  ##       ########  ######   ##     ##    ##    ######      ##     ##  ######  ######   ########
+//  ##       ##   ##   ##       #########    ##    ##          ##     ##       ## ##       ##   ##
+//  ##    ## ##    ##  ##       ##     ##    ##    ##          ##     ## ##    ## ##       ##    ##
+//   ######  ##     ## ######## ##     ##    ##    ########     #######   ######  ######## ##     ##
+//
+*/
 /**
  *
  * Create a new user in the database
@@ -274,18 +340,21 @@ function get_user_profile( $param ) {
  */
 function create_user( $param ) {
     global $db;
-    $insert = $db->prepare( 'INSERT INTO user (`username`, `password`, `email`, `role`, `permission`, `date`) VALUES (:username, :password, :email, :role,:permission, :date)' );
-    $insert->bindValue( ':username', $param['username'] );
-    $insert->bindValue( ':password', password_hash( $param['password'], PASSWORD_DEFAULT ) );
-    $insert->bindValue( ':email', $param['email'] );
-    $insert->bindValue( ':role', $param['role'] );
-    $insert->bindValue( ':permission', $param['permission'] );
-    $insert->bindValue( ':date', date( 'd.m.Y H:i:s' ) );
+    $stmt = $db->prepare( 'INSERT INTO user (`username`, `password`, `email`, `role`, `permission`, `date`) VALUES (:username, :password, :email, :role,:permission, :date)' );
+    $stmt->bindValue( ':username', $param['username'] );
+    $stmt->bindValue( ':password', password_hash( $param['password'], PASSWORD_DEFAULT ) );
+    $stmt->bindValue( ':email', $param['email'] );
+    $stmt->bindValue( ':role', $param['role'] );
+    $stmt->bindValue( ':permission', $param['permission'] );
+    $stmt->bindValue( ':date', date( 'd.m.Y H:i:s' ) );
 
     $response = [];
-    if ( $insert->execute() ) {
-        $response['code']    = 200;
-        $response['message'] = 'user '.$param['username'].' created';
+    if ( $stmt->execute() ) {
+        $count = $stmt->rowCount();
+
+        $response['data']['id'] = $db->lastInsertId();
+        $response['code']       = 200;
+        $response['message']    = 'user '.$param['username'].' created';
 
     } else {
         $response['code']    = 400;
@@ -296,6 +365,17 @@ function create_user( $param ) {
     return_JSON( $response );
 }
 
+/*
+//
+//  ##        #######   ######   #### ##    ##    ##     ##  ######  ######## ########
+//  ##       ##     ## ##    ##   ##  ###   ##    ##     ## ##    ## ##       ##     ##
+//  ##       ##     ## ##         ##  ####  ##    ##     ## ##       ##       ##     ##
+//  ##       ##     ## ##   ####  ##  ## ## ##    ##     ##  ######  ######   ########
+//  ##       ##     ## ##    ##   ##  ##  ####    ##     ##       ## ##       ##   ##
+//  ##       ##     ## ##    ##   ##  ##   ###    ##     ## ##    ## ##       ##    ##
+//  ########  #######   ######   #### ##    ##     #######   ######  ######## ##     ##
+//
+*/
 /**
  *
  * This function is used to login a user. It takes in a username and password, and checks if the user

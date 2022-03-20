@@ -4,12 +4,13 @@ import Form from '../Form.js';
 
 export default {
     render: async(userID) => {
+
         Functions.pageTitle(`Login`);
         await Style();
         await Content();
         await getUserData(userID);
         await dropDownEvent();
-
+        await addNewUser();
         await addEditFunction();
     },
 };
@@ -29,10 +30,8 @@ let Style = async() => {
            position: relative;
            widht:100%; 
        }
-       #editButton{
-            // position: absolute;
-            // left: 0px;
-            // top: -2em;
+       #newUserButton,
+       #editButton{ 
             font-size: 14px;
             cursor:pointer;
             color: var(--font_0);
@@ -45,13 +44,15 @@ let Style = async() => {
             transition: all 0.5s ease-in-out;
             border-radius: 0.2em;
             font-size: 1em;
+           margin-left: 1em;
+
        }
+       #newUserButton:hover,
        #editButton:hover{
            color: var(--fontBlue);
        }
 
        #UserProfileList {
-           margin-right: 2em;
         display: inline-block;
       }
 
@@ -69,6 +70,7 @@ let Content = async() => {
             <h2>Profile</h2> 
             <div id=UserProfileList>${await UserList.render('dropdown')}</div>
             <span id="editButton">Edit</span>
+            <span id="newUserButton">New</span>
             <br>
             <div id=editArea>
                 <div id=Userdata></div>
@@ -78,30 +80,81 @@ let Content = async() => {
 };
 
 
+let addNewUser = () => {
+    const currentUserRole = Functions.getLocal('role');
+
+    if (currentUserRole === '0') {
+
+        document.getElementById('newUserButton').addEventListener('click', (button) => {
+            if ('Save' === button.target.innerHTML) {
+                deb('SAVE')
+
+                let userProfilForm = document.getElementById('userProfilForm')
+                userProfilForm = new FormData(userProfilForm);
+                Functions.getAPIdata('newuser', userProfilForm)
+                    .then((res) => {
+                        deb(res)
+                        if (res.code === 200) {
+                            window.location.hash = '#user/profile/' + res.data.id;
+                        }
+                    })
+            }
+
+            if ('New' === button.target.innerHTML) {
+                deb('NEW')
+                document.querySelectorAll('#editArea input').forEach(el => {
+                    delete el.dataset.db;
+                    el.value = '';
+                    el.classList.remove('hideEdit');
+                    button.target.innerHTML = 'Save';
+                });
+            }
+        })
+
+    }
+    // if not admin, delete this button
+    else {
+        document.getElementById('newUserButton').remove();
+    }
+}
+
+
+
 let dropDownEvent = () => {
+    const currentUserRole = Functions.getLocal('role');
+
+    if (currentUserRole === '0') {
         document.getElementById('UserListSelect').addEventListener('change', (el) => {
             // deb(el.target.value)
             window.location.hash = '#user/profile/' + el.target.value;
 
         })
+    } else {
+        document.getElementById('UserProfileList').remove();
     }
-    /**
-     * It gets the user data from the API and displays it on the page.
-     */
+}
+
+
+
+
+/**
+ * It gets the user data from the API and displays it on the page.
+ */
 let getUserData = async(userID) => {
 
+    const currentUserRole = Functions.getLocal('role');
 
     var formData = new FormData();
     formData.append('id', userID);
-    var currentUserRole = Functions.getLocal('role');
     // getAPIdata (endpoint, formID)
-    Functions.getAPIdata('userprofile', formData).then((res) => {
-        // deb(res);
-        if (res.code === 200) {
-            const user = res.data;
-            let innerHTML = /*HTML*/ `
+    Functions.getAPIdata('userprofile', formData)
+        .then((res) => {
+            // deb(res);
+            if (res.code === 200) {
+                const user = res.data;
+                let innerHTML = /*HTML*/ `
                      
-                <div id=insideform class="FF-row">
+                <form id=userProfilForm class="FF-row">
         
 
                     ${Form.inputText({
@@ -130,7 +183,7 @@ let getUserData = async(userID) => {
                         widths: '100/150/300',
                         edit: 'hide',
                         label: 'Password',
-                        value: user.email,
+                        value: 'xxx',
                         db: 'password/user/id/' + user.id,
                     })}
 
@@ -157,19 +210,19 @@ let getUserData = async(userID) => {
                         db: 'permission/user/id/' + user.id,
                     })}
 
-                </div>
+                </form>
 
 
 
                         `;
-            Functions.setInnerHTML('Userdata', innerHTML);
-        }
-        // return error message
-        else {
-            let innerHTML = /*HTML*/ `<div id="T_UserLoginForm"> ${res.message}</div>`;
-            Functions.setInnerHTML('Userdata', innerHTML);
-        }
-    });
+                Functions.setInnerHTML('Userdata', innerHTML);
+            }
+            // return error message
+            else {
+                let innerHTML = /*HTML*/ `<div id="T_UserLoginForm"> ${res.message}</div>`;
+                Functions.setInnerHTML('Userdata', innerHTML);
+            }
+        });
 };
 
 let addEditFunction = async() => {
