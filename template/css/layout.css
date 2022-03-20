@@ -217,7 +217,7 @@ a {
 /* scrollbar */
 
 * {
-    scrollbar-color: #696969 green;
+    scrollbar-color: #696969 var(--bg_2);
     scrollbar-width: thin;
 }
 

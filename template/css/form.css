@@ -39,6 +39,7 @@ input[type="submit"]:hover {
     background: var(--bg_1);
 }
 
+select,
 input[type="submit"],
 input[type="text"],
 input[type="date"],
@@ -54,6 +55,13 @@ input[type="time"] {
     color: var(--font_0);
     background: var(--bg_3);
     line-height: 1.2em;
+    outline: none;
+    padding: 0.3em .3em .2em .4em;
+    border: none;
+    outline: var(--border_0) solid 1px;
+    transition: all 0.5s ease-in-out;
+    border-radius: 0.2em;
+    font-size: 1em;
 }
 
 div.FF-item {
@@ -66,14 +74,15 @@ div.FF-item>* {
     /* font-size: clamp(2vw, 2vw, 3vw); */
 }
 
-div.FF-item input {
+
+/* div.FF-item input {
     outline: none;
     padding: 0.3em .3em .2em .4em;
     border: none;
     outline: var(--border_0) solid 1px;
     transition: all 0.5s ease-in-out;
     border-radius: 0.2em;
-}
+} */
 
 [data-theme=dark-boxes] div.FF-item input,
 [data-theme=light-boxes] div.FF-item input {

@@ -111,7 +111,9 @@ if ( 'login' === $endpoint ) {
 switch ( $endpoint ) {
 case 'userprofile':
     get_user_profile( $request );
-
+    break;
+case 'userlist':
+    get_user_list( $request );
     break;
 
 case 'login':
@@ -148,9 +150,46 @@ default:
 
 // https://phpdelusions.net/pdo_examples/select
 
+function get_user_list( $request ) {
+    if ( isAllowed() ) {
+
+        global $db;
+        $response = [];
+
+        $stmt = $db->prepare( "SELECT * FROM user" );
+        $stmt->execute();
+        $users = $stmt->fetchAll( PDO::FETCH_ASSOC );
+
+        if ( $users ) {
+
+            // unset password from list
+            foreach ( array_keys( $users ) as $key ) {
+                unset( $users[$key]['password'] );
+            }
+
+            $response['code'] = 200;
+            $response['data'] = $users;
+
+        } else {
+            $response['code']    = 400;
+            $response['message'] = 'no user found';
+        }
+
+        // return response
+        return_JSON( $response );
+    } else {
+        $response['code']    = 400;
+        $response['message'] = 'vorbidden';
+        return_JSON( $response );
+    }
+}
+
 function singleedit( $param ) {
     if ( isAllowed() ) {
 
+        if ( 'password' === $param['update'] ) {
+            $param['value'] = password_hash( $param['value'], PASSWORD_DEFAULT );
+        }
         global $db;
         $response = [];
 
