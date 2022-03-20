@@ -213,24 +213,34 @@ a {
     color: var(--fontBlue);
 }
 
- ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px
+
+/* scrollbar */
+
+* {
+    scrollbar-color: #696969 green;
+    scrollbar-width: thin;
 }
 
- ::-webkit-scrollbar-thumb {}
+ ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px
+}
 
  ::-webkit-scrollbar-track {
     background: 0 0
 }
 
-
-/* Handle */
+::-webkit-scrollbar-track-piece {
+    background-color: #232327;
+}
 
 ::-webkit-scrollbar-thumb {
-    /* background: var(--scrollbar) */
-    background: linear-gradient( #232327, #696969, #232327);
+    background: var(--scrollbar)
+    /* background: linear-gradient( #232327, #696969, #232327); */
 }
+
+
+/* transition for ALL  */
 
 * {
     transition: all .2s ease-in-out;

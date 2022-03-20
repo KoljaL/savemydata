@@ -286,34 +286,17 @@ let Functions = {
     },
 
 
-
-    // /* Fading the element in and out. */
-    // fadeWraper: (inout = 'out', el, int = 10) => {
-
-    //     var count = (inout === 'out') ? 1 : 0;
-
-    //     if (document.querySelector(el)) {
-    //         var interval = setInterval(() => {
-
-    //             document.querySelector(el).style.opacity = count;
-
-    //             if (inout === 'out') {
-    //                 count = count - .1;
-    //                 if (count < 0.01) {
-    //                     clearInterval(interval);
-    //                     document.querySelector(el).style.display = 'none';
-    //                 }
-    //             } else {
-    //                 count = count + .1;
-    //                 if (count > 1) {
-    //                     clearInterval(interval);
-    //                 }
-    //             }
-    //         }, int);
-    //     }
-    // },
-
-
+    /*
+    //  
+    //  ##     ##  ######  ######## ########  ##    ##    ###    ##     ## ########
+    //  ##     ## ##    ## ##       ##     ## ###   ##   ## ##   ###   ### ##
+    //  ##     ## ##       ##       ##     ## ####  ##  ##   ##  #### #### ##
+    //  ##     ##  ######  ######   ########  ## ## ## ##     ## ## ### ## ######
+    //  ##     ##       ## ##       ##   ##   ##  #### ######### ##     ## ##
+    //  ##     ## ##    ## ##       ##    ##  ##   ### ##     ## ##     ## ##
+    //   #######   ######  ######## ##     ## ##    ## ##     ## ##     ## ########
+    //  
+    */
 
     /* Setting the username in the navbar. */
     setUsername: async(username, userID) => {
@@ -324,7 +307,44 @@ let Functions = {
             <span id=userLogout class="logout_icon"></span>`;
 
         document.querySelector('#userprofile').setAttribute('data-link', 'user/profile/' + userID);
-    }
+    },
+
+    /*
+    //  
+    //   ######  #### ##    ##  ######   ##       ########    ######## ########  #### ########
+    //  ##    ##  ##  ###   ## ##    ##  ##       ##          ##       ##     ##  ##     ##
+    //  ##        ##  ####  ## ##        ##       ##          ##       ##     ##  ##     ##
+    //   ######   ##  ## ## ## ##   #### ##       ######      ######   ##     ##  ##     ##
+    //        ##  ##  ##  #### ##    ##  ##       ##          ##       ##     ##  ##     ##
+    //  ##    ##  ##  ##   ### ##    ##  ##       ##          ##       ##     ##  ##     ##
+    //   ######  #### ##    ##  ######   ######## ########    ######## ########  ####    ##
+    //  
+    */
+    /* This is the code that is used to update a single value in the database. */
+    singleEdit: async(el) => {
+        deb(el)
+        let db = el.dataset.db.split('/');
+
+        var formData = new FormData();
+        formData.append('update', db[0]);
+        formData.append('table', db[1]);
+        formData.append('where', db[2]);
+        formData.append('equal', db[3]);
+        formData.append('value', el.value);
+
+        Functions.getAPIdata('singleedit', formData)
+            .then((res) => {
+                deb(res);
+                if (200 === res.code) {
+                    el.classList.add('successEdit')
+                    setTimeout(() => {
+                        el.classList.remove('successEdit')
+                    }, 1000);
+                } else {
+                    el.classList.add('errorEdit')
+                }
+            });
+    },
 
 
 };

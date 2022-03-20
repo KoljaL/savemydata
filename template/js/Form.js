@@ -64,8 +64,11 @@ let Forms = {
                 // deb(flexWidth)
         }
 
-        if (d.hideEdit) {
+        if (d.edit === 'hide') {
             hideEdit = 'hideEdit'
+        }
+        if (d.edit === 'forbidden') {
+            hideEdit = 'forbiddenEdit'
         }
 
         // return input element  

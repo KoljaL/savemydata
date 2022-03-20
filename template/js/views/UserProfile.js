@@ -18,14 +18,18 @@ export default {
  */
 let Style = async() => {
     let styleTags = /*CSS*/ `
+        #T_UserLoginForm h2{
+            display:inline-block;
+            margin-right: 1em;
+        }
        #editArea{
            position: relative;
            widht:100%; 
        }
        #editButton{
-            position: absolute;
-            left: 0px;
-            top: -2em;
+            // position: absolute;
+            // left: 0px;
+            // top: -2em;
             font-size: 14px;
             cursor:pointer;
        }
@@ -35,7 +39,7 @@ let Style = async() => {
 
  
     `;
-    Functions.createStyle('UserLogin_style', styleTags);
+    Functions.createStyle('UserProfile_style', styleTags);
 };
 
 /**
@@ -45,12 +49,9 @@ let Content = async() => {
     let innerHTML = /*HTML*/ `
         <div id="T_UserLoginForm" class="template"> 
             <h2>Profile</h2> 
-            <br>
-
-            <div id=editArea>
             <span id="editButton">Edit</span>
-                
-
+            <br>
+            <div id=editArea>
                 <div id=Userdata></div>
             </div>
         </div>`;
@@ -63,8 +64,8 @@ let Content = async() => {
 let getUserData = async(userID) => {
     var formData = new FormData();
     formData.append('id', userID);
-
-    // getAPIdata (endpoint, formID)
+    var currentUserRole = Functions.getLocal('role')
+        // getAPIdata (endpoint, formID)
     Functions.getAPIdata('userprofile', formData).then((res) => {
         deb(res);
         if (res.code === 200) {
@@ -78,7 +79,7 @@ let getUserData = async(userID) => {
                         name: 'username',
                         type: 'text',
                         widths: '100/150/300',
-                        hideEdit: true,
+                        edit: 'hide',
                         label: 'Username',
                         value: user.username,
                         db: 'username/user/id/' + user.id,
@@ -88,10 +89,33 @@ let getUserData = async(userID) => {
                         name: 'email',
                         type: 'text',
                         widths: '100/150/300',
-                        hideEdit: true,
+                        edit: 'hide',
                         label: 'Email',
                         value: user.email,
                         db: 'email/user/id/' + user.id,
+                    })}
+
+
+                    ${Form.inputText({
+                        name: 'role',
+                        type: 'text',
+                        widths: '100/150/300',
+                        edit: (currentUserRole==='0')?'hide':'forbidden',
+                        label: 'Role',
+                        value: user.role,
+                        db: 'role/user/id/' + user.id,
+                    })}
+
+
+
+                    ${Form.inputText({
+                        name: 'permission',
+                        type: 'text',
+                        widths: '100/150/300',
+                        edit: (currentUserRole==='0')?'hide':'forbidden',
+                        label: 'Permission',
+                        value: user.permission,
+                        db: 'permission/user/id/' + user.id,
                     })}
 
                 </div>
@@ -100,11 +124,10 @@ let getUserData = async(userID) => {
 
                         `;
             Functions.setInnerHTML('Userdata', innerHTML);
-        } else {
-            let innerHTML = /*HTML*/ `
-                    <div id="T_UserLoginForm" class="template"> 
-                    ${res.message}
-                    </div>`;
+        }
+        // return error message
+        else {
+            let innerHTML = /*HTML*/ `<div id="T_UserLoginForm"> ${res.message}</div>`;
             Functions.setInnerHTML('Userdata', innerHTML);
         }
     });
@@ -114,31 +137,17 @@ let addEditFunction = async() => {
     document.getElementById('editButton').addEventListener('click', function() {
         document.querySelectorAll('#editArea input').forEach((input) => {
             // deb(input)
+
+            // make fields editable
             input.classList.toggle('hideEdit');
 
-            input.addEventListener('focusout', singleEdit);
+            // updata db on focusout
+            input.addEventListener('focusout', function(el) {
+
+                // update a single value in db
+                Functions.singleEdit(el.target)
+            });
         });
     });
 
-    function singleEdit() {
-        let db = this.dataset.db.split('/');
-
-        var formData = new FormData();
-        formData.append('update', db[0]);
-        formData.append('table', db[1]);
-        formData.append('where', db[2]);
-        formData.append('equal', db[3]);
-        formData.append('value', this.value);
-
-        Functions.getAPIdata('singleedit', formData)
-            .then((res) => {
-                deb(res);
-                if (200 === res.code)
-                    this.classList.add('successEdit')
-                setTimeout(() => {
-                    this.classList.remove('successEdit')
-
-                }, 1000);
-            });
-    }
 };

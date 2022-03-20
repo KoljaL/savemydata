@@ -154,17 +154,17 @@ function singleedit( $param ) {
         global $db;
         $response = [];
 
-        $sql  = "UPDATE $param[table] SET $param[update]=? WHERE $param[where]=?";
-        $stmt = $db->prepare( $sql );
-        $stmt->execute( [$param['value'], $param['equal']] );
-
-        if ( $stmt ) {
+        $sql    = "UPDATE $param[table] SET $param[update]=? WHERE $param[where]=?";
+        $stmt   = $db->prepare( $sql );
+        $update = $stmt->execute( [$param['value'], $param['equal']] );
+        $count  = $stmt->rowCount();
+        if ( $count ) {
             $response['code'] = 200;
-            $response['data'] = $stmt;
+            $response['data'] = $update;
 
         } else {
             $response['code']    = 400;
-            $response['message'] = 'no user found';
+            $response['message'] = 'no field updated';
         }
 
         // return response

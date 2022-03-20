@@ -122,16 +122,32 @@ div.FF-item input:focus+label {
     color: var(--font_2);
 }
 
+
+/* no borders & background if input is hideEdit */
+
 .FF-item input.hideEdit {
     background: transparent!important;
-    /* border: 1px solid transparent!important; */
     box-shadow: 4px 4px 0 transparent!important;
     outline: none!important;
     pointer-events: none!important;
 }
 
+.FF-item input.forbiddenEdit {
+    background: transparent!important;
+    box-shadow: 4px 4px 0 transparent!important;
+    outline: none!important;
+    pointer-events: none!important;
+}
+
+
+/* input border for singleEdit function */
+
 .FF-item input.successEdit {
     outline: 1px solid var(--fontGreen);
+}
+
+.FF-item input.errorEdit {
+    outline: 1px solid var(--fontRed);
 }
 
 
