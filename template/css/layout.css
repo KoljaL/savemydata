@@ -206,12 +206,18 @@ a {
     height: 8px
 }
 
- ::-webkit-scrollbar-thumb {
-    background: var(--scrollbar)
-}
+ ::-webkit-scrollbar-thumb {}
 
  ::-webkit-scrollbar-track {
     background: 0 0
+}
+
+
+/* Handle */
+
+::-webkit-scrollbar-thumb {
+    /* background: var(--scrollbar) */
+    background: linear-gradient( #232327, #696969, #232327);
 }
 
 * {

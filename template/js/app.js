@@ -16,13 +16,19 @@ import Solar from './views/Solar.js';
 
 // COMPONENTS
 // import CustomerListSelect from './components/CustomerListSelect.js';
-
+// https://gist.github.com/gre/1650294
 // LOAD ROUTER
 window.addEventListener('DOMContentLoaded', router);
 window.addEventListener('hashchange', router);
 
 async function router() {
-    Functions.fadeWraper('in', '#darkWrapper', 20);
+    // Functions.fadeWraper('in', '#darkWrapper', 20);
+    // await fadeOut('main', 200);
+    // document.querySelector('main').style.opacity = 0;
+    deb("1")
+    await fadeOut('main', 200)
+    deb("3")
+
 
     let request = Functions.parseRequestURL();
     let page = checkUserLoggedIn() || request.page;
@@ -57,15 +63,56 @@ async function router() {
             await Default.render();
             break;
     }
+    await fadeIn('main', 200);
 
     // Userlogin has its own fadeWrapper()
     if ('/' !== page) {
-        Functions.fadeWraper('out', '#darkWrapper', 20);
+        // Functions.fadeWraper('out', '#darkWrapper', 20);
     }
 
 }
 
+async function fadeIn(el, time) {
+    var count = 0;
+    if (document.querySelector(el)) {
 
+
+        var interval = setInterval(() => {
+
+            document.querySelector(el).style.opacity = count;
+
+            count = count + .1;
+            if (count > 1) {
+                clearInterval(interval);
+            }
+
+        }, time);
+
+
+    }
+}
+
+async function fadeOut(el, time) {
+
+    var count = 1;
+    if (document.querySelector(el)) {
+
+
+        var interval = setInterval(() => {
+            deb("2")
+
+            document.querySelector(el).style.opacity = count;
+
+            count = count - .1;
+            if (count < 0.01) {
+                clearInterval(interval);
+            }
+
+        }, time);
+
+
+    }
+}
 
 
 /**

@@ -5,8 +5,8 @@
     "background_color": "#aaa",
     "display": "fullScreen",
     "orientation": "portrait",
-    "scope": "/",
-    "start_url": "/",
+    "scope": "/savemydata",
+    "start_url": "/savemydata",
     "icons": [{
             "src": "img/browser/icon-72x72.png",
             "sizes": "72x72",
