@@ -35,10 +35,10 @@ let Functions = {
     setInnerHTML: async(el, innerHTML) => {
         let element = document.getElementById(el);
         element.classList.remove('visible');
-        setTimeout(function() {
-            element.classList.add('visible');
-        }, 500);
+        await Functions.sleep(200)
         element.innerHTML = innerHTML;
+        await Functions.sleep(100)
+        element.classList.add('visible');
     },
 
     /*
@@ -55,20 +55,17 @@ let Functions = {
         let url = location.hash.slice(1).toLowerCase() || '/';
         let request = {};
         // deb(url)
-        if (url.includes('-')) {
-            let array = url.split('-');
-            request.page = array[0];
-            request.key = array[1];
-            if (array[1].includes(':')) {
-                array = array[1].split(':');
-                request.key = array[0];
-                request.value = array[1];
-            }
+        if (url.includes('/')) {
+            let arr = url.split('/');
+            request.page = arr[0];
+            request.key = arr[1];
+            request.value = arr[2];
         } else {
             request.page = url;
             request.key = '';
             request.value = '';
         }
+        // deb(request)
         return request;
     },
 
@@ -81,7 +78,7 @@ let Functions = {
     ##    ## ##       ##       ##       ##
      ######  ######## ######## ######## ##
     */
-    sleep: (ms) => {
+    sleep: async(ms) => {
         return new Promise((resolve) => setTimeout(resolve, ms));
     },
 
@@ -243,6 +240,7 @@ let Functions = {
             localStorage.removeItem(arr[i]);
         }
         // window.location.hash = '';
+        document.getElementById('body').classList.add('darkWrapper')
         history.pushState('', document.title, window.location.pathname);
         location.reload();
     },
@@ -273,7 +271,7 @@ let Functions = {
             formData = FormId;
         }
 
-        deb(formData)
+        // deb(formData)
         formData = JSON.stringify(Object.fromEntries(formData));
         const response = await fetch(URL, {
             method: 'POST',
@@ -289,42 +287,43 @@ let Functions = {
 
 
 
-    /* Fading the element in and out. */
-    fadeWraper: (inout = 'out', el, int = 10) => {
+    // /* Fading the element in and out. */
+    // fadeWraper: (inout = 'out', el, int = 10) => {
 
-        var count = (inout === 'out') ? 1 : 0;
+    //     var count = (inout === 'out') ? 1 : 0;
 
-        if (document.querySelector(el)) {
-            var interval = setInterval(() => {
+    //     if (document.querySelector(el)) {
+    //         var interval = setInterval(() => {
 
-                document.querySelector(el).style.opacity = count;
+    //             document.querySelector(el).style.opacity = count;
 
-                if (inout === 'out') {
-                    count = count - .1;
-                    if (count < 0.01) {
-                        clearInterval(interval);
-                        document.querySelector(el).style.display = 'none';
-                    }
-                } else {
-                    count = count + .1;
-                    if (count > 1) {
-                        clearInterval(interval);
-                    }
-                }
-            }, int);
-        }
-    },
+    //             if (inout === 'out') {
+    //                 count = count - .1;
+    //                 if (count < 0.01) {
+    //                     clearInterval(interval);
+    //                     document.querySelector(el).style.display = 'none';
+    //                 }
+    //             } else {
+    //                 count = count + .1;
+    //                 if (count > 1) {
+    //                     clearInterval(interval);
+    //                 }
+    //             }
+    //         }, int);
+    //     }
+    // },
 
 
 
     /* Setting the username in the navbar. */
-    setUsername: async(username) => {
-        document.querySelector('li[data-link="userprofile"] span.link_text').innerHTML = /*HTML*/ `
+    setUsername: async(username, userID) => {
+        document.querySelector('#userprofile span.link_text').innerHTML = /*HTML*/ `
             <span class="icon" style="background-color:transparent">
-                <img src="uploads/avatars/${username}.png"></span>
-                ${username}
-            <span id=userLogout class="logout_icon"></span>
-        `;
+            <img src="uploads/avatars/${username}.png"></span>
+            ${username}
+            <span id=userLogout class="logout_icon"></span>`;
+
+        document.querySelector('#userprofile').setAttribute('data-link', 'user/profile/' + userID);
     }
 
 

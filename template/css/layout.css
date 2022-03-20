@@ -184,9 +184,21 @@ body {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background: var(--bg_1);
+    background: var(--bg_2);
     color: var(--font_0);
     font-family: 'Public Sans', sans-serif
+}
+
+.darkWrapper::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--bg_1);
+    z-index: 4;
+    opacity: 1;
+    content: "";
 }
 
 h1,
@@ -365,6 +377,7 @@ header .page_name {
 
 main {
     overflow-y: scroll;
+    opacity: 0;
 }
 
 main h1:first-of-type,
@@ -374,6 +387,11 @@ main h2:first-of-type {
 
 main img {
     padding: .5em;
+}
+
+main.visible {
+    opacity: 1;
+    transition: opacity .2s ease-in-out;
 }
 
 

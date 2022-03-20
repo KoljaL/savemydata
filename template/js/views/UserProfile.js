@@ -2,11 +2,11 @@ import Functions from '../Functions.js';
 import Form from '../Form.js';
 
 export default {
-    render: async() => {
+    render: async(userID) => {
         Functions.pageTitle(`Login`);
         await Style();
         await Content();
-        await getUserData();
+        await getUserData(userID);
         await addEditFunction();
     },
 };
@@ -60,12 +60,10 @@ let Content = async() => {
 /**
  * It gets the user data from the API and displays it on the page.
  */
-let getUserData = async() => {
+let getUserData = async(userID) => {
     var formData = new FormData();
-    // id muss noch aus der URL kommen!!!!!!!!!
-    formData.append('id', Functions.getLocal('id'));
+    formData.append('id', userID);
 
-    deb(formData);
     // getAPIdata (endpoint, formID)
     Functions.getAPIdata('userprofile', formData).then((res) => {
         deb(res);

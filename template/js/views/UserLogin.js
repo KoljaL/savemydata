@@ -33,6 +33,8 @@ let Style = async() => {
             height:100vh;
             display:flex;
             justify-content: center;
+            background: var(--bg_1);
+            z-index: 5;
         }
         #UserLoginForm {
             position: relative;
@@ -128,24 +130,26 @@ let Login = async() => {
                 // deb(res);
                 if (res.code === 200) {
                     const user = res.data.user;
+                    document.getElementById('body').classList.remove('visible');
 
-                    Functions.setUsername(user.username);
+                    // add username & avatar to sidebar
+                    Functions.setUsername(user.username, user.id);
+
                     // save userdata in localStorage
                     Functions.setLocal('username', user.username);
                     Functions.setLocal('id', user.id);
                     Functions.setLocal('role', user.role);
                     Functions.setLocal('permission', user.permission);
                     Functions.setLocal('token', res.data.token);
-                    Functions.fadeWraper('out', '#darkWrapper', 20);
 
+                    // activate logout button
+                    document.getElementById('userLogout').addEventListener('click', Functions.flushLocal);
                     //  redirect to userprofile
-                    window.location.hash = '#userprofile';
+                    window.location.hash = '#user/profile/' + user.id;
+
                 } else {
                     document.getElementById('UserLoginFormError').innerHTML = res.message;
                 }
             })
-            .then(() => {
-                document.getElementById('userLogout').addEventListener('click', Functions.flushLocal);
-            });
     });
 }

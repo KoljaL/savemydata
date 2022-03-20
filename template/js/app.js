@@ -22,13 +22,6 @@ window.addEventListener('DOMContentLoaded', router);
 window.addEventListener('hashchange', router);
 
 async function router() {
-    // Functions.fadeWraper('in', '#darkWrapper', 20);
-    // await fadeOut('main', 200);
-    // document.querySelector('main').style.opacity = 0;
-    deb("1")
-    await fadeOut('main', 200)
-    deb("3")
-
 
     let request = Functions.parseRequestURL();
     let page = checkUserLoggedIn() || request.page;
@@ -39,8 +32,16 @@ async function router() {
             await UserLogin.render();
             break;
 
-        case 'userprofile':
-            await UserProfile.render();
+        case 'user':
+
+            switch (request.key) {
+                case 'profile':
+                    await UserProfile.render(request.value);
+                    break;
+
+                default:
+                    break;
+            }
             break;
 
         case 'form':
@@ -63,56 +64,12 @@ async function router() {
             await Default.render();
             break;
     }
-    await fadeIn('main', 200);
 
     // Userlogin has its own fadeWrapper()
-    if ('/' !== page) {
-        // Functions.fadeWraper('out', '#darkWrapper', 20);
-    }
+    if ('/' !== page) {}
 
 }
 
-async function fadeIn(el, time) {
-    var count = 0;
-    if (document.querySelector(el)) {
-
-
-        var interval = setInterval(() => {
-
-            document.querySelector(el).style.opacity = count;
-
-            count = count + .1;
-            if (count > 1) {
-                clearInterval(interval);
-            }
-
-        }, time);
-
-
-    }
-}
-
-async function fadeOut(el, time) {
-
-    var count = 1;
-    if (document.querySelector(el)) {
-
-
-        var interval = setInterval(() => {
-            deb("2")
-
-            document.querySelector(el).style.opacity = count;
-
-            count = count - .1;
-            if (count < 0.01) {
-                clearInterval(interval);
-            }
-
-        }, time);
-
-
-    }
-}
 
 
 /**
@@ -120,8 +77,13 @@ async function fadeOut(el, time) {
  * @returns A string.
  */
 function checkUserLoggedIn() {
+    // if there is a token in localStorage, we aim that the user ist valid
     if (Functions.getLocal('token')) {
-        Functions.setUsername(Functions.getLocal('username'))
+        // set name and avatar in sidebar
+        Functions.setUsername(Functions.getLocal('username'), Functions.getLocal('id'));
+        // remove the darkWrapper from body
+        document.getElementById('body').classList.remove('darkWrapper');
+        // set logout Button
         document.getElementById('userLogout').addEventListener('click', Functions.flushLocal);
         return false;
     } else {

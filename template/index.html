@@ -33,32 +33,18 @@
     <link rel="icon" href="template/img/browser/icon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="template/css/layout.css">
     <link rel="stylesheet" href="template/css/form.css">
+
     <style>
-        .darkWrapper {
-            position: absolute;
-            top: var(--header_full_height);
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: var(--bg_1);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 5;
-            overflow: hidden;
-            opacity: 1;
-            content: "";
-            transition: all .9s ease-in-out;
-        }
-        
-        body::after {
-            transition: all .2s ease-in-out;
-        }
+
     </style>
 </head>
 
-<body>
-    <!-- <div id="darkWrapper" class="darkWrapper"></div> -->
+<body id="body" class="darkWrapper">
+    <script>
+        if (localStorage.getItem('DF_token')) {
+            document.getElementById('body').classList.remove('darkWrapper')
+        }
+    </script>
     <div id="PRL">
         <header>
             <a href="http://localhost/savemydata/"><img src="template/img/browser/icon.svg" alt="RPL" /></a>
@@ -73,7 +59,7 @@
             </div>
             <div class="sidebar_body">
                 <ul>
-                    <li data-link="userprofile">
+                    <li data-link="userprofile" id="userprofile">
                         <span class="link_text"><span class="icon user_icon"></span>User</span>
                     </li>
                     <li data-link="solar">
@@ -127,9 +113,7 @@
             <div class="sidebar_footer"></div>
         </nav>
 
-        <main id="main">
-            <h2>Content</h2>
-            <h3>...</h3>
+        <main id="main" class="visible">
         </main>
 
         <footer>
