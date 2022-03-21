@@ -459,7 +459,8 @@ nav ul {
 [data-theme=light-boxes] li:not(ul.subList li) {
     outline: black solid 1px;
     box-shadow: 4px 4px 0 black;
-    margin: 15px;
+    margin: 10px 10px 10px 4px;
+    padding-left: 2px;
 }
 
 [data-theme=dark-boxes] li:not(ul.subList li).active,
@@ -570,6 +571,16 @@ nav li .icon {
     /* left: 14px; */
     top: 3px;
     pointer-events: none;
+}
+
+[data-theme=light-boxes] nav li .icon,
+[data-theme=dark-boxes] nav li .icon {
+    left: -10px;
+}
+
+[data-theme=light-boxes] .sidebar nav li .icon,
+[data-theme=dark-boxes] .sidebar nav li .icon {
+    left: 0px;
 }
 
 nav .sidebar_footer {

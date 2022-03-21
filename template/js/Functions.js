@@ -34,11 +34,11 @@ let Functions = {
     */
     setInnerHTML: async(el, innerHTML) => {
         let element = document.getElementById(el);
-        element.classList.remove('visible');
-        await Functions.sleep(200)
+        // element.classList.remove('visible');
+        // await Functions.sleep(200)
         element.innerHTML = innerHTML;
-        await Functions.sleep(100)
-        element.classList.add('visible');
+        // await Functions.sleep(200)
+        // element.classList.add('visible');
     },
 
     /*

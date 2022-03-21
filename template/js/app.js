@@ -26,47 +26,62 @@ async function router() {
     let request = Functions.parseRequestURL();
     let page = checkUserLoggedIn() || request.page;
     // deb(request);
-    switch (page) {
 
-        case '/':
-            await UserLogin.render();
-            break;
+    // remove the opycity class, wait, call async switch :-)
+    document.getElementById('main').classList.remove('visible');
+    await Functions.sleep(200);
+    (async() => {
 
-        case 'user':
+        switch (page) {
 
-            switch (request.key) {
-                case 'profile':
-                    await UserProfile.render(request.value);
-                    break;
+            case '/':
+                await UserLogin.render();
+                break;
 
-                default:
-                    break;
-            }
-            break;
+            case 'user':
 
-        case 'form':
-            await Form.render();
-            break;
+                switch (request.key) {
+                    case 'profile':
+                        await UserProfile.render(request.value)
 
-        case 'form1':
-            await Form1.render();
-            break;
+                        break;
 
-        case 'form2':
-            await Form2.render();
-            break;
+                    default:
+                        break;
+                }
+                break;
 
-        case 'solar':
-            await Solar.render();
-            break;
+            case 'form':
+                await Form.render();
+                break;
 
-        default:
-            await Default.render();
-            break;
-    }
+            case 'form1':
+                await Form1.render();
+                break;
 
-    // Userlogin has its own fadeWrapper()
-    if ('/' !== page) {}
+            case 'form2':
+                await Form2.render();
+                break;
+
+            case 'solar':
+                await Solar.render();
+                break;
+
+            default:
+                await Default.render();
+                break;
+        }
+
+    })()
+    // when content is loaded, turn bach the opacity :-)
+    .then(() => {
+        document.getElementById('main').classList.add('visible');
+    })
+
+
+
+
+
 
 }
 

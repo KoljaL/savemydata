@@ -79,6 +79,8 @@ div.FF-item>* {
     /* font-size: clamp(2vw, 2vw, 3vw); */
 }
 
+[data-theme=dark-boxes] div.FF-item textarea,
+[data-theme=light-boxes] div.FF-item textarea,
 [data-theme=dark-boxes] div.FF-item input,
 [data-theme=light-boxes] div.FF-item input {
     border: none;
@@ -95,6 +97,8 @@ div.FF-item input:focus {
     transition: 0.1s;
 }
 
+[data-theme=dark-boxes] div.FF-item textarea:focus,
+[data-theme=light-boxes] div.FF-item textarea:focus,
 [data-theme=dark-boxes] div.FF-item input:focus,
 [data-theme=light-boxes] div.FF-item input:focus {
     border: none;

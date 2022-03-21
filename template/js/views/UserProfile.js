@@ -10,7 +10,7 @@ export default {
         await getUserData(userID);
         await dropDownEvent();
         await newUserButton();
-        await editUserButton();
+        await editUserButton(userID);
         await deleteUserButton();
     },
 };
@@ -29,6 +29,13 @@ let Style = async() => {
             position: relative;
             widht:100%; 
         }
+        #deleteUserButton:empty,
+        #newUserButton:empty,
+        #editUserButton:empty{
+            border: none;
+            outline: none;
+            background: transparent;
+        }
         #deleteUserButton,
         #newUserButton,
         #editUserButton{ 
@@ -37,9 +44,7 @@ let Style = async() => {
             color: var(--font_0);
             background: var(--bg_3);
             line-height: 1.2em;
-            outline: none;
             padding: 0.3em .3em .2em .4em;
-            border: none;
             outline: var(--border_0) solid 1px;
             transition: all 0.5s ease-in-out;
             border-radius: 0.2em;
@@ -59,7 +64,15 @@ let Style = async() => {
         #UserProfileList {
             display: inline-block;
         }
-
+        #UserProfileHeader{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: start;
+        }
+        .ActionButtons{
+            margin-bottom: 1.5em;
+        }
  
     `;
     Functions.createStyle('UserProfile_style', styleTags);
@@ -71,19 +84,24 @@ let Style = async() => {
 let Content = async() => {
     let innerHTML = /*HTML*/ `
         <div id="T_UserLoginForm" class="template"> 
-            <h2>Profile</h2> 
-            <div id=UserProfileList>${await UserList.render('dropdown')}</div>
-            <span id="editUserButton">Edit</span>
-            <span id="newUserButton">New</span>
-            <span id="deleteUserButton">Delete</span>
-            <br>
+            <div id=UserProfileHeader>
+                <h2>UserProfile</h2> 
+                <div class="ActionButtons">
+                    <div id=UserProfileList></div>
+                    <span id="editUserButton"></span>
+                    <span id="newUserButton"></span>
+                    <span id="deleteUserButton"></span>
+                </div>
+            </div>
             <div id=editArea>
                 <div id=Userdata></div>
             </div>
         </div>`;
     await Functions.setInnerHTML('main', innerHTML);
+
 };
 
+{ /* <div id=UserProfileList>${await UserList.render('dropdown')}</div> */ }
 
 
 
@@ -216,14 +234,16 @@ let getUserData = async(userID) => {
 /**
  * It adds an event listener to the dropdown menu.
  */
-let dropDownEvent = () => {
+let dropDownEvent = async() => {
     // only admin '0' can do this
     if (Functions.getLocal('role') === '0') {
-        document.getElementById('UserListSelect').addEventListener('change', (el) => {
-            window.location.hash = '#user/profile/' + el.target.value;
-        })
-    } else {
-        document.getElementById('UserProfileList').remove();
+        let innerHTML = await UserList.render('dropdown')
+        await Functions.setInnerHTML('UserProfileList', innerHTML)
+            .then(() => {
+                document.getElementById('UserListSelect').addEventListener('change', (el) => {
+                    window.location.hash = '#user/profile/' + el.target.value;
+                })
+            })
     }
 }
 
@@ -234,23 +254,34 @@ let dropDownEvent = () => {
 /**
  * It makes the edit button clickable and makes the fields editable.
  */
-let editUserButton = async() => {
-    document.getElementById('editUserButton').addEventListener('click', function() {
-        document.querySelectorAll('#editArea input,#editArea textarea').forEach((input) => {
-            // make fields editable
-            input.classList.toggle('hideEdit');
-            // updata db on focusout
-            input.addEventListener('focusout', function(el) {
-                // update a single value in db
-                Functions.singleEdit(el.target);
-            });
-        });
-    });
+let editUserButton = async(userID) => {
+
+    // only admin '0' can do this
+    if (Functions.getLocal('role') === '0' || Functions.getLocal('id') === userID) {
+        await Functions.setInnerHTML('editUserButton', 'Edit')
+            .then(() => {
+
+                document.getElementById('editUserButton').addEventListener('click', function() {
+                    document.querySelectorAll('#editArea input,#editArea textarea').forEach((input) => {
+                        // make fields editable
+                        input.classList.toggle('hideEdit');
+                        // updata db on focusout
+                        input.addEventListener('focusout', function(el) {
+                            // update a single value in db
+                            Functions.singleEdit(el.target);
+                        });
+                    });
+                });
+
+            })
+    }
+
 };
 
 
-let deleteUserButton = async() => {
+let deleteUserButton = () => {
     if (Functions.getLocal('role') === '0') {
+        Functions.setInnerHTML('deleteUserButton', 'Delete')
 
         document.getElementById('deleteUserButton').addEventListener('click', function() {
 
@@ -266,11 +297,13 @@ let deleteUserButton = async() => {
 
 
 /**
- * It adds a new user to the database.
+ * It adds a new user to the database. newUserButton
  */
-let newUserButton = () => {
+let newUserButton = async() => {
     // only admin '0' can do this
     if (Functions.getLocal('role') === '0') {
+        Functions.setInnerHTML('newUserButton', 'New')
+
         document.getElementById('newUserButton').addEventListener('click', (button) => {
 
             // send all inputfields to API & get directed to the new users profile
@@ -288,7 +321,8 @@ let newUserButton = () => {
 
             // delete all form values, make them editable & remove the data-db for singeedit
             if ('New' === button.target.innerHTML) {
-                deb('NEW')
+                document.getElementById('editUserButton').remove();
+                document.getElementById('deleteUserButton').remove();
                 document.querySelectorAll('#editArea input,#editArea textarea').forEach(el => {
                     delete el.dataset.db;
                     el.value = '';
@@ -298,9 +332,5 @@ let newUserButton = () => {
             } //new
 
         })
-    }
-    // if not admin, delete this button
-    else {
-        document.getElementById('newUserButton').remove();
     }
 }
