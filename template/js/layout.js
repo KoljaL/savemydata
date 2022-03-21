@@ -59,6 +59,56 @@ navLinks.forEach(function(nav_links) {
     });
 });
 
+
+
+/**
+ * 
+ * It iterates over all nav links and checks if the current url matches the link's url. 
+ * If so, it adds the active class to the link and all its children
+ * 
+ */
+window.addEventListener('DOMContentLoaded', initSidebar);
+window.addEventListener('hashchange', initSidebar);
+
+function initSidebar(event) {
+    let url = location.hash.slice(1).toLowerCase() || '/';
+    url = url.split('/');
+    let slug = url[0];
+    if (url[1]) slug = slug + '/' + url[1];
+    // deb(slug)
+
+    navLinks.forEach(function(nav_links) {
+        // deb(nav_links.dataset.link)
+        if (slug == nav_links.dataset.link) {
+            // remove active marks
+            navLinks.forEach(function(old_links) {
+                // do not close, if all opend by toggleSubLists
+                if (!toggleSubLists) {
+                    old_links.classList.remove('active');
+                }
+                old_links.classList.remove('current');
+            });
+            nav_links.classList.add('active', 'current');
+            // mark children as active
+            if (nav_links.nextElementSibling && nav_links.nextElementSibling.tagName === 'UL') {
+                // deb(link.nextElementSibling.children)
+                for (let child_link of nav_links.nextElementSibling.children) {
+                    child_link.classList.add('active');
+                }
+            }
+            // mark parent als parent sibling as active
+            // deb(link.parentElement.classList.contains('subList'))
+            if (nav_links.parentElement.classList.contains('subList')) {
+                for (let child_link of nav_links.parentElement.children) {
+                    child_link.classList.add('active');
+                    // deb(child_link.parentElement.previousElementSibling)
+                    child_link.parentElement.parentElement.classList.add('active');
+                }
+            }
+        }
+    });
+}
+
 /**
  *
  * It toggles the class of the navLinks to expand all SubLists.
@@ -99,7 +149,7 @@ document.getElementById('toggleSidebar').addEventListener('click', (e) => {
                 document.removeEventListener('click', closeOnEveryClick);
             }
         }
-    } else {}
+    }
 });
 
 /**
@@ -149,7 +199,7 @@ function toggleView() {
  *
  */
 
-const modes = ['dark', 'dark-boxes', 'light', 'light-boxes', ];
+const modes = ['dark', 'dark-boxes', 'light', 'light-boxes'];
 
 // check localStorage for colorStyle
 if (localStorage.getItem('colorStyle')) {
