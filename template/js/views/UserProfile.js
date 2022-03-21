@@ -4,7 +4,8 @@ import Form from '../Form.js';
 
 export default {
     render: async(userID) => {
-        Functions.pageTitle(`Login`);
+        Functions.pageTitle(`User Profile`);
+
         await Style();
         await Content();
         await getUserData(userID);
@@ -240,7 +241,12 @@ let dropDownEvent = async() => {
         let innerHTML = await UserList.render('dropdown')
         await Functions.setInnerHTML('UserProfileList', innerHTML)
             .then(() => {
+
                 document.getElementById('UserListSelect').addEventListener('change', (el) => {
+                    Message.info("User Profile: " + el.target.options[el.target.selectedIndex].text);
+                    // Message.success()
+                    // Message.error()
+                    // Message.warn()
                     window.location.hash = '#user/profile/' + el.target.value;
                 })
             })

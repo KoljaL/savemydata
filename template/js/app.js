@@ -3,6 +3,7 @@
 // COMMON FUCTIONS
 import Functions from './Functions.js';
 // import Toast from './Toast.js';
+import ("./components/ModalMessage.js");
 
 // VIEWS
 import Default from './views/Default.js';
