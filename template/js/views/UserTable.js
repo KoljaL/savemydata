@@ -30,7 +30,7 @@ let Style = async() => {
     #UserTable .tui-grid-body-area {
         background-color: transparent;
       }
-      #UserTable .tui-grid-cell {
+    #UserTable .tui-grid-cell {
         background-color: transparent;
         border-color: var(--border_0);
         border-left-width: 0;
@@ -38,14 +38,23 @@ let Style = async() => {
         border-top-width: 1px;
         border-bottom-width: 1px;
         color: var(--font_0);
-      }
-      #UserTable .tui-grid-header-area {
+    }
+    #UserTable .tui-grid-header-area {
         background-color: var(--bg_1);
         border-color: var(--border_0);
-      }
-      #UserTable .tui-grid-content-area {
+    }
+    #UserTable .tui-grid-content-area {
         border-color: #ea0000;
-      }
+    }
+
+       
+    [data-column-name="id"] .tui-grid-cell-content {
+        color: var(--fontBlue);
+        font-weight: bold;
+    }     
+    [data-column-name="id"] {
+        cursor:pointer;
+    }
 
     `;
     Functions.createStyle('UserTable_style', styleTags);
