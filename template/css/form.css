@@ -26,7 +26,7 @@ fieldset {
     flex-shrink: 1;
     min-width: 50px;
     max-width: 200px;
-    height: 50px;
+    /* height: 50px; */
     margin: 1em;
 }
 
@@ -40,6 +40,7 @@ input[type="submit"]:hover {
 }
 
 select,
+textarea,
 input[type="submit"],
 input[type="text"],
 input[type="date"],
@@ -64,6 +65,10 @@ input[type="time"] {
     font-size: 1em;
 }
 
+.FF-item textarea {
+    height: 6em;
+}
+
 div.FF-item {
     position: relative;
 }
@@ -73,16 +78,6 @@ div.FF-item>* {
     font-size: 18px;
     /* font-size: clamp(2vw, 2vw, 3vw); */
 }
-
-
-/* div.FF-item input {
-    outline: none;
-    padding: 0.3em .3em .2em .4em;
-    border: none;
-    outline: var(--border_0) solid 1px;
-    transition: all 0.5s ease-in-out;
-    border-radius: 0.2em;
-} */
 
 [data-theme=dark-boxes] div.FF-item input,
 [data-theme=light-boxes] div.FF-item input {
@@ -123,6 +118,7 @@ div.FF-item label {
     transition: all 0.5s ease-in-out;
 }
 
+div.FF-item textarea:not(:placeholder-shown)+label,
 div.FF-item input:valid+label,
 div.FF-item input:focus+label {
     transition: all 0.5s ease-in-out;
@@ -134,6 +130,7 @@ div.FF-item input:focus+label {
 
 /* no borders & background if input is hideEdit */
 
+.FF-item textarea.hideEdit,
 .FF-item input.hideEdit {
     background: transparent!important;
     box-shadow: 4px 4px 0 transparent!important;
@@ -141,6 +138,7 @@ div.FF-item input:focus+label {
     pointer-events: none!important;
 }
 
+.FF-item textarea.forbiddenEdit,
 .FF-item input.forbiddenEdit {
     background: transparent!important;
     box-shadow: 4px 4px 0 transparent!important;
@@ -151,10 +149,12 @@ div.FF-item input:focus+label {
 
 /* input border for singleEdit function */
 
+.FF-item textarea.successEdit,
 .FF-item input.successEdit {
     outline: 1px solid var(--fontGreen);
 }
 
+.FF-item textarea.errorEdit,
 .FF-item input.errorEdit {
     outline: 1px solid var(--fontRed);
 }

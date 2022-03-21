@@ -4,18 +4,17 @@ import Form from '../Form.js';
 
 export default {
     render: async(userID) => {
-
         Functions.pageTitle(`Login`);
         await Style();
         await Content();
         await getUserData(userID);
         await dropDownEvent();
-        await addNewUser();
-        await addEditFunction();
+        await newUserButton();
+        await editUserButton();
+        await deleteUserButton();
     },
 };
 
-// export default UserLogin;
 
 /**
  * STYLE
@@ -26,12 +25,13 @@ let Style = async() => {
             display:inline-block;
             margin-right: 1em;
         }
-       #editArea{
-           position: relative;
-           widht:100%; 
-       }
-       #newUserButton,
-       #editButton{ 
+        #editArea{
+            position: relative;
+            widht:100%; 
+        }
+        #deleteUserButton,
+        #newUserButton,
+        #editUserButton{ 
             font-size: 14px;
             cursor:pointer;
             color: var(--font_0);
@@ -44,17 +44,21 @@ let Style = async() => {
             transition: all 0.5s ease-in-out;
             border-radius: 0.2em;
             font-size: 1em;
-           margin-left: 1em;
+            margin-left: 1em;
+        }
+        #deleteUserButton:hover{
+            color: var(--fontRed);
+        }
+        #newUserButton:hover{
+            color: var(--fontGreen);
+        }
+        #editUserButton:hover{
+            color: var(--fontBlue);
+        }
 
-       }
-       #newUserButton:hover,
-       #editButton:hover{
-           color: var(--fontBlue);
-       }
-
-       #UserProfileList {
-        display: inline-block;
-      }
+        #UserProfileList {
+            display: inline-block;
+        }
 
  
     `;
@@ -69,8 +73,9 @@ let Content = async() => {
         <div id="T_UserLoginForm" class="template"> 
             <h2>Profile</h2> 
             <div id=UserProfileList>${await UserList.render('dropdown')}</div>
-            <span id="editButton">Edit</span>
+            <span id="editUserButton">Edit</span>
             <span id="newUserButton">New</span>
+            <span id="deleteUserButton">Delete</span>
             <br>
             <div id=editArea>
                 <div id=Userdata></div>
@@ -78,61 +83,6 @@ let Content = async() => {
         </div>`;
     await Functions.setInnerHTML('main', innerHTML);
 };
-
-
-let addNewUser = () => {
-    const currentUserRole = Functions.getLocal('role');
-
-    if (currentUserRole === '0') {
-
-        document.getElementById('newUserButton').addEventListener('click', (button) => {
-            if ('Save' === button.target.innerHTML) {
-                deb('SAVE')
-
-                let userProfilForm = document.getElementById('userProfilForm')
-                userProfilForm = new FormData(userProfilForm);
-                Functions.getAPIdata('newuser', userProfilForm)
-                    .then((res) => {
-                        deb(res)
-                        if (res.code === 200) {
-                            window.location.hash = '#user/profile/' + res.data.id;
-                        }
-                    })
-            }
-
-            if ('New' === button.target.innerHTML) {
-                deb('NEW')
-                document.querySelectorAll('#editArea input').forEach(el => {
-                    delete el.dataset.db;
-                    el.value = '';
-                    el.classList.remove('hideEdit');
-                    button.target.innerHTML = 'Save';
-                });
-            }
-        })
-
-    }
-    // if not admin, delete this button
-    else {
-        document.getElementById('newUserButton').remove();
-    }
-}
-
-
-
-let dropDownEvent = () => {
-    const currentUserRole = Functions.getLocal('role');
-
-    if (currentUserRole === '0') {
-        document.getElementById('UserListSelect').addEventListener('change', (el) => {
-            // deb(el.target.value)
-            window.location.hash = '#user/profile/' + el.target.value;
-
-        })
-    } else {
-        document.getElementById('UserProfileList').remove();
-    }
-}
 
 
 
@@ -154,8 +104,9 @@ let getUserData = async(userID) => {
                 const user = res.data;
                 let innerHTML = /*HTML*/ `
                      
-                <form id=userProfilForm class="FF-row">
-        
+                <form id=userProfilForm >
+                
+                <div class="FF-row">
 
                     ${Form.inputText({
                         name: 'username',
@@ -166,6 +117,28 @@ let getUserData = async(userID) => {
                         value: user.username,
                         db: 'username/user/id/' + user.id,
                     })}
+
+                    ${Form.inputText({
+                        name: 'firstname',
+                        type: 'text',
+                        widths: '100/150/300',
+                        edit: 'hide',
+                        label: 'Firstname',
+                        value: user.firstname,
+                        db: 'firstname/user/id/' + user.id,
+                    })}
+
+
+                    ${Form.inputText({
+                        name: 'lastname',
+                        type: 'text',
+                        widths: '100/150/300',
+                        edit: 'hide',
+                        label: 'Lastname',
+                        value: user.lastname,
+                        db: 'lastname/user/id/' + user.id,
+                    })}
+
 
                     ${Form.inputText({
                         name: 'email',
@@ -187,34 +160,46 @@ let getUserData = async(userID) => {
                         db: 'password/user/id/' + user.id,
                     })}
 
+                </div>
+              
+                <div class="FF-row">
+
+                    ${Form.inputText({
+                        name: 'comment',
+                        type: 'textarea',
+                        widths: '300/400/500',
+                        edit: currentUserRole === '0' ? 'hide' : 'forbidden',
+                        label: 'Comment',
+                        value: user.comment,
+                        db: 'comment/user/id/' + user.id,
+                    })}
+
+                    </div>
+                    <div class="FF-row">
 
                     ${Form.inputText({
                         name: 'role',
                         type: 'text',
-                        widths: '100/150/300',
+                        widths: '50/50/50',
                         edit: currentUserRole === '0' ? 'hide' : 'forbidden',
                         label: 'Role',
                         value: user.role,
                         db: 'role/user/id/' + user.id,
                     })}
 
-
-
                     ${Form.inputText({
                         name: 'permission',
                         type: 'text',
-                        widths: '100/150/300',
+                        widths: '100/100/100',
                         edit: currentUserRole === '0' ? 'hide' : 'forbidden',
                         label: 'Permission',
                         value: user.permission,
                         db: 'permission/user/id/' + user.id,
                     })}
+            </div>
+                </form>`;
 
-                </form>
-
-
-
-                        `;
+                // copy to DOM
                 Functions.setInnerHTML('Userdata', innerHTML);
             }
             // return error message
@@ -225,14 +210,35 @@ let getUserData = async(userID) => {
         });
 };
 
-let addEditFunction = async() => {
-    document.getElementById('editButton').addEventListener('click', function() {
-        document.querySelectorAll('#editArea input').forEach((input) => {
-            // deb(input)
 
+
+
+/**
+ * It adds an event listener to the dropdown menu.
+ */
+let dropDownEvent = () => {
+    // only admin '0' can do this
+    if (Functions.getLocal('role') === '0') {
+        document.getElementById('UserListSelect').addEventListener('change', (el) => {
+            window.location.hash = '#user/profile/' + el.target.value;
+        })
+    } else {
+        document.getElementById('UserProfileList').remove();
+    }
+}
+
+
+
+
+
+/**
+ * It makes the edit button clickable and makes the fields editable.
+ */
+let editUserButton = async() => {
+    document.getElementById('editUserButton').addEventListener('click', function() {
+        document.querySelectorAll('#editArea input,#editArea textarea').forEach((input) => {
             // make fields editable
             input.classList.toggle('hideEdit');
-
             // updata db on focusout
             input.addEventListener('focusout', function(el) {
                 // update a single value in db
@@ -241,3 +247,60 @@ let addEditFunction = async() => {
         });
     });
 };
+
+
+let deleteUserButton = async() => {
+    if (Functions.getLocal('role') === '0') {
+
+        document.getElementById('deleteUserButton').addEventListener('click', function() {
+
+
+        });
+    }
+    // if not admin, delete this button
+    else {
+        document.getElementById('deleteUserButton').remove();
+    }
+};
+
+
+
+/**
+ * It adds a new user to the database.
+ */
+let newUserButton = () => {
+    // only admin '0' can do this
+    if (Functions.getLocal('role') === '0') {
+        document.getElementById('newUserButton').addEventListener('click', (button) => {
+
+            // send all inputfields to API & get directed to the new users profile
+            if ('Save' === button.target.innerHTML) {
+                let userProfilForm = document.getElementById('userProfilForm')
+                userProfilForm = new FormData(userProfilForm);
+                Functions.getAPIdata('newuser', userProfilForm)
+                    .then((res) => {
+                        deb(res)
+                        if (res.code === 200) {
+                            window.location.hash = '#user/profile/' + res.data.id;
+                        }
+                    })
+            } // save
+
+            // delete all form values, make them editable & remove the data-db for singeedit
+            if ('New' === button.target.innerHTML) {
+                deb('NEW')
+                document.querySelectorAll('#editArea input,#editArea textarea').forEach(el => {
+                    delete el.dataset.db;
+                    el.value = '';
+                    el.classList.remove('hideEdit');
+                    button.target.innerHTML = 'Save';
+                });
+            } //new
+
+        })
+    }
+    // if not admin, delete this button
+    else {
+        document.getElementById('newUserButton').remove();
+    }
+}

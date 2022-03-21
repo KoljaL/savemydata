@@ -72,8 +72,9 @@ let Forms = {
         }
 
         // return input element  
-        return /*HTML*/ `
-        <div class="FF-item" style="${flexWidth}">
+        if (d.type === 'text' || d.type === 'password' || d.type === 'time' || d.type === 'date' || d.type === 'datetime-local' || d.type === 'number' || d.type === 'search') {
+            return /*HTML*/ `
+            <div class="FF-item" style="${flexWidth}">
             <input 
             id=${d.name} 
             class="${hideEdit}" 
@@ -84,7 +85,26 @@ let Forms = {
             ${dataDB}
             required>
             <label for=${d.name}>${d.label}</label>
-        </div>`;
+            </div>`;
+        }
+
+        // return textarea element  
+        if (d.type === 'textarea') {
+            return /*HTML*/ `
+                    <div class="FF-item" style="${flexWidth}">
+                    <textarea 
+                    id=${d.name} 
+                    class="${hideEdit}" 
+                    name=${d.name} 
+                    type="${d.type}" 
+                    placeholder="${d.placeholder}" 
+                    ${dataDB}
+                    required>${d.value}</textarea>
+                    <label for=${d.name}>${d.label}</label>
+                    </div>`;
+        }
+
+
 
     },
 

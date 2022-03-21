@@ -34,7 +34,7 @@ $JWT_key = 'example_key';
 //
 */
 
-$db_path = 'db/db.db';
+$db_path = 'db/db1w1de1.db';
 /*
  *
  * This is a way to check if the database exists. If it doesn't exist, it will create it.
@@ -44,6 +44,8 @@ $db_path = 'db/db.db';
 if ( !file_exists( $db_path ) ) {
     $db = new PDO( 'sqlite:'.$db_path );
     init_usertable();
+    include './php/dummy_content.php';
+    create_dummy_staff( 100 );
 } else {
     $db = new PDO( 'sqlite:'.$db_path );
 }
@@ -340,10 +342,14 @@ function get_user_profile( $param ) {
  */
 function create_user( $param ) {
     global $db;
-    $stmt = $db->prepare( 'INSERT INTO user (`username`, `password`, `email`, `role`, `permission`, `date`) VALUES (:username, :password, :email, :role,:permission, :date)' );
+    $stmt = $db->prepare( 'INSERT INTO user (`username`, `password`, `firstname`, `lastname`, `email`, `comment`, `role`, `permission`, `date`)
+                            VALUES (:username, :password, :firstname, :lastname, :email, :comment, :role,:permission, :date)' );
     $stmt->bindValue( ':username', $param['username'] );
     $stmt->bindValue( ':password', password_hash( $param['password'], PASSWORD_DEFAULT ) );
+    $stmt->bindValue( ':firstname', $param['firstname'] );
+    $stmt->bindValue( ':lastname', $param['lastname'] );
     $stmt->bindValue( ':email', $param['email'] );
+    $stmt->bindValue( ':comment', $param['comment'] );
     $stmt->bindValue( ':role', $param['role'] );
     $stmt->bindValue( ':permission', $param['permission'] );
     $stmt->bindValue( ':date', date( 'd.m.Y H:i:s' ) );
@@ -430,16 +436,19 @@ function init_usertable() {
     $db->exec( 'CREATE TABLE user(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT NOT NULL,
-            password INTEGER NOT NULL,
+            password TEXT NOT NULL,
+            firstname TEXT NOT NULL,
+            lastname TEXT NOT NULL,
             email TEXT NOT NULL,
+            comment TEXT NOT NULL,
             role TEXT NOT NULL,
             permission TEXT NOT NULL,
             date TEXT NOT NULL
         )' );
 
     // create first users
-    $admin = ['username' => 'admin', 'password' => 'password', 'email' => 'admin@admin.org', 'role' => '0', 'permission' => '0'];
-    $user  = ['username' => 'user', 'password' => 'password', 'email' => 'user@user.org', 'role' => '1', 'permission' => '0'];
+    $admin = ['username' => 'admin', 'password' => 'password', 'firstname' => 'admin', 'lastname' => 'admin', 'email' => 'admin@admin.org', 'comment' => 'lorem iopsum', 'role' => '0', 'permission' => '0'];
+    $user  = ['username' => 'user', 'password' => 'password', 'firstname' => 'user', 'lastname' => 'user', 'email' => 'user@user.org', 'comment' => 'lorem iopsum', 'role' => '1', 'permission' => '0'];
 
     create_user( $admin );
     create_user( $user );
@@ -466,4 +475,20 @@ function return_JSON( $response ) {
     header( 'Access-Control-Max-Age: 3600' );
     header( 'Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With' );
     echo json_encode( $response );
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// CREATE DUMMY USER
+function create_dummy_staff( $count ) {
+    for ( $i = 0; $i < $count; $i++ ) {
+        $random_name = random_name();
+        $email       = $random_name[0]."@".$random_name[1].".com";
+        $user        = ['username' => $random_name[0].'_'.$random_name[1], 'password' => 'password', 'firstname' => $random_name[0], 'lastname' => $random_name[1], 'email' => $email, 'comment' => random_text(), 'role' => '1', 'permission' => '0'];
+        create_user( $user );
+    }
 }
