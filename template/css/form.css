@@ -5,7 +5,7 @@
 }
 
 .FF-form h2 {
-    margin: 1em!important;
+    margin: 1em !important;
 }
 
 fieldset {
@@ -34,30 +34,30 @@ fieldset {
     max-width: max-content;
 }
 
-input[type="submit"]:hover {
+input[type='submit']:hover {
     cursor: pointer;
     background: var(--bg_1);
 }
 
 select,
 textarea,
-input[type="submit"],
-input[type="text"],
-input[type="date"],
-input[type="number"],
-input[type="search"],
-input[type="tel"],
-input[type="url"],
-input[type="datetime-local"],
-input[type="email"],
-input[type="password"],
-input[type="time"] {
+input[type='submit'],
+input[type='text'],
+input[type='date'],
+input[type='number'],
+input[type='search'],
+input[type='tel'],
+input[type='url'],
+input[type='datetime-local'],
+input[type='email'],
+input[type='password'],
+input[type='time'] {
     width: 100%;
     color: var(--font_0);
     background: var(--bg_3);
     line-height: 1.2em;
     outline: none;
-    padding: 0.3em .3em .2em .4em;
+    padding: 0.3em 0.3em 0.2em 0.4em;
     border: none;
     outline: var(--border_0) solid 1px;
     transition: all 0.5s ease-in-out;
@@ -79,10 +79,10 @@ div.FF-item>* {
     /* font-size: clamp(2vw, 2vw, 3vw); */
 }
 
-[data-theme=dark-boxes] div.FF-item textarea,
-[data-theme=light-boxes] div.FF-item textarea,
-[data-theme=dark-boxes] div.FF-item input,
-[data-theme=light-boxes] div.FF-item input {
+[data-theme='dark-boxes'] div.FF-item textarea,
+[data-theme='light-boxes'] div.FF-item textarea,
+[data-theme='dark-boxes'] div.FF-item input,
+[data-theme='light-boxes'] div.FF-item input {
     border: none;
     outline: black solid 1px;
     box-shadow: 4px 4px 0 black;
@@ -97,10 +97,10 @@ div.FF-item input:focus {
     transition: 0.1s;
 }
 
-[data-theme=dark-boxes] div.FF-item textarea:focus,
-[data-theme=light-boxes] div.FF-item textarea:focus,
-[data-theme=dark-boxes] div.FF-item input:focus,
-[data-theme=light-boxes] div.FF-item input:focus {
+[data-theme='dark-boxes'] div.FF-item textarea:focus,
+[data-theme='light-boxes'] div.FF-item textarea:focus,
+[data-theme='dark-boxes'] div.FF-item input:focus,
+[data-theme='light-boxes'] div.FF-item input:focus {
     border: none;
     outline: black solid 1px;
     box-shadow: 2px 2px 0 black;
@@ -136,18 +136,18 @@ div.FF-item input:focus+label {
 
 .FF-item textarea.hideEdit,
 .FF-item input.hideEdit {
-    background: transparent!important;
-    box-shadow: 4px 4px 0 transparent!important;
-    outline: none!important;
-    pointer-events: none!important;
+    background: transparent !important;
+    box-shadow: 4px 4px 0 transparent !important;
+    outline: none !important;
+    pointer-events: none !important;
 }
 
 .FF-item textarea.forbiddenEdit,
 .FF-item input.forbiddenEdit {
-    background: transparent!important;
-    box-shadow: 4px 4px 0 transparent!important;
-    outline: none!important;
-    pointer-events: none!important;
+    background: transparent !important;
+    box-shadow: 4px 4px 0 transparent !important;
+    outline: none !important;
+    pointer-events: none !important;
 }
 
 
@@ -210,7 +210,7 @@ input::-webkit-inner-spin-button {
     margin: 0;
 }
 
-input[type=number] {
+input[type='number'] {
     -moz-appearance: textfield;
 }
 

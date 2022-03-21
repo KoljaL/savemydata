@@ -12,4 +12,5 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.+)$ api.php [QSA]
 
 
-
+# AddType 'text/css; charset=UTF-8' css
+# AddType text/css css

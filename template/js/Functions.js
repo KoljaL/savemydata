@@ -21,6 +21,17 @@ let Functions = {
         }
     },
 
+
+    addStylesheet: async(path) => {
+        var ss = document.createElement("link");
+        ss.type = "text/css";
+        ss.rel = "stylesheet";
+        ss.href = path;
+        document.getElementsByTagName("head")[0].appendChild(ss);
+    },
+
+
+
     /*
     //  
     //   ######  ######## ########    #### ##    ## ##    ## ######## ########  ##     ## ######## ##     ## ##
@@ -340,7 +351,9 @@ let Functions = {
                     setTimeout(() => {
                         el.classList.remove('successEdit')
                     }, 1000);
-                } else {
+                }
+                // no else, so we have a chance of no extra class ;-)
+                if (400 === res.code) {
                     el.classList.add('errorEdit')
                 }
             });

@@ -5,14 +5,13 @@ import Form from '../Form.js';
 export default {
     render: async(userID) => {
         Functions.pageTitle(`User Profile`);
-
         await Style();
         await Content();
         await getUserData(userID);
         await dropDownEvent();
         await newUserButton();
         await editUserButton(userID);
-        await deleteUserButton();
+        await deleteUserButton(userID);
     },
 };
 
@@ -102,8 +101,6 @@ let Content = async() => {
 
 };
 
-{ /* <div id=UserProfileList>${await UserList.render('dropdown')}</div> */ }
-
 
 
 /**
@@ -121,6 +118,7 @@ let getUserData = async(userID) => {
             // deb(res);
             if (res.code === 200) {
                 const user = res.data;
+                window.userName = user.username;
                 let innerHTML = /*HTML*/ `
                      
                 <form id=userProfilForm >
@@ -175,7 +173,7 @@ let getUserData = async(userID) => {
                         widths: '100/150/300',
                         edit: 'hide',
                         label: 'Password',
-                        value: 'xxx',
+                        value: '',
                         db: 'password/user/id/' + user.id,
                     })}
 
@@ -262,7 +260,7 @@ let dropDownEvent = async() => {
  */
 let editUserButton = async(userID) => {
 
-    // only admin '0' can do this
+    // only admin '0' can do this, or youser himselfs
     if (Functions.getLocal('role') === '0' || Functions.getLocal('id') === userID) {
         await Functions.setInnerHTML('editUserButton', 'Edit')
             .then(() => {
@@ -285,12 +283,25 @@ let editUserButton = async(userID) => {
 };
 
 
-let deleteUserButton = () => {
+let deleteUserButton = (userID) => {
+    // only admin '0' can do this
     if (Functions.getLocal('role') === '0') {
+        // set text, make the button visible
         Functions.setInnerHTML('deleteUserButton', 'Delete')
 
         document.getElementById('deleteUserButton').addEventListener('click', function() {
+            var userDeleteForm = new FormData();
+            userDeleteForm.append('table', 'user');
+            userDeleteForm.append('id', userID);
 
+            Functions.getAPIdata('deleteuser', userDeleteForm)
+                .then((res) => {
+                    deb(res)
+                    if (res.code === 200) {
+                        Message.warn("Deleted User: " + window.userName);
+                        window.location.hash = '#user/table/';
+                    }
+                })
 
         });
     }
@@ -308,6 +319,7 @@ let deleteUserButton = () => {
 let newUserButton = async() => {
     // only admin '0' can do this
     if (Functions.getLocal('role') === '0') {
+        // set text, make the button visible
         Functions.setInnerHTML('newUserButton', 'New')
 
         document.getElementById('newUserButton').addEventListener('click', (button) => {
@@ -318,7 +330,7 @@ let newUserButton = async() => {
                 userProfilForm = new FormData(userProfilForm);
                 Functions.getAPIdata('newuser', userProfilForm)
                     .then((res) => {
-                        deb(res)
+                        // deb(res)
                         if (res.code === 200) {
                             window.location.hash = '#user/profile/' + res.data.id;
                         }
@@ -329,10 +341,10 @@ let newUserButton = async() => {
             if ('New' === button.target.innerHTML) {
                 document.getElementById('editUserButton').remove();
                 document.getElementById('deleteUserButton').remove();
-                document.querySelectorAll('#editArea input,#editArea textarea').forEach(el => {
-                    delete el.dataset.db;
-                    el.value = '';
-                    el.classList.remove('hideEdit');
+                document.querySelectorAll('#editArea input,#editArea textarea').forEach(input => {
+                    delete input.dataset.db;
+                    input.value = '';
+                    input.classList.remove('hideEdit');
                     button.target.innerHTML = 'Save';
                 });
             } //new

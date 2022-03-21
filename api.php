@@ -117,6 +117,10 @@ case 'newuser':
     new_user( $request );
     break;
 
+case 'deleteuser':
+    delete_user( $request );
+    break;
+
 case 'login':
     login_user( $request );
     break;
@@ -147,6 +151,53 @@ default:
 
 // https://phpdelusions.net/pdo_examples/select
 
+function delete_user( $param ) {
+    if ( isAllowed() ) {
+
+        global $db;
+        $response = [];
+
+        $table = $param['table'];
+
+        $stmt = $db->prepare( "DELETE FROM $table WHERE id =?" );
+        $stmt->execute( [$param['id']] );
+        $count = $stmt->rowCount();
+
+        if ( $count ) {
+
+            $response['code'] = 200;
+            $response['data'] = $count;
+
+        } else {
+            $response['code']    = 400;
+            $response['data']    = $count;
+            $response['message'] = 'no user found';
+        }
+        return_JSON( $response );
+
+    } else {
+        $response['code']    = 400;
+        $response['message'] = 'vorbidden';
+        return_JSON( $response );
+    }
+}
+
+/*
+//
+//  ##    ## ######## ##      ##    ##     ##  ######  ######## ########
+//  ###   ## ##       ##  ##  ##    ##     ## ##    ## ##       ##     ##
+//  ####  ## ##       ##  ##  ##    ##     ## ##       ##       ##     ##
+//  ## ## ## ######   ##  ##  ##    ##     ##  ######  ######   ########
+//  ##  #### ##       ##  ##  ##    ##     ##       ## ##       ##   ##
+//  ##   ### ##       ##  ##  ##    ##     ## ##    ## ##       ##    ##
+//  ##    ## ########  ###  ###      #######   ######  ######## ##     ##
+//
+*/
+/**
+ *
+ * Create a new user
+ *
+ */
 function new_user( $param ) {
     if ( isAllowed() ) {
 
@@ -226,7 +277,15 @@ function get_user_list( $request ) {
 function singleedit( $param ) {
     if ( isAllowed() ) {
 
+        // special case for password update
         if ( 'password' === $param['update'] ) {
+            // if new passwort is emopty, do not set and return
+            if ( '' === $param['value'] ) {
+                $response['code'] = 300;
+                return_JSON( $response );
+                exit;
+            }
+            // hash password
             $param['value'] = password_hash( $param['value'], PASSWORD_DEFAULT );
         }
         global $db;
@@ -235,7 +294,9 @@ function singleedit( $param ) {
         $sql    = "UPDATE $param[table] SET $param[update]=? WHERE $param[where]=?";
         $stmt   = $db->prepare( $sql );
         $update = $stmt->execute( [$param['value'], $param['equal']] );
-        $count  = $stmt->rowCount();
+        // count is the way to get 'true' if row is updated
+        $count = $stmt->rowCount();
+
         if ( $count ) {
             $response['code'] = 200;
             $response['data'] = $update;
@@ -393,10 +454,10 @@ function login_user( $request ) {
     global $db, $JWT_key;
 
     // check if userlogin is email or name
-    $row = ( filter_var( $request['userlogin'], FILTER_VALIDATE_EMAIL ) ) ? 'email' : 'username';
+    $userlogin = ( filter_var( $request['userlogin'], FILTER_VALIDATE_EMAIL ) ) ? 'email' : 'username';
 
     // find user in table
-    $stmt = $db->prepare( "SELECT * FROM user WHERE $row =?" );
+    $stmt = $db->prepare( "SELECT * FROM user WHERE $userlogin =?" );
     $stmt->execute( [$request['userlogin']] );
     $user = $stmt->fetch();
 
@@ -425,6 +486,17 @@ function login_user( $request ) {
     return_JSON( $response );
 }
 
+/*
+//
+//  #### ##    ## #### ########    ##     ##  ######  ######## ########  ########    ###    ########  ##       ########
+//   ##  ###   ##  ##     ##       ##     ## ##    ## ##       ##     ##    ##      ## ##   ##     ## ##       ##
+//   ##  ####  ##  ##     ##       ##     ## ##       ##       ##     ##    ##     ##   ##  ##     ## ##       ##
+//   ##  ## ## ##  ##     ##       ##     ##  ######  ######   ########     ##    ##     ## ########  ##       ######
+//   ##  ##  ####  ##     ##       ##     ##       ## ##       ##   ##      ##    ######### ##     ## ##       ##
+//   ##  ##   ###  ##     ##       ##     ## ##    ## ##       ##    ##     ##    ##     ## ##     ## ##       ##
+//  #### ##    ## ####    ##        #######   ######  ######## ##     ##    ##    ##     ## ########  ######## ########
+//
+*/
 /**
  *
  * Create a user table in the database
@@ -460,10 +532,20 @@ function init_usertable() {
     return_JSON( $response );
 }
 
+/*
+//
+//  ########  ######## ######## ##     ## ########  ##    ##          ##  ######   #######  ##    ##
+//  ##     ## ##          ##    ##     ## ##     ## ###   ##          ## ##    ## ##     ## ###   ##
+//  ##     ## ##          ##    ##     ## ##     ## ####  ##          ## ##       ##     ## ####  ##
+//  ########  ######      ##    ##     ## ########  ## ## ##          ##  ######  ##     ## ## ## ##
+//  ##   ##   ##          ##    ##     ## ##   ##   ##  ####    ##    ##       ## ##     ## ##  ####
+//  ##    ##  ##          ##    ##     ## ##    ##  ##   ###    ##    ## ##    ## ##     ## ##   ###
+//  ##     ## ########    ##     #######  ##     ## ##    ##     ######   ######   #######  ##    ##
+//
+*/
 /**
  *
  * This function will return a JSON object to the client
- * @param data - The data to be returned.
  *
  */
 function return_JSON( $response ) {
@@ -475,14 +557,20 @@ function return_JSON( $response ) {
     header( 'Access-Control-Max-Age: 3600' );
     header( 'Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With' );
     echo json_encode( $response );
+    exit;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+/*
+//
+//  ########  ##     ## ##     ## ##     ## ##    ##
+//  ##     ## ##     ## ###   ### ###   ###  ##  ##
+//  ##     ## ##     ## #### #### #### ####   ####
+//  ##     ## ##     ## ## ### ## ## ### ##    ##
+//  ##     ## ##     ## ##     ## ##     ##    ##
+//  ##     ## ##     ## ##     ## ##     ##    ##
+//  ########   #######  ##     ## ##     ##    ##
+//
+*/
 // CREATE DUMMY USER
 function create_dummy_staff( $count ) {
     for ( $i = 0; $i < $count; $i++ ) {

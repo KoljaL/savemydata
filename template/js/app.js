@@ -9,6 +9,7 @@ import ("./components/ModalMessage.js");
 import Default from './views/Default.js';
 import UserLogin from './views/UserLogin.js';
 import UserProfile from './views/UserProfile.js';
+import UserTable from './views/UserTable.js';
 import Form from './views/Form.js';
 import Form1 from './views/Form1.js';
 import Form2 from './views/Form2.js';
@@ -40,14 +41,15 @@ async function router() {
                 break;
 
             case 'user':
-
                 switch (request.key) {
                     case 'profile':
                         await UserProfile.render(request.value)
-
                         break;
-
+                    case 'table':
+                        await UserTable.render()
+                        break;
                     default:
+                        await UserTable.render()
                         break;
                 }
                 break;

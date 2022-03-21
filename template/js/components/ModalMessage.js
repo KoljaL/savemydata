@@ -156,7 +156,7 @@
         options: {
             title: undefined,
             position: toastPosition.TopCenter,
-            duration: 2000000,
+            duration: 2000,
             closable: true,
             focusable: true,
             callback: undefined

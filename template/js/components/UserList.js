@@ -3,19 +3,21 @@ import Functions from '../Functions.js';
 
 export default {
     render: async(type) => {
-            let post = await getUserList();
-            deb(post)
+            let list = await getUserList();
+            // deb(list)
 
             if ('dropdown' === type) {
                 return /*html*/ ` 
                 <select id="UserListSelect" name=user>
                     <option value="" hidden disabled selected>Select User</option>
-                    ${Object.keys(post.data).map(key => (
-                        `<option value="${post.data[key].id}">${post.data[key].username}</option>`
+                    ${Object.keys(list.data).map(key => (
+                        `<option value="${list.data[key].id}">${list.data[key].username}</option>`
                     )).join('')}
                 </select> `;
                 }
-       
+            if ('raw' === type) {
+                return list;
+                }
 
     },
 };
