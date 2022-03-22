@@ -34,7 +34,7 @@ $JWT_key = 'example_key';
 //
 */
 
-$db_path = 'db/1.db';
+$db_path = 'db/11.db';
 /*
  *
  * This is a way to check if the database exists. If it doesn't exist, it will create it.
@@ -230,8 +230,9 @@ function get_user_list( $request ) {
 
         global $db;
         $response = [];
+        $table    = $request['table'];
 
-        $stmt = $db->prepare( "SELECT * FROM user" );
+        $stmt = $db->prepare( "SELECT * FROM $table" );
         $stmt->execute();
         $users = $stmt->fetchAll( PDO::FETCH_ASSOC );
 
@@ -671,7 +672,7 @@ function create_dummy_staff( $count ) {
         $random_name = random_name();
         $email       = $random_name[0]."@".$random_name[1].".com";
         $user        = [
-            'username'   => $random_name[0].'_'.$random_name[1],
+            'username'   => 'U_'.$random_name[0].'_'.$random_name[1],
             'password'   => 'password',
             'firstname'  => $random_name[0],
             'lastname'   => $random_name[1],
@@ -689,7 +690,7 @@ function create_dummy_customer( $count ) {
         $random_name = random_name();
         $email       = $random_name[0]."@".$random_name[1].".com";
         $user        = [
-            'customername' => $random_name[0].'_'.$random_name[1],
+            'customername' => 'C_'.$random_name[0].'_'.$random_name[1],
             'password'     => 'password',
             'firstname'    => $random_name[0],
             'lastname'     => $random_name[1],

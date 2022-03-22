@@ -143,7 +143,8 @@ let Login = async() => {
                     // activate logout button
                     document.getElementById('userLogout').addEventListener('click', Functions.flushLocal);
                     //  redirect to userprofile
-                    window.location.hash = '#user/profile/' + user.id;
+                    // window.location.hash = '#user/profile/' + user.id;
+                    window.location.hash = '';
 
                 } else {
                     document.getElementById('UserLoginFormError').innerHTML = res.message;

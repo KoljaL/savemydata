@@ -1,15 +1,20 @@
 'use strict';
 
 // COMMON FUCTIONS
-import Functions from './Functions.js';
-// import Toast from './Toast.js';
 import ("./components/ModalMessage.js");
+import Functions from './Functions.js';
+
 
 // VIEWS
 import Default from './views/Default.js';
 import UserLogin from './views/UserLogin.js';
-import UserProfile from './views/UserProfile.js';
 import UserTable from './views/UserTable.js';
+import UserProfile from './views/UserProfile.js';
+import CustomerTable from './views/CustomerTable.js';
+import CustomerProfile from './views/CustomerProfile.js';
+
+
+// dummy
 import Form from './views/Form.js';
 import Form1 from './views/Form1.js';
 import Form2 from './views/Form2.js';
@@ -50,6 +55,20 @@ async function router() {
                         break;
                     default:
                         await UserTable.render()
+                        break;
+                }
+                break;
+
+            case 'customer':
+                switch (request.key) {
+                    case 'profile':
+                        await CustomerProfile.render(request.value)
+                        break;
+                    case 'table':
+                        await CustomerTable.render()
+                        break;
+                    default:
+                        await CustomerTable.render()
                         break;
                 }
                 break;

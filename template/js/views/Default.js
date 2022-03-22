@@ -26,7 +26,11 @@ export default Default;
 let Style = async() => {
     let styleTags = /*CSS*/ `
         #DefaultWrapper {
-       
+            padding:1em;
+        } 
+        #DefaultWrapper li{
+            padding:.5em;
+            margin-left:1em;
         } 
        
     `;
@@ -52,7 +56,25 @@ let Style = async() => {
 let Content = async() => {
     let innerHTML = /*HTML*/ `
     <div id=DefaultWrapper>
-       empty page
+       <h2>Save my data</h2>
+       <p>CRM on its own<br>link to repo at the bottom</p>
+       <h3>works now</h3>
+            <li>two themes in two colors</li>
+            <li>full responsive with three states</li>
+            <li>Auth via Token</li>
+            <li>database init on first run</li>
+            <li>create admin & user</li>
+            <li>create dummy data</li>
+            <li>admin can create user & customer</li>
+            <li>user can only see other user</li>
+            <li>user & customer profile</li>
+            <li>user & customer table</li>
+            <li>input text fields via component</li>
+        <h3>to do</h3>
+        <li>projects</li>
+        <li>appointments</li>
+            <li>real roles & permissions in API & frontend</li>
+        
     </div>`;
     await Functions.setInnerHTML('main', innerHTML);
 }

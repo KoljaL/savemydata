@@ -14,7 +14,7 @@
     --header_full_height: 60px;
     --header_small_height: 50px;
     --footer_height: 20px;
-    --sidebar_full_width: 200px;
+    --sidebar_full_width: 220px;
     --sidebar_small_width: 50px;
     --bg_1: #27272b;
     --bg_2: #232327;
@@ -36,7 +36,7 @@
     --header_full_height: 60px;
     --header_small_height: 50px;
     --footer_height: 20px;
-    --sidebar_full_width: 200px;
+    --sidebar_full_width: 220px;
     --sidebar_small_width: 50px;
     --bg_1: #232327;
     --bg_2: #27272b;
@@ -59,7 +59,7 @@
     --header_full_height: 60px;
     --header_small_height: 50px;
     --footer_height: 20px;
-    --sidebar_full_width: 200px;
+    --sidebar_full_width: 220px;
     --sidebar_small_width: 50px;
     --bg_1: #232327;
     --bg_2: #27272b;
@@ -82,14 +82,14 @@
     --header_full_height: 60px;
     --header_small_height: 50px;
     --footer_height: 20px;
-    --sidebar_full_width: 200px;
+    --sidebar_full_width: 220px;
     --sidebar_small_width: 50px;
     --bg_1: #757575;
     --bg_2: #868686;
     --bg_3: #bbbbbb;
     --font_0: #1e1e1f;
     --font_1: #464647;
-    --font_2: #918d8d;
+    --font_2: #515151;
     --scrollbar: #918d8d;
     --border_0: rgb(49, 49, 49);
     --fontSalomon: #c19c90;
@@ -107,14 +107,14 @@
     --header_full_height: 60px;
     --header_small_height: 50px;
     --footer_height: 20px;
-    --sidebar_full_width: 200px;
+    --sidebar_full_width: 220px;
     --sidebar_small_width: 50px;
     --bg_1: #757575;
     --bg_2: #868686;
     --bg_3: #bbbbbb;
     --font_0: #1e1e1f;
     --font_1: #464647;
-    --font_2: #918d8d;
+    --font_2: #515151;
     --scrollbar: #918d8d;
     --border_0: rgb(49, 49, 49);
     --fontSalomon: #c19c90;
@@ -520,16 +520,16 @@ nav ul {
     padding-left: 0
 }
 
-[data-theme=dark-boxes] li:not(ul.subList li),
-[data-theme=light-boxes] li:not(ul.subList li) {
+[data-theme=dark-boxes] nav li:not(ul.subList li),
+[data-theme=light-boxes] nav li:not(ul.subList li) {
     outline: black solid 1px;
     box-shadow: 4px 4px 0 black;
     margin: 10px 10px 10px 4px;
     padding-left: 2px;
 }
 
-[data-theme=dark-boxes] li:not(ul.subList li).active,
-[data-theme=light-boxes] li:not(ul.subList li).active {
+[data-theme=dark-boxes] nav li:not(ul.subList li).active,
+[data-theme=light-boxes] nav li:not(ul.subList li).active {
     box-shadow: 2px 2px 0 black;
     transform: translate(2px, 2px);
     transition: 0.1s;
@@ -586,6 +586,11 @@ nav li ul.subList li {
     padding: 0 0 0 2rem
 }
 
+[data-theme=dark-boxes] .subList .link_text,
+[data-theme=light-boxes] .subList .link_text {
+    padding: .4rem 0 0 2rem
+}
+
 nav li .link_text:hover {
     color: var(--fontBlue)
 }
@@ -597,9 +602,11 @@ nav li .link_text:hover>.icon {
 nav li.active {
     background: var(--bg_2);
     box-shadow: inset -1px 0 var(--border_0);
-    /* border-right: 1px solid var(--border_0); */
-    /* border-top: 1px solid var(--border_0); */
-    /* border-bottom: 1px solid var(--border_0); */
+}
+
+[data-theme=dark-boxes] nav li.active,
+[data-theme=light-boxes] nav li.active {
+    box-shadow: none;
 }
 
 nav li.current>.link_text {
@@ -619,7 +626,6 @@ nav li .icon {
     display: inline-block;
     margin-right: 1em;
     position: relative;
-    /* left: 14px; */
     top: 3px;
     pointer-events: none;
 }
@@ -774,6 +780,11 @@ footer .withLove img {
 .user_icon {
     -webkit-mask-image: url(../img/icons/user.svg);
     mask-image: url(../img/icons/user.svg)
+}
+
+.users_icon {
+    -webkit-mask-image: url(../img/icons/users.svg);
+    mask-image: url(../img/icons/users.svg)
 }
 
 .updown_icon {

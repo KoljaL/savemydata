@@ -3,15 +3,15 @@ import UserList from '../components/UserList.js';
 import Form from '../Form.js';
 
 export default {
-    render: async(userID) => {
-        Functions.pageTitle(`User Profile`);
+    render: async(customerID) => {
+        Functions.pageTitle(`Customer Profile`);
         await Style();
         await Content();
-        await getUserData(userID);
+        await getCustomerData(customerID);
         await dropDownEvent();
-        await newUserButton();
-        await editUserButton(userID);
-        await deleteUserButton(userID);
+        await newCustomerButton();
+        await editCustomerButton(customerID);
+        await deleteCustomerButton(customerID);
     },
 };
 
@@ -21,7 +21,7 @@ export default {
  */
 let Style = async() => {
     let styleTags = /*CSS*/ `
-        #T_UserLoginForm h2{
+        #T_CustomerLoginForm h2{
             display:inline-block;
             margin-right: 1em;
         }
@@ -29,16 +29,16 @@ let Style = async() => {
             position: relative;
             widht:100%; 
         }
-        #deleteUserButton:empty,
-        #newUserButton:empty,
-        #editUserButton:empty{
+        #deleteCustomerButton:empty,
+        #newCustomerButton:empty,
+        #editCustomerButton:empty{
             border: none;
             outline: none;
             background: transparent;
         }
-        #deleteUserButton,
-        #newUserButton,
-        #editUserButton{ 
+        #deleteCustomerButton,
+        #newCustomerButton,
+        #editCustomerButton{ 
             font-size: 14px;
             cursor:pointer;
             color: var(--font_0);
@@ -51,20 +51,20 @@ let Style = async() => {
             font-size: 1em;
             margin-left: 1em;
         }
-        #deleteUserButton:hover{
+        #deleteCustomerButton:hover{
             color: var(--fontRed);
         }
-        #newUserButton:hover{
+        #newCustomerButton:hover{
             color: var(--fontGreen);
         }
-        #editUserButton:hover{
+        #editCustomerButton:hover{
             color: var(--fontBlue);
         }
 
-        #UserProfileList {
+        #CustomerProfileList {
             display: inline-block;
         }
-        #UserProfileHeader{
+        #CustomerProfileHeader{
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
@@ -75,7 +75,7 @@ let Style = async() => {
         }
  
     `;
-    Functions.createStyle('UserProfile_style', styleTags);
+    Functions.createStyle('CustomerProfile_style', styleTags);
 };
 
 /**
@@ -83,18 +83,18 @@ let Style = async() => {
  */
 let Content = async() => {
     let innerHTML = /*HTML*/ `
-        <div id="T_UserLoginForm" class="template"> 
-            <div id=UserProfileHeader>
-                <h2>UserProfile</h2> 
+        <div id="T_CustomerLoginForm" class="template"> 
+            <div id=CustomerProfileHeader>
+                <h2>CustomerProfile</h2> 
                 <div class="ActionButtons">
-                    <div id=UserProfileList></div>
-                    <span id="editUserButton"></span>
-                    <span id="newUserButton"></span>
-                    <span id="deleteUserButton"></span>
+                    <div id=CustomerProfileList></div>
+                    <span id="editCustomerButton"></span>
+                    <span id="newCustomerButton"></span>
+                    <span id="deleteCustomerButton"></span>
                 </div>
             </div>
             <div id=editArea>
-                <div id=Userdata></div>
+                <div id=Customerdata></div>
             </div>
         </div>`;
     await Functions.setInnerHTML('main', innerHTML);
@@ -104,21 +104,22 @@ let Content = async() => {
 
 
 /**
- * It gets the user data from the API and displays it on the page.
+ * It gets the customer data from the API and displays it on the page.
  */
-let getUserData = async(userID) => {
+let getCustomerData = async(customerID) => {
 
-    const currentUserRole = Functions.getLocal('role');
+    const currentCustomerRole = Functions.getLocal('role');
 
     var formData = new FormData();
-    formData.append('id', userID);
+    formData.append('id', customerID);
     // getAPIdata (endpoint, formID)
     Functions.getAPIdata('userprofile', formData)
         .then((res) => {
             // deb(res);
             if (res.code === 200) {
-                const user = res.data;
-                window.userName = user.username;
+                const customer = res.data;
+                // deb(customer)
+                window.userName = customer.username;
                 let innerHTML = /*HTML*/ `
                      
                 <form id=userProfilForm >
@@ -130,9 +131,9 @@ let getUserData = async(userID) => {
                         type: 'text',
                         widths: '100/150/300',
                         edit: 'hide',
-                        label: 'Username',
-                        value: user.username,
-                        db: 'username/user/id/' + user.id,
+                        label: 'Customername',
+                        value: customer.username,
+                        db: 'username/customer/id/' + customer.id,
                     })}
 
                     ${Form.inputText({
@@ -141,8 +142,8 @@ let getUserData = async(userID) => {
                         widths: '100/150/300',
                         edit: 'hide',
                         label: 'Firstname',
-                        value: user.firstname,
-                        db: 'firstname/user/id/' + user.id,
+                        value: customer.firstname,
+                        db: 'firstname/customer/id/' + customer.id,
                     })}
 
 
@@ -152,8 +153,8 @@ let getUserData = async(userID) => {
                         widths: '100/150/300',
                         edit: 'hide',
                         label: 'Lastname',
-                        value: user.lastname,
-                        db: 'lastname/user/id/' + user.id,
+                        value: customer.lastname,
+                        db: 'lastname/customer/id/' + customer.id,
                     })}
 
 
@@ -163,8 +164,8 @@ let getUserData = async(userID) => {
                         widths: '100/150/300',
                         edit: 'hide',
                         label: 'Email',
-                        value: user.email,
-                        db: 'email/user/id/' + user.id,
+                        value: customer.email,
+                        db: 'email/customer/id/' + customer.id,
                     })}
 
                     ${Form.inputText({
@@ -174,7 +175,7 @@ let getUserData = async(userID) => {
                         edit: 'hide',
                         label: 'Password',
                         value: '',
-                        db: 'password/user/id/' + user.id,
+                        db: 'password/customer/id/' + customer.id,
                     })}
 
                 </div>
@@ -185,10 +186,10 @@ let getUserData = async(userID) => {
                         name: 'comment',
                         type: 'textarea',
                         widths: '300/400/500',
-                        edit: currentUserRole === '0' ? 'hide' : 'forbidden',
+                        edit: currentCustomerRole === '0' ? 'hide' : 'forbidden',
                         label: 'Comment',
-                        value: user.comment,
-                        db: 'comment/user/id/' + user.id,
+                        value: customer.comment,
+                        db: 'comment/customer/id/' + customer.id,
                     })}
 
                     </div>
@@ -198,31 +199,31 @@ let getUserData = async(userID) => {
                         name: 'role',
                         type: 'text',
                         widths: '50/50/50',
-                        edit: currentUserRole === '0' ? 'hide' : 'forbidden',
+                        edit: currentCustomerRole === '0' ? 'hide' : 'forbidden',
                         label: 'Role',
-                        value: user.role,
-                        db: 'role/user/id/' + user.id,
+                        value: customer.role,
+                        db: 'role/customer/id/' + customer.id,
                     })}
 
                     ${Form.inputText({
                         name: 'permission',
                         type: 'text',
                         widths: '100/100/100',
-                        edit: currentUserRole === '0' ? 'hide' : 'forbidden',
+                        edit: currentCustomerRole === '0' ? 'hide' : 'forbidden',
                         label: 'Permission',
-                        value: user.permission,
-                        db: 'permission/user/id/' + user.id,
+                        value: customer.permission,
+                        db: 'permission/customer/id/' + customer.id,
                     })}
             </div>
                 </form>`;
 
                 // copy to DOM
-                Functions.setInnerHTML('Userdata', innerHTML);
+                Functions.setInnerHTML('Customerdata', innerHTML);
             }
             // return error message
             else {
-                let innerHTML = /*HTML*/ `<div id="T_UserLoginForm"> ${res.message}</div>`;
-                Functions.setInnerHTML('Userdata', innerHTML);
+                let innerHTML = /*HTML*/ `<div id="T_CustomerLoginForm"> ${res.message}</div>`;
+                Functions.setInnerHTML('Customerdata', innerHTML);
             }
         });
 };
@@ -236,16 +237,16 @@ let getUserData = async(userID) => {
 let dropDownEvent = async() => {
     // only admin '0' can do this
     if (Functions.getLocal('role') === '0') {
-        let innerHTML = await UserList.render('dropdown', 'user')
-        await Functions.setInnerHTML('UserProfileList', innerHTML)
+        let innerHTML = await UserList.render('dropdown', 'customer')
+        await Functions.setInnerHTML('CustomerProfileList', innerHTML)
             .then(() => {
 
                 document.getElementById('UserListSelect').addEventListener('change', (el) => {
-                    Message.info("User Profile: " + el.target.options[el.target.selectedIndex].text);
+                    Message.info("Customer Profile: " + el.target.options[el.target.selectedIndex].text);
                     // Message.success()
                     // Message.error()
                     // Message.warn()
-                    window.location.hash = '#user/profile/' + el.target.value;
+                    window.location.hash = '#customer/profile/' + el.target.value;
                 })
             })
     }
@@ -258,14 +259,14 @@ let dropDownEvent = async() => {
 /**
  * It makes the edit button clickable and makes the fields editable.
  */
-let editUserButton = async(userID) => {
+let editCustomerButton = async(customerID) => {
 
     // only admin '0' can do this, or youser himselfs
-    if (Functions.getLocal('role') === '0' || Functions.getLocal('id') === userID) {
-        await Functions.setInnerHTML('editUserButton', 'Edit')
+    if (Functions.getLocal('role') === '0' || Functions.getLocal('id') === customerID) {
+        await Functions.setInnerHTML('editCustomerButton', 'Edit')
             .then(() => {
 
-                document.getElementById('editUserButton').addEventListener('click', function() {
+                document.getElementById('editCustomerButton').addEventListener('click', function() {
                     document.querySelectorAll('#editArea input,#editArea textarea').forEach((input) => {
                         // make fields editable
                         input.classList.toggle('hideEdit');
@@ -283,23 +284,23 @@ let editUserButton = async(userID) => {
 };
 
 
-let deleteUserButton = (userID) => {
+let deleteCustomerButton = (customerID) => {
     // only admin '0' can do this
     if (Functions.getLocal('role') === '0') {
         // set text, make the button visible
-        Functions.setInnerHTML('deleteUserButton', 'Delete')
+        Functions.setInnerHTML('deleteCustomerButton', 'Delete')
 
-        document.getElementById('deleteUserButton').addEventListener('click', function() {
+        document.getElementById('deleteCustomerButton').addEventListener('click', function() {
             var userDeleteForm = new FormData();
-            userDeleteForm.append('table', 'user');
-            userDeleteForm.append('id', userID);
+            userDeleteForm.append('table', 'customer');
+            userDeleteForm.append('id', customerID);
 
             Functions.getAPIdata('deleteuser', userDeleteForm)
                 .then((res) => {
                     deb(res)
                     if (res.code === 200) {
-                        Message.warn("Deleted User: " + window.userName);
-                        window.location.hash = '#user/table/';
+                        Message.warn("Deleted Customer: " + window.userName);
+                        window.location.hash = '#customer/table/';
                     }
                 })
 
@@ -307,22 +308,22 @@ let deleteUserButton = (userID) => {
     }
     // if not admin, delete this button
     else {
-        document.getElementById('deleteUserButton').remove();
+        document.getElementById('deleteCustomerButton').remove();
     }
 };
 
 
 
 /**
- * It adds a new user to the database. newUserButton
+ * It adds a new customer to the database. newCustomerButton
  */
-let newUserButton = async() => {
+let newCustomerButton = async() => {
     // only admin '0' can do this
     if (Functions.getLocal('role') === '0') {
         // set text, make the button visible
-        Functions.setInnerHTML('newUserButton', 'New')
+        Functions.setInnerHTML('newCustomerButton', 'New')
 
-        document.getElementById('newUserButton').addEventListener('click', (button) => {
+        document.getElementById('newCustomerButton').addEventListener('click', (button) => {
 
             // send all inputfields to API & get directed to the new users profile
             if ('Save' === button.target.innerHTML) {
@@ -332,15 +333,15 @@ let newUserButton = async() => {
                     .then((res) => {
                         // deb(res)
                         if (res.code === 200) {
-                            window.location.hash = '#user/profile/' + res.data.id;
+                            window.location.hash = '#customer/profile/' + res.data.id;
                         }
                     })
             } // save
 
             // delete all form values, make them editable & remove the data-db for singeedit
             if ('New' === button.target.innerHTML) {
-                document.getElementById('editUserButton').remove();
-                document.getElementById('deleteUserButton').remove();
+                document.getElementById('editCustomerButton').remove();
+                document.getElementById('deleteCustomerButton').remove();
                 document.querySelectorAll('#editArea input,#editArea textarea').forEach(input => {
                     delete input.dataset.db;
                     input.value = '';
