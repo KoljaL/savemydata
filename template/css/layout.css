@@ -196,7 +196,7 @@ body {
     width: 100vw;
     height: 100vh;
     background: var(--bg_1);
-    z-index: 4;
+    z-index: 10;
     opacity: 1;
     content: "";
 }
@@ -296,7 +296,7 @@ a {
     white-space: nowrap;
     background-color: var(--bg_3);
     box-shadow: inset -1px 0 var(--border_0);
-    z-index: 2
+    z-index: 6;
 }
 
 #PRL.large>nav,
@@ -418,21 +418,86 @@ main.visible {
 */
 
 nav .sidebar_header {
-    padding: 1em 0 0 .65em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1rem .5rem 1rem;
     font-size: 1.5em;
     font-family: 'Zilla Slab Medium', sans-serif;
-    font-weight: 400
+    font-weight: 400;
+    width: var(--sidebar_full_width);
 }
 
-nav .sidebar_title {
-    margin-left: 1em
+nav .sidebar_header #toggleSidebar {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    cursor: pointer;
+    background-color: var(--font_0);
+    -webkit-mask-image: url(../img/icons/menu.svg);
+    mask-image: url(../img/icons/menu.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat!important
+}
+
+nav .sidebar_header #toggleSidebar:hover {
+    background-color: var(--fontBlue)
+}
+
+.sidebar nav .sidebar_header #toggleSidebar {
+    -webkit-mask-image: url(../img/icons/mark.svg);
+    mask-image: url(../img/icons/mark.svg)
+}
+
+.small #toggleSidebar {
+    position: fixed;
+    display: inline-block;
+    top: .4em;
+    right: .75em;
+    width: 30px;
+    height: 30px;
+}
+
+nav .sidebar_userpanel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1rem 0rem .5rem;
+    width: var(--sidebar_full_width);
+}
+
+nav .sidebar_userpanel img {
+    width: 40px;
+    height: 40px;
+    margin-left: -2px;
+}
+
+nav .sidebar_userpanel .username {
+    font-family: 'Zilla Slab Medium', sans-serif;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+nav .sidebar_userpanel .username:hover {
+    color: var(--fontBlue);
+}
+
+#userLogout.logout_icon {
+    background-color: var(--font_0);
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+#userLogout.logout_icon:hover {
+    background-color: var(--fontRed);
 }
 
 nav #expandSubLists {
     display: inline-block;
     position: relative;
     top: .1em;
-    margin-left: .75em;
+    /* margin-left: .75em; */
     width: 18px;
     height: 18px;
     cursor: pointer;
@@ -545,20 +610,6 @@ nav li.current .icon {
     background-color: var(--fontBlue);
 }
 
-#userLogout.logout_icon {
-    background-color: var(--font_0);
-    width: 20px;
-    height: 20px;
-    display: inline-block;
-    position: relative;
-    left: 2em;
-    top: 0.3em;
-}
-
-#userLogout.logout_icon:hover {
-    background-color: var(--fontRed);
-}
-
 nav li .icon {
     content: '';
     background-repeat: no-repeat;
@@ -651,40 +702,6 @@ footer .withLove img {
 
 #darkmodecheckbox:hover {
     fill: var(--fontBlue)
-}
-
-#toggleSidebar {
-    width: 20px;
-    height: 20px;
-    /* margin-right: .5em; */
-    display: inline-block;
-    /* margin-left: -40px; */
-    /* position: relative; */
-    /* top: 3px; */
-    cursor: pointer;
-    background-color: var(--font_0);
-    -webkit-mask-image: url(../img/icons/menu.svg);
-    mask-image: url(../img/icons/menu.svg);
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat!important
-}
-
-#toggleSidebar:hover {
-    background-color: var(--fontBlue)
-}
-
-.sidebar #toggleSidebar {
-    -webkit-mask-image: url(../img/icons/mark.svg);
-    mask-image: url(../img/icons/mark.svg)
-}
-
-.small #toggleSidebar {
-    position: fixed;
-    display: inline-block;
-    top: .4em;
-    right: .75em;
-    width: 30px;
-    height: 30px;
 }
 
 

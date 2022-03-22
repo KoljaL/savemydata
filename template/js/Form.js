@@ -77,7 +77,7 @@ let Forms = {
             <div class="FF-item" style="${flexWidth}">
             <input 
             id=${d.name} 
-            class="${hideEdit}" 
+            class="${hideEdit}"  
             name=${d.name} 
             type="${d.type}" 
             placeholder="${d.placeholder}" 

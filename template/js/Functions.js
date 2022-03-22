@@ -283,6 +283,7 @@ let Functions = {
         }
 
         // deb(formData)
+        // URL = 'https://localhost/savemydata/' + URL;
         formData = JSON.stringify(Object.fromEntries(formData));
         const response = await fetch(URL, {
             method: 'POST',
@@ -311,14 +312,12 @@ let Functions = {
 
     /* Setting the username in the navbar. */
     setUsername: async(username, userID) => {
-        document.querySelector('#userprofile span.link_text').innerHTML = /*HTML*/ `
-            <span class="icon" style="background-color:transparent">
-            <img src="uploads/avatars/${username}.png"></span>
-            ${username}
+        document.querySelector('nav .sidebar_userpanel').innerHTML = /*HTML*/ `
+            <img src="uploads/avatars/${username}.png">
+            <span class=username  onclick='window.location.hash ="user/profile/"+${userID}'>${username}</span>
             <span id=userLogout class="logout_icon"></span>`;
-
-        document.querySelector('#userprofile').setAttribute('data-link', 'user/profile/' + userID);
     },
+
 
     /*
     //  

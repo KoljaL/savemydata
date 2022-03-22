@@ -27,20 +27,18 @@ let Style = async() => {
     let styleTags = /*CSS*/ `
         #UserLoginWrapper {
             position: absolute;
-            top: var(--header_full_height);
+            top: 0;
             left: 0;
-            width: 100vw;
+        width: 100vw;
             height:100vh;
             display:flex;
             justify-content: center;
-            background: var(--bg_1);
-            z-index: 5;
         }
         #UserLoginForm {
             position: relative;
             top: 10vh;
             max-width: 300px;
-            z-index: 10;
+            z-index: 15;
         }
        
     `;

@@ -6,7 +6,9 @@ a simple framework to save various data based on users
 
 ## dependencies
 
--   **Auth**: [PHP-JWT](https://github.com/firebase/php-jwt)
+-   **Auth** [PHP-JWT](https://github.com/firebase/php-jwt)
+- 	**Table** [TUI grid](https://github.com/nhn/tui.grid)
+
 
 ## links
 

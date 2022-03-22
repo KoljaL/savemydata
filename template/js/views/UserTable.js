@@ -3,10 +3,8 @@ import UserList from '../components/UserList.js';
 import Form from '../Form.js';
 
 // import files for grid
-import ("../components/TUIgrid.js");
+import ('../components/TUIgrid.js');
 Functions.addStylesheet('./template/css/TUIgrid.css');
-
-
 
 export default {
     render: async(userID) => {
@@ -16,7 +14,6 @@ export default {
         await Data();
     },
 };
-
 
 /**
  * STYLE
@@ -32,11 +29,11 @@ let Style = async() => {
       }
     #UserTable .tui-grid-cell {
         background-color: transparent;
-        border-color: var(--border_0);
-        border-left-width: 0;
-        border-right-width: 0;
-        border-top-width: 1px;
-        border-bottom-width: 1px;
+    border-color: var(--border_0);
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
         color: var(--font_0);
     }
     #UserTable .tui-grid-header-area {
@@ -46,13 +43,18 @@ let Style = async() => {
     #UserTable .tui-grid-content-area {
         border-color: #ea0000;
     }
-
+    #UserTable .tui-grid-layer-focus-border {
+        background-color: transparent;
+      }
+    #UserTable  .tui-grid-layer-focus-deactive .tui-grid-layer-focus-border {
+        background-color: transparent;
+    }
        
-    [data-column-name="id"] .tui-grid-cell-content {
+    #UserTable [data-column-name="username"] .tui-grid-cell-content {
         color: var(--fontBlue);
         font-weight: bold;
     }     
-    [data-column-name="id"] {
+    #UserTable [data-column-name="username"] {
         cursor:pointer;
     }
 
@@ -72,13 +74,12 @@ let Content = async() => {
             <div id="UserTable"></div>
         </div>`;
     await Functions.setInnerHTML('main', innerHTML);
-
 };
 
 let Data = async() => {
     let data = await UserList.render('raw');
-    data = data.data
-        // deb(data)
+    data = data.data;
+    // deb(data)
     const grid = new tui.Grid({
         usageStatistics: false,
         el: document.getElementById('UserTable'),
@@ -87,58 +88,70 @@ let Data = async() => {
         rowHeaders: ['rowNum'],
         scrollX: false,
         scrollY: false,
+        // bodyHeight: "90%",
         columnOptions: {
-            resizable: true
+            // resizable: true
+        },
+        header: {
+            align: 'left',
         },
         columns: [{
                 header: 'ID',
                 name: 'id',
                 sortingType: 'asc',
-                sortable: true
+                sortable: true,
+                width: 50,
             },
             {
                 header: 'Username',
                 name: 'username',
                 sortingType: 'asc',
-                sortable: true
+                sortable: true,
             },
             {
                 header: 'Firstname',
                 name: 'firstname',
                 sortingType: 'asc',
-                sortable: true
+                sortable: true,
             },
             {
                 header: 'Lastname',
                 name: 'lastname',
                 sortingType: 'asc',
-                sortable: true
+                sortable: true,
             },
             {
                 header: 'Email',
-                name: 'email'
+                name: 'email',
             },
             {
                 header: 'Role',
-                name: 'role'
+                name: 'role',
+                width: 50,
             },
             {
                 header: 'Permission',
-                name: 'permission'
+                name: 'permission',
+                width: 50,
             },
             {
                 header: 'Comment',
-                name: 'comment'
-            }
-        ]
+                name: 'comment',
+            },
+        ],
     });
 
+    grid.on('click', (ev) => {
+        // deb(grid.getFocusedCell())
+        // deb(grid.getFormattedValue(grid.getFocusedCell().rowKey, 'id'))
 
-    grid.on('click', ev => {
-        if (ev.columnName === 'id') {
-            let id = grid.getFocusedCell().value
-            window.location.hash = '#user/profile/' + id
+        if (ev.columnName === 'username') {
+            let id = grid.getFormattedValue(grid.getFocusedCell().rowKey, 'id');
+            window.location.hash = '#user/profile/' + id;
         }
-        // console.log('change focused cell!', ev);
+        if (ev.columnName === 'id') {
+            let id = grid.getFocusedCell().value;
+            window.location.hash = '#user/profile/' + id;
+        }
     });
 };

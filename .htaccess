@@ -14,3 +14,6 @@ RewriteRule ^(.+)$ api.php [QSA]
 
 # AddType 'text/css; charset=UTF-8' css
 # AddType text/css css
+#  <IfModule mod_headers.c>
+#    Header set Access-Control-Allow-Origin "*"
+#  </IfModule>
