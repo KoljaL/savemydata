@@ -34,7 +34,7 @@ $JWT_key = 'example_key';
 //
 */
 
-$db_path = 'db/aaaaaaaa.db';
+$db_path = 'db/uu.db';
 /*
  *
  * This is a way to check if the database exists. If it doesn't exist, it will create it.
@@ -45,14 +45,12 @@ if ( !file_exists( $db_path ) ) {
     $db = new PDO( 'sqlite:'.$db_path );
     init_customertable();
     init_usertable();
+    init_user_profile_form_table();
     include './php/dummy_content.php';
     create_dummy_staff( 30 );
     create_dummy_customer( 100 );
 } else {
     $db = new PDO( 'sqlite:'.$db_path );
-    // include './php/dummy_content.php';
-    // create_dummy_customer( 100 );
-
 }
 /*
  *
@@ -63,6 +61,17 @@ if ( !file_exists( $db_path ) ) {
 $uri      = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
 $uri      = explode( '/', $uri );
 $endpoint = end( $uri );
+
+//DEBUG
+//DEBUG
+//DEBUG
+if ( 'do' === $endpoint ) {
+    init_user_profile_form_table();
+    exit;
+}
+//DEBUG
+//DEBUG
+//DEBUG
 
 /*
  *
@@ -91,15 +100,17 @@ if ( 'login' === $endpoint ) {
 }
 
 /*
-//
-//  ######## ##    ## ########  ########   #######  #### ##    ## ########  ######
-//  ##       ###   ## ##     ## ##     ## ##     ##  ##  ###   ##    ##    ##    ##
-//  ##       ####  ## ##     ## ##     ## ##     ##  ##  ####  ##    ##    ##
-//  ######   ## ## ## ##     ## ########  ##     ##  ##  ## ## ##    ##     ######
-//  ##       ##  #### ##     ## ##        ##     ##  ##  ##  ####    ##          ##
-//  ##       ##   ### ##     ## ##        ##     ##  ##  ##   ###    ##    ##    ##
-//  ######## ##    ## ########  ##         #######  #### ##    ##    ##     ######
-//
+//////////////////////////////////////////////////////////////////////////////////////
+//                                                                                  //
+//  ######## ##    ## ########  ########   #######  #### ##    ## ########  ######  //
+//  ##       ###   ## ##     ## ##     ## ##     ##  ##  ###   ##    ##    ##    ## //
+//  ##       ####  ## ##     ## ##     ## ##     ##  ##  ####  ##    ##    ##       //
+//  ######   ## ## ## ##     ## ########  ##     ##  ##  ## ## ##    ##     ######  //
+//  ##       ##  #### ##     ## ##        ##     ##  ##  ##  ####    ##          ## //
+//  ##       ##   ### ##     ## ##        ##     ##  ##  ##   ###    ##    ##    ## //
+//  ######## ##    ## ########  ##         #######  #### ##    ##    ##     ######  //
+//                                                                                  //
+//////////////////////////////////////////////////////////////////////////////////////
 */
 
 /*
@@ -451,6 +462,40 @@ function login_user( $request ) {
     return_JSON( $response );
 }
 
+// ${Form.inputText({
+//     name: 'comment',
+//     type: 'textarea',
+//     widths: '300/400/500',
+//     edit: currentUserRole === '0' ? 'hide' : 'forbidden',
+//     label: 'Comment',
+//     value: user.comment,
+//     db: 'comment/user/id/' + user.id,
+// })}
+
+function init_user_profile_form_table() {
+    global $db;
+    // create user table
+    $db->exec( 'CREATE TABLE IF NOT EXISTS user_profile_form(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            date TEXT NOT NULL DEFAULT ""
+        )' );
+
+    // create first users
+    $field = [
+        'pos'    => '10',
+        'name'   => 'comment',
+        'type'   => 'textarea',
+        'widths' => '300/400/500',
+        'edit'   => 'hide/forbidden',
+        'label'  => 'Comment',
+        'value'  => 'user.comment',
+        'db'     => 'comment/user/id'
+
+    ];
+    insert_into_db( $field, 'user_profile_form' );
+
+}
+
 /*
 //
 //  #### ##    ## #### ########    ##     ##  ######  ######## ########  ########    ###    ########  ##       ########
@@ -632,15 +677,6 @@ function insert_into_db( $param, $table ) {
     $vars[] = date( 'd.m.Y H:i:s' );
     // print_r( $vars );
 
-    // Fatal error: Uncaught PDOException: SQLSTATE[HY000]:
-    // General error: 1 near "table": syntax error in /www/htdocs/w01c010a/dev.rasal.de/savemydata/api.php:637
-    // Stack trace:
-    // #0 /www/htdocs/w01c010a/dev.rasal.de/savemydata/api.php(637): PDO->prepare('INSERT INTO cus...')
-    // #1 /www/htdocs/w01c010a/dev.rasal.de/savemydata/api.php(212): insert_into_db(Array, 'customer')
-    // #2 /www/htdocs/w01c010a/dev.rasal.de/savemydata/api.php(121): new_user(Array)
-    // #3 {main} thrown in /www/htdocs/w01c010a/dev.rasal.de/savemydata/api.php on line 637
-    // INSERT INTO customer (customername,firstname,lastname,email,password,comment,role,permission,user_id,user_token,date)
-    //  VALUES (?,?,?,?,?,?,?,?,?,?,?)
     //
     // INSERT INTO
     //
