@@ -202,10 +202,30 @@ body {
 }
 
 h1,
-h2 {
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-family: 'Zilla Slab Medium', sans-serif;
     font-weight: 400;
     letter-spacing: .1rem;
+    text-shadow: .03em .03em white;
+}
+
+[data-theme=dark-boxes] h1,
+[data-theme=dark] h1,
+[data-theme=dark-boxes] h2,
+[data-theme=dark] h2,
+[data-theme=dark-boxes] h3,
+[data-theme=dark] h3,
+[data-theme=dark-boxes] h4,
+[data-theme=dark] h4,
+[data-theme=dark-boxes] h5,
+[data-theme=dark] h5,
+[data-theme=dark-boxes] h6,
+[data-theme=dark] h6 {
+    text-shadow: .1em .1em black;
 }
 
 a {
@@ -580,6 +600,11 @@ nav li ul.subList li {
 [data-theme=dark-boxes] .link_text,
 [data-theme=light-boxes] .link_text {
     padding: 6px 0 6px 1em;
+}
+
+[data-theme=dark-boxes] .link_text,
+[data-theme=dark] .link_text {
+    text-shadow: .07em .07em black;
 }
 
 .subList .link_text {

@@ -34,7 +34,7 @@ $JWT_key = 'example_key';
 //
 */
 
-$db_path = 'db/11.db';
+$db_path = 'db/11aa.db';
 /*
  *
  * This is a way to check if the database exists. If it doesn't exist, it will create it.
@@ -50,6 +50,9 @@ if ( !file_exists( $db_path ) ) {
     create_dummy_customer( 100 );
 } else {
     $db = new PDO( 'sqlite:'.$db_path );
+    // include './php/dummy_content.php';
+    // create_dummy_customer( 100 );
+
 }
 /*
  *
@@ -137,17 +140,17 @@ default:
 }
 
 /*
-//
-//
-//  ######## ##     ## ##    ##  ######  ######## ####  #######  ##    ##  ######
-//  ##       ##     ## ###   ## ##    ##    ##     ##  ##     ## ###   ## ##    ##
-//  ##       ##     ## ####  ## ##          ##     ##  ##     ## ####  ## ##
-//  ######   ##     ## ## ## ## ##          ##     ##  ##     ## ## ## ##  ######
-//  ##       ##     ## ##  #### ##          ##     ##  ##     ## ##  ####       ##
-//  ##       ##     ## ##   ### ##    ##    ##     ##  ##     ## ##   ### ##    ##
-//  ##        #######  ##    ##  ######     ##    ####  #######  ##    ##  ######
-//
-//
+//////////////////////////////////////////////////////////////////////////////////////
+//                                                                                  //
+//  ######## ##     ## ##    ##  ######  ######## ####  #######  ##    ##  ######   //
+//  ##       ##     ## ###   ## ##    ##    ##     ##  ##     ## ###   ## ##    ##  //
+//  ##       ##     ## ####  ## ##          ##     ##  ##     ## ####  ## ##        //
+//  ######   ##     ## ## ## ## ##          ##     ##  ##     ## ## ## ##  ######   //
+//  ##       ##     ## ##  #### ##          ##     ##  ##     ## ##  ####       ##  //
+//  ##       ##     ## ##   ### ##    ##    ##     ##  ##     ## ##   ### ##    ##  //
+//  ##        #######  ##    ##  ######     ##    ####  #######  ##    ##  ######   //
+//                                                                                  //
+//////////////////////////////////////////////////////////////////////////////////////
 */
 
 // https://phpdelusions.net/pdo_examples/select
@@ -205,7 +208,8 @@ function new_user( $param ) {
         global $db;
         $response = [];
 
-        create_user( $param );
+        // create_user( $param );
+        insert_into_db( $param, 'user' );
 
     } else {
         $response['code']    = 400;
@@ -225,12 +229,17 @@ function new_user( $param ) {
 //   #######   ######  ######## ##     ## ######## ####  ######     ##
 //
 */
-function get_user_list( $request ) {
+/**
+ *
+ * This function is used to get all the users from the database
+ * Depending on the $param['table'] it will respond staff or customer data
+ */
+function get_user_list( $param ) {
     if ( isAllowed() ) {
 
         global $db;
         $response = [];
-        $table    = $request['table'];
+        $table    = $param['table'];
 
         $stmt = $db->prepare( "SELECT * FROM $table" );
         $stmt->execute();
@@ -389,98 +398,6 @@ function get_user_profile( $param ) {
 
 /*
 //
-//   ######  ########  ########    ###    ######## ########    ##     ##  ######  ######## ########
-//  ##    ## ##     ## ##         ## ##      ##    ##          ##     ## ##    ## ##       ##     ##
-//  ##       ##     ## ##        ##   ##     ##    ##          ##     ## ##       ##       ##     ##
-//  ##       ########  ######   ##     ##    ##    ######      ##     ##  ######  ######   ########
-//  ##       ##   ##   ##       #########    ##    ##          ##     ##       ## ##       ##   ##
-//  ##    ## ##    ##  ##       ##     ##    ##    ##          ##     ## ##    ## ##       ##    ##
-//   ######  ##     ## ######## ##     ##    ##    ########     #######   ######  ######## ##     ##
-//
-*/
-/**
- *
- * Create a new user in the database
- *
- */
-function create_user( $param ) {
-    global $db;
-    $stmt = $db->prepare( 'INSERT INTO user (`username`, `password`, `firstname`, `lastname`, `email`, `comment`, `role`, `permission`, `date`)
-                            VALUES (:username, :password, :firstname, :lastname, :email, :comment, :role,:permission, :date)' );
-    $stmt->bindValue( ':username', $param['username'] );
-    $stmt->bindValue( ':password', password_hash( $param['password'], PASSWORD_DEFAULT ) );
-    $stmt->bindValue( ':firstname', $param['firstname'] );
-    $stmt->bindValue( ':lastname', $param['lastname'] );
-    $stmt->bindValue( ':email', $param['email'] );
-    $stmt->bindValue( ':comment', $param['comment'] );
-    $stmt->bindValue( ':role', $param['role'] );
-    $stmt->bindValue( ':permission', $param['permission'] );
-    $stmt->bindValue( ':date', date( 'd.m.Y H:i:s' ) );
-
-    $response = [];
-    if ( $stmt->execute() ) {
-        $count = $stmt->rowCount();
-
-        $response['data']['id'] = $db->lastInsertId();
-        $response['code']       = 200;
-        $response['message']    = 'user '.$param['username'].' created';
-
-    } else {
-        $response['code']    = 400;
-        $response['message'] = 'no user created';
-    }
-
-    // return response
-    return_JSON( $response );
-}
-
-// $stmt = $db->prepare( "SELECT * FROM user WHERE id=?" );
-// $stmt->execute( [$param['id']] );
-
-function create_customer( $param ) {
-    global $db;
-    $stmt = $db->prepare( "INSERT INTO customer (customername, password, firstname, lastname, email, phone,street, street_nr,city, city_nr,comment, role, permission, date ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)" );
-
-    $password = $param['password'];
-    $date     = date( 'd.m.Y H:i:s' );
-
-    $stmt->execute( [
-        $param['customername'],
-        $password,
-        $param['firstname'],
-        $param['lastname'],
-        $param['email'],
-        $param['phone'],
-        $param['street'],
-        $param['street_nr'],
-        $param['city'],
-        $param['city_nr'],
-        $param['comment'],
-        $param['role'],
-        $param['permission'],
-        $date
-    ] );
-
-    $count = $stmt->rowCount();
-
-    $response = [];
-    if ( $count ) {
-
-        $response['data']['id'] = $db->lastInsertId();
-        $response['code']       = 200;
-        $response['message']    = 'user '.$param['customername'].' created';
-
-    } else {
-        $response['code']    = 400;
-        $response['message'] = 'no user created';
-    }
-
-    // return response
-    return_JSON( $response );
-}
-
-/*
-//
 //  ##        #######   ######   #### ##    ##    ##     ##  ######  ######## ########
 //  ##       ##     ## ##    ##   ##  ###   ##    ##     ## ##    ## ##       ##     ##
 //  ##       ##     ## ##         ##  ####  ##    ##     ## ##       ##       ##     ##
@@ -568,9 +485,11 @@ function init_usertable() {
     // create first users
     $admin = ['username' => 'admin', 'password' => 'password', 'firstname' => 'admin', 'lastname' => 'admin', 'email' => 'admin@admin.org', 'comment' => 'lorem iopsum', 'role' => '0', 'permission' => '0'];
     $user  = ['username' => 'user', 'password' => 'password', 'firstname' => 'user', 'lastname' => 'user', 'email' => 'user@user.org', 'comment' => 'lorem iopsum', 'role' => '1', 'permission' => '0'];
+    insert_into_db( $admin, 'user' );
+    insert_into_db( $user, 'user' );
 
-    create_user( $admin );
-    create_user( $user );
+    // create_user( $admin );
+    // create_user( $user );
 
     // send response
     $response['code']    = 200;
@@ -579,6 +498,22 @@ function init_usertable() {
     return_JSON( $response );
 }
 
+
+
+/*
+//  
+//  #### ##    ## #### ########     ######  ##     ##  ######  ########  #######  ##     ## ######## ########  ########    ###    ########  ##       ########
+//   ##  ###   ##  ##     ##       ##    ## ##     ## ##    ##    ##    ##     ## ###   ### ##       ##     ##    ##      ## ##   ##     ## ##       ##
+//   ##  ####  ##  ##     ##       ##       ##     ## ##          ##    ##     ## #### #### ##       ##     ##    ##     ##   ##  ##     ## ##       ##
+//   ##  ## ## ##  ##     ##       ##       ##     ##  ######     ##    ##     ## ## ### ## ######   ########     ##    ##     ## ########  ##       ######
+//   ##  ##  ####  ##     ##       ##       ##     ##       ##    ##    ##     ## ##     ## ##       ##   ##      ##    ######### ##     ## ##       ##
+//   ##  ##   ###  ##     ##       ##    ## ##     ## ##    ##    ##    ##     ## ##     ## ##       ##    ##     ##    ##     ## ##     ## ##       ##
+//  #### ##    ## ####    ##        ######   #######   ######     ##     #######  ##     ## ######## ##     ##    ##    ##     ## ########  ######## ########
+//  
+*/
+/**
+ * Create a table in the database
+ */
 function init_customertable() {
     global $db;
     // create user table
@@ -604,8 +539,8 @@ function init_customertable() {
     $first_customer = [
         'customername' => 'customer',
         'password'     => 'password',
-        'firstname'    => 'admin',
-        'lastname'     => 'admin',
+        'firstname'    => 'customer',
+        'lastname'     => 'customer',
         'email'        => 'customer@customer.org',
         'phone'        => '555-123456789',
         'street'       => 'Sesam',
@@ -617,12 +552,113 @@ function init_customertable() {
         'permission'   => '10'
     ];
 
-    create_customer( $first_customer );
+    // create_customer( $first_customer );
+    insert_into_db( $first_customer, 'customer' );
 
     // send response
     $response['code']    = 200;
     $response['message'] = 'customertable created';
 
+    return_JSON( $response );
+}
+
+
+
+/*
+//  
+//  #### ##    ##  ######  ######## ########  ########         #### ##    ## ########  #######          ########  ########
+//   ##  ###   ## ##    ## ##       ##     ##    ##             ##  ###   ##    ##    ##     ##         ##     ## ##     ##
+//   ##  ####  ## ##       ##       ##     ##    ##             ##  ####  ##    ##    ##     ##         ##     ## ##     ##
+//   ##  ## ## ##  ######  ######   ########     ##             ##  ## ## ##    ##    ##     ##         ##     ## ########
+//   ##  ##  ####       ## ##       ##   ##      ##             ##  ##  ####    ##    ##     ##         ##     ## ##     ##
+//   ##  ##   ### ##    ## ##       ##    ##     ##             ##  ##   ###    ##    ##     ##         ##     ## ##     ##
+//  #### ##    ##  ######  ######## ##     ##    ##            #### ##    ##    ##     #######          ########  ########
+//  
+*/
+/**
+ * Inserts a row into a table
+ *
+ * @param param the parameters that are passed to the function
+ * @param table The name of the table to insert into.
+ */
+function insert_into_db( $param, $table ) {
+    global $db;
+    // print_r( $param );
+
+    //
+    // get EXISTING COLUMNS from db table
+    //
+    $stmt = $db->query( "PRAGMA table_info($table)" );
+    $stmt->execute();
+    $table_info     = $stmt->fetchAll( PDO::FETCH_ASSOC );
+    $columns_exists = [];
+    foreach ( $table_info as $key => $value ) {
+        $columns_exists[] = $table_info[$key]['name'];
+    }
+    // print_r( $columns_exists );
+
+    //
+    // get NEEDED COLUMNS from parameters & add date
+    //
+    $columns_needed_array   = array_keys( $param );
+    $columns_needed_array[] = 'date';
+    $columns_needed         = implode( ',', $columns_needed_array );
+    $columns_needed         = $columns_needed;
+    // print_r( $columns_needed );
+
+    //
+    // find MISSING COLUMNS & create them
+    $missing_columns = array_diff( $columns_needed_array, $columns_exists );
+    // print_r( $missing_columns );
+    if ( $missing_columns ) {
+        foreach ( $missing_columns as $key => $column ) {
+            $db->exec( "ALTER TABLE $table ADD COLUMN '$column' TEXT NOT NULL DEFAULT '' " );
+        }
+    }
+
+    //
+    // prepare amount of PLACEHOLDERS
+    $count       = count( $param ) + 1;
+    $placeholder = '?';
+    for ( $i = 1; $i < $count; $i++ ) {
+        $placeholder .= ',?';
+    }
+    // print_r( $placeholder );
+
+    //
+    // prepare VARS from parameters & add date
+    //
+    $vars = [];
+    foreach ( $param as $key => $value ) {
+        if ( 'password' === $key ) {
+            $value = password_hash( $value, PASSWORD_DEFAULT );
+        }
+        $vars[] = $value;
+    }
+    $vars[] = date( 'd.m.Y H:i:s' );
+    // print_r( $vars );
+
+    //
+    // INSERT INTO
+    //
+    $stmt = $db->prepare( "INSERT INTO $table ($columns_needed) VALUES ($placeholder)" );
+    $stmt->execute( $vars );
+
+    $count = $stmt->rowCount();
+
+    $response = [];
+    if ( $count ) {
+
+        $response['data']['id'] = $db->lastInsertId();
+        $response['code']       = 200;
+        $response['message']    = 'insert successfull';
+
+    } else {
+        $response['code']    = 400;
+        $response['message'] = 'insert failed';
+    }
+
+    // return response
     return_JSON( $response );
 }
 
@@ -671,7 +707,7 @@ function create_dummy_staff( $count ) {
     for ( $i = 0; $i < $count; $i++ ) {
         $random_name = random_name();
         $email       = $random_name[0]."@".$random_name[1].".com";
-        $user        = [
+        $staff       = [
             'username'   => 'U_'.$random_name[0].'_'.$random_name[1],
             'password'   => 'password',
             'firstname'  => $random_name[0],
@@ -681,7 +717,8 @@ function create_dummy_staff( $count ) {
             'role'       => random_int( 1, 5 ),
             'permission' => random_int( 1, 5 ).','.random_int( 1, 5 ).','.random_int( 1, 5 )
         ];
-        create_user( $user );
+        insert_into_db( $staff, 'user' );
+        // create_user( $user );
     }
 }
 
@@ -689,7 +726,7 @@ function create_dummy_customer( $count ) {
     for ( $i = 0; $i < $count; $i++ ) {
         $random_name = random_name();
         $email       = $random_name[0]."@".$random_name[1].".com";
-        $user        = [
+        $customer    = [
             'customername' => 'C_'.$random_name[0].'_'.$random_name[1],
             'password'     => 'password',
             'firstname'    => $random_name[0],
@@ -704,6 +741,8 @@ function create_dummy_customer( $count ) {
             'role'         => '10',
             'permission'   => '10'
         ];
-        create_customer( $user );
+        // create_customer( $user );
+        insert_into_db( $customer, 'customer' );
+
     }
 }
