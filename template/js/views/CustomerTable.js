@@ -7,8 +7,8 @@ import ('../components/TUIgrid.js');
 Functions.addStylesheet('./template/css/TUIgrid.css');
 
 export default {
-    render: async(userID) => {
-        Functions.pageTitle(`User Table`);
+    render: async() => {
+        Functions.pageTitle(`Customer Table`);
         await Style();
         await Content();
         await Data();
@@ -65,7 +65,7 @@ let Style = async() => {
     }
 
     `;
-    Functions.createStyle('UserTable_style', styleTags);
+    Functions.createStyle('CustomerTable_style', styleTags);
 };
 
 /**
@@ -73,9 +73,9 @@ let Style = async() => {
  */
 let Content = async() => {
     let innerHTML = /*HTML*/ `
-        <div id="UserTableWrapper" class="template"> 
-            <div id=UserTableHeader>
-                <h2>User Table</h2>  
+        <div id="CustomerTableWrapper" class="template"> 
+            <div id=CustomerTableHeader>
+                <h2>Customer Table</h2>  
             </div>
             <div id="CustomerTable"></div>
         </div>`;
@@ -92,7 +92,7 @@ let Data = async() => {
         data: data,
         // rowHeaders: ['checkbox'],
         rowHeaders: ['rowNum'],
-        scrollX: false,
+        scrollX: true,
         scrollY: false,
         // bodyHeight: "90%",
         columnOptions: {
@@ -113,12 +113,14 @@ let Data = async() => {
                 name: 'customername',
                 sortingType: 'asc',
                 sortable: true,
+                width: 200,
             },
             {
                 header: 'Firstname',
                 name: 'firstname',
                 sortingType: 'asc',
                 sortable: true,
+                width: 120,
             },
             {
                 header: 'Lastname',

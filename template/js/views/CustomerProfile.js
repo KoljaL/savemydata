@@ -85,7 +85,7 @@ let Content = async() => {
     let innerHTML = /*HTML*/ `
         <div id="T_CustomerLoginForm" class="template"> 
             <div id=CustomerProfileHeader>
-                <h2>CustomerProfile</h2> 
+                <h2>Customer Profile</h2> 
                 <div class="ActionButtons">
                     <div id=CustomerProfileList></div>
                     <span id="editCustomerButton"></span>
@@ -112,6 +112,7 @@ let getCustomerData = async(customerID) => {
 
     var formData = new FormData();
     formData.append('id', customerID);
+    formData.append('table', 'customer');
     // getAPIdata (endpoint, formID)
     Functions.getAPIdata('userprofile', formData)
         .then((res) => {
@@ -119,7 +120,7 @@ let getCustomerData = async(customerID) => {
             if (res.code === 200) {
                 const customer = res.data;
                 // deb(customer)
-                window.userName = customer.username;
+                window.customername = customer.customername;
                 let innerHTML = /*HTML*/ `
                      
                 <form id=userProfilForm >
@@ -127,13 +128,13 @@ let getCustomerData = async(customerID) => {
                 <div class="FF-row">
 
                     ${Form.inputText({
-                        name: 'username',
+                        name: 'customername',
                         type: 'text',
                         widths: '100/150/300',
                         edit: 'hide',
                         label: 'Customername',
-                        value: customer.username,
-                        db: 'username/customer/id/' + customer.id,
+                        value: customer.customername,
+                        db: 'customername/customer/id/' + customer.id,
                     })}
 
                     ${Form.inputText({
@@ -299,7 +300,7 @@ let deleteCustomerButton = (customerID) => {
                 .then((res) => {
                     deb(res)
                     if (res.code === 200) {
-                        Message.warn("Deleted Customer: " + window.userName);
+                        Message.warn("Deleted Customer: " + window.customername);
                         window.location.hash = '#customer/table/';
                     }
                 })
@@ -329,6 +330,7 @@ let newCustomerButton = async() => {
             if ('Save' === button.target.innerHTML) {
                 let userProfilForm = document.getElementById('userProfilForm')
                 userProfilForm = new FormData(userProfilForm);
+                userProfilForm.append('table', 'customer');
                 Functions.getAPIdata('newuser', userProfilForm)
                     .then((res) => {
                         // deb(res)

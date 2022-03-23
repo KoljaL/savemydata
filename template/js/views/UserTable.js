@@ -92,7 +92,6 @@ let Data = async() => {
         rowHeaders: ['rowNum'],
         scrollX: false,
         scrollY: false,
-        // bodyHeight: "90%",
         columnOptions: {
             // resizable: true
         },
@@ -111,6 +110,7 @@ let Data = async() => {
                 name: 'username',
                 sortingType: 'asc',
                 sortable: true,
+                width: 200,
             },
             {
                 header: 'Firstname',

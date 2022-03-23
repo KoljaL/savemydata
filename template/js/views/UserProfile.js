@@ -112,6 +112,7 @@ let getUserData = async(userID) => {
 
     var formData = new FormData();
     formData.append('id', userID);
+    formData.append('table', 'user');
     // getAPIdata (endpoint, formID)
     Functions.getAPIdata('userprofile', formData)
         .then((res) => {
@@ -328,6 +329,7 @@ let newUserButton = async() => {
             if ('Save' === button.target.innerHTML) {
                 let userProfilForm = document.getElementById('userProfilForm')
                 userProfilForm = new FormData(userProfilForm);
+                userProfilForm.append('table', 'user');
                 Functions.getAPIdata('newuser', userProfilForm)
                     .then((res) => {
                         // deb(res)

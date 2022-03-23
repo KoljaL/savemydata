@@ -34,7 +34,7 @@ $JWT_key = 'example_key';
 //
 */
 
-$db_path = 'db/11aa.db';
+$db_path = 'db/aaaaaaaa.db';
 /*
  *
  * This is a way to check if the database exists. If it doesn't exist, it will create it.
@@ -207,9 +207,10 @@ function new_user( $param ) {
 
         global $db;
         $response = [];
-
+        $table    = $param['table'];
+        unset( $param['table'] );
         // create_user( $param );
-        insert_into_db( $param, 'user' );
+        insert_into_db( $param, $table );
 
     } else {
         $response['code']    = 400;
@@ -369,14 +370,14 @@ function isAllowed( $action = '' ) {
  */
 function get_user_profile( $param ) {
     if ( isAllowed() ) {
-
         global $db;
-        $response = [];
 
-        $stmt = $db->prepare( "SELECT * FROM user WHERE id=?" );
+        $table = $param['table'];
+        $stmt  = $db->prepare( "SELECT * FROM $table WHERE id=?" );
         $stmt->execute( [$param['id']] );
         $user = $stmt->fetch( PDO::FETCH_ASSOC );
 
+        $response = [];
         if ( $user ) {
             unset( $user['password'] );
             $response['code'] = 200;
@@ -471,15 +472,15 @@ function init_usertable() {
     // create user table
     $db->exec( 'CREATE TABLE user(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT NOT NULL,
-            password TEXT NOT NULL,
-            firstname TEXT NOT NULL,
-            lastname TEXT NOT NULL,
-            email TEXT NOT NULL,
-            comment TEXT NOT NULL,
-            role TEXT NOT NULL,
-            permission TEXT NOT NULL,
-            date TEXT NOT NULL
+            username TEXT NOT NULL DEFAULT "",
+            password TEXT NOT NULL DEFAULT "",
+            firstname TEXT NOT NULL DEFAULT "",
+            lastname TEXT NOT NULL DEFAULT "",
+            email TEXT NOT NULL DEFAULT "",
+            comment TEXT NOT NULL DEFAULT "",
+            role TEXT NOT NULL DEFAULT "",
+            permission TEXT NOT NULL DEFAULT "",
+            date TEXT NOT NULL DEFAULT ""
         )' );
 
     // create first users
@@ -488,9 +489,6 @@ function init_usertable() {
     insert_into_db( $admin, 'user' );
     insert_into_db( $user, 'user' );
 
-    // create_user( $admin );
-    // create_user( $user );
-
     // send response
     $response['code']    = 200;
     $response['message'] = 'usertable created';
@@ -498,10 +496,8 @@ function init_usertable() {
     return_JSON( $response );
 }
 
-
-
 /*
-//  
+//
 //  #### ##    ## #### ########     ######  ##     ##  ######  ########  #######  ##     ## ######## ########  ########    ###    ########  ##       ########
 //   ##  ###   ##  ##     ##       ##    ## ##     ## ##    ##    ##    ##     ## ###   ### ##       ##     ##    ##      ## ##   ##     ## ##       ##
 //   ##  ####  ##  ##     ##       ##       ##     ## ##          ##    ##     ## #### #### ##       ##     ##    ##     ##   ##  ##     ## ##       ##
@@ -509,7 +505,7 @@ function init_usertable() {
 //   ##  ##  ####  ##     ##       ##       ##     ##       ##    ##    ##     ## ##     ## ##       ##   ##      ##    ######### ##     ## ##       ##
 //   ##  ##   ###  ##     ##       ##    ## ##     ## ##    ##    ##    ##     ## ##     ## ##       ##    ##     ##    ##     ## ##     ## ##       ##
 //  #### ##    ## ####    ##        ######   #######   ######     ##     #######  ##     ## ######## ##     ##    ##    ##     ## ########  ######## ########
-//  
+//
 */
 /**
  * Create a table in the database
@@ -519,20 +515,20 @@ function init_customertable() {
     // create user table
     $db->exec( 'CREATE TABLE customer(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            customername TEXT NOT NULL,
-            password TEXT NOT NULL,
-            firstname TEXT NOT NULL,
-            lastname TEXT NOT NULL,
-            email TEXT NOT NULL,
-            phone TEXT NOT NULL,
-            street TEXT NOT NULL,
-            street_nr TEXT NOT NULL,
-            city TEXT NOT NULL,
-            city_nr TEXT NOT NULL,
-            comment TEXT NOT NULL,
-            role TEXT NOT NULL,
-            permission TEXT NOT NULL,
-            date TEXT NOT NULL
+            customername TEXT NOT NULL DEFAULT "",
+            password TEXT NOT NULL DEFAULT "",
+            firstname TEXT NOT NULL DEFAULT "",
+            lastname TEXT NOT NULL DEFAULT "",
+            email TEXT NOT NULL DEFAULT "",
+            phone TEXT NOT NULL DEFAULT "",
+            street TEXT NOT NULL DEFAULT "",
+            street_nr TEXT NOT NULL DEFAULT "",
+            city TEXT NOT NULL DEFAULT "",
+            city_nr TEXT NOT NULL DEFAULT "",
+            comment TEXT NOT NULL DEFAULT "",
+            role TEXT NOT NULL DEFAULT "",
+            permission TEXT NOT NULL DEFAULT "",
+            date TEXT NOT NULL  DEFAULT ""
         )' );
 
     // create first users
@@ -562,10 +558,8 @@ function init_customertable() {
     return_JSON( $response );
 }
 
-
-
 /*
-//  
+//
 //  #### ##    ##  ######  ######## ########  ########         #### ##    ## ########  #######          ########  ########
 //   ##  ###   ## ##    ## ##       ##     ##    ##             ##  ###   ##    ##    ##     ##         ##     ## ##     ##
 //   ##  ####  ## ##       ##       ##     ##    ##             ##  ####  ##    ##    ##     ##         ##     ## ##     ##
@@ -573,7 +567,7 @@ function init_customertable() {
 //   ##  ##  ####       ## ##       ##   ##      ##             ##  ##  ####    ##    ##     ##         ##     ## ##     ##
 //   ##  ##   ### ##    ## ##       ##    ##     ##             ##  ##   ###    ##    ##     ##         ##     ## ##     ##
 //  #### ##    ##  ######  ######## ##     ##    ##            #### ##    ##    ##     #######          ########  ########
-//  
+//
 */
 /**
  * Inserts a row into a table
@@ -638,9 +632,19 @@ function insert_into_db( $param, $table ) {
     $vars[] = date( 'd.m.Y H:i:s' );
     // print_r( $vars );
 
+    // Fatal error: Uncaught PDOException: SQLSTATE[HY000]:
+    // General error: 1 near "table": syntax error in /www/htdocs/w01c010a/dev.rasal.de/savemydata/api.php:637
+    // Stack trace:
+    // #0 /www/htdocs/w01c010a/dev.rasal.de/savemydata/api.php(637): PDO->prepare('INSERT INTO cus...')
+    // #1 /www/htdocs/w01c010a/dev.rasal.de/savemydata/api.php(212): insert_into_db(Array, 'customer')
+    // #2 /www/htdocs/w01c010a/dev.rasal.de/savemydata/api.php(121): new_user(Array)
+    // #3 {main} thrown in /www/htdocs/w01c010a/dev.rasal.de/savemydata/api.php on line 637
+    // INSERT INTO customer (customername,firstname,lastname,email,password,comment,role,permission,user_id,user_token,date)
+    //  VALUES (?,?,?,?,?,?,?,?,?,?,?)
     //
     // INSERT INTO
     //
+    // echo "INSERT INTO $table ($columns_needed) VALUES ($placeholder)";
     $stmt = $db->prepare( "INSERT INTO $table ($columns_needed) VALUES ($placeholder)" );
     $stmt->execute( $vars );
 
@@ -652,9 +656,10 @@ function insert_into_db( $param, $table ) {
         $response['data']['id'] = $db->lastInsertId();
         $response['code']       = 200;
         $response['message']    = 'insert successfull';
-
+        $response['param']      = $param;
     } else {
         $response['code']    = 400;
+        $response['param']   = $param;
         $response['message'] = 'insert failed';
     }
 
