@@ -283,7 +283,7 @@ let Functions = {
         }
 
         // deb(formData)
-        // URL = 'https://localhost/savemydata/' + URL;
+        URL = 'api/' + URL;
         formData = JSON.stringify(Object.fromEntries(formData));
         const response = await fetch(URL, {
             method: 'POST',

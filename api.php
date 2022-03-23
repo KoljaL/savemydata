@@ -58,14 +58,38 @@ if ( !file_exists( $db_path ) ) {
  * Created on Thu Mar 17 2022 at 02:22:13
  *
  */
-$uri      = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
-$uri      = explode( '/', $uri );
-$endpoint = end( $uri );
+$uri = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+$uri = explode( '/', $uri );
+// $API_endpoint = end( $uri );
+
+// print_r( $uri );
+$api          = array_search( 'api', $uri );
+$API_endpoint = '';
+$API_param    = '';
+$API_value    = '';
+if ( isset( $uri[$api + 1] ) ) {
+    $API_endpoint = $uri[$api + 1];
+}
+if ( isset( $uri[$api + 2] ) ) {
+    $API_param = $uri[$api + 2];
+}
+if ( isset( $uri[$api + 3] ) ) {
+    $API_value = $uri[$api + 3];
+}
+// echo "<br>";
+// echo "<br>";
+// print_r( $API_endpoint );
+// echo "<br>";
+// print_r( $API_param );
+// echo "<br>";
+// print_r( $API_value );
+
+// exit;
 
 //DEBUG
 //DEBUG
 //DEBUG
-if ( 'do' === $endpoint ) {
+if ( 'do' === $API_endpoint ) {
     init_user_profile_form_table();
     exit;
 }
@@ -91,12 +115,18 @@ if ( $request ) {
  *
 */
 
-if ( 'login' === $endpoint ) {
+if ( 'login' === $API_endpoint ) {
     login_user( $request );
     exit;
 } else {
-    $TOKEN = JWT::decode( $request['user_token'], new Key( $JWT_key, 'HS256' ) );
-    $TOKEN = json_decode( json_encode( $TOKEN ), true );
+    if ( isset( $request['user_token'] ) ) {
+
+        $TOKEN = JWT::decode( $request['user_token'], new Key( $JWT_key, 'HS256' ) );
+        $TOKEN = json_decode( json_encode( $TOKEN ), true );
+    } else {
+        echo "no key";
+        exit;
+    }
 }
 
 /*
@@ -119,7 +149,7 @@ if ( 'login' === $endpoint ) {
  * Then it will call the corresponding function.
  *
  */
-switch ( $endpoint ) {
+switch ( $API_endpoint ) {
 case 'userprofile':
     get_user_profile( $request );
     break;
@@ -144,9 +174,13 @@ case 'singleedit':
     singleedit( $request );
     break;
 
+case 'form_profile':
+    get_profile_form( 'user_profil_form' );
+    break;
+
     break;
 default:
-    // echo 'Endpoint <b>'.$endpoint.'</b> not found';
+    // echo 'Endpoint <b>'.$API_endpoint.'</b> not found';
     break;
 }
 
@@ -165,6 +199,40 @@ default:
 */
 
 // https://phpdelusions.net/pdo_examples/select
+
+function get_profile_form( $param ) {
+    if ( isAllowed() ) {
+        global $API_param;
+
+        global $db;
+        $response = [];
+
+        $table = $API_param;
+
+        $stmt = $db->prepare( "SELECT * FROM $table" );
+        $stmt->execute();
+        $form  = $stmt->fetchAll( PDO::FETCH_ASSOC );
+        $count = $stmt->rowCount();
+
+        if ( $count ) {
+
+            $response['code'] = 200;
+            $response['data'] = $form;
+
+        } else {
+            $response['code']    = 400;
+            $response['$table']  = $table;
+            $response['data']    = $count;
+            $response['message'] = 'no form profile found';
+        }
+        return_JSON( $response );
+
+    } else {
+        $response['code']    = 400;
+        $response['message'] = 'vorbidden';
+        return_JSON( $response );
+    }
+}
 
 function delete_user( $param ) {
     if ( isAllowed() ) {
