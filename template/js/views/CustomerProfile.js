@@ -104,11 +104,7 @@ let Content = async() => {
  */
 let getCustomerData = async(customerID) => {
     const currentCustomerRole = Functions.getLocal('role');
-    var dummy = new FormData();
 
-    Functions.getAPIdata('form_profile/user_profile_form', dummy).then((res) => {
-        deb(res);
-    });
 
 
 

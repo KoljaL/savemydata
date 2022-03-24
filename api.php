@@ -23,35 +23,12 @@ use Firebase\JWT\Key;
 $JWT_key = 'example_key';
 
 /*
-//
-//  ########  ########     #### ##    ## #### ########
-//  ##     ## ##     ##     ##  ###   ##  ##     ##
-//  ##     ## ##     ##     ##  ####  ##  ##     ##
-//  ##     ## ########      ##  ## ## ##  ##     ##
-//  ##     ## ##     ##     ##  ##  ####  ##     ##
-//  ##     ## ##     ##     ##  ##   ###  ##     ##
-//  ########  ########     #### ##    ## ####    ##
-//
-*/
-
-$db_path = 'db/uu.db';
-/*
  *
- * This is a way to check if the database exists. If it doesn't exist, it will create it.
- * Created on Thu Mar 17 2022 at 02:22:51
+ * path to db file
  *
  */
-if ( !file_exists( $db_path ) ) {
-    $db = new PDO( 'sqlite:'.$db_path );
-    init_customertable();
-    init_usertable();
-    init_user_profile_form_table();
-    include './php/dummy_content.php';
-    create_dummy_staff( 30 );
-    create_dummy_customer( 100 );
-} else {
-    $db = new PDO( 'sqlite:'.$db_path );
-}
+$db_path = 'db/database.sqlite';
+
 /*
  *
  * Splitting the URI into an array to get the endpoint
@@ -90,12 +67,45 @@ if ( isset( $uri[$api + 3] ) ) {
 //DEBUG
 //DEBUG
 if ( 'do' === $API_endpoint ) {
-    init_user_profile_form_table();
+    get_profile_form( '  ' );
     exit;
+}
+if ( 'reset' === $API_endpoint ) {
+    unlink( $db_path );
 }
 //DEBUG
 //DEBUG
 //DEBUG
+
+/*
+//
+//  ########  ########     #### ##    ## #### ########
+//  ##     ## ##     ##     ##  ###   ##  ##     ##
+//  ##     ## ##     ##     ##  ####  ##  ##     ##
+//  ##     ## ########      ##  ## ## ##  ##     ##
+//  ##     ## ##     ##     ##  ##  ####  ##     ##
+//  ##     ## ##     ##     ##  ##   ###  ##     ##
+//  ########  ########     #### ##    ## ####    ##
+//
+*/
+
+/*
+ *
+ * This is a way to check if the database exists. If it doesn't exist, it will create it.
+ * Created on Thu Mar 17 2022 at 02:22:51
+ *
+ */
+if ( !file_exists( $db_path ) ) {
+    $db = new PDO( 'sqlite:'.$db_path );
+    init_customertable();
+    init_usertable();
+    init_user_profile_form_table();
+    include './php/dummy_content.php';
+    create_dummy_staff( 10 );
+    create_dummy_customer( 30 );
+} else {
+    $db = new PDO( 'sqlite:'.$db_path );
+}
 
 /*
  *
@@ -125,10 +135,9 @@ if ( 'login' === $API_endpoint ) {
         $TOKEN = json_decode( json_encode( $TOKEN ), true );
     } else {
         echo "no key";
-        exit;
+        // exit;
     }
 }
-
 /*
 //////////////////////////////////////////////////////////////////////////////////////
 //                                                                                  //
@@ -175,7 +184,7 @@ case 'singleedit':
     break;
 
 case 'form_profile':
-    get_profile_form( 'user_profil_form' );
+    get_profile_form( $request );
     break;
 
     break;
@@ -199,48 +208,77 @@ default:
 */
 
 // https://phpdelusions.net/pdo_examples/select
+// https://code-boxx.com/php-user-role-management-system/
+
+/*
+//
+//   ######   ######## ########    ########  ########   #######  ######## #### ##       ########    ########  #######  ########  ##     ##
+//  ##    ##  ##          ##       ##     ## ##     ## ##     ## ##        ##  ##       ##          ##       ##     ## ##     ## ###   ###
+//  ##        ##          ##       ##     ## ##     ## ##     ## ##        ##  ##       ##          ##       ##     ## ##     ## #### ####
+//  ##   #### ######      ##       ########  ########  ##     ## ######    ##  ##       ######      ######   ##     ## ########  ## ### ##
+//  ##    ##  ##          ##       ##        ##   ##   ##     ## ##        ##  ##       ##          ##       ##     ## ##   ##   ##     ##
+//  ##    ##  ##          ##       ##        ##    ##  ##     ## ##        ##  ##       ##          ##       ##     ## ##    ##  ##     ##
+//   ######   ########    ##       ##        ##     ##  #######  ##       #### ######## ########    ##        #######  ##     ## ##     ##
+//
+*/
+/**
+ *
+ * This function is used to get all the profile form from the database
+ *
+ */
 
 function get_profile_form( $param ) {
-    if ( isAllowed() ) {
-        global $API_param;
+    // if ( isAllowed() ) {
+    global $API_param, $db;
 
-        global $db;
-        $response = [];
+    $table = $API_param;
 
-        $table = $API_param;
+    $stmt = $db->prepare( "SELECT * FROM $table" );
+    $stmt->execute();
+    $form = $stmt->fetchAll( PDO::FETCH_ASSOC );
 
-        $stmt = $db->prepare( "SELECT * FROM $table" );
-        $stmt->execute();
-        $form  = $stmt->fetchAll( PDO::FETCH_ASSOC );
-        $count = $stmt->rowCount();
+    $response = [];
+    if ( $form ) {
 
-        if ( $count ) {
-
-            $response['code'] = 200;
-            $response['data'] = $form;
-
-        } else {
-            $response['code']    = 400;
-            $response['$table']  = $table;
-            $response['data']    = $count;
-            $response['message'] = 'no form profile found';
-        }
-        return_JSON( $response );
+        $response['code'] = 200;
+        $response['data'] = $form;
 
     } else {
         $response['code']    = 400;
-        $response['message'] = 'vorbidden';
-        return_JSON( $response );
+        $response['table']   = $form;
+        $response['data']    = $count;
+        $response['message'] = 'no form profile found';
     }
+    return_JSON( $response );
+
+    // } else {
+    //     $response['code']    = 400;
+    //     $response['message'] = 'vorbidden';
+    //     return_JSON( $response );
+    // }
 }
 
+/*
+//
+//  ########  ######## ##       ######## ######## ########    ##     ##  ######  ######## ########
+//  ##     ## ##       ##       ##          ##    ##          ##     ## ##    ## ##       ##     ##
+//  ##     ## ##       ##       ##          ##    ##          ##     ## ##       ##       ##     ##
+//  ##     ## ######   ##       ######      ##    ######      ##     ##  ######  ######   ########
+//  ##     ## ##       ##       ##          ##    ##          ##     ##       ## ##       ##   ##
+//  ##     ## ##       ##       ##          ##    ##          ##     ## ##    ## ##       ##    ##
+//  ########  ######## ######## ########    ##    ########     #######   ######  ######## ##     ##
+//
+*/
+/**
+ *
+ * This function deletes a user from the database
+ *
+ */
 function delete_user( $param ) {
     if ( isAllowed() ) {
-
         global $db;
         $response = [];
-
-        $table = $param['table'];
+        $table    = $param['table'];
 
         $stmt = $db->prepare( "DELETE FROM $table WHERE id =?" );
         $stmt->execute( [$param['id']] );
@@ -530,16 +568,6 @@ function login_user( $request ) {
     return_JSON( $response );
 }
 
-// ${Form.inputText({
-//     name: 'comment',
-//     type: 'textarea',
-//     widths: '300/400/500',
-//     edit: currentUserRole === '0' ? 'hide' : 'forbidden',
-//     label: 'Comment',
-//     value: user.comment,
-//     db: 'comment/user/id/' + user.id,
-// })}
-
 function init_user_profile_form_table() {
     global $db;
     // create user table
@@ -549,18 +577,87 @@ function init_user_profile_form_table() {
         )' );
 
     // create first users
-    $field = [
-        'pos'    => '10',
-        'name'   => 'comment',
-        'type'   => 'textarea',
-        'widths' => '300/400/500',
-        'edit'   => 'hide/forbidden',
-        'label'  => 'Comment',
-        'value'  => 'user.comment',
-        'db'     => 'comment/user/id'
+    $fields = [
+
+        [
+            'pos'    => '10',
+            'row'    => '1',
+            'name'   => 'username',
+            'type'   => 'text',
+            'widths' => '100/150/300',
+            'edit'   => 'hide',
+            'label'  => 'Username',
+            'db'     => 'username/user/id'
+        ],
+        [
+            'pos'    => '20',
+            'row'    => '1',
+            'name'   => 'password',
+            'type'   => 'password',
+            'widths' => '100/150/300',
+            'edit'   => 'hide',
+            'label'  => 'Password',
+            'db'     => 'password/user/id'
+        ],
+        [
+            'pos'    => '10',
+            'row'    => '2',
+            'name'   => 'firstname',
+            'type'   => 'text',
+            'widths' => '100/150/300',
+            'edit'   => 'hide',
+            'label'  => 'Firstname',
+            'db'     => 'firstname/user/id'
+        ],
+
+        [
+            'pos'    => '20',
+            'row'    => '2',
+            'name'   => 'lastname',
+            'type'   => 'text',
+            'widths' => '100/150/300',
+            'edit'   => 'hide',
+            'label'  => 'Lastname',
+            'db'     => 'lastname/user/id'
+        ],
+
+        [
+            'pos'    => '10',
+            'row'    => '3',
+            'name'   => 'comment',
+            'type'   => 'textarea',
+            'widths' => '400/550/600',
+            'edit'   => 'hide',
+            'label'  => 'Comment',
+            'value'  => 'user.comment',
+            'db'     => 'comment/user/id'
+        ],
+        [
+            'pos'    => '10',
+            'row'    => '4',
+            'name'   => 'role',
+            'type'   => 'text',
+            'widths' => '100/100/100',
+            'edit'   => 'hide',
+            'label'  => 'Role',
+            'db'     => 'role/user/id'
+        ],
+
+        [
+            'pos'    => '20',
+            'row'    => '4',
+            'name'   => 'permission',
+            'type'   => 'text',
+            'widths' => '100/100/100',
+            'edit'   => 'hide',
+            'label'  => 'Permission',
+            'db'     => 'permission/user/id'
+        ]
 
     ];
-    insert_into_db( $field, 'user_profile_form' );
+    foreach ( $fields as $field ) {
+        insert_into_db( $field, 'user_profile_form' );
+    }
 
 }
 
@@ -789,14 +886,18 @@ function insert_into_db( $param, $table ) {
  */
 //  header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
 function return_JSON( $response ) {
-    global $request;
-    $response['request'] = $request;
-    header( 'Access-Control-Allow-Origin: *' );
-    header( 'Content-Type: application/json; charset=UTF-8' );
-    header( 'Access-Control-Allow-Methods: POST' );
-    header( 'Access-Control-Max-Age: 3600' );
-    header( 'Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With' );
-    echo json_encode( $response );
+    global $request, $API_endpoint;
+
+    if ( 'reset' !== $API_endpoint ) {
+
+        $response['request'] = $request;
+        header( 'Access-Control-Allow-Origin: *' );
+        header( 'Content-Type: application/json; charset=UTF-8' );
+        header( 'Access-Control-Allow-Methods: POST' );
+        header( 'Access-Control-Max-Age: 3600' );
+        header( 'Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With' );
+        echo json_encode( $response );
+    }
     // exit;
 }
 

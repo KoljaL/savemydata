@@ -8,8 +8,8 @@ export default {
 
             var name = (table === 'user') ? 'username' : 'customername';
             if ('dropdown' === type) {
-                deb(table)
-                deb(name)
+                // deb(table)
+                // deb(name)
                 return /*html*/ ` 
                 <select id="UserListSelect" name=user>
                     <option value="" hidden disabled selected>Select User</option>

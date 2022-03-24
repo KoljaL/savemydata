@@ -85,7 +85,7 @@ let Content = async() => {
 let Data = async() => {
     let data = await UserList.render('raw', 'customer');
     data = data.data;
-    deb(data)
+    // deb(data)
     const grid = new tui.Grid({
         usageStatistics: false,
         el: document.getElementById('CustomerTable'),
