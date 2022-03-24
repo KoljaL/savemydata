@@ -710,10 +710,10 @@ function init_usertable() {
     insert_into_db( $user, 'user' );
 
     // send response
-    $response['code']    = 200;
-    $response['message'] = 'usertable created';
+    // $response['code']    = 200;
+    // $response['message'] = 'usertable created';
 
-    return_JSON( $response );
+    // return_JSON( $response );
 }
 
 /*

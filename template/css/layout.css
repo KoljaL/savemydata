@@ -22,7 +22,7 @@
     --font_0: #d7d7d8;
     --font_1: #d6d6d9;
     --font_2: #696969;
-    --border_0: rgb(0, 0, 0);
+    --border_0: black;
     --fontSalomon: #c19c90;
     --fontBlue: #2798e4;
     --fontViolet: #988cca;
@@ -31,6 +31,9 @@
     --fontRed: #e9553b;
     --fontGreen: #6a8759;
 }
+
+
+/* https://sleekdb.github.io/ */
 
 [data-theme='dark'] {
     --header_full_height: 60px;
@@ -46,13 +49,6 @@
     --font_2: #696969;
     --scrollbar: #3f3f3f;
     --border_0: rgb(0, 0, 0);
-    --fontSalomon: #c19c90;
-    --fontBlue: #2798e4;
-    --fontViolet: #988cca;
-    --fontYellow: #c9ac57;
-    --fontOrange: #cb7832;
-    --fontRed: #e9553b;
-    --fontGreen: #6a8759;
 }
 
 [data-theme='dark-boxes'] {
@@ -69,13 +65,6 @@
     --font_2: #696969;
     --scrollbar: #3f3f3f;
     --border_0: rgb(0, 0, 0);
-    --fontSalomon: #c19c90;
-    --fontBlue: #2798e4;
-    --fontViolet: #988cca;
-    --fontYellow: #c9ac57;
-    --fontOrange: #cb7832;
-    --fontRed: #e9553b;
-    --fontGreen: #6a8759;
 }
 
 [data-theme='light'] {
@@ -91,16 +80,7 @@
     --font_1: #464647;
     --font_2: #515151;
     --scrollbar: #918d8d;
-    --border_0: rgb(49, 49, 49);
-    --fontSalomon: #c19c90;
-    --fontBlue: #0160a0;
-    --fontViolet: #988cca;
-    --fontYellow: #c9ac57;
-    --fontOrange: #cb7832;
-    --fontRed: #e9553b;
-    --fontGreen: #6a8759;
-    --outline: none;
-    --box-shadow: none;
+    --border_0: #313132;
 }
 
 [data-theme='light-boxes'] {
@@ -116,14 +96,34 @@
     --font_1: #464647;
     --font_2: #515151;
     --scrollbar: #918d8d;
-    --border_0: rgb(49, 49, 49);
-    --fontSalomon: #c19c90;
-    --fontBlue: #0160a0;
-    --fontViolet: #988cca;
-    --fontYellow: #c9ac57;
-    --fontOrange: #cb7832;
-    --fontRed: #e9553b;
-    --fontGreen: #6a8759;
+    --border_0: #313132;
+    --outline: none;
+    --box-shadow: none;
+}
+
+
+/* https://appwrite.io/docs/getting-started-for-web */
+
+[data-theme='blue'] {
+    --bg_1: #171D37;
+    --bg_2: #1c223a;
+    --bg_3: #262d50;
+    --font_0: #c7d8eb;
+    --font_1: #4caedb;
+    --font_2: #4caedb;
+    --scrollbar: #171D37;
+    --border_0: #313132;
+}
+
+[data-theme='blue-boxes'] {
+    --bg_1: #171D37;
+    --bg_2: #1c223a;
+    --bg_3: #262d50;
+    --font_0: #c7d8eb;
+    --font_1: #4caedb;
+    --font_2: #4caedb;
+    --scrollbar: #171D37;
+    --border_0: #313132;
     --outline: none;
     --box-shadow: none;
 }
@@ -213,6 +213,20 @@ h6 {
     text-shadow: 0.03em 0.03em white;
 }
 
+
+/* 
+[data-theme='blue-boxes'] h1,
+[data-theme='blue'] h1,
+[data-theme='blue-boxes'] h2,
+[data-theme='blue'] h2,
+[data-theme='blue-boxes'] h3,
+[data-theme='blue'] h3,
+[data-theme='blue-boxes'] h4,
+[data-theme='blue'] h4,
+[data-theme='blue-boxes'] h5,
+[data-theme='blue'] h5,
+[data-theme='blue-boxes'] h6,
+[data-theme='blue'] h6,
 [data-theme='dark-boxes'] h1,
 [data-theme='dark'] h1,
 [data-theme='dark-boxes'] h2,
@@ -224,7 +238,20 @@ h6 {
 [data-theme='dark-boxes'] h5,
 [data-theme='dark'] h5,
 [data-theme='dark-boxes'] h6,
-[data-theme='dark'] h6 {
+[data-theme='dark'] h6 */
+
+[data-theme*='dark'] h1,
+[data-theme*='blue'] h1,
+[data-theme*='dark'] h2,
+[data-theme*='blue'] h2,
+[data-theme*='dark'] h3,
+[data-theme*='blue'] h3,
+[data-theme*='dark'] h4,
+[data-theme*='blue'] h4,
+[data-theme*='dark'] h5,
+[data-theme*='blue'] h5,
+[data-theme*='dark'] h6,
+[data-theme*='blue'] h6 {
     text-shadow: 0.1em 0.1em black;
 }
 
@@ -540,16 +567,14 @@ nav ul {
     padding-left: 0;
 }
 
-[data-theme='dark-boxes'] nav li:not(ul.subList li),
-[data-theme='light-boxes'] nav li:not(ul.subList li) {
+[data-theme*='boxes'] nav li:not(ul.subList li) {
     outline: black solid 1px;
     box-shadow: 4px 4px 0 black;
     margin: 10px 10px 10px 4px;
     padding-left: 2px;
 }
 
-[data-theme='dark-boxes'] nav li:not(ul.subList li).active,
-[data-theme='light-boxes'] nav li:not(ul.subList li).active {
+[data-theme*='boxes'] nav li:not(ul.subList li).active {
     box-shadow: 2px 2px 0 black;
     transform: translate(2px, 2px);
     transition: 0.1s;
@@ -597,13 +622,19 @@ nav li ul.subList li {
     letter-spacing: 0.1rem;
 }
 
-[data-theme='dark-boxes'] .link_text,
-[data-theme='light-boxes'] .link_text {
+
+/* [data-theme='blue-boxes'] .link_text,
+[data-theme='dark-boxes'] .link_text, */
+
+[data-theme*='boxes'] .link_text {
     padding: 6px 0 6px 1em;
 }
 
-[data-theme='dark-boxes'] .link_text,
-[data-theme='dark'] .link_text {
+
+/* [data-theme='blue-boxes'] .link_text,
+[data-theme='dark-boxes'] .link_text, */
+
+[data-theme*='boxes'].link_text {
     text-shadow: 0.07em 0.07em black;
 }
 
@@ -611,8 +642,11 @@ nav li ul.subList li {
     padding: 0 0 0 2rem;
 }
 
-[data-theme='dark-boxes'] .subList .link_text,
-[data-theme='light-boxes'] .subList .link_text {
+
+/* [data-theme='blue-boxes'] .subList .link_text,
+[data-theme='dark-boxes'] .subList .link_text, */
+
+[data-theme*='boxes'] .subList .link_text {
     padding: 0.4rem 0 0 2rem;
 }
 
@@ -629,8 +663,11 @@ nav li.active {
     box-shadow: inset -1px 0 var(--border_0);
 }
 
-[data-theme='dark-boxes'] nav li.active,
-[data-theme='light-boxes'] nav li.active {
+
+/* [data-theme='blue-boxes'] nav li.active,
+[data-theme='dark-boxes'] nav li.active, */
+
+[data-theme*='boxes'] nav li.active {
     box-shadow: none;
 }
 
@@ -655,13 +692,19 @@ nav li .icon {
     pointer-events: none;
 }
 
-[data-theme='light-boxes'] nav li .icon,
-[data-theme='dark-boxes'] nav li .icon {
+
+/* [data-theme='blue-boxes'] nav li .icon,
+[data-theme='light-boxes'] nav li .icon, */
+
+[data-theme*='boxes'] nav li .icon {
     left: -10px;
 }
 
-[data-theme='light-boxes'] .sidebar nav li .icon,
-[data-theme='dark-boxes'] .sidebar nav li .icon {
+
+/* [data-theme='blue-boxes'] .sidebar nav li .icon,
+[data-theme='light-boxes'] .sidebar nav li .icon, */
+
+[data-theme*='boxes'] .sidebar nav li .icon {
     left: 0px;
 }
 
