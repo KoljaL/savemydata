@@ -12,6 +12,7 @@ import UserTable from './views/UserTable.js';
 import UserProfile from './views/UserProfile.js';
 import CustomerTable from './views/CustomerTable.js';
 import CustomerProfile from './views/CustomerProfile.js';
+import UserProfileForm from './views/UserProfileForm.js';
 
 
 // dummy
@@ -52,6 +53,19 @@ async function router() {
                         break;
                     case 'table':
                         await UserTable.render()
+                        break;
+                    default:
+                        await UserTable.render()
+                        break;
+                }
+                break;
+
+            case 'formeditor':
+                switch (request.key) {
+                    case 'userprofile':
+                        await UserProfileForm.render(request.key)
+                        break;
+                        erTable.render()
                         break;
                     default:
                         await UserTable.render()

@@ -187,12 +187,15 @@ case 'form_profile':
     get_profile_form( $request );
     break;
 
+// case 'edit_profile_form':
+//     edit_profile_form( $request );
+//     break;
+
     break;
 default:
     // echo 'Endpoint <b>'.$API_endpoint.'</b> not found';
     break;
 }
-
 /*
 //////////////////////////////////////////////////////////////////////////////////////
 //                                                                                  //
@@ -573,6 +576,14 @@ function init_user_profile_form_table() {
     // create user table
     $db->exec( 'CREATE TABLE IF NOT EXISTS user_profile_form(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL DEFAULT "",
+            label TEXT NOT NULL DEFAULT "",
+            type TEXT NOT NULL DEFAULT "",
+            row TEXT NOT NULL DEFAULT "",
+            pos TEXT NOT NULL DEFAULT "",
+            widths TEXT NOT NULL DEFAULT "",
+            edit TEXT NOT NULL DEFAULT "",
+            db TEXT NOT NULL DEFAULT "",
             date TEXT NOT NULL DEFAULT ""
         )' );
 
@@ -629,7 +640,6 @@ function init_user_profile_form_table() {
             'widths' => '400/550/600',
             'edit'   => 'hide',
             'label'  => 'Comment',
-            'value'  => 'user.comment',
             'db'     => 'comment/user/id'
         ],
         [

@@ -120,131 +120,41 @@ let getUserData = async(userID) => {
 
             if (formFields.code === 200) {
                 formFields = formFields.data;
-                //style="display: grid; grid-auto-columns: auto;"
+                // deb(formFields);
 
+                // sort by position
                 formFields.sort((a, b) => {
                     return a.pos - b.pos;
                 });
+                //sort by row
                 formFields.sort((a, b) => {
                     return a.row - b.row;
                 });
-                deb(formFields);
 
-
+                // start with a form and the first row
                 var innerHTML = '<form id=userProfilForm>';
-                innerHTML += '<div class="FF-row" style="border: 1px solid white;margin:.5em;">';
+                innerHTML += '<div class="FF-row">';
 
                 var row = 1;
                 formFields.forEach((formField) => {
+
+                    // for the next row, close the old one and open the new row
                     if (formField.row * 1 > row) {
                         innerHTML += '</div>';
-                        innerHTML += '<div class="FF-row" style="border: 1px solid red;margin:.5em;">';
+                        innerHTML += '<div class="FF-row">';
                         row++;
                     }
+
+                    // create the form field
                     innerHTML += Form.inputTextDB(formField, user);
 
                 });
+                // close last row & form 
                 innerHTML += '</div>';
                 innerHTML += '</form>';
 
             }
 
-            let innerHTML1 = /*HTML*/ `
-                     
-                <form id=userProfilForm >
-                
-                <div class="FF-row">
-
-                    ${Form.inputText({
-                        name: 'username',
-                        type: 'text',
-                        widths: '100/150/300',
-                        edit: 'hide',
-                        label: 'Username',
-                        value: user.username,
-                        db: 'username/user/id/' + user.id,
-                    })}
-
-                    ${Form.inputText({
-                        name: 'firstname',
-                        type: 'text',
-                        widths: '100/150/300',
-                        edit: 'hide',
-                        label: 'Firstname',
-                        value: user.firstname,
-                        db: 'firstname/user/id/' + user.id,
-                    })}
-
-
-                    ${Form.inputText({
-                        name: 'lastname',
-                        type: 'text',
-                        widths: '100/150/300',
-                        edit: 'hide',
-                        label: 'Lastname',
-                        value: user.lastname,
-                        db: 'lastname/user/id/' + user.id,
-                    })}
-
-
-                    ${Form.inputText({
-                        name: 'email',
-                        type: 'text',
-                        widths: '100/150/300',
-                        edit: 'hide',
-                        label: 'Email',
-                        value: user.email,
-                        db: 'email/user/id/' + user.id,
-                    })}
-
-                    ${Form.inputText({
-                        name: 'password',
-                        type: 'password',
-                        widths: '100/150/300',
-                        edit: 'hide',
-                        label: 'Password',
-                        value: '',
-                        db: 'password/user/id/' + user.id,
-                    })}
-
-                </div>
-              
-                <div class="FF-row">
-
-                    ${Form.inputText({
-                        name: 'comment',
-                        type: 'textarea',
-                        widths: '300/400/500',
-                        edit: currentUserRole === '0' ? 'hide' : 'forbidden',
-                        label: 'Comment',
-                        value: user.comment,
-                        db: 'comment/user/id/' + user.id,
-                    })}
-
-                    </div>
-                    <div class="FF-row">
-
-                    ${Form.inputText({
-                        name: 'role',
-                        type: 'text',
-                        widths: '50/50/50',
-                        edit: currentUserRole === '0' ? 'hide' : 'forbidden',
-                        label: 'Role',
-                        value: user.role,
-                        db: 'role/user/id/' + user.id,
-                    })}
-
-                    ${Form.inputText({
-                        name: 'permission',
-                        type: 'text',
-                        widths: '100/100/100',
-                        edit: currentUserRole === '0' ? 'hide' : 'forbidden',
-                        label: 'Permission',
-                        value: user.permission,
-                        db: 'permission/user/id/' + user.id,
-                    })}
-            </div>
-                </form>`;
 
             // copy to DOM
             Functions.setInnerHTML('Userdata', innerHTML);
