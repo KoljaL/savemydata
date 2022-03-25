@@ -193,13 +193,35 @@ function toggleView() {
     });
 }
 
+
+/**
+ * 
+ * get all data-theme modes ([data-theme='blue']) from the CSS file
+ * 
+ */
+function getModes() {
+    var modes = [];
+    var classes = document.styleSheets[0].rules || document.styleSheets[0].cssRules;
+    for (var x = 0; x < classes.length; x++) {
+        if (classes[x].cssText.includes('data-theme') && !classes[x].cssText.includes('*')) {
+            let str = classes[x].cssText;
+            // deb(str)
+            str = str.split(']');
+            str = str[0].split('"');
+            modes.push(str[1]);
+        }
+    }
+    return modes;
+}
+
 /**
  *
- * The function `toggleTheme` takes the current theme and adds one to it.
+ * The function `toggleTheme` takes the current theme and adds one to it. 
  *
  */
 
-const modes = ['dark', 'dark-boxes', 'blue', 'blue-boxes', 'light', 'light-boxes'];
+// const modes = ['dark', 'dark-boxes', 'blue', 'blue-boxes', 'light', 'light-boxes'];
+const modes = getModes();
 
 // check localStorage for colorStyle
 if (localStorage.getItem('colorStyle')) {
