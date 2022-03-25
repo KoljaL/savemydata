@@ -4,11 +4,11 @@ import Form from '../Form.js';
 
 // import files for grid
 import ('../components/TUIgrid.js');
-Functions.addStylesheet('./template/css/TUIgrid.css');
+Functions.addStylesheet('./style/css/TUIgrid.css');
 
 export default {
-    render: async(userID) => {
-        Functions.pageTitle(`User Table`);
+    render: async() => {
+        Functions.pageTitle(`Customer Table`);
         await Style();
         await Content();
         await Data();
@@ -21,13 +21,13 @@ export default {
 let Style = async() => {
     let styleTags = /*CSS*/ ` 
  
-    #UserTable .tui-grid-border-line-top {
+    #CustomerTable .tui-grid-border-line-top {
         border-top: none;
     }      
-    #UserTable .tui-grid-body-area {
+    #CustomerTable .tui-grid-body-area {
         background-color: transparent;
       }
-    #UserTable .tui-grid-cell {
+    #CustomerTable .tui-grid-cell {
         background-color: transparent;
     border-color: var(--border_0);
     border-left-width: 0;
@@ -36,34 +36,36 @@ let Style = async() => {
     border-bottom-width: 1px;
         color: var(--font_0);
     }
-    #UserTable .tui-grid-header-area {
+    #CustomerTable .tui-grid-header-area {
         background-color: var(--bg_1);
         border-color: var(--border_0);
     }
-    #UserTable .tui-grid-content-area {
+    #CustomerTable .tui-grid-content-area {
         border-color: #ea0000;
     }
-    #UserTable .tui-grid-layer-focus-border {
+    #CustomerTable .tui-grid-layer-focus-border {
         background-color: transparent;
       }
-    #UserTable  .tui-grid-layer-focus-deactive .tui-grid-layer-focus-border {
+    #CustomerTable  .tui-grid-layer-focus-deactive .tui-grid-layer-focus-border {
         background-color: transparent;
     }
     
-    #UserTable [data-column-name="_number"] .tui-grid-cell-content {
+    
+    #CustomerTable [data-column-name="_number"] .tui-grid-cell-content {
         color: var(--font_2);
     }
-
-    #UserTable [data-column-name="username"] .tui-grid-cell-content {
+    
+    #CustomerTable [data-column-name="username"] .tui-grid-cell-content {
         color: var(--fontBlue);
         font-weight: bold;
-    }     
-    #UserTable [data-column-name="username"] {
+    }
+
+    #CustomerTable [data-column-name="username"] {
         cursor:pointer;
     }
 
     `;
-    Functions.createStyle('UserTable_style', styleTags);
+    Functions.createStyle('CustomerTable_style', styleTags);
 };
 
 /**
@@ -71,27 +73,29 @@ let Style = async() => {
  */
 let Content = async() => {
     let innerHTML = /*HTML*/ `
-        <div id="UserTableWrapper" class="template"> 
-            <div id=UserTableHeader>
-                <h2>User Table</h2>  
+        <div id="CustomerTableWrapper" class="template"> 
+            <div id=CustomerTableHeader>
+                <h2>Customer Table</h2>  
             </div>
-            <div id="UserTable"></div>
+            <div id="CustomerTable"></div>
         </div>`;
     await Functions.setInnerHTML('main', innerHTML);
 };
 
 let Data = async() => {
-    let data = await Functions.getAPIdata('get_data_from/user/');
+    let data = await Functions.getAPIdata('get_data_from/customer');
+
     data = data.data;
     // deb(data)
     const grid = new tui.Grid({
         usageStatistics: false,
-        el: document.getElementById('UserTable'),
+        el: document.getElementById('CustomerTable'),
         data: data,
         // rowHeaders: ['checkbox'],
         rowHeaders: ['rowNum'],
-        scrollX: false,
+        scrollX: true,
         scrollY: false,
+        // bodyHeight: "90%",
         columnOptions: {
             // resizable: true
         },
@@ -106,7 +110,7 @@ let Data = async() => {
                 width: 50,
             },
             {
-                header: 'Username',
+                header: 'Customername',
                 name: 'username',
                 sortingType: 'asc',
                 sortable: true,
@@ -117,6 +121,7 @@ let Data = async() => {
                 name: 'firstname',
                 sortingType: 'asc',
                 sortable: true,
+                width: 120,
             },
             {
                 header: 'Lastname',
@@ -127,6 +132,30 @@ let Data = async() => {
             {
                 header: 'Email',
                 name: 'email',
+            },
+            {
+                header: 'Street',
+                name: 'street',
+            },
+            {
+                header: 'Nr',
+                name: 'street_nr',
+                width: 50,
+
+            },
+            {
+                header: 'City',
+                name: 'city',
+                width: 60,
+            },
+            {
+                header: 'Post',
+                name: 'city_nr',
+                width: 50,
+            },
+            {
+                header: 'Phone',
+                name: 'phone',
             },
             {
                 header: 'Role',
@@ -151,11 +180,11 @@ let Data = async() => {
 
         if (ev.columnName === 'username') {
             let id = grid.getFormattedValue(grid.getFocusedCell().rowKey, 'id');
-            window.location.hash = '#user/profile/' + id;
+            window.location.hash = '#customer/profile/' + id;
         }
         if (ev.columnName === 'id') {
             let id = grid.getFocusedCell().value;
-            window.location.hash = '#user/profile/' + id;
+            window.location.hash = '#customer/profile/' + id;
         }
     });
 };

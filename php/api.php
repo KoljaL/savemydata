@@ -17,7 +17,7 @@ error_reporting( E_ALL );
  *
  */
 
-require __DIR__.'/php/vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 $JWT_key = 'example_key';
@@ -27,7 +27,7 @@ $JWT_key = 'example_key';
  * path to db file
  *
  */
-$db_path = 'userdata/db/database.sqlite';
+$db_path = '../userdata/db/database.sqlite';
 
 /*
  *
@@ -100,7 +100,7 @@ if ( !file_exists( $db_path ) ) {
     init_customertable();
     init_usertable();
     init_user_profile_form_table();
-    include './php/dummy_content.php';
+    include './dummy_content.php';
     create_dummy_staff( 10 );
     create_dummy_customer( 30 );
 } else {

@@ -315,7 +315,7 @@ let Functions = {
     /* Setting the username in the navbar. */
     setUsername: async(username, userID) => {
         document.querySelector('nav .sidebar_userpanel').innerHTML = /*HTML*/ `
-            <img src="uploads/avatars/${username}.png">
+            <img src="userdata/uploads/avatars/${username}.png">
             <span class=username  onclick='window.location.hash ="user/profile/"+${userID}'>${username}</span>
             <span id=userLogout class="logout_icon"></span>`;
     },

@@ -2,14 +2,14 @@
 RewriteEngine on
 
 ## direct a root call to the template
-RewriteRule ^$ template/index.html [L]
+RewriteRule ^$ index.html [L]
 
 # Deliver the folder or file directly if it exists on the server
 RewriteCond %{REQUEST_URI} !(.*)/$
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 # Push every request to api.php
-RewriteRule ^(.+)$ api.php [QSA]
+RewriteRule ^(.+)$ php/api.php [QSA]
 
 
 # AddType 'text/css; charset=UTF-8' css
