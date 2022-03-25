@@ -39,8 +39,8 @@ just some explanations to remember
 
 Endpoint Variables: `$API_endpoint/$API_param/$API_value`
 
-#### `get_profile_form()`
-- called by: `/form_profile`   
+#### `get_data_from()`
+- called by: `xxx`   
 - returns all data from table `$API_param`
 
 

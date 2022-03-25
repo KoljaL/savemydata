@@ -81,7 +81,7 @@ let Content = async() => {
 };
 
 let Data = async() => {
-    let data = await UserList.render('raw', 'user');
+    let data = await Functions.getAPIdata('get_data_from/user/');
     data = data.data;
     // deb(data)
     const grid = new tui.Grid({

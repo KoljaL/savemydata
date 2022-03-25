@@ -55,12 +55,12 @@ let Style = async() => {
         color: var(--font_2);
     }
     
-    #CustomerTable [data-column-name="customername"] .tui-grid-cell-content {
+    #CustomerTable [data-column-name="username"] .tui-grid-cell-content {
         color: var(--fontBlue);
         font-weight: bold;
     }
 
-    #CustomerTable [data-column-name="customername"] {
+    #CustomerTable [data-column-name="username"] {
         cursor:pointer;
     }
 
@@ -83,7 +83,8 @@ let Content = async() => {
 };
 
 let Data = async() => {
-    let data = await UserList.render('raw', 'customer');
+    let data = await Functions.getAPIdata('get_data_from/customer/');
+
     data = data.data;
     // deb(data)
     const grid = new tui.Grid({
@@ -110,7 +111,7 @@ let Data = async() => {
             },
             {
                 header: 'Customername',
-                name: 'customername',
+                name: 'username',
                 sortingType: 'asc',
                 sortable: true,
                 width: 200,
@@ -177,7 +178,7 @@ let Data = async() => {
         // deb(grid.getFocusedCell())
         // deb(grid.getFormattedValue(grid.getFocusedCell().rowKey, 'id'))
 
-        if (ev.columnName === 'customername') {
+        if (ev.columnName === 'username') {
             let id = grid.getFormattedValue(grid.getFocusedCell().rowKey, 'id');
             window.location.hash = '#customer/profile/' + id;
         }

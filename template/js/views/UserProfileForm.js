@@ -67,9 +67,7 @@ let Content = async() => {
 ########  #######   ######   #### ##    ##
 */
 let getData = async(formtable) => {
-    // getAPIdata (endpoint, formID)
-    var dummy = new FormData();
-    Functions.getAPIdata('form_profile/user_profile_form', dummy)
+    Functions.getAPIdata('get_data_from/user_profile_form')
         .then((res) => {
             if (res.code === 200) {
                 let formFields = res.data;

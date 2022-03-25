@@ -230,15 +230,16 @@ let dropDownEvent = async() => {
     // only admin '0' can do this
     if (Functions.getLocal('role') === '0') {
         let innerHTML = await UserList.render('dropdown', 'customer');
-        await Functions.setInnerHTML('CustomerProfileList', innerHTML).then(() => {
-            document.getElementById('UserListSelect').addEventListener('change', (el) => {
-                Message.info('Customer Profile: ' + el.target.options[el.target.selectedIndex].text);
-                // Message.success()
-                // Message.error()
-                // Message.warn()
-                window.location.hash = '#customer/profile/' + el.target.value;
+        await Functions.setInnerHTML('CustomerProfileList', innerHTML)
+            .then(() => {
+                document.getElementById('UserListSelect').addEventListener('change', (el) => {
+                    Message.info('Customer Profile: ' + el.target.options[el.target.selectedIndex].text);
+                    // Message.success()
+                    // Message.error()
+                    // Message.warn()
+                    window.location.hash = '#customer/profile/' + el.target.value;
+                });
             });
-        });
     }
 };
 
@@ -301,8 +302,7 @@ let newCustomerButton = async() => {
             if ('Save' === button.target.innerHTML) {
                 let userProfilForm = document.getElementById('userProfilForm');
                 userProfilForm = new FormData(userProfilForm);
-                userProfilForm.append('table', 'customer');
-                Functions.getAPIdata('newuser', userProfilForm).then((res) => {
+                Functions.getAPIdata('new_entry_in/customer').then((res) => {
                     // deb(res)
                     if (res.code === 200) {
                         window.location.hash = '#customer/profile/' + res.data.id;

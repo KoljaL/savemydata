@@ -103,68 +103,70 @@ let Content = async() => {
  * It gets the user data from the API and displays it on the page.
  */
 let getUserData = async(userID) => {
-    const currentUserRole = Functions.getLocal('role');
+    if (userID) {
 
-    var dummy = new FormData();
-    var formFields = await Functions.getAPIdata('form_profile/user_profile_form', dummy);
+        const currentUserRole = Functions.getLocal('role');
 
-    var formData = new FormData();
-    formData.append('id', userID);
-    formData.append('table', 'user');
-    // getAPIdata (endpoint, formID)
-    Functions.getAPIdata('userprofile', formData).then((res) => {
-        // deb(res);
-        if (res.code === 200) {
-            const user = res.data;
-            window.userName = user.username;
+        var formFields = await Functions.getAPIdata('get_data_from/user_profile_form');
 
-            if (formFields.code === 200) {
-                formFields = formFields.data;
-                // deb(formFields);
+        // var formData = new FormData();
+        // formData.append('id', userID);
+        // formData.append('table', 'user');
+        // getAPIdata (endpoint, formID)
+        Functions.getAPIdata('get_data_from/user/' + userID).then((res) => {
+            // deb(res);
+            if (res.code === 200) {
+                const user = res.data[0];
+                window.userName = user.username;
 
-                // sort by position
-                formFields.sort((a, b) => {
-                    return a.pos - b.pos;
-                });
-                //sort by row
-                formFields.sort((a, b) => {
-                    return a.row - b.row;
-                });
+                if (formFields.code === 200) {
+                    formFields = formFields.data;
+                    // deb(formFields);
 
-                // start with a form and the first row
-                var innerHTML = '<form id=userProfilForm>';
-                innerHTML += '<div class="FF-row">';
+                    // sort by position
+                    formFields.sort((a, b) => {
+                        return a.pos - b.pos;
+                    });
+                    //sort by row
+                    formFields.sort((a, b) => {
+                        return a.row - b.row;
+                    });
 
-                var row = 1;
-                formFields.forEach((formField) => {
+                    // start with a form and the first row
+                    var innerHTML = '<form id=userProfilForm>';
+                    innerHTML += '<div class="FF-row">';
 
-                    // for the next row, close the old one and open the new row
-                    if (formField.row * 1 > row) {
-                        innerHTML += '</div>';
-                        innerHTML += '<div class="FF-row">';
-                        row++;
-                    }
+                    var row = 1;
+                    formFields.forEach((formField) => {
 
-                    // create the form field
-                    innerHTML += Form.inputTextDB(formField, user);
+                        // for the next row, close the old one and open the new row
+                        if (formField.row * 1 > row) {
+                            innerHTML += '</div>';
+                            innerHTML += '<div class="FF-row">';
+                            row++;
+                        }
 
-                });
-                // close last row & form 
-                innerHTML += '</div>';
-                innerHTML += '</form>';
+                        // create the form field
+                        innerHTML += Form.inputTextDB(formField, user);
 
+                    });
+                    // close last row & form 
+                    innerHTML += '</div>';
+                    innerHTML += '</form>';
+
+                }
+
+
+                // copy to DOM
+                Functions.setInnerHTML('Userdata', innerHTML);
             }
-
-
-            // copy to DOM
-            Functions.setInnerHTML('Userdata', innerHTML);
-        }
-        // return error message
-        else {
-            let innerHTML = /*HTML*/ `<div id="T_UserLoginForm"> ${res.message}</div>`;
-            Functions.setInnerHTML('Userdata', innerHTML);
-        }
-    });
+            // return error message
+            else {
+                let innerHTML = /*HTML*/ `<div id="T_UserLoginForm"> ${res.message}</div>`;
+                Functions.setInnerHTML('Userdata', innerHTML);
+            }
+        });
+    }
 };
 
 /**

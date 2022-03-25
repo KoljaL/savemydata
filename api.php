@@ -163,8 +163,8 @@ case 'userprofile':
     get_user_profile( $request );
     break;
 
-case 'userlist':
-    get_user_list( $request );
+case 'get_list_from':
+    get_list_from( $request );
     break;
 
 case 'newuser':
@@ -186,8 +186,8 @@ case 'edit_single_field':
     edit_single_field( $request );
     break;
 
-case 'form_profile':
-    get_profile_form( $request );
+case 'get_data_from':
+    get_data_from( $request );
     break;
 
 // case 'edit_profile_form':
@@ -233,13 +233,17 @@ default:
  *
  */
 
-function get_profile_form( $param ) {
+function get_data_from( $param ) {
     // if ( isAllowed() ) {
-    global $API_param, $db;
-
+    global $db, $API_param, $API_value;
     $table = $API_param;
 
-    $stmt = $db->prepare( "SELECT * FROM $table" );
+    if ( '' !== $API_value ) {
+        $where = ' WHERE id = '.$API_value;
+    } else {
+        $where = '';
+    }
+    $stmt = $db->prepare( "SELECT * FROM $table $where" );
     $stmt->execute();
     $form = $stmt->fetchAll( PDO::FETCH_ASSOC );
 
@@ -377,27 +381,26 @@ function new_entry_in( $param ) {
  * This function is used to get all the users from the database
  * Depending on the $param['table'] it will respond staff or customer data
  */
-function get_user_list( $param ) {
+function get_list_from( $param ) {
     if ( isAllowed() ) {
+        global $db, $API_param, $API_value;
 
-        global $db;
-        $response = [];
-        $table    = $param['table'];
+        $table = $API_param;
 
-        $stmt = $db->prepare( "SELECT * FROM $table" );
+        if ( '' !== $API_value ) {
+            $columns = $API_value;
+        } else {
+            $columns = '*';
+        }
+
+        $stmt = $db->prepare( "SELECT $columns FROM $table" );
         $stmt->execute();
         $users = $stmt->fetchAll( PDO::FETCH_ASSOC );
 
+        $response = [];
         if ( $users ) {
-
-            // unset password from list
-            foreach ( array_keys( $users ) as $key ) {
-                unset( $users[$key]['password'] );
-            }
-
             $response['code'] = 200;
             $response['data'] = $users;
-
         } else {
             $response['code']    = 400;
             $response['message'] = 'no user found';
@@ -766,7 +769,7 @@ function init_customertable() {
     // create user table
     $db->exec( 'CREATE TABLE customer(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            customername TEXT NOT NULL DEFAULT "",
+            username TEXT NOT NULL DEFAULT "",
             password TEXT NOT NULL DEFAULT "",
             firstname TEXT NOT NULL DEFAULT "",
             lastname TEXT NOT NULL DEFAULT "",
@@ -784,19 +787,19 @@ function init_customertable() {
 
     // create first users
     $first_customer = [
-        'customername' => 'customer',
-        'password'     => 'password',
-        'firstname'    => 'customer',
-        'lastname'     => 'customer',
-        'email'        => 'customer@customer.org',
-        'phone'        => '555-123456789',
-        'street'       => 'Sesam',
-        'street_nr'    => '10',
-        'city'         => 'Clondyke',
-        'city_nr'      => '10',
-        'comment'      => 'lorem iopsum',
-        'role'         => '10',
-        'permission'   => '10'
+        'username'   => 'customer',
+        'password'   => 'password',
+        'firstname'  => 'customer',
+        'lastname'   => 'customer',
+        'email'      => 'customer@customer.org',
+        'phone'      => '555-123456789',
+        'street'     => 'Sesam',
+        'street_nr'  => '10',
+        'city'       => 'Clondyke',
+        'city_nr'    => '10',
+        'comment'    => 'lorem iopsum',
+        'role'       => '10',
+        'permission' => '10'
     ];
 
     // create_customer( $first_customer );
@@ -927,11 +930,15 @@ function insert_into_db( $param, $table ) {
  */
 //  header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
 function return_JSON( $response ) {
-    global $request, $API_endpoint;
+    global $request, $API_endpoint, $API_param, $API_value;
 
     if ( 'reset' !== $API_endpoint ) {
 
-        $response['request'] = $request;
+        $response['GET']['$API_endpoint'] = $API_endpoint;
+        $response['GET']['$API_param']    = $API_param;
+        $response['GET']['$API_value']    = $API_value;
+
+        $response['POST'] = $request;
         header( 'Access-Control-Allow-Origin: *' );
         header( 'Content-Type: application/json; charset=UTF-8' );
         header( 'Access-Control-Allow-Methods: POST' );
@@ -978,19 +985,19 @@ function create_dummy_customer( $count ) {
         $random_name = random_name();
         $email       = $random_name[0]."@".$random_name[1].".com";
         $customer    = [
-            'customername' => 'C_'.$random_name[0].'_'.$random_name[1],
-            'password'     => 'password',
-            'firstname'    => $random_name[0],
-            'lastname'     => $random_name[1],
-            'email'        => $email,
-            'comment'      => random_text(),
-            'phone'        => random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ).random_int( 1, 9 ).'-'.random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ).random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ),
-            'street'       => random_street(),
-            'street_nr'    => random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ),
-            'city'         => random_city(),
-            'city_nr'      => random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ).random_int( 1, 9 ).random_int( 0, 9 ),
-            'role'         => '10',
-            'permission'   => '10'
+            'username'   => 'C_'.$random_name[0].'_'.$random_name[1],
+            'password'   => 'password',
+            'firstname'  => $random_name[0],
+            'lastname'   => $random_name[1],
+            'email'      => $email,
+            'comment'    => random_text(),
+            'phone'      => random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ).random_int( 1, 9 ).'-'.random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ).random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ),
+            'street'     => random_street(),
+            'street_nr'  => random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ),
+            'city'       => random_city(),
+            'city_nr'    => random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ).random_int( 1, 9 ).random_int( 0, 9 ),
+            'role'       => '10',
+            'permission' => '10'
         ];
         // create_customer( $user );
         insert_into_db( $customer, 'customer' );
