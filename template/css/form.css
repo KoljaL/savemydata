@@ -160,8 +160,8 @@ div.FF-item input:focus+label {
 
 /* input border for singleEdit function */
 
-.FF-item textarea.successEdit,
-.FF-item input.successEdit {
+textarea.successEdit,
+input.successEdit {
     outline: 1px solid var(--fontGreen);
 }
 

@@ -268,18 +268,20 @@ let Functions = {
     //  
     */
     /* This code is fetching the data from the API and returning it. */
-    getAPIdata: async(URL, FormId) => {
-        // deb(FormId)
-        if (URL !== 'login') {
-            FormId.append('user_id', Functions.getLocal('id'));
-            FormId.append('user_token', Functions.getLocal('token'));
+    getAPIdata: async(URL, formData = '') => {
+        // deb(formData)
+        // if called without the formData parameter
+        if (formData === '') {
+            formData = new FormData();
         }
-        var formData;
-        if (FormId.tagName) {
-            formData = new FormData(FormId);
-
-        } else {
-            formData = FormId;
+        // almost always add the token
+        if (URL !== 'login') {
+            // formData.append('user_id', Functions.getLocal('id'));
+            formData.append('user_token', Functions.getLocal('token'));
+        }
+        // if fornData was just a node, make real FormData of it
+        if (!(formData instanceof FormData)) {
+            formData = new FormData(formData);
         }
 
         // deb(formData)
@@ -342,7 +344,7 @@ let Functions = {
         formData.append('equal', db[3]);
         formData.append('value', el.value);
 
-        Functions.getAPIdata('singleedit', formData)
+        Functions.getAPIdata('edit_single_field', formData)
             .then((res) => {
                 deb(res);
                 if (200 === res.code) {
@@ -363,8 +365,7 @@ let Functions = {
         var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         var charactersLength = characters.length;
         for (var i = 0; i < length; i++) {
-            result += characters.charAt(Math.floor(Math.random() *
-                charactersLength));
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
         }
         return result;
     }

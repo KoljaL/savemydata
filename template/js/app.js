@@ -62,14 +62,13 @@ async function router() {
 
             case 'formeditor':
                 switch (request.key) {
-                    case 'userprofile':
+                    case 'user_profile_form':
                         await UserProfileForm.render(request.key)
                         break;
-                        erTable.render()
-                        break;
-                    default:
-                        await UserTable.render()
-                        break;
+
+                        // default:
+                        //     await UserTable.render()
+                        //     break;
                 }
                 break;
 

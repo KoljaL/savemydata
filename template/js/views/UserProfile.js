@@ -216,10 +216,7 @@ let deleteUserButton = (userID) => {
 
         document.getElementById('deleteUserButton').addEventListener('click', function() {
             var userDeleteForm = new FormData();
-            userDeleteForm.append('table', 'user');
-            userDeleteForm.append('id', userID);
-
-            Functions.getAPIdata('deleteuser', userDeleteForm).then((res) => {
+            Functions.getAPIdata('delete_entry_in/user/' + userID).then((res) => {
                 deb(res);
                 if (res.code === 200) {
                     Message.warn('Deleted User: ' + window.userName);

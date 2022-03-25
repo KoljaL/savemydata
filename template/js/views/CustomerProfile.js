@@ -105,9 +105,6 @@ let Content = async() => {
 let getCustomerData = async(customerID) => {
     const currentCustomerRole = Functions.getLocal('role');
 
-
-
-
     var formData = new FormData();
     formData.append('id', customerID);
     formData.append('table', 'customer');
@@ -275,10 +272,7 @@ let deleteCustomerButton = (customerID) => {
 
         document.getElementById('deleteCustomerButton').addEventListener('click', function() {
             var userDeleteForm = new FormData();
-            userDeleteForm.append('table', 'customer');
-            userDeleteForm.append('id', customerID);
-
-            Functions.getAPIdata('deleteuser', userDeleteForm).then((res) => {
+            Functions.getAPIdata('delete_entry_in/customer/' + customerID, userDeleteForm).then((res) => {
                 deb(res);
                 if (res.code === 200) {
                     Message.warn('Deleted Customer: ' + window.customername);

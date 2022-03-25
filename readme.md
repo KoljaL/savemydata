@@ -44,11 +44,11 @@ Endpoint Variables: `$API_endpoint/$API_param/$API_value`
 - returns all data from table `$API_param`
 
 
-#### `delete_user()`
-- called by: `/deleteuser`   
-- deletes user by `$param['id']` from table `$param['table']`
+#### `delete_entry_in()`
+- called by: `/delete_entry_in/user/[id]`   
+- deletes user by id (`$API_value`) from table `$API_param`
 - returns `200/400`  
-**rename to universal `delete_row`, from `$param[]` to `$API_`**
+
 
 #### `new_user()`
 - called by: `/xxx`   

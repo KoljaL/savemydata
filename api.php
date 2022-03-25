@@ -171,16 +171,19 @@ case 'newuser':
     new_user( $request );
     break;
 
-case 'deleteuser':
-    delete_user( $request );
+case 'new_entry_in':
+    new_entry_in( $request );
+    break;
+case 'delete_entry_in':
+    delete_entry_in( $request );
     break;
 
 case 'login':
     login_user( $request );
     break;
 
-case 'singleedit':
-    singleedit( $request );
+case 'edit_single_field':
+    edit_single_field( $request );
     break;
 
 case 'form_profile':
@@ -277,14 +280,15 @@ function get_profile_form( $param ) {
  * This function deletes a user from the database
  *
  */
-function delete_user( $param ) {
+function delete_entry_in( $param ) {
     if ( isAllowed() ) {
-        global $db;
+        global $db, $API_param, $API_value;
         $response = [];
-        $table    = $param['table'];
+        $table    = $API_param;
+        $id       = $API_value;
 
         $stmt = $db->prepare( "DELETE FROM $table WHERE id =?" );
-        $stmt->execute( [$param['id']] );
+        $stmt->execute( [$id] );
         $count = $stmt->rowCount();
 
         if ( $count ) {
@@ -329,6 +333,24 @@ function new_user( $param ) {
         $response = [];
         $table    = $param['table'];
         unset( $param['table'] );
+        // create_user( $param );
+        insert_into_db( $param, $table );
+
+    } else {
+        $response['code']    = 400;
+        $response['message'] = 'vorbidden';
+        return_JSON( $response );
+    }
+}
+
+function new_entry_in( $param ) {
+    if ( isAllowed() ) {
+
+        global $db, $API_param;
+        $response = [];
+        $table    = $API_param;
+        unset( $param['user_id'] );
+        unset( $param['user_token'] );
         // create_user( $param );
         insert_into_db( $param, $table );
 
@@ -406,7 +428,7 @@ function get_user_list( $param ) {
  * This function is used to update a single field in a table
  *
  */
-function singleedit( $param ) {
+function edit_single_field( $param ) {
     if ( isAllowed() ) {
 
         // special case for password update
@@ -422,6 +444,15 @@ function singleedit( $param ) {
         }
         global $db;
         $response = [];
+
+        // check if colums exists
+        try {
+
+            $stmt   = $db->prepare( "SELECT $param[update] from $param[table];" );
+            $update = $stmt->execute();
+        } catch ( Exception $e ) {
+            $db->exec( "ALTER TABLE $param[table] ADD COLUMN '$param[update]' TEXT NOT NULL DEFAULT '' " );
+        }
 
         $sql    = "UPDATE $param[table] SET $param[update]=? WHERE $param[where]=?";
         $stmt   = $db->prepare( $sql );
@@ -467,7 +498,7 @@ function singleedit( $param ) {
  */
 function isAllowed( $action = '' ) {
     global $TOKEN, $request;
-    if ( $request['user_id'] === $TOKEN['id'] || "0" === $TOKEN['role'] ) {
+    if ( "0" === $TOKEN['role'] ) {
         return true;
     }
 }
