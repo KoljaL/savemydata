@@ -1,4 +1,4 @@
-import Functions from '../Functions.js';
+import Functions from '../../Functions.js';
 
 let Solar = {
     render: async() => {

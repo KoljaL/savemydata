@@ -1,5 +1,6 @@
-import Functions from '../Functions.js';
-import Form from '../Form.js';
+import Functions from '../../Functions.js';
+
+import Form from '../../Form.js';
 
 let Form2 = {
     render: async() => {
@@ -51,7 +52,7 @@ let Content = async() => {
         <h2>Floating Form</h2>
         <form>
             <div id=insideform class="FF-row">
- 
+  
             ${Form.inputText({
                 name: "Name",
                 type: "text",

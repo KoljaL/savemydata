@@ -1,4 +1,5 @@
-import Functions from '../Functions.js';
+import Functions from '../../Functions.js';
+
 
 let Form1 = {
     render: async() => {
@@ -174,7 +175,7 @@ let Style = async() => {
         z-index: 1;
     }
     
-    input.file {
+    input.file { 
         position: relative;
         text-align: right;
         -moz-opacity: 0;

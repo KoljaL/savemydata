@@ -28,7 +28,13 @@ a simple framework to save various data based on users
 
  
 ----
-
+**Messages**
+```javascript
+Message.info('CustomerProfile:');
+Message.success('CustomerProfile:')
+Message.error('CustomerProfile:')
+Message.warn('CustomerProfile:')
+```
 # Code
 just some explanations to remember
 

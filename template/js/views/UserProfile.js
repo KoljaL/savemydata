@@ -3,12 +3,23 @@ import UserList from '../components/UserList.js';
 import Form from '../Form.js';
 
 export default {
-    render: async(userID) => {
-        Functions.pageTitle(`User Profile`);
+    render: async(userID, action) => {
+        if (action === 'user') {
+            window.slugName = 'User';
+            window.tableName = 'user';
+            window.formTableName = 'user_profile_form';
+        }
+        if (action === 'customer') {
+            window.slugName = 'Customer';
+            window.tableName = 'customer';
+            window.formTableName = 'customer_profile_form';
+        }
+
+        Functions.pageTitle(`${slugName} Profile`);
         await Style();
         await Content();
         await getUserData(userID);
-        await dropDownEvent();
+        await dropDownEvent(tableName);
         await newUserButton();
         await editUserButton(userID);
         await deleteUserButton(userID);
@@ -107,13 +118,13 @@ let getUserData = async(userID) => {
 
         const currentUserRole = Functions.getLocal('role');
 
-        var formFields = await Functions.getAPIdata('get_data_from/user_profile_form');
+        var formFields = await Functions.getAPIdata('get_data_from/' + window.formTableName);
 
         // var formData = new FormData();
         // formData.append('id', userID);
         // formData.append('table', 'user');
         // getAPIdata (endpoint, formID)
-        Functions.getAPIdata('get_data_from/user/' + userID).then((res) => {
+        Functions.getAPIdata(`get_data_from/${tableName}/${userID}`).then((res) => {
             // deb(res);
             if (res.code === 200) {
                 const user = res.data[0];
@@ -172,17 +183,17 @@ let getUserData = async(userID) => {
 /**
  * It adds an event listener to the dropdown menu.
  */
-let dropDownEvent = async() => {
+let dropDownEvent = async(tableName) => {
     // only admin '0' can do this
     if (Functions.getLocal('role') === '0') {
-        let innerHTML = await UserList.render('dropdown', 'user');
+        let innerHTML = await UserList.render('dropdown', tableName);
         await Functions.setInnerHTML('UserProfileList', innerHTML).then(() => {
             document.getElementById('UserListSelect').addEventListener('change', (el) => {
                 Message.info('User Profile: ' + el.target.options[el.target.selectedIndex].text);
                 // Message.success()
                 // Message.error()
                 // Message.warn()
-                window.location.hash = '#user/profile/' + el.target.value;
+                window.location.hash = '#' + tableName + '/profile/' + el.target.value;
             });
         });
     }
@@ -218,7 +229,8 @@ let deleteUserButton = (userID) => {
 
         document.getElementById('deleteUserButton').addEventListener('click', function() {
             var userDeleteForm = new FormData();
-            Functions.getAPIdata('delete_entry_in/user/' + userID).then((res) => {
+
+            Functions.getAPIdata(`delete_entry_in/${tableName}/${userID}`).then((res) => {
                 deb(res);
                 if (res.code === 200) {
                     Message.warn('Deleted User: ' + window.userName);
@@ -247,11 +259,11 @@ let newUserButton = async() => {
             if ('Save' === button.target.innerHTML) {
                 let userProfilForm = document.getElementById('userProfilForm');
                 userProfilForm = new FormData(userProfilForm);
-                userProfilForm.append('table', 'user');
+                userProfilForm.append('table', tableName);
                 Functions.getAPIdata('newuser', userProfilForm).then((res) => {
                     // deb(res)
                     if (res.code === 200) {
-                        window.location.hash = '#user/profile/' + res.data.id;
+                        window.location.hash = `#${tableName}/profile/${res.data.id}`;
                     }
                 });
             } // save

@@ -11,15 +11,14 @@ import UserLogin from './views/UserLogin.js';
 import UserTable from './views/UserTable.js';
 import UserProfile from './views/UserProfile.js';
 import CustomerTable from './views/CustomerTable.js';
-import CustomerProfile from './views/CustomerProfile.js';
 import UserProfileForm from './views/UserProfileForm.js';
 
 
 // dummy
-import Form from './views/Form.js';
-import Form1 from './views/Form1.js';
-import Form2 from './views/Form2.js';
-import Solar from './views/Solar.js';
+import Form from './views/dummy/Form.js';
+import Form1 from './views/dummy/Form1.js';
+import Form2 from './views/dummy/Form2.js';
+import Solar from './views/dummy/Solar.js';
 
 
 // COMPONENTS
@@ -49,7 +48,7 @@ async function router() {
             case 'user':
                 switch (request.key) {
                     case 'profile':
-                        await UserProfile.render(request.value)
+                        await UserProfile.render(request.value, 'user')
                         break;
                     case 'table':
                         await UserTable.render()
@@ -65,6 +64,9 @@ async function router() {
                     case 'user_profile_form':
                         await UserProfileForm.render(request.key)
                         break;
+                    case 'customer_profile_form':
+                        await UserProfileForm.render(request.key)
+                        break;
 
                         // default:
                         //     await UserTable.render()
@@ -75,7 +77,7 @@ async function router() {
             case 'customer':
                 switch (request.key) {
                     case 'profile':
-                        await CustomerProfile.render(request.value)
+                        await UserProfile.render(request.value, 'customer')
                         break;
                     case 'table':
                         await CustomerTable.render()

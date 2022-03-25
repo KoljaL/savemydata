@@ -334,30 +334,34 @@ let Functions = {
     */
     /* This is the code that is used to update a single value in the database. */
     singleEdit: async(el) => {
-        deb(el)
-        let db = el.dataset.db.split('/');
+        // deb(el)
+        if (el.dataset.db) {
 
-        var formData = new FormData();
-        formData.append('update', db[0]);
-        formData.append('table', db[1]);
-        formData.append('where', db[2]);
-        formData.append('equal', db[3]);
-        formData.append('value', el.value);
+            let db = el.dataset.db.split('/');
 
-        Functions.getAPIdata('edit_single_field', formData)
-            .then((res) => {
-                deb(res);
-                if (200 === res.code) {
-                    el.classList.add('successEdit')
-                    setTimeout(() => {
-                        el.classList.remove('successEdit')
-                    }, 1000);
-                }
-                // no else, so we have a chance of no extra class ;-)
-                if (400 === res.code) {
-                    el.classList.add('errorEdit')
-                }
-            });
+            var formData = new FormData();
+            formData.append('update', db[0]);
+            formData.append('table', db[1]);
+            formData.append('where', db[2]);
+            formData.append('equal', db[3]);
+            formData.append('value', el.value);
+
+            Functions.getAPIdata('edit_single_field', formData)
+                .then((res) => {
+                    // deb(res);
+                    if (200 === res.code) {
+                        el.classList.add('successEdit')
+                        Message.info("Value '" + el.value + "' saved");
+                        setTimeout(() => {
+                            el.classList.remove('successEdit')
+                        }, 1000);
+                    }
+                    // no else, so we have a chance of no extra class ;-)
+                    if (400 === res.code) {
+                        el.classList.add('errorEdit')
+                    }
+                });
+        }
     },
 
     makeid: (length) => {

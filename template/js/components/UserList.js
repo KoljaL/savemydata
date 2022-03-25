@@ -5,7 +5,7 @@ export default {
         let list = await getUserList(table);
         // deb(list)
 
-        // var name = table === 'user' ? 'username' : 'customername';
+        var name = (table === 'customer') ? 'Customer' : 'User';
         if ('dropdown' === type) {
             // deb(table)
             // deb(name)
@@ -15,7 +15,7 @@ export default {
             })
             return /*html*/ ` 
                 <select id="UserListSelect" name=user>
-                    <option value="" hidden disabled selected>Select User</option>
+                    <option value="" hidden disabled selected>Select ${name}</option>
                     ${innerHTML}
                 </select> `;
         }

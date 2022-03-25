@@ -256,7 +256,6 @@ function get_data_from( $param ) {
     } else {
         $response['code']    = 400;
         $response['table']   = $form;
-        $response['data']    = $count;
         $response['message'] = 'no form profile found';
     }
     return_JSON( $response );
@@ -609,98 +608,62 @@ function init_user_profile_form_table() {
     global $db;
     // create user table
     $db->exec( 'CREATE TABLE IF NOT EXISTS user_profile_form(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL DEFAULT "",
-            label TEXT NOT NULL DEFAULT "",
-            type TEXT NOT NULL DEFAULT "",
-            row TEXT NOT NULL DEFAULT "",
-            pos TEXT NOT NULL DEFAULT "",
-            widths TEXT NOT NULL DEFAULT "",
-            edit TEXT NOT NULL DEFAULT "",
-            db TEXT NOT NULL DEFAULT "",
-            date TEXT NOT NULL DEFAULT ""
-        )' );
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL DEFAULT "",
+        label TEXT NOT NULL DEFAULT "",
+        type TEXT NOT NULL DEFAULT "",
+        row TEXT NOT NULL DEFAULT "",
+        pos TEXT NOT NULL DEFAULT "",
+        widths TEXT NOT NULL DEFAULT "",
+        edit TEXT NOT NULL DEFAULT "",
+        db TEXT NOT NULL DEFAULT "",
+        date TEXT NOT NULL DEFAULT ""
+    )' );
 
     // create first users
-    $fields = [
-
-        [
-            'pos'    => '10',
-            'row'    => '1',
-            'name'   => 'username',
-            'type'   => 'text',
-            'widths' => '100/150/300',
-            'edit'   => 'hide',
-            'label'  => 'Username',
-            'db'     => 'username/user/id'
-        ],
-        [
-            'pos'    => '20',
-            'row'    => '1',
-            'name'   => 'password',
-            'type'   => 'password',
-            'widths' => '100/150/300',
-            'edit'   => 'hide',
-            'label'  => 'Password',
-            'db'     => 'password/user/id'
-        ],
-        [
-            'pos'    => '10',
-            'row'    => '2',
-            'name'   => 'firstname',
-            'type'   => 'text',
-            'widths' => '100/150/300',
-            'edit'   => 'hide',
-            'label'  => 'Firstname',
-            'db'     => 'firstname/user/id'
-        ],
-
-        [
-            'pos'    => '20',
-            'row'    => '2',
-            'name'   => 'lastname',
-            'type'   => 'text',
-            'widths' => '100/150/300',
-            'edit'   => 'hide',
-            'label'  => 'Lastname',
-            'db'     => 'lastname/user/id'
-        ],
-
-        [
-            'pos'    => '10',
-            'row'    => '3',
-            'name'   => 'comment',
-            'type'   => 'textarea',
-            'widths' => '400/550/600',
-            'edit'   => 'hide',
-            'label'  => 'Comment',
-            'db'     => 'comment/user/id'
-        ],
-        [
-            'pos'    => '10',
-            'row'    => '4',
-            'name'   => 'role',
-            'type'   => 'text',
-            'widths' => '100/100/100',
-            'edit'   => 'hide',
-            'label'  => 'Role',
-            'db'     => 'role/user/id'
-        ],
-
-        [
-            'pos'    => '20',
-            'row'    => '4',
-            'name'   => 'permission',
-            'type'   => 'text',
-            'widths' => '100/100/100',
-            'edit'   => 'hide',
-            'label'  => 'Permission',
-            'db'     => 'permission/user/id'
-        ]
-
+    $userfields = [
+        ['pos' => '10', 'row' => '1', 'name' => 'username', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Username', 'db' => 'username/user/id'],
+        ['pos' => '20', 'row' => '1', 'name' => 'email', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Email', 'db' => 'email/user/id'],
+        ['pos' => '20', 'row' => '1', 'name' => 'password', 'type' => 'password', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Password', 'db' => 'password/user/id'],
+        ['pos' => '10', 'row' => '2', 'name' => 'firstname', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Firstname', 'db' => 'firstname/user/id'],
+        ['pos' => '20', 'row' => '2', 'name' => 'lastname', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Lastname', 'db' => 'lastname/user/id'],
+        ['pos' => '10', 'row' => '3', 'name' => 'comment', 'type' => 'textarea', 'widths' => '400/550/600', 'edit' => 'hide', 'label' => 'Comment', 'db' => 'comment/user/id'],
+        ['pos' => '10', 'row' => '4', 'name' => 'role', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Role', 'db' => 'role/user/id'],
+        ['pos' => '20', 'row' => '4', 'name' => 'permission', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Permission', 'db' => 'permission/user/id']
     ];
-    foreach ( $fields as $field ) {
+    foreach ( $userfields as $field ) {
         insert_into_db( $field, 'user_profile_form' );
+    }
+    // create customer table
+    $db->exec( 'CREATE TABLE IF NOT EXISTS customer_profile_form(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL DEFAULT "",
+        label TEXT NOT NULL DEFAULT "",
+        type TEXT NOT NULL DEFAULT "",
+        row TEXT NOT NULL DEFAULT "",
+        pos TEXT NOT NULL DEFAULT "",
+        widths TEXT NOT NULL DEFAULT "",
+        edit TEXT NOT NULL DEFAULT "",
+        db TEXT NOT NULL DEFAULT "",
+        date TEXT NOT NULL DEFAULT ""
+    )' );
+    // create first users
+    $customerfields = [
+        ['pos' => '10', 'row' => '1', 'name' => 'username', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Username', 'db' => 'username/user/id'],
+        ['pos' => '20', 'row' => '1', 'name' => 'email', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Email', 'db' => 'email/user/id'],
+        ['pos' => '30', 'row' => '1', 'name' => 'password', 'type' => 'password', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Password', 'db' => 'password/user/id'],
+        ['pos' => '10', 'row' => '2', 'name' => 'firstname', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Firstname', 'db' => 'firstname/user/id'],
+        ['pos' => '20', 'row' => '2', 'name' => 'street', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Street', 'db' => 'street/user/id'],
+        ['pos' => '20', 'row' => '2', 'name' => 'street_nr', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Street_nr', 'db' => 'street_nr/user/id'],
+        ['pos' => '20', 'row' => '2', 'name' => 'city', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'City', 'db' => 'city/user/id'],
+        ['pos' => '20', 'row' => '2', 'name' => 'city_nr', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'City_nr', 'db' => 'city_nr/user/id'],
+        ['pos' => '20', 'row' => '2', 'name' => 'phone', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'phone', 'db' => 'phone/user/id'],
+        ['pos' => '10', 'row' => '3', 'name' => 'comment', 'type' => 'textarea', 'widths' => '400/550/600', 'edit' => 'hide', 'label' => 'Comment', 'db' => 'comment/user/id'],
+        ['pos' => '10', 'row' => '4', 'name' => 'role', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Role', 'db' => 'role/user/id'],
+        ['pos' => '20', 'row' => '4', 'name' => 'permission', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Permission', 'db' => 'permission/user/id']
+    ];
+    foreach ( $customerfields as $field ) {
+        insert_into_db( $field, 'customer_profile_form' );
     }
 
 }

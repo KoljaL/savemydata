@@ -1,4 +1,4 @@
-import Functions from '../Functions.js';
+import Functions from '../../Functions.js';
 
 let Form1 = {
     render: async() => {
@@ -255,7 +255,7 @@ let Style = async() => {
             padding-bottom: 5px;
         }
     }
-       
+        
     `;
     Functions.createStyle('Form_style', styleTags);
 };
