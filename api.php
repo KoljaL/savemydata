@@ -17,7 +17,7 @@ error_reporting( E_ALL );
  *
  */
 
-require __DIR__.'/vendor/autoload.php';
+require __DIR__.'/php/vendor/autoload.php';
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 $JWT_key = 'example_key';
@@ -27,7 +27,7 @@ $JWT_key = 'example_key';
  * path to db file
  *
  */
-$db_path = 'db/database.sqlite';
+$db_path = 'userdata/db/database.sqlite';
 
 /*
  *
