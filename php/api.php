@@ -249,7 +249,9 @@ function get_data_from( $param ) {
 
     $response = [];
     if ( $form ) {
-
+        foreach ( $form as $key => $value ) {
+            unset( $form[$key]['password'] );
+        }
         $response['code'] = 200;
         $response['data'] = $form;
 

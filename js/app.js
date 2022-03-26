@@ -9,6 +9,7 @@ import Functions from './Functions.js';
 import Default from './views/Default.js';
 import UserLogin from './views/UserLogin.js';
 import UserTable from './views/UserTable.js';
+import UserBetterTable from './views/UserBetterTable.js';
 import UserProfile from './views/UserProfile.js';
 import CustomerTable from './views/CustomerTable.js';
 import UserProfileForm from './views/UserProfileForm.js';
@@ -51,7 +52,7 @@ async function router() {
                         await UserProfile.render(request.value, 'user')
                         break;
                     case 'table':
-                        await UserTable.render()
+                        await UserBetterTable.render()
                         break;
                     default:
                         await UserTable.render()
