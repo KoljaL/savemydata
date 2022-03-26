@@ -3,7 +3,7 @@ import Functions from '../Functions.js';
 
 export default {
     render: async(data) => {
-        return await Content(data);
+        return await Content(data, slugName);
     },
 };
 
@@ -18,12 +18,12 @@ let Style = async() => {
         justify-content: space-between;
         flex-wrap: wrap;
     }
-
     #TableHeader .FF-item{
         margin-top:0;
     }
     #TableContent{
         border-collapse: collapse;
+        fontsize: .9em;
     }
     #TableContent .headerRow {
         position: sticky;
@@ -46,14 +46,12 @@ let Style = async() => {
     #TableContent td.id {
         opacity:.5;
     }
-
-    tr.hideRow{
+    #TableContent tr.hideRow{
         visibility: collapse;
         opacity:0;
         transition: visibility .3s ease-out,opacity .8s ease-out;
     }
- 
-    tr.hideRow>td{
+    #TableContent tr.hideRow>td{
         line-height:0;
         padding-top:0!important;
         padding-bottom:0!important;
@@ -62,7 +60,7 @@ let Style = async() => {
         -o-transition: padding .3s ease-out, line-height 1.3s ease-out;
         transition: padding .3s ease-out, line-height 1.3s ease-out;
     }
-    tr.showRow>td{
+    #TableContent tr.showRow>td{
         -webkit-transition: padding .3s ease-out, line-height 1.3s ease-out;
         -moz-transition: padding .3s ease-out, line-height 1.3s ease-out;
         -o-transition: padding .3s ease-out, line-height 1.3s ease-out;
@@ -80,26 +78,36 @@ let Content = async(data) => {
     await Style();
 
     // CREATE HTML
+
     // outer DIV
     let TableWrapper = document.createElement('DIV');
     TableWrapper.id = 'TableWrapper';
+
     // header
     let TableHeader = document.createElement('DIV');
     TableHeader.id = 'TableHeader';
+
     //headline
     let Headline = document.createElement('H2');
-    Headline.innerHTML = 'User Table'
+    Headline.innerHTML = slugName + ' Table'
     TableHeader.appendChild(Headline);
-    // searchfield
+
+    // searchwrapper
     let TableSearchWrapper = document.createElement('DIV');
     TableSearchWrapper.classList.add('FF-item');
+
+    // searchfield
     let TableSearch = document.createElement('input');
     TableSearch.id = 'TableSearch';
     TableSearch.type = 'text';
+    TableSearch.required = 'required';
+
+    //searchlabel
     let TableSearchLabel = document.createElement('label');
     TableSearchLabel.innerHTML = 'Search';
-    TableSearch.appendChild(TableSearchLabel);
+
     TableSearchWrapper.appendChild(TableSearch);
+    TableSearchWrapper.appendChild(TableSearchLabel);
     TableHeader.appendChild(TableSearchWrapper);
     // CONTENT
     let TableContent = document.createElement('table');

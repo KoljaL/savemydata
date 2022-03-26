@@ -9,7 +9,6 @@ import Functions from './Functions.js';
 import Default from './views/Default.js';
 import UserLogin from './views/UserLogin.js';
 import UserTable from './views/UserTable.js';
-import UserBetterTable from './views/UserBetterTable.js';
 import UserProfile from './views/UserProfile.js';
 import CustomerTable from './views/CustomerTable.js';
 import UserProfileForm from './views/UserProfileForm.js';
@@ -32,7 +31,9 @@ window.addEventListener('hashchange', router);
 async function router() {
 
     let request = Functions.parseRequestURL();
-    let page = checkUserLoggedIn() || request.page;
+    const API_page = checkUserLoggedIn() || request.page;
+    const API_key = request.key || '';
+    const API_value = request.value || '';
     // deb(request);
 
     // remove the opycity class, wait, call async switch :-)
@@ -40,19 +41,19 @@ async function router() {
     await Functions.sleep(200);
     (async() => {
 
-        switch (page) {
+        switch (API_page) {
 
             case '/':
                 await UserLogin.render();
                 break;
 
             case 'user':
-                switch (request.key) {
+                switch (API_key) {
                     case 'profile':
-                        await UserProfile.render(request.value, 'user')
+                        await UserProfile.render(API_value, 'user')
                         break;
                     case 'table':
-                        await UserBetterTable.render()
+                        await UserTable.render(API_page)
                         break;
                     default:
                         await UserTable.render()
@@ -61,12 +62,12 @@ async function router() {
                 break;
 
             case 'formeditor':
-                switch (request.key) {
+                switch (API_key) {
                     case 'user_profile_form':
-                        await UserProfileForm.render(request.key)
+                        await UserProfileForm.render(API_key)
                         break;
                     case 'customer_profile_form':
-                        await UserProfileForm.render(request.key)
+                        await UserProfileForm.render(API_key)
                         break;
 
                         // default:
@@ -76,12 +77,12 @@ async function router() {
                 break;
 
             case 'customer':
-                switch (request.key) {
+                switch (API_key) {
                     case 'profile':
-                        await UserProfile.render(request.value, 'customer')
+                        await UserProfile.render(API_value, 'customer')
                         break;
                     case 'table':
-                        await CustomerTable.render()
+                        await UserTable.render(API_page)
                         break;
                     default:
                         await CustomerTable.render()
