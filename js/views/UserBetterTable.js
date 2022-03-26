@@ -1,10 +1,5 @@
 import Functions from '../Functions.js';
-import UserList from '../components/UserList.js';
-import Form from '../Form.js';
 
-// import files for grid
-import ('../components/TUIgrid.js');
-Functions.addStylesheet('./style/css/TUIgrid.css');
 
 export default {
     render: async(userID) => {
@@ -20,31 +15,66 @@ export default {
  */
 let Style = async() => {
     let styleTags = /*CSS*/ ` 
+
+    #UserTableHeader{
+        display:flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    #UserTableHeader .FF-item{
+        margin-top:0;
+    }
     #UserTable{
         border-collapse: collapse;
     }
     #UserTable .headerRow {
-        // position: fixed;
+        position: sticky;
+        top: -1em;
         background: var(--bg_1);
         padding: .5em;
     }
-        #UserTable th {
+    #UserTable th {
         padding: .5em 1em .5em .5em;
         text-align: left;
+        cursor: pointer;
     }
-        #UserTable td {
+    #UserTable td {
         white-space: nowrap;
         padding: .5em;
         max-width: 20em;
         overflow: hidden;
     }      
    
-    #UserTable [data-column-name="username"] .tui-grid-cell-content {
-        color: var(--fontBlue);
-        font-weight: bold;
-    }     
-    #UserTable [data-column-name="username"] {
-        cursor:pointer;
+    #UserTable td.id {
+        opacity:.5;
+    }
+
+    tr.hideRow{
+        // display:none;
+        transition: display 1.3s ease-out;
+    }
+
+    tr.hideRow>td{
+        line-height:0;
+        padding-top:0!important;
+        padding-bottom:0!important;
+        // -webkit-transition: all 0.3s ease-out;
+        // -moz-transition: all 0.3s ease-out;
+        // -o-transition: all 0.3s ease-out;
+        // transition: padding .3s ease-out, line-height 1.3s ease-out;
+
+        transition-timing-function: linear, step-end, step-end;
+
+    }
+    tr.showRow>td{
+        transition: opacity 2s linear, padding 2s step-start, z-index 2s step-start;
+
+        // color: green;
+        // -webkit-transition: all 0.3s ease-out;
+        // -moz-transition: all 0.3s ease-out;
+        // -o-transition: all 0.3s ease-out;
+        // transition: padding .3s ease-out, line-height 1.3s ease-out;
     }
 
     `;
@@ -58,10 +88,13 @@ let Content = async() => {
     let innerHTML = /*HTML*/ `
         <div id="UserTableWrapper" class="template"> 
             <div id=UserTableHeader>
-                <h2>User Better Table</h2>  
+                <h2>User Better Table</h2>   
+                <div class=FF-item>
+                    <input type="text" id="TableSearch"  placeholder="Search for everything.." required="">
+                    <label>Search</label>
+                </div>
             </div>
-            <input type="text" id="myInput"  placeholder="Search for names..">
-            <table id="UserTable"></table>
+            <div id="UserTable"></div>
         </div>`;
     await Functions.setInnerHTML('main', innerHTML);
 };
@@ -70,40 +103,39 @@ let Data = async() => {
     let data = await Functions.getAPIdata('get_data_from/customer');
     data = data.data;
     // deb(data)
-    createTable(data);
-    searchTable();
-    sortTable();
+    await createTable(data, 'UserTable');
+    searchTable('UserTable');
+    sortTable('UserTable');
 };
 
-function createTable(data) {
+async function createTable(data, el) {
     // https://www.valentinog.com/blog/html-table/
     // deb(data)
+    el = document.getElementById(el);
 
-    let table = document.querySelector("#UserTable");
+    let table = document.createElement('table');
+    el.appendChild(table);
+
+    // let table = document.querySelector("#UserTable");
     let head = Object.keys(data[0]);
-    // generateTableHead(table, head);
-    // generateTableBody(table, data);
 
-
-    // function generateTableHead(table, head) {
     let thead = table.createTHead();
     let row = thead.insertRow();
     row.classList.add('headerRow');
     for (let key of head) {
         let th = document.createElement("th");
-        th.appendChild(document.createTextNode(key));
+        th.classList.add(key);
+        th.innerHTML = key;
         row.appendChild(th);
     }
-    // }
 
-    // function generateTableBody(table, data) {
     for (let element of data) {
         let row = table.insertRow();
         var ID;
         for (let key in element) {
             let cell = row.insertCell();
+            // add the obj key as classname 
             cell.classList.add(key);
-
             if (key === 'id') {
                 ID = element[key];
             }
@@ -111,20 +143,18 @@ function createTable(data) {
                 element[key] = /*MTML*/ `<a href="#user/profile/${ID}">${element[key]}</a>`;
             }
             cell.innerHTML = element[key];
-            // cell.appendChild(document.createTextNode(element[key]));
         }
     }
-    // }
 
 
 }
 
-function searchTable() {
+function searchTable(el) {
     //https://www.w3schools.com/howto/howto_js_filter_table.asp
-    // Declare variables
     var input, filter, table, tr, td, i, txtValue;
-    input = document.getElementById("myInput");
-    table = document.getElementById("UserTable");
+    table = document.getElementById(el);
+    input = document.getElementById("TableSearch");
+
     tr = table.getElementsByTagName("tr");
     input.addEventListener('keyup', (el) => {
         filter = el.target.value.toLowerCase();
@@ -136,14 +166,16 @@ function searchTable() {
                 var td = cField[j];
                 if (td) {
                     txtValue = td.textContent || td.innerText;
-                    // deb(txtValue.toLowerCase())
-                    // deb(filter)
-                    // deb(txtValue.toLowerCase().indexOf(filter))
+                    // problem with numbers? // deb(txtValue.toLowerCase())// deb(filter)// deb(txtValue.toLowerCase().indexOf(filter))
                     if (txtValue.toLowerCase().indexOf(filter) === 0) {
-                        cRow.style.display = "";
+                        cRow.setAttribute('class', 'showRow');
+                        // cRow.setAttribute('style', 'line-height: 1em; height:1em; position: relative;top: 0em;');
+                        // cRow.style.display = "";
                         break;
                     } else {
-                        cRow.style.display = "none";
+                        cRow.setAttribute('class', 'hideRow');
+                        // cRow.setAttribute('style', 'line-height: 0em; height:0; position: relative;top: -1em;');
+                        // cRow.style.display = "none";
                     }
                 }
             } // for cField
@@ -151,7 +183,7 @@ function searchTable() {
     })
 }
 
-function sortTable() {
+function sortTable(table) {
     // https://www.w3schools.com/howto/howto_js_sort_table.asp
     document.querySelectorAll('table th').forEach(tableHead => {
         tableHead.addEventListener('click', (el) => {
