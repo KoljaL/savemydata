@@ -187,15 +187,16 @@ let dropDownEvent = async(tableName) => {
     // only admin '0' can do this
     if (Functions.getLocal('role') === '0') {
         let innerHTML = await UserList.render('dropdown', tableName);
-        await Functions.setInnerHTML('UserProfileList', innerHTML).then(() => {
-            document.getElementById('UserListSelect').addEventListener('change', (el) => {
-                Message.info('User Profile: ' + el.target.options[el.target.selectedIndex].text);
-                // Message.success()
-                // Message.error()
-                // Message.warn()
-                window.location.hash = '#' + tableName + '/profile/' + el.target.value;
+        await Functions.setInnerHTML('UserProfileList', innerHTML)
+            .then(() => {
+                document.getElementById('UserListSelect').addEventListener('change', (el) => {
+                    Message.info('User Profile: ' + el.target.options[el.target.selectedIndex].text);
+                    // Message.success()
+                    // Message.error()
+                    // Message.warn()
+                    window.location.hash = '#' + tableName + '/profile/' + el.target.value;
+                });
             });
-        });
     }
 };
 
