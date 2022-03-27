@@ -126,6 +126,9 @@ if ( $request ) {
 */
 
 if ( 'login' === $API_endpoint ) {
+    // make backup
+    require __DIR__.'/backup.php';
+
     login_user( $request );
     exit;
 } else {

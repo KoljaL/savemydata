@@ -1,4 +1,5 @@
 database/
 db/
 vendor/
+php/backups/
 .vscode
