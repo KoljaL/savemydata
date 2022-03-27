@@ -1,6 +1,7 @@
 import Functions from '../Functions.js';
 import UserList from '../components/UserList.js';
-import Form from '../Form.js';
+import Form from '../components/Form.js';
+import LanguageSwitch from '../components/LanguageSwitch.js';
 
 export default {
     render: async(userID, action) => {
@@ -14,15 +15,15 @@ export default {
             window.tableName = 'customer';
             window.formTableName = 'customer_profile_form';
         }
-
+        // deb(action)
         Functions.pageTitle(`${slugName} Profile`);
         await Style();
         await Content();
-        await getUserData(userID);
-        await dropDownEvent(tableName);
+        getUserData(userID);
+        dropDownEvent(tableName);
         await newUserButton();
-        await editUserButton(userID);
-        await deleteUserButton(userID);
+        deleteUserButton(userID);
+        editUserButton(userID);
     },
 };
 
@@ -95,7 +96,7 @@ let Content = async() => {
     let innerHTML = /*HTML*/ `
         <div id="T_UserLoginForm" class="template"> 
             <div id=UserProfileHeader>
-                <h2>UserProfile</h2> 
+                <h2 data-lang="${slugName}-Profile">UserProfile</h2> 
                 <div class="ActionButtons">
                     <div id=UserProfileList></div>
                     <span id="editUserButton"></span>
@@ -258,23 +259,25 @@ let newUserButton = async() => {
         // set text, make the button visible
         Functions.setInnerHTML('newUserButton', 'New');
         document.getElementById('newUserButton').dataset.lang = 'new'
+        document.getElementById('newUserButton').dataset.action = 'new'
 
         document.getElementById('newUserButton').addEventListener('click', (button) => {
             // send all inputfields to API & get directed to the new users profile
-            if ('Save' === button.target.innerHTML) {
+            if ('save' === button.target.dataset.action) {
                 let userProfilForm = document.getElementById('userProfilForm');
                 userProfilForm = new FormData(userProfilForm);
                 userProfilForm.append('table', tableName);
                 Functions.getAPIdata('newuser', userProfilForm).then((res) => {
                     // deb(res)
                     if (res.code === 200) {
+                        Message.success('New User created')
                         window.location.hash = `#${tableName}/profile/${res.data.id}`;
                     }
                 });
             } // save
 
             // delete all form values, make them editable & remove the data-db for singeedit
-            if ('New' === button.target.innerHTML) {
+            if ('new' === button.target.dataset.action) {
                 document.getElementById('editUserButton').remove();
                 document.getElementById('deleteUserButton').remove();
                 document.querySelectorAll('#editArea input,#editArea textarea').forEach((input) => {
@@ -282,8 +285,12 @@ let newUserButton = async() => {
                     input.value = '';
                     input.classList.remove('hideEdit');
                     button.target.innerHTML = 'Save';
+                    document.getElementById('newUserButton').dataset.lang = 'save'
+                    document.getElementById('newUserButton').dataset.action = 'save'
+
                 });
             } //new
-        });
+            LanguageSwitch.render();
+        }); // eventListener
     }
 };

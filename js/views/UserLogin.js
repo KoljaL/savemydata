@@ -1,5 +1,5 @@
 import Functions from '../Functions.js';
-import Form from '../Form.js';
+import Form from '../components/Form.js';
 
 let UserLogin = {
     render: async() => {

@@ -2,8 +2,18 @@ import Functions from '../Functions.js';
 
 
 export default {
-    render: async(data) => {
-        return await Content(data, slugName);
+    render: async(data, action) => {
+        if (action === 'user') {
+            window.slugName = 'User';
+            window.tableName = 'user';
+            window.formTableName = 'user_profile_form';
+        }
+        if (action === 'customer') {
+            window.slugName = 'Customer';
+            window.tableName = 'customer';
+            window.formTableName = 'customer_profile_form';
+        }
+        return await Content(data);
     },
 };
 
@@ -89,6 +99,7 @@ let Content = async(data) => {
 
     //headline
     let Headline = document.createElement('H2');
+    Headline.dataset.lang = formTableName;
     Headline.innerHTML = slugName + ' Table'
     TableHeader.appendChild(Headline);
 

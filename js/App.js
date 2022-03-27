@@ -10,7 +10,6 @@ import Default from './views/Default.js';
 import UserLogin from './views/UserLogin.js';
 import UserTable from './views/UserTable.js';
 import UserProfile from './views/UserProfile.js';
-import CustomerTable from './views/CustomerTable.js';
 import UserProfileForm from './views/UserProfileForm.js';
 import LanguageSwitch from './components/LanguageSwitch.js';
 
@@ -117,9 +116,12 @@ async function router() {
     // when content is loaded, turn bach the opacity :-)
     await Functions.sleep(300)
         .then(() => {
-
             LanguageSwitch.render();
             document.getElementById('main').classList.add('visible');
+        }).then(() => {
+            setTimeout(() => {
+                LanguageSwitch.render();
+            }, 500);
         })
 
 

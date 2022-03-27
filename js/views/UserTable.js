@@ -15,9 +15,9 @@ export default {
             window.formTableName = 'customer_profile_form';
         }
 
-        Functions.pageTitle(`User Better Table`);
-        await Style();
-        await Content();
+        Functions.pageTitle(`User Table`);
+        Style();
+        Content(action);
     },
 };
 
@@ -33,7 +33,7 @@ let Style = async() => {
 /**
  * This function is used to render the content of the page
  */
-let Content = async() => {
+let Content = async(action) => {
 
     let data = await Functions.getAPIdata('get_data_from/' + tableName);
     data = data.data;
@@ -42,7 +42,7 @@ let Content = async() => {
     let innerHTML = /*HTML*/ `
         <div id="UserTableWrapper" class="template"> 
          
-            <div id="UserTable">${await CreateTable.render(data,slugName)}</div>
+            <div id="UserTable">${await CreateTable.render(data,action)}</div>
         </div>`;
-    await Functions.setInnerHTML('main', innerHTML);
+    Functions.setInnerHTML('main', innerHTML);
 };

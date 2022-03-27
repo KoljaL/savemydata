@@ -4,8 +4,17 @@ export default {
         'S_title': 'S-M-D',
         'edit': 'Bearbeiten',
         'new': 'Neu',
+        'save': 'Speichern',
         'delete': 'Löschen',
         'search': 'Suche',
+        // dropdown
+        'select-User': 'Mitarbeiter auswählen',
+        'select-Customer': 'Kunden auswählen',
+        // headlines
+        'user_profile_form': 'Mitarbeiter Tabelle',
+        'customer_profile_form': 'Kunden Tabelle',
+        'User-Profile': 'Mitarbeiter Profil',
+        "Customer-Profile": 'Kunden Profil',
         // Sidebar
         'S_menu': 'Menü',
         'S_user': 'Mitarbeiter',
@@ -39,8 +48,17 @@ export default {
         'S_title': 'S-M-D',
         'edit': 'Edit',
         'new': 'New',
+        'save': 'Save',
         'delete': 'Delete',
         'search': 'Search',
+        // dropdown
+        'select-User': 'Select User',
+        'select-Customer': 'Select Customer',
+        // headlines
+        'user_profile_form': 'Staff Table',
+        'customer_profile_form': 'Customer Table',
+        'User-Profile': 'Staff Profile',
+        "Customer-Profile": 'Customer Profile',
         //sidebar
         'S_menu': 'Menu',
         'S_user': 'Staff',
@@ -58,7 +76,7 @@ export default {
         'P_new_entry': 'New Entry',
         // form labels
         'F_id': 'ID',
-        'F_username': 'Usernam',
+        'F_username': 'Username',
         'F_email': 'Email',
         'F_password': 'Password',
         'F_firstname': 'Firstame',
@@ -67,6 +85,7 @@ export default {
         'F_role': 'Role',
         'F_permission': 'Permission',
         'F_date': 'Date',
+
 
     }
 }

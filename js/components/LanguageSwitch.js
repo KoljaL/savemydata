@@ -22,8 +22,8 @@ let Style = async() => {
     let styleTags = /*CSS*/ `
     #selectLanguageDIV{
         position: absolute;
-        bottom:0;
-        left:0;
+        top:10px;
+        left:50%;
         z-index: 6;
         width: 50px;
     }
@@ -77,7 +77,7 @@ let Init = async() => {
  * @param lanForm - The language code that the user has chosen.
  */
 function changeLanguage(lanForm) {
-    deb('changeLanguage');
+    // deb('changeLanguage');
     let langObj = LanguageFile;
 
     let UserLanguage = 'en'

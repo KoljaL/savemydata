@@ -1,4 +1,5 @@
 import Functions from '../Functions.js';
+import LanguageSwitch from './LanguageSwitch.js';
 
 export default {
     render: async(type, table) => {
@@ -15,9 +16,11 @@ export default {
             })
             return /*html*/ ` 
                 <select id="UserListSelect" name=user>
-                    <option value="" hidden disabled selected>Select ${name}</option>
+                    <option value="" hidden disabled selected data-lang="select-${name}">Select ${name}</option>
                     ${innerHTML}
                 </select> `;
+            LanguageSwitch.render();
+
         }
     },
 };
