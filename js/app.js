@@ -12,6 +12,7 @@ import UserTable from './views/UserTable.js';
 import UserProfile from './views/UserProfile.js';
 import CustomerTable from './views/CustomerTable.js';
 import UserProfileForm from './views/UserProfileForm.js';
+import LanguageSwitch from './components/LanguageSwitch.js';
 
 
 // dummy
@@ -20,7 +21,7 @@ import Form1 from './views/dummy/Form1.js';
 import Form2 from './views/dummy/Form2.js';
 import Solar from './views/dummy/Solar.js';
 
-
+// LanguageSwitch.render();
 // COMPONENTS
 // import CustomerListSelect from './components/CustomerListSelect.js';
 // https://gist.github.com/gre/1650294
@@ -111,11 +112,15 @@ async function router() {
                 break;
         }
 
+
     })()
     // when content is loaded, turn bach the opacity :-)
-    .then(() => {
-        document.getElementById('main').classList.add('visible');
-    })
+    await Functions.sleep(300)
+        .then(() => {
+
+            LanguageSwitch.render();
+            document.getElementById('main').classList.add('visible');
+        })
 
 
 

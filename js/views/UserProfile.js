@@ -85,7 +85,7 @@ let Style = async() => {
         }
  
     `;
-    Functions.createStyle('UserProfile_style', styleTags);
+    Functions.createStyle('UserProfile_8284_style', styleTags);
 };
 
 /**
@@ -207,6 +207,8 @@ let editUserButton = async(userID) => {
     // only admin '0' can do this, or youser himselfs
     if (Functions.getLocal('role') === '0' || Functions.getLocal('id') === userID) {
         await Functions.setInnerHTML('editUserButton', 'Edit').then(() => {
+            document.getElementById('editUserButton').dataset.lang = 'edit'
+
             document.getElementById('editUserButton').addEventListener('click', function() {
                 document.querySelectorAll('#editArea input,#editArea textarea').forEach((input) => {
                     // make fields editable
@@ -227,6 +229,7 @@ let deleteUserButton = (userID) => {
     if (Functions.getLocal('role') === '0') {
         // set text, make the button visible
         Functions.setInnerHTML('deleteUserButton', 'Delete');
+        document.getElementById('deleteUserButton').dataset.lang = 'delete'
 
         document.getElementById('deleteUserButton').addEventListener('click', function() {
             var userDeleteForm = new FormData();
@@ -254,6 +257,7 @@ let newUserButton = async() => {
     if (Functions.getLocal('role') === '0') {
         // set text, make the button visible
         Functions.setInnerHTML('newUserButton', 'New');
+        document.getElementById('newUserButton').dataset.lang = 'new'
 
         document.getElementById('newUserButton').addEventListener('click', (button) => {
             // send all inputfields to API & get directed to the new users profile

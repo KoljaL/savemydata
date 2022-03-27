@@ -44,7 +44,7 @@
 // Please see https://bitbucket.org/phpliteadmin/public/wiki/Configuration for more details
 
 //password to gain access (set an empty password to disable authentication completely)
-$password = 'codes123';
+$password = 'smd';
 
 //directory relative to this file to search for databases (if false, manually list databases in the $databases variable)
 $directory = '../userdata/db';
@@ -75,7 +75,7 @@ $language = 'en';
 $rowsNum = 150;
 
 // reduce string characters by a number bigger than 10
-$charsNum = 300;
+$charsNum = 200;
 
 // maximum number of SQL queries to save in the history
 $maxSavedQueries = 10;
@@ -102,7 +102,7 @@ function leet_text($value)
 /* ---- Advanced options ---- */
 
 //changing the following variable allows multiple phpLiteAdmin installs to work under the same domain.
-$cookie_name = 'pla3wed412';
+$cookie_name = 'pla3wewsd412';
 
 //whether or not to put the app in debug mode where errors are outputted
 $debug = false;

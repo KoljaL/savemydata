@@ -4,8 +4,6 @@ import CreateTable from '../components/CreateTable.js';
 
 export default {
     render: async(action) => {
-        deb(action)
-
         if (action === 'user') {
             window.slugName = 'User';
             window.tableName = 'user';

@@ -17,12 +17,14 @@ var screenSize, toggleSubLists;
  */
 navLinks.forEach(function(nav_links) {
     nav_links.addEventListener('click', (el) => {
-        let link = el.target.parentElement;
-        // deb(el.target)
+        let linkElement = el.target.parentElement;
+        // deb(link.parentElement)
         // deb(el.target.parentElement)
-        // run only if there is a data-link inside the tag
-        if (link.dataset.link) {
-            window.location.hash = link.dataset.link;
+        // handle with <span data-lang="">
+        var link = linkElement.dataset.link || linkElement.parentElement.dataset.link
+            // run only if there is a data-link inside the tag
+        if (link) {
+            window.location.hash = link;
             // demoContent(link.dataset.link);
 
             // document.querySelector('main h3').innerHTML = link.dataset.link;
@@ -38,18 +40,18 @@ navLinks.forEach(function(nav_links) {
                 old_links.classList.remove('current');
             });
             // mark this li as active & current
-            link.classList.add('active', 'current');
+            linkElement.classList.add('active', 'current');
             // mark children as active
-            if (link.nextElementSibling && link.nextElementSibling.tagName === 'UL') {
+            if (linkElement.nextElementSibling && linkElement.nextElementSibling.tagName === 'UL') {
                 // deb(link.nextElementSibling.children)
-                for (let child_link of link.nextElementSibling.children) {
+                for (let child_link of linkElement.nextElementSibling.children) {
                     child_link.classList.add('active');
                 }
             }
             // mark parent als parent sibling as active
             // deb(link.parentElement.classList.contains('subList'))
-            if (link.parentElement.classList.contains('subList')) {
-                for (let child_link of link.parentElement.children) {
+            if (linkElement.parentElement.classList.contains('subList')) {
+                for (let child_link of linkElement.parentElement.children) {
                     child_link.classList.add('active');
                     // deb(child_link.parentElement.previousElementSibling)
                     child_link.parentElement.parentElement.classList.add('active');

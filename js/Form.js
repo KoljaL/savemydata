@@ -192,7 +192,7 @@ let Forms = {
                     value="${u[d.name]}" 
                     ${dataDB}
                     required>
-                    <label for=${d.name}>${d.label}</label>
+                    <label data-lang="F_${d.label.toLowerCase()}" for=${d.name}>${d.label}</label>
                 </div>`;
         }
 
@@ -208,7 +208,7 @@ let Forms = {
                     placeholder="${d.placeholder}" 
                     ${dataDB}
                     required>${u[d.name]}</textarea>
-                    <label for=${d.name}>${d.label}</label>
+                    <label data-lang="F_${d.label.toLowerCase()}" for=${d.name}>${d.label}</label>
                 </div>`;
         }
 

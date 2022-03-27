@@ -79,7 +79,7 @@ let getData = async(formtable) => {
                 });
 
                 // create table
-                let innerHTML = /*HTML*/ `<h2>edit entry</h2>`;
+                let innerHTML = /*HTML*/ `<h2 data-lang="P_edit_entry">edit entry</h2>`;
                 innerHTML += /*HTML*/ `<table id=editEntry><tr>`;
                 Object.keys(formFields[0]).forEach(key => {
                     if ('date' == key) return
@@ -110,7 +110,9 @@ let getData = async(formtable) => {
 
 
                 // new entry
-                innerHTML += /*HTML*/ `<h2>new entry</h2>`;
+                innerHTML += /*HTML*/ `<h2 data-lang="P_new_entry">new entry</h2>`;
+                deb('P_new_entry');
+
                 innerHTML += /*HTML*/ `<table><tr>`;
                 Object.keys(formFields[0]).forEach(key => {
                     if ('date' == key || 'id' == key) return

@@ -105,6 +105,7 @@ let Content = async(data) => {
     //searchlabel
     let TableSearchLabel = document.createElement('label');
     TableSearchLabel.innerHTML = 'Search';
+    TableSearchLabel.dataset.lang = 'search';
 
     TableSearchWrapper.appendChild(TableSearch);
     TableSearchWrapper.appendChild(TableSearchLabel);
@@ -136,6 +137,7 @@ async function createTable(data, TableContent) {
     for (let key of head) {
         let th = document.createElement("th");
         th.classList.add(key);
+        th.dataset.lang = 'F_' + key;
         th.innerHTML = key;
         row.appendChild(th);
     }
