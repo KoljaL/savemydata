@@ -3,15 +3,15 @@ import Functions from '../Functions.js';
 
 export default {
     render: async(data, action) => {
-        if (action === 'user') {
-            window.slugName = 'User';
-            window.tableName = 'user';
-            window.formTableName = 'user_profile_form';
+        if (action === 'staff') {
+            window.slugName = 'Staff';
+            window.tableName = 'staff';
+            window.formTableName = 'staff_fields';
         }
         if (action === 'customer') {
             window.slugName = 'Customer';
             window.tableName = 'customer';
-            window.formTableName = 'customer_profile_form';
+            window.formTableName = 'customer_fields';
         }
         return await Content(data);
     },

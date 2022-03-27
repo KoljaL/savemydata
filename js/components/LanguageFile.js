@@ -8,17 +8,17 @@ export default {
         'delete': 'Löschen',
         'search': 'Suche',
         // dropdown
-        'select-User': 'Mitarbeiter auswählen',
+        'select-Staff': 'Mitarbeiter auswählen',
         'select-Customer': 'Kunden auswählen',
         // headlines
-        'user_profile_form': 'Mitarbeiter Tabelle',
-        'customer_profile_form': 'Kunden Tabelle',
-        'User-Profile': 'Mitarbeiter Profil',
+        'staff_fields': 'Mitarbeiter Tabelle',
+        'customer_fields': 'Kunden Tabelle',
+        'Staff-Profile': 'Mitarbeiter Profil',
         "Customer-Profile": 'Kunden Profil',
         // Sidebar
         'S_menu': 'Menü',
-        'S_user': 'Mitarbeiter',
-        'S_user-profile': 'Mitarbeiterprofil',
+        'S_staff': 'Mitarbeiter',
+        'S_staff-profile': 'Mitarbeiterprofil',
         'S_profile-form': 'Profil Elemente',
         'S_customer': 'Kunden',
         'S_customer-profile': 'Kundenprofil',
@@ -41,6 +41,11 @@ export default {
         'F_role': 'Rolle',
         'F_permission': 'Berechtigungen',
         'F_date': 'Datum',
+        'F_street': 'Straße',
+        'F_street_nr': 'Nr.',
+        'F_city': 'Stadt',
+        'F_city_nr': 'PLZ',
+        'F_phone': 'Telefon',
 
     },
     'en': {
@@ -52,17 +57,17 @@ export default {
         'delete': 'Delete',
         'search': 'Search',
         // dropdown
-        'select-User': 'Select User',
+        'select-Staff': 'Select Staff',
         'select-Customer': 'Select Customer',
         // headlines
-        'user_profile_form': 'Staff Table',
-        'customer_profile_form': 'Customer Table',
-        'User-Profile': 'Staff Profile',
+        'staff_fields': 'Staff Table',
+        'customer_fields': 'Customer Table',
+        'Staff-Profile': 'Staff Profile',
         "Customer-Profile": 'Customer Profile',
         //sidebar
         'S_menu': 'Menu',
-        'S_user': 'Staff',
-        'S_user-profile': 'Staffprofile',
+        'S_staff': 'Staff',
+        'S_staff-profile': 'Staffprofile',
         'S_profile-form': 'Profile Elements',
         'S_customer': 'Customer',
         'S_customer-profile': 'Customerprofile',
@@ -85,7 +90,11 @@ export default {
         'F_role': 'Role',
         'F_permission': 'Permission',
         'F_date': 'Date',
-
+        'F_street': 'Street',
+        'F_street_nr': 'No.',
+        'F_city': 'City',
+        'F_city_nr': 'Postcode',
+        'F_phone': 'Phone',
 
     }
 }

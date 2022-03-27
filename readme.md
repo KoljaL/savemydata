@@ -91,9 +91,9 @@ Endpoint Variables: `$API_endpoint/$API_param/$API_value`
 **make table dynamically by `$API_param`**
 
 
-#### `init_user_profile_form_table()`
+#### `init_user_staff_fields_table()`
 - called by: `/xxx`   
-- creates the table `user_profile_form` and insertes fields
+- creates the table `staff_fields` and insertes fields
 - calls: `insert_into_db()`
 
 

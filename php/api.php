@@ -99,7 +99,7 @@ if ( !file_exists( $db_path ) ) {
     $db = new PDO( 'sqlite:'.$db_path );
     init_customertable();
     init_usertable();
-    init_user_profile_form_table();
+    init_staff_fields_table();
     include './dummy_content.php';
     create_dummy_staff( 10 );
     create_dummy_customer( 30 );
@@ -127,7 +127,7 @@ if ( $request ) {
 
 if ( 'login' === $API_endpoint ) {
     // make backup
-    require __DIR__.'/backup.php';
+    // require __DIR__.'/backup.php';
 
     login_user( $request );
     exit;
@@ -580,7 +580,7 @@ function login_user( $request ) {
     $userlogin = ( filter_var( $request['userlogin'], FILTER_VALIDATE_EMAIL ) ) ? 'email' : 'username';
 
     // find user in table
-    $stmt = $db->prepare( "SELECT * FROM user WHERE $userlogin =?" );
+    $stmt = $db->prepare( "SELECT * FROM staff WHERE $userlogin =?" );
     $stmt->execute( [$request['userlogin']] );
     $user = $stmt->fetch();
 
@@ -609,10 +609,10 @@ function login_user( $request ) {
     return_JSON( $response );
 }
 
-function init_user_profile_form_table() {
+function init_staff_fields_table() {
     global $db;
     // create user table
-    $db->exec( 'CREATE TABLE IF NOT EXISTS user_profile_form(
+    $db->exec( 'CREATE TABLE IF NOT EXISTS staff_fields(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL DEFAULT "",
         label TEXT NOT NULL DEFAULT "",
@@ -637,10 +637,10 @@ function init_user_profile_form_table() {
         ['pos' => '20', 'row' => '4', 'name' => 'permission', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Permission', 'db' => 'permission/user/id']
     ];
     foreach ( $userfields as $field ) {
-        insert_into_db( $field, 'user_profile_form' );
+        insert_into_db( $field, 'staff_fields' );
     }
     // create customer table
-    $db->exec( 'CREATE TABLE IF NOT EXISTS customer_profile_form(
+    $db->exec( 'CREATE TABLE IF NOT EXISTS customer_fields(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL DEFAULT "",
         label TEXT NOT NULL DEFAULT "",
@@ -668,7 +668,7 @@ function init_user_profile_form_table() {
         ['pos' => '20', 'row' => '4', 'name' => 'permission', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Permission', 'db' => 'permission/user/id']
     ];
     foreach ( $customerfields as $field ) {
-        insert_into_db( $field, 'customer_profile_form' );
+        insert_into_db( $field, 'customer_fields' );
     }
 
 }
@@ -692,7 +692,7 @@ function init_user_profile_form_table() {
 function init_usertable() {
     global $db;
     // create user table
-    $db->exec( 'CREATE TABLE user(
+    $db->exec( 'CREATE TABLE staff(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT NOT NULL DEFAULT "",
             password TEXT NOT NULL DEFAULT "",
@@ -708,8 +708,8 @@ function init_usertable() {
     // create first users
     $admin = ['username' => 'admin', 'password' => 'password', 'firstname' => 'admin', 'lastname' => 'admin', 'email' => 'admin@admin.org', 'comment' => 'lorem iopsum', 'role' => '0', 'permission' => '0'];
     $user  = ['username' => 'user', 'password' => 'password', 'firstname' => 'user', 'lastname' => 'user', 'email' => 'user@user.org', 'comment' => 'lorem iopsum', 'role' => '1', 'permission' => '0'];
-    insert_into_db( $admin, 'user' );
-    insert_into_db( $user, 'user' );
+    insert_into_db( $admin, 'staff' );
+    insert_into_db( $user, 'staff' );
 
     // send response
     // $response['code']    = 200;
@@ -943,7 +943,7 @@ function create_dummy_staff( $count ) {
             'role'       => random_int( 1, 5 ),
             'permission' => random_int( 1, 5 ).','.random_int( 1, 5 ).','.random_int( 1, 5 )
         ];
-        insert_into_db( $staff, 'user' );
+        insert_into_db( $staff, 'staff' );
         // create_user( $user );
     }
 }

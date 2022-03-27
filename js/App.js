@@ -47,10 +47,10 @@ async function router() {
                 await UserLogin.render();
                 break;
 
-            case 'user':
+            case 'staff':
                 switch (API_key) {
                     case 'profile':
-                        await UserProfile.render(API_value, 'user')
+                        await UserProfile.render(API_value, 'staff')
                         break;
                     case 'table':
                         await UserTable.render(API_page)
@@ -63,10 +63,10 @@ async function router() {
 
             case 'formeditor':
                 switch (API_key) {
-                    case 'user_profile_form':
+                    case 'staff_fields':
                         await UserProfileForm.render(API_key)
                         break;
-                    case 'customer_profile_form':
+                    case 'customer_fields':
                         await UserProfileForm.render(API_key)
                         break;
 

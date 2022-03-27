@@ -99,7 +99,7 @@ let getData = async(formtable) => {
                             innerHTML += /*HTML*/ `<td>${value}</td>`;
                             inputID = value;
                         } else {
-                            innerHTML += /*HTML*/ `<td><input data-db="${key}/user_profile_form/id/${inputID}" type=text name="${key}" value="${value}"></td>`;
+                            innerHTML += /*HTML*/ `<td><input data-db="${key}/staff_fields/id/${inputID}" type=text name="${key}" value="${value}"></td>`;
                         }
                     });
                     innerHTML += /*HTML*/ `<td><input class="removeEntry button" data-remove="${inputID}" type=submit value="🗑"></td>`;
@@ -111,7 +111,6 @@ let getData = async(formtable) => {
 
                 // new entry
                 innerHTML += /*HTML*/ `<h2 data-lang="P_new_entry">new entry</h2>`;
-                deb('P_new_entry');
 
                 innerHTML += /*HTML*/ `<table><tr>`;
                 Object.keys(formFields[0]).forEach(key => {
@@ -163,7 +162,7 @@ let getData = async(formtable) => {
             document.getElementById('newEntryButton').addEventListener('click', (el) => {
                 event.preventDefault();
                 let newEntryForm = new FormData(el.target.form);
-                Functions.getAPIdata('new_entry_in/user_profile_form', newEntryForm)
+                Functions.getAPIdata('new_entry_in/staff_fields', newEntryForm)
                     .then((res) => {
                         // deb(res)
                         if (res.code === 200) {

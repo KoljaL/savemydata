@@ -6,7 +6,7 @@ export default {
         let list = await getUserList(table);
         // deb(list)
 
-        var name = (table === 'customer') ? 'Customer' : 'User';
+        var name = (table === 'customer') ? 'Customer' : 'Staff';
         if ('dropdown' === type) {
             // deb(table)
             // deb(name)
