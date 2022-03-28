@@ -104,6 +104,7 @@ let Content = async() => {
                     <span id="deleteUserButton"></span>
                 </div>
             </div>
+           
             <div id=editArea>
                 <div id=Userdata></div>
             </div>
@@ -125,59 +126,117 @@ let getUserData = async(userID) => {
         // formData.append('id', userID);
         // formData.append('table', 'staff');
         // getAPIdata (endpoint, formID)
-        Functions.getAPIdata(`get_data_from/${tableName}/${userID}`).then((res) => {
-            // deb(res);
-            if (res.code === 200) {
-                const user = res.data[0];
-                window.userName = user.username;
+        Functions.getAPIdata(`get_data_from/${tableName}/${userID}`)
+            .then((res) => {
+                // deb(res);
+                if (res.code === 200) {
+                    const user = res.data[0];
+                    window.userName = user.username;
 
-                if (formFields.code === 200) {
-                    formFields = formFields.data;
-                    // deb(formFields);
+                    if (formFields.code === 200) {
+                        formFields = formFields.data;
+                        // deb(formFields);
 
-                    // sort by position
-                    formFields.sort((a, b) => {
-                        return a.pos - b.pos;
+                        // sort by position
+                        formFields.sort((a, b) => {
+                            return a.pos - b.pos;
+                        });
+                        //sort by row
+                        formFields.sort((a, b) => {
+                            return a.row - b.row;
+                        });
+
+                        // start with a form and the first row
+                        var innerHTML = '<form id=userProfilForm>';
+                        innerHTML += '<div class="FF-row">';
+
+                        var row = 1;
+                        formFields.forEach((formField) => {
+
+                            // for the next row, close the old one and open the new row
+                            if (formField.row * 1 > row) {
+                                innerHTML += '</div>';
+                                innerHTML += '<div class="FF-row">';
+                                row++;
+                            }
+
+                            // create the form field
+                            innerHTML += Form.inputTextDB(formField, user);
+
+                        });
+                        // close last row & form 
+                        innerHTML += '</div>';
+                        innerHTML += '</form>';
+
+                    }
+
+
+                    // copy to DOM
+                    Functions.setInnerHTML('Userdata', innerHTML);
+                }
+                // return error message
+                else {
+                    let innerHTML = /*HTML*/ `<div id="T_UserLoginForm"> ${res.message}</div>`;
+                    Functions.setInnerHTML('Userdata', innerHTML);
+                }
+            })
+            .then(() => {
+                InlineEditor
+                    .create(document.querySelector('#editor'))
+                    .then(editor => {
+                        window.editor = editor;
+
+                        detectFocusOut(editor);
+                    })
+                    .catch(error => {
+                        console.error(error);
                     });
-                    //sort by row
-                    formFields.sort((a, b) => {
-                        return a.row - b.row;
-                    });
 
-                    // start with a form and the first row
-                    var innerHTML = '<form id=userProfilForm>';
-                    innerHTML += '<div class="FF-row">';
-
-                    var row = 1;
-                    formFields.forEach((formField) => {
-
-                        // for the next row, close the old one and open the new row
-                        if (formField.row * 1 > row) {
-                            innerHTML += '</div>';
-                            innerHTML += '<div class="FF-row">';
-                            row++;
+                function detectFocusOut(editor) {
+                    editor.ui.focusTracker.on('change:isFocused', (evt, name, isFocused) => {
+                        if (!isFocused) {
+                            console.log(editor.getData());
                         }
-
-                        // create the form field
-                        innerHTML += Form.inputTextDB(formField, user);
-
                     });
-                    // close last row & form 
-                    innerHTML += '</div>';
-                    innerHTML += '</form>';
-
                 }
 
 
-                // copy to DOM
-                Functions.setInnerHTML('Userdata', innerHTML);
-            }
-            // return error message
-            else {
-                let innerHTML = /*HTML*/ `<div id="T_UserLoginForm"> ${res.message}</div>`;
-                Functions.setInnerHTML('Userdata', innerHTML);
-            }
-        });
+
+                // tinymce.init({
+                //     selector: '#myeditablediv',
+                //     menubar: false,
+                //     inline: true,
+                //     plugins: ["link", "lists", "powerpaste", "autolink", "tinymcespellchecker"],
+                //     toolbar: [
+                //         "undo redo | bold italic underline | fontselect fontsizeselect",
+                //         "forecolor backcolor | alignleft aligncenter alignright alignfull | numlist bullist outdent indent"
+                //     ],
+                //     valid_elements: "p[style],strong,em,span[style],a[href],ul,ol,li",
+                //     valid_styles: {
+                //         "*": "font-size,font-family,color,text-decoration,text-align"
+                //     },
+                //     powerpaste_word_import: "clean",
+                //     powerpaste_html_import: "clean"
+
+                // });
+
+                // function setupEditor(editor) {
+                //     editor.on('FocusOut', function(tiny) {
+                //         var myContent = tinymce.activeEditor.getContent();
+                //         console.log('Editor was clicked');
+                //         console.log(myContent);
+                //         console.log(tiny.target.parentElement);
+                //     });
+                // }
+
+                // function setupEditor(editor) {
+                //     editor.on('click', function() {
+                //         console.log('Editor was clicked');
+                //     });
+                // }
+                // deb('tinymce')
+
+            })
     }
 };
 

@@ -177,28 +177,24 @@
     </div>
     <script src="js/Layout.js"></script>
     <script type="module" src="js/App.js"></script>
+    <!-- <script src="./js/components/CKEditor/ckeditor.js"></script> -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/33.0.0/inline/ckeditor.js"></script>
+    <!-- <script src="./js/components/tinymce/tinymce.min.js" referrerpolicy="origin"></script> -->
 
-    <!-- <script>
-        function setCookie(c_name, value, exdays) {
-            var exdate = new Date();
-            exdate.setDate(exdate.getDate() + exdays);
-            var c_value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
-            document.cookie = c_name + "=" + c_value;
-        }
 
-        function getCookie(c_name) {
-            var i, x, y, ARRcookies = document.cookie.split(";");
-            for (i = 0; i < ARRcookies.length; i++) {
-                x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
-                y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
-                x = x.replace(/^\s+|\s+$/g, "");
-                if (x == c_name) {
-                    // console.log('y', unescape(y))
-                    return unescape(y);
-                }
-            }
+    <!--<script src="https://cdn.jsdelivr.net/npm/@tinymce/tinymce-webcomponent@1/dist/tinymce-webcomponent.min.js"></script>
+
+    <script>
+        function setupEditor(editor) {
+            editor.on('FocusOut', function(tiny) {
+                var myContent = tinymce.activeEditor.getContent();
+                console.log('Editor was clicked');
+                console.log(myContent);
+                console.log(tiny.target.parentElement);
+            });
         }
     </script> -->
+
 </body>
 
 </html>
