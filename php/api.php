@@ -63,20 +63,6 @@ if ( isset( $uri[$api + 3] ) ) {
 
 // exit;
 
-//DEBUG
-//DEBUG
-//DEBUG
-if ( 'do' === $API_endpoint ) {
-    get_profile_form( '  ' );
-    exit;
-}
-if ( 'reset' === $API_endpoint ) {
-    unlink( $db_path );
-}
-//DEBUG
-//DEBUG
-//DEBUG
-
 /*
 //
 //  ########  ########     #### ##    ## #### ########
@@ -100,9 +86,15 @@ if ( !file_exists( $db_path ) ) {
     init_customertable();
     init_usertable();
     init_staff_fields_table();
+    init_appointment_table();
+    init_project_table();
     include './dummy_content.php';
     create_dummy_staff( 10 );
-    create_dummy_customer( 30 );
+    create_dummy_customer( 90 );
+    create_dummy_project( 250 );
+    create_dummy_appointment( 530 );
+    echo "init done";
+    exit;
 } else {
     $db = new PDO( 'sqlite:'.$db_path );
 }
@@ -124,12 +116,24 @@ if ( $request ) {
  * If it is, it will call the `userlogin` function.
  *
 */
-
+//DEBUG
+//DEBUG
+//DEBUG
+if ( 'do' === $API_endpoint ) {
+    get_ramdon_id_from( 'staff' );
+    exit;
+}
+if ( 'reset' === $API_endpoint ) {
+    unlink( $db_path );
+}
+//DEBUG
+//DEBUG
+//DEBUG
 if ( 'login' === $API_endpoint ) {
     // make backup
-    // require __DIR__.'/backup.php';
 
     login_user( $request );
+    require __DIR__.'/backup.php';
     exit;
 } else {
     if ( isset( $request['user_token'] ) ) {
@@ -609,177 +613,6 @@ function login_user( $request ) {
     return_JSON( $response );
 }
 
-function init_staff_fields_table() {
-    global $db;
-    // create user table
-    $db->exec( 'CREATE TABLE IF NOT EXISTS staff_fields(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL DEFAULT "",
-        label TEXT NOT NULL DEFAULT "",
-        type TEXT NOT NULL DEFAULT "",
-        row TEXT NOT NULL DEFAULT "",
-        pos TEXT NOT NULL DEFAULT "",
-        widths TEXT NOT NULL DEFAULT "",
-        edit TEXT NOT NULL DEFAULT "",
-        db TEXT NOT NULL DEFAULT "",
-        date TEXT NOT NULL DEFAULT ""
-    )' );
-
-    // create first users
-    $userfields = [
-        ['pos' => '10', 'row' => '1', 'name' => 'username', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Username', 'db' => 'username/user/id'],
-        ['pos' => '20', 'row' => '1', 'name' => 'email', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Email', 'db' => 'email/user/id'],
-        ['pos' => '20', 'row' => '1', 'name' => 'password', 'type' => 'password', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Password', 'db' => 'password/user/id'],
-        ['pos' => '10', 'row' => '2', 'name' => 'firstname', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Firstname', 'db' => 'firstname/user/id'],
-        ['pos' => '20', 'row' => '2', 'name' => 'lastname', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Lastname', 'db' => 'lastname/user/id'],
-        ['pos' => '10', 'row' => '3', 'name' => 'comment', 'type' => 'textarea', 'widths' => '400/550/600', 'edit' => 'hide', 'label' => 'Comment', 'db' => 'comment/user/id'],
-        ['pos' => '10', 'row' => '4', 'name' => 'role', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Role', 'db' => 'role/user/id'],
-        ['pos' => '20', 'row' => '4', 'name' => 'permission', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Permission', 'db' => 'permission/user/id']
-    ];
-    foreach ( $userfields as $field ) {
-        insert_into_db( $field, 'staff_fields' );
-    }
-    // create customer table
-    $db->exec( 'CREATE TABLE IF NOT EXISTS customer_fields(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL DEFAULT "",
-        label TEXT NOT NULL DEFAULT "",
-        type TEXT NOT NULL DEFAULT "",
-        row TEXT NOT NULL DEFAULT "",
-        pos TEXT NOT NULL DEFAULT "",
-        widths TEXT NOT NULL DEFAULT "",
-        edit TEXT NOT NULL DEFAULT "",
-        db TEXT NOT NULL DEFAULT "",
-        date TEXT NOT NULL DEFAULT ""
-    )' );
-    // create first users
-    $customerfields = [
-        ['pos' => '10', 'row' => '1', 'name' => 'username', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Username', 'db' => 'username/user/id'],
-        ['pos' => '20', 'row' => '1', 'name' => 'email', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Email', 'db' => 'email/user/id'],
-        ['pos' => '30', 'row' => '1', 'name' => 'password', 'type' => 'password', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Password', 'db' => 'password/user/id'],
-        ['pos' => '10', 'row' => '2', 'name' => 'firstname', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Firstname', 'db' => 'firstname/user/id'],
-        ['pos' => '20', 'row' => '2', 'name' => 'street', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Street', 'db' => 'street/user/id'],
-        ['pos' => '20', 'row' => '2', 'name' => 'street_nr', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Street_nr', 'db' => 'street_nr/user/id'],
-        ['pos' => '20', 'row' => '2', 'name' => 'city', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'City', 'db' => 'city/user/id'],
-        ['pos' => '20', 'row' => '2', 'name' => 'city_nr', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'City_nr', 'db' => 'city_nr/user/id'],
-        ['pos' => '20', 'row' => '2', 'name' => 'phone', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'phone', 'db' => 'phone/user/id'],
-        ['pos' => '10', 'row' => '3', 'name' => 'comment', 'type' => 'textarea', 'widths' => '400/550/600', 'edit' => 'hide', 'label' => 'Comment', 'db' => 'comment/user/id'],
-        ['pos' => '10', 'row' => '4', 'name' => 'role', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Role', 'db' => 'role/user/id'],
-        ['pos' => '20', 'row' => '4', 'name' => 'permission', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Permission', 'db' => 'permission/user/id']
-    ];
-    foreach ( $customerfields as $field ) {
-        insert_into_db( $field, 'customer_fields' );
-    }
-
-}
-
-/*
-//
-//  #### ##    ## #### ########    ##     ##  ######  ######## ########  ########    ###    ########  ##       ########
-//   ##  ###   ##  ##     ##       ##     ## ##    ## ##       ##     ##    ##      ## ##   ##     ## ##       ##
-//   ##  ####  ##  ##     ##       ##     ## ##       ##       ##     ##    ##     ##   ##  ##     ## ##       ##
-//   ##  ## ## ##  ##     ##       ##     ##  ######  ######   ########     ##    ##     ## ########  ##       ######
-//   ##  ##  ####  ##     ##       ##     ##       ## ##       ##   ##      ##    ######### ##     ## ##       ##
-//   ##  ##   ###  ##     ##       ##     ## ##    ## ##       ##    ##     ##    ##     ## ##     ## ##       ##
-//  #### ##    ## ####    ##        #######   ######  ######## ##     ##    ##    ##     ## ########  ######## ########
-//
-*/
-/**
- *
- * Create a user table in the database
- *
- */
-function init_usertable() {
-    global $db;
-    // create user table
-    $db->exec( 'CREATE TABLE staff(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT NOT NULL DEFAULT "",
-            password TEXT NOT NULL DEFAULT "",
-            firstname TEXT NOT NULL DEFAULT "",
-            lastname TEXT NOT NULL DEFAULT "",
-            email TEXT NOT NULL DEFAULT "",
-            comment TEXT NOT NULL DEFAULT "",
-            role TEXT NOT NULL DEFAULT "",
-            permission TEXT NOT NULL DEFAULT "",
-            date TEXT NOT NULL DEFAULT ""
-        )' );
-
-    // create first users
-    $admin = ['username' => 'admin', 'password' => 'password', 'firstname' => 'admin', 'lastname' => 'admin', 'email' => 'admin@admin.org', 'comment' => 'lorem iopsum', 'role' => '0', 'permission' => '0'];
-    $user  = ['username' => 'user', 'password' => 'password', 'firstname' => 'user', 'lastname' => 'user', 'email' => 'user@user.org', 'comment' => 'lorem iopsum', 'role' => '1', 'permission' => '0'];
-    insert_into_db( $admin, 'staff' );
-    insert_into_db( $user, 'staff' );
-
-    // send response
-    // $response['code']    = 200;
-    // $response['message'] = 'usertable created';
-
-    // return_JSON( $response );
-}
-
-/*
-//
-//  #### ##    ## #### ########     ######  ##     ##  ######  ########  #######  ##     ## ######## ########  ########    ###    ########  ##       ########
-//   ##  ###   ##  ##     ##       ##    ## ##     ## ##    ##    ##    ##     ## ###   ### ##       ##     ##    ##      ## ##   ##     ## ##       ##
-//   ##  ####  ##  ##     ##       ##       ##     ## ##          ##    ##     ## #### #### ##       ##     ##    ##     ##   ##  ##     ## ##       ##
-//   ##  ## ## ##  ##     ##       ##       ##     ##  ######     ##    ##     ## ## ### ## ######   ########     ##    ##     ## ########  ##       ######
-//   ##  ##  ####  ##     ##       ##       ##     ##       ##    ##    ##     ## ##     ## ##       ##   ##      ##    ######### ##     ## ##       ##
-//   ##  ##   ###  ##     ##       ##    ## ##     ## ##    ##    ##    ##     ## ##     ## ##       ##    ##     ##    ##     ## ##     ## ##       ##
-//  #### ##    ## ####    ##        ######   #######   ######     ##     #######  ##     ## ######## ##     ##    ##    ##     ## ########  ######## ########
-//
-*/
-/**
- * Create a table in the database
- */
-function init_customertable() {
-    global $db;
-    // create user table
-    $db->exec( 'CREATE TABLE customer(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT NOT NULL DEFAULT "",
-            password TEXT NOT NULL DEFAULT "",
-            firstname TEXT NOT NULL DEFAULT "",
-            lastname TEXT NOT NULL DEFAULT "",
-            email TEXT NOT NULL DEFAULT "",
-            phone TEXT NOT NULL DEFAULT "",
-            street TEXT NOT NULL DEFAULT "",
-            street_nr TEXT NOT NULL DEFAULT "",
-            city TEXT NOT NULL DEFAULT "",
-            city_nr TEXT NOT NULL DEFAULT "",
-            comment TEXT NOT NULL DEFAULT "",
-            role TEXT NOT NULL DEFAULT "",
-            permission TEXT NOT NULL DEFAULT "",
-            date TEXT NOT NULL  DEFAULT ""
-        )' );
-
-    // create first users
-    $first_customer = [
-        'username'   => 'customer',
-        'password'   => 'password',
-        'firstname'  => 'customer',
-        'lastname'   => 'customer',
-        'email'      => 'customer@customer.org',
-        'phone'      => '555-123456789',
-        'street'     => 'Sesam',
-        'street_nr'  => '10',
-        'city'       => 'Clondyke',
-        'city_nr'    => '10',
-        'comment'    => 'lorem iopsum',
-        'role'       => '10',
-        'permission' => '10'
-    ];
-
-    // create_customer( $first_customer );
-    insert_into_db( $first_customer, 'customer' );
-
-    // send response
-    $response['code']    = 200;
-    $response['message'] = 'customertable created';
-
-    return_JSON( $response );
-}
-
 /*
 //
 //  #### ##    ##  ######  ######## ########  ########         #### ##    ## ########  #######          ########  ########
@@ -919,6 +752,224 @@ function return_JSON( $response ) {
 
 /*
 //
+//  #### ##    ## #### ########    ########    ###    ########  ##       ########  ######
+//   ##  ###   ##  ##     ##          ##      ## ##   ##     ## ##       ##       ##    ##
+//   ##  ####  ##  ##     ##          ##     ##   ##  ##     ## ##       ##       ##
+//   ##  ## ## ##  ##     ##          ##    ##     ## ########  ##       ######    ######
+//   ##  ##  ####  ##     ##          ##    ######### ##     ## ##       ##             ##
+//   ##  ##   ###  ##     ##          ##    ##     ## ##     ## ##       ##       ##    ##
+//  #### ##    ## ####    ##          ##    ##     ## ########  ######## ########  ######
+//
+*/
+
+function init_staff_fields_table() {
+    global $db;
+    // create user table
+    $db->exec( 'CREATE TABLE IF NOT EXISTS staff_fields(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL DEFAULT "",
+        label TEXT NOT NULL DEFAULT "",
+        type TEXT NOT NULL DEFAULT "",
+        row TEXT NOT NULL DEFAULT "",
+        pos TEXT NOT NULL DEFAULT "",
+        widths TEXT NOT NULL DEFAULT "",
+        edit TEXT NOT NULL DEFAULT "",
+        db TEXT NOT NULL DEFAULT "",
+        date TEXT NOT NULL DEFAULT ""
+    )' );
+
+    // create first users
+    $userfields = [
+        ['pos' => '10', 'row' => '1', 'name' => 'username', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Username', 'db' => 'username/staff/id'],
+        ['pos' => '20', 'row' => '1', 'name' => 'email', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Email', 'db' => 'email/staff/id'],
+        ['pos' => '20', 'row' => '1', 'name' => 'password', 'type' => 'password', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Password', 'db' => 'password/staff/id'],
+        ['pos' => '10', 'row' => '2', 'name' => 'firstname', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Firstname', 'db' => 'firstname/staff/id'],
+        ['pos' => '20', 'row' => '2', 'name' => 'lastname', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Lastname', 'db' => 'lastname/staff/id'],
+        ['pos' => '30', 'row' => '2', 'name' => 'instaname', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Instaname', 'db' => 'instaname/staff/id'],
+        ['pos' => '30', 'row' => '2', 'name' => 'birthdate', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Birthdate', 'db' => 'birthdate/staff/id'],
+        ['pos' => '10', 'row' => '3', 'name' => 'comment', 'type' => 'textarea', 'widths' => '400/550/600', 'edit' => 'hide', 'label' => 'Comment', 'db' => 'comment/staff/id'],
+        ['pos' => '10', 'row' => '4', 'name' => 'role', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Role', 'db' => 'role/staff/id'],
+        ['pos' => '20', 'row' => '4', 'name' => 'permission', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Permission', 'db' => 'permission/staff/id']
+    ];
+    foreach ( $userfields as $field ) {
+        insert_into_db( $field, 'staff_fields' );
+    }
+    // create customer table
+    $db->exec( 'CREATE TABLE IF NOT EXISTS customer_fields(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL DEFAULT "",
+        label TEXT NOT NULL DEFAULT "",
+        type TEXT NOT NULL DEFAULT "",
+        row TEXT NOT NULL DEFAULT "",
+        pos TEXT NOT NULL DEFAULT "",
+        widths TEXT NOT NULL DEFAULT "",
+        edit TEXT NOT NULL DEFAULT "",
+        db TEXT NOT NULL DEFAULT "",
+        date TEXT NOT NULL DEFAULT ""
+    )' );
+    // create first users
+    $customerfields = [
+        ['pos' => '10', 'row' => '1', 'name' => 'username', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Username', 'db' => 'username/customer/id'],
+        ['pos' => '20', 'row' => '1', 'name' => 'email', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Email', 'db' => 'email/customer/id'],
+        ['pos' => '30', 'row' => '1', 'name' => 'password', 'type' => 'password', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Password', 'db' => 'password/customer/id'],
+        ['pos' => '10', 'row' => '2', 'name' => 'firstname', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Firstname', 'db' => 'firstname/customer/id'],
+        ['pos' => '30', 'row' => '2', 'name' => 'instaname', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Instaname', 'db' => 'instaname/customer/id'],
+        ['pos' => '30', 'row' => '2', 'name' => 'birthdate', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Birthdate', 'db' => 'birthdate/customer/id'],
+
+        ['pos' => '20', 'row' => '2', 'name' => 'street', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Street', 'db' => 'street/customer/id'],
+        ['pos' => '20', 'row' => '2', 'name' => 'street_nr', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Street_nr', 'db' => 'street_nr/customer/id'],
+        ['pos' => '20', 'row' => '2', 'name' => 'city', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'City', 'db' => 'city/customer/id'],
+        ['pos' => '20', 'row' => '2', 'name' => 'city_nr', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'City_nr', 'db' => 'city_nr/customer/id'],
+        ['pos' => '20', 'row' => '2', 'name' => 'phone', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'phone', 'db' => 'phone/customer/id'],
+        ['pos' => '10', 'row' => '3', 'name' => 'comment', 'type' => 'textarea', 'widths' => '400/550/600', 'edit' => 'hide', 'label' => 'Comment', 'db' => 'comment/customer/id'],
+        ['pos' => '10', 'row' => '4', 'name' => 'role', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Role', 'db' => 'role/customer/id'],
+        ['pos' => '20', 'row' => '4', 'name' => 'permission', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Permission', 'db' => 'permission/customer/id']
+    ];
+    foreach ( $customerfields as $field ) {
+        insert_into_db( $field, 'customer_fields' );
+    }
+
+}
+
+/*
+//
+//  #### ##    ## #### ########    ##     ##  ######  ######## ########  ########    ###    ########  ##       ########
+//   ##  ###   ##  ##     ##       ##     ## ##    ## ##       ##     ##    ##      ## ##   ##     ## ##       ##
+//   ##  ####  ##  ##     ##       ##     ## ##       ##       ##     ##    ##     ##   ##  ##     ## ##       ##
+//   ##  ## ## ##  ##     ##       ##     ##  ######  ######   ########     ##    ##     ## ########  ##       ######
+//   ##  ##  ####  ##     ##       ##     ##       ## ##       ##   ##      ##    ######### ##     ## ##       ##
+//   ##  ##   ###  ##     ##       ##     ## ##    ## ##       ##    ##     ##    ##     ## ##     ## ##       ##
+//  #### ##    ## ####    ##        #######   ######  ######## ##     ##    ##    ##     ## ########  ######## ########
+//
+*/
+/**
+ *
+ * Create a user table in the database
+ *
+ */
+function init_usertable() {
+    global $db;
+    // create user table
+    $db->exec( 'CREATE TABLE staff(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT NOT NULL DEFAULT "",
+            password TEXT NOT NULL DEFAULT "",
+            firstname TEXT NOT NULL DEFAULT "",
+            lastname TEXT NOT NULL DEFAULT "",
+            email TEXT NOT NULL DEFAULT "",
+            comment TEXT NOT NULL DEFAULT "",
+            role TEXT NOT NULL DEFAULT "",
+            permission TEXT NOT NULL DEFAULT "",
+            date TEXT NOT NULL DEFAULT ""
+        )' );
+
+    // create first users
+    $admin = ['username' => 'admin', 'password' => 'password', 'firstname' => 'admin', 'lastname' => 'admin', 'email' => 'admin@admin.org', 'comment' => 'lorem iopsum', 'role' => '0', 'permission' => '0'];
+    $user  = ['username' => 'user', 'password' => 'password', 'firstname' => 'user', 'lastname' => 'user', 'email' => 'user@user.org', 'comment' => 'lorem iopsum', 'role' => '1', 'permission' => '0'];
+    insert_into_db( $admin, 'staff' );
+    insert_into_db( $user, 'staff' );
+
+    // send response
+    // $response['code']    = 200;
+    // $response['message'] = 'usertable created';
+
+    // return_JSON( $response );
+}
+
+/*
+//
+//  #### ##    ## #### ########     ######  ##     ##  ######  ########  #######  ##     ## ######## ########  ########    ###    ########  ##       ########
+//   ##  ###   ##  ##     ##       ##    ## ##     ## ##    ##    ##    ##     ## ###   ### ##       ##     ##    ##      ## ##   ##     ## ##       ##
+//   ##  ####  ##  ##     ##       ##       ##     ## ##          ##    ##     ## #### #### ##       ##     ##    ##     ##   ##  ##     ## ##       ##
+//   ##  ## ## ##  ##     ##       ##       ##     ##  ######     ##    ##     ## ## ### ## ######   ########     ##    ##     ## ########  ##       ######
+//   ##  ##  ####  ##     ##       ##       ##     ##       ##    ##    ##     ## ##     ## ##       ##   ##      ##    ######### ##     ## ##       ##
+//   ##  ##   ###  ##     ##       ##    ## ##     ## ##    ##    ##    ##     ## ##     ## ##       ##    ##     ##    ##     ## ##     ## ##       ##
+//  #### ##    ## ####    ##        ######   #######   ######     ##     #######  ##     ## ######## ##     ##    ##    ##     ## ########  ######## ########
+//
+*/
+/**
+ * Create a table in the database
+ */
+function init_customertable() {
+    global $db;
+    // create user table
+    $db->exec( 'CREATE TABLE customer(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT NOT NULL DEFAULT "",
+            password TEXT NOT NULL DEFAULT "",
+            firstname TEXT NOT NULL DEFAULT "",
+            lastname TEXT NOT NULL DEFAULT "",
+            email TEXT NOT NULL DEFAULT "",
+            phone TEXT NOT NULL DEFAULT "",
+            street TEXT NOT NULL DEFAULT "",
+            street_nr TEXT NOT NULL DEFAULT "",
+            city TEXT NOT NULL DEFAULT "",
+            city_nr TEXT NOT NULL DEFAULT "",
+            comment TEXT NOT NULL DEFAULT "",
+            role TEXT NOT NULL DEFAULT "",
+            permission TEXT NOT NULL DEFAULT "",
+            date TEXT NOT NULL  DEFAULT ""
+        )' );
+
+    // create first users
+    $first_customer = [
+        'username'   => 'customer',
+        'password'   => 'password',
+        'firstname'  => 'customer',
+        'lastname'   => 'customer',
+        'email'      => 'customer@customer.org',
+        'phone'      => '555-123456789',
+        'street'     => 'Sesam',
+        'street_nr'  => '10',
+        'city'       => 'Clondyke',
+        'city_nr'    => '10',
+        'comment'    => 'lorem iopsum',
+        'role'       => '10',
+        'permission' => '10'
+    ];
+
+    // create_customer( $first_customer );
+    insert_into_db( $first_customer, 'customer' );
+
+    // send response
+    $response['code']    = 200;
+    $response['message'] = 'customertable created';
+
+    return_JSON( $response );
+}
+
+function init_project_table() {
+    global $db;
+    // create user table
+    $db->exec( 'CREATE TABLE project(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            titel TEXT NOT NULL DEFAULT "",
+            customer_id TEXT NOT NULL DEFAULT "",
+            comment_staff TEXT NOT NULL DEFAULT "",
+            comment_customer TEXT NOT NULL DEFAULT "",
+            date TEXT NOT NULL  DEFAULT ""
+        )' );
+}
+
+function init_appointment_table() {
+    global $db;
+    // create user table
+    $db->exec( 'CREATE TABLE appointment(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            titel TEXT NOT NULL DEFAULT "",
+            start_time TEXT NOT NULL DEFAULT "",
+            end_time TEXT NOT NULL DEFAULT "",
+            duration TEXT NOT NULL DEFAULT "",
+            staff_id TEXT NOT NULL DEFAULT "",
+            project_id TEXT NOT NULL DEFAULT "",
+            customer_id TEXT NOT NULL DEFAULT "",
+            public TEXT NOT NULL DEFAULT 0,
+            date TEXT NOT NULL  DEFAULT ""
+        )' );
+}
+
+/*
+//
 //  ########  ##     ## ##     ## ##     ## ##    ##
 //  ##     ## ##     ## ###   ### ###   ###  ##  ##
 //  ##     ## ##     ## #### #### #### ####   ####
@@ -938,6 +989,7 @@ function create_dummy_staff( $count ) {
             'password'   => 'password',
             'firstname'  => $random_name[0],
             'lastname'   => $random_name[1],
+            'instaname'  => $random_name[1].'_'.$random_name[0],
             'email'      => $email,
             'comment'    => random_text(),
             'role'       => random_int( 1, 5 ),
@@ -954,6 +1006,7 @@ function create_dummy_customer( $count ) {
         $email       = $random_name[0]."@".$random_name[1].".com";
         $customer    = [
             'username'   => 'C_'.$random_name[0].'_'.$random_name[1],
+            'instaname'  => $random_name[1].'_'.$random_name[0],
             'password'   => 'password',
             'firstname'  => $random_name[0],
             'lastname'   => $random_name[1],
@@ -962,6 +1015,7 @@ function create_dummy_customer( $count ) {
             'phone'      => random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ).random_int( 1, 9 ).'-'.random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ).random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ),
             'street'     => random_street(),
             'street_nr'  => random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ),
+            'birthdate'  => random_int( 1, 30 ).'.'.random_int( 0, 12 ).'.'.random_int( 1960, 2002 ),
             'city'       => random_city(),
             'city_nr'    => random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ).random_int( 1, 9 ).random_int( 0, 9 ),
             'role'       => '10',
@@ -971,4 +1025,59 @@ function create_dummy_customer( $count ) {
         insert_into_db( $customer, 'customer' );
 
     }
+}
+
+function create_dummy_project( $count ) {
+    for ( $i = 0; $i < $count; $i++ ) {
+        $project = [
+            'titel'            => random_body(),
+            'customer_id'      => get_ramdon_id_from( 'customer' ),
+            'comment_staff'    => random_text(),
+            'comment_customer' => random_text()
+        ];
+        insert_into_db( $project, 'project' );
+    }
+}
+
+function create_dummy_appointment( $count ) {
+    for ( $i = 0; $i < $count; $i++ ) {
+        $days = 20;
+        // random numbers
+        if ( rand( 0, 1 ) ) {
+            $random_date = date( 'Y-m-d', strtotime( '+'.mt_rand( 0, $days ).' days' ) );
+        } else {
+            $random_date = date( 'Y-m-d', strtotime( '-'.mt_rand( 0, $days ).' days' ) );
+        }
+        $random_hour     = str_pad( rand( 8, 18 ), 2, 0, STR_PAD_LEFT );
+        $random_minute   = str_pad( rand( 0, 59 ), 2, 0, STR_PAD_LEFT );
+        $durations       = [30, 60, 90, 120, 150, 180];
+        $random_duration = $durations[mt_rand( 0, 5 )];
+        // startdate
+        $random_datetime_start = $random_date.' '.$random_hour.':'.$random_minute.':00';
+        // enddate is startdate + duration
+        $datetime = new DateTime( $random_datetime_start );
+        $datetime->add( new DateInterval( 'PT'.$random_duration.'M' ) );
+        $random_datetime_end = $datetime->format( 'Y-m-d H:i:s' );
+
+        $project = [
+            'start_time'  => $random_datetime_start,
+            'end_time'    => $random_datetime_end,
+            'duration'    => $random_duration,
+            'staff_id'    => get_ramdon_id_from( 'staff' ),
+            'project_id'  => get_ramdon_id_from( 'project' ),
+            'customer_id' => get_ramdon_id_from( 'customer' ),
+            'public'      => random_int( 0, 1 )
+        ];
+        insert_into_db( $project, 'appointment' );
+    }
+}
+
+function get_ramdon_id_from( $table ) {
+    global $db;
+    $stmt = $db->prepare( "SELECT id FROM $table" );
+    $stmt->execute();
+    $IDs = $stmt->fetchAll( PDO::FETCH_ASSOC );
+    // print_r( $IDs );
+    $i = random_int( 0, count( $IDs ) - 1 );
+    return $IDs[$i]['id'];
 }

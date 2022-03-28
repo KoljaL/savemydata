@@ -46,6 +46,8 @@ export default {
         'F_city': 'Stadt',
         'F_city_nr': 'PLZ',
         'F_phone': 'Telefon',
+        'F_instaname': 'Instagram',
+        'F_birthdate': 'Geburtsdatum',
 
     },
     'en': {
@@ -95,6 +97,7 @@ export default {
         'F_city': 'City',
         'F_city_nr': 'Postcode',
         'F_phone': 'Phone',
-
+        'F_instaname': 'Instagram',
+        'F_birthdate': 'Date of Birth',
     }
 }

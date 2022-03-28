@@ -123,6 +123,12 @@ function random_text() {
     return $text;
 }
 
+function random_body() {
+    $i         = random_int( 0, 20 );
+    $bodyparts = ['ear', 'chin', 'neck', 'chest', 'right arm', 'left arm', 'left hand', 'right hand', 'right leg', 'left leg', 'left foot', 'right foot', 'toes', 'left ankle', 'right ankle', 'navel', 'left shoulder', 'right shoulder', 'left elbow', 'right elbow', 'back'];
+    return $bodyparts[$i];
+}
+
 function random_name() {
     $names = [
         'Allison',

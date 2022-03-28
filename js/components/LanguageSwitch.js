@@ -101,7 +101,7 @@ function changeLanguage(lanForm) {
             if (typeof langObj[UserLanguage][el.dataset.lang] !== 'undefined') {
                 el.innerHTML = langObj[UserLanguage][el.dataset.lang];
             } else {
-                el.innerHTML = langObj['en'][el.dataset.lang];
+                // el.innerHTML = langObj['en'][el.dataset.lang];
             }
         }
         // change page title

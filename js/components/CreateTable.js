@@ -39,7 +39,7 @@ let Style = async() => {
         position: sticky;
         top: -1em;
         background: var(--bg_1);
-        padding: .5em;
+        white-space: nowrap;
     }
     #TableContent th {
         padding: .5em 1em .5em .5em;
@@ -164,7 +164,7 @@ async function createTable(data, TableContent) {
                 ID = element[key];
             }
             if (key === 'username') {
-                element[key] = /*MTML*/ `<a href="#user/profile/${ID}">${element[key]}</a>`;
+                element[key] = /*MTML*/ `<a href="#${tableName}/profile/${ID}">${element[key]}</a>`;
             }
             cell.innerHTML = element[key];
         }
