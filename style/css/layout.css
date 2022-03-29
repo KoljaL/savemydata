@@ -263,6 +263,10 @@ a {
     color: var(--fontBlue);
 }
 
+.numeric {
+    font-variant-numeric: tabular-nums;
+}
+
 
 /* scrollbar */
 

@@ -237,7 +237,14 @@ function get_project( $param ) {
         $project  = $stmt->fetch( PDO::FETCH_ASSOC );
         $response = [];
         if ( $project ) {
-            $project['username'] = get_username_by_id( 'customer', $project['customer_id'] );
+
+            $stmt = $db->prepare( "SELECT * FROM appointment WHERE project_id = $API_param" );
+            $stmt->execute();
+            $appointments            = $stmt->fetchAll( PDO::FETCH_ASSOC );
+            $project['appointments'] = $appointments;
+
+            $project['customername'] = get_username_by_id( 'customer', $project['customer_id'] );
+            $project['staffname']    = get_username_by_id( 'staff', $project['staff_id'] );
 
             $response['code'] = 200;
             $response['data'] = $project;
@@ -1065,7 +1072,7 @@ function create_dummy_staff( $count ) {
         $random_name = random_name();
         $email       = $random_name[0]."@".$random_name[1].".com";
         $staff       = [
-            'username'   => 'U_'.$random_name[0].'_'.$random_name[1],
+            'username'   => 'S_'.$random_name[0].'_'.$random_name[1],
             'password'   => 'password',
             'firstname'  => $random_name[0],
             'lastname'   => $random_name[1],
