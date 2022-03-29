@@ -22,10 +22,10 @@ let Style = async() => {
     let styleTags = /*CSS*/ `
     #selectLanguageDIV{
         position: absolute;
-        top:10px;
-        left:50%;
+        bottom:0px;
+        left:0;
         z-index: 6;
-        width: 50px;
+        width: 48px;
     }
  
     `;
@@ -65,7 +65,7 @@ let Switch = async() => {
  * INIT
  */
 let Init = async() => {
-    let lanForm = Functions.getLocal("UserLanguage");
+    let lanForm = Functions.getLocal('lang');
     document.getElementById('selectLanguage').value = lanForm;
     changeLanguage(lanForm)
 };
@@ -78,39 +78,39 @@ let Init = async() => {
  */
 function changeLanguage(lanForm) {
     // deb('changeLanguage');
-    let langObj = LanguageFile;
+    // let LanguageFile = LanguageFile;
 
     let UserLanguage = 'en'
     if (lanForm) {
         UserLanguage = lanForm
-    } else if (typeof Functions.getLocal("UserLanguage") !== 'undefined') {
-        UserLanguage = Functions.getLocal("UserLanguage")
+    } else if (typeof Functions.getLocal('lang') !== 'undefined') {
+        UserLanguage = Functions.getLocal('lang')
     } else {
         var userLang = navigator.language || navigator.userLanguage;
         UserLanguage = userLang.substr(0, 2).toLowerCase()
     }
-    if (UserLanguage in langObj) {
-        Functions.setLocal("UserLanguage", UserLanguage);
+    if (UserLanguage in LanguageFile) {
+        Functions.setLocal('lang', UserLanguage);
     }
 
     // check if language exists
-    if (typeof langObj[UserLanguage] !== 'undefined') {
+    if (typeof LanguageFile[UserLanguage] !== 'undefined') {
         let langFields = document.querySelectorAll('[data-lang]');
         for (let i = 0; i < langFields.length; i++) {
             const el = langFields[i];
-            if (typeof langObj[UserLanguage][el.dataset.lang] !== 'undefined') {
-                el.innerHTML = langObj[UserLanguage][el.dataset.lang];
+            if (typeof LanguageFile[UserLanguage][el.dataset.lang] !== 'undefined') {
+                el.innerHTML = LanguageFile[UserLanguage][el.dataset.lang];
             } else {
-                // el.innerHTML = langObj['en'][el.dataset.lang];
+                // el.innerHTML = LanguageFile['en'][el.dataset.lang];
             }
         }
         // change page title
-        if (typeof langObj[UserLanguage]['title'] !== 'undefined') {
-            document.title = langObj[UserLanguage]['title'];
+        if (typeof LanguageFile[UserLanguage]['title'] !== 'undefined') {
+            document.title = LanguageFile[UserLanguage]['title'];
         }
         // change page description
-        if (typeof langObj[UserLanguage]['description'] !== 'undefined') {
-            document.querySelector('meta[name="description"]').setAttribute("content", langObj[UserLanguage]['description']);
+        if (typeof LanguageFile[UserLanguage]['description'] !== 'undefined') {
+            document.querySelector('meta[name="description"]').setAttribute("content", LanguageFile[UserLanguage]['description']);
         }
     }
 } //function

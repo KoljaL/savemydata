@@ -227,3 +227,34 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     display: none;
     -webkit-appearance: none;
 } */
+
+.ck.ck-toolbar {
+    background: var(--bg_3)!important;
+    border: 1px solid var(--border_0);
+}
+
+.ck.ck-button .ck-button__label,
+a.ck.ck-button .ck-button__label,
+.ck.ck-icon,
+.ck.ck-icon * {
+    color: var(--font_0)!important;
+    cursor: pointer!important;
+}
+
+.ck.ck-button .ck-button__label:hover,
+a.ck.ck-button .ck-button__label:hover,
+.ck.ck-button:not(.ck-disabled):hover,
+a.ck.ck-button:not(.ck-disabled):hover {
+    background: var(--bg_2)!important;
+}
+
+.ck.ck-balloon-panel {
+    box-shadow: var(black), 0 0!important;
+    min-height: 15px;
+    background: var(--bg_1)!important;
+    border: 1px solid var(--border_0)!important;
+}
+
+.ck.ck-editor__editable:not(.ck-editor__nested-editable).ck-focused {
+    border: 1px solid var(--fontBlue)!important;
+}

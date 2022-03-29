@@ -232,17 +232,18 @@ let Functions = {
     */
     /* This is a function that sets a local storage item. */
     setLocal: (key, value) => {
-        localStorage.setItem('DF_' + key, value);
+        localStorage.setItem('SMD_' + key, value);
     },
     /* This is a function that gets the value of a key from local storage. */
     getLocal: (key) => {
-        return localStorage.getItem('DF_' + key);
+        return localStorage.getItem('SMD_' + key);
     },
     /* Removing all the data from the local storage. */
     flushLocal: () => {
+        // deb('flush')
         var arr = [];
         for (var i = 0; i < localStorage.length; i++) {
-            if (localStorage.key(i).substring(0, 3) == 'DF_') {
+            if (localStorage.key(i).substring(0, 4) == 'SMD_') {
                 arr.push(localStorage.key(i));
                 // deb(localStorage.key(i))
             }
@@ -316,7 +317,7 @@ let Functions = {
     setUsername: async(username, userID) => {
         document.querySelector('nav .sidebar_userpanel').innerHTML = /*HTML*/ `
             <img src="userdata/uploads/avatars/${username}.png" width="40" height="40">
-            <span class=username  onclick='window.location.hash ="user/profile/"+${userID}'>${username}</span>
+            <span class=username  onclick='window.location.hash ="staff/profile/"+${userID}'>${username}</span>
             <span id=userLogout class="logout_icon"></span>`;
     },
 

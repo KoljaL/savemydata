@@ -10,6 +10,7 @@ import Default from './views/Default.js';
 import UserLogin from './views/UserLogin.js';
 import UserTable from './views/UserTable.js';
 import UserProfile from './views/UserProfile.js';
+import Project from './views/Project.js';
 import UserProfileForm from './views/UserProfileForm.js';
 import LanguageSwitch from './components/LanguageSwitch.js';
 
@@ -84,11 +85,21 @@ async function router() {
                     case 'table':
                         await UserTable.render(API_page)
                         break;
-                    default:
-                        await CustomerTable.render()
+                }
+                break;
+
+            case 'project':
+                switch (API_key) {
+                    case 'id':
+                        await Project.render(API_value)
+                        break;
+                    case 'table':
+                        await UserTable.render(API_page)
                         break;
                 }
                 break;
+
+
 
             case 'form':
                 await Form.render();

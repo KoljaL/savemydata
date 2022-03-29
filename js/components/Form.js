@@ -196,7 +196,7 @@ let Forms = {
                 </div>`;
         }
         // return textarea element  
-        if (d.type === 'textarea') {
+        if (d.type === 'editor') {
             return /*HTML*/ `
                 <div class="FF-item" style="${flexWidth}">
                     <div
@@ -212,20 +212,20 @@ let Forms = {
 
         }
 
-        // if (d.type === 'textarea') {
-        //     return /*HTML*/ `
-        //         <div class="FF-item" style="${flexWidth}">
-        //             <textarea 
-        //             id=${d.name} 
-        //             class="${hideEdit}" 
-        //             name=${d.name} 
-        //             type="${d.type}" 
-        //             placeholder="${d.placeholder}" 
-        //             ${dataDB}
-        //             required>${u[d.name]}</textarea>
-        //             <label data-lang="F_${d.label.toLowerCase()}" for=${d.name}>${d.label}</label>
-        //         </div>`;
-        // }
+        if (d.type === 'textarea') {
+            return /*HTML*/ `
+                <div class="FF-item" style="${flexWidth}">
+                    <textarea 
+                    id=${d.name} 
+                    class="${hideEdit}" 
+                    name=${d.name} 
+                    type="${d.type}" 
+                    placeholder="${d.placeholder}" 
+                    ${dataDB}
+                    required>${u[d.name]}</textarea>
+                    <label data-lang="F_${d.label.toLowerCase()}" for=${d.name}>${d.label}</label>
+                </div>`;
+        }
 
 
 

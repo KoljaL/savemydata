@@ -139,6 +139,7 @@ let Login = async() => {
                     Functions.setLocal('role', user.role);
                     Functions.setLocal('permission', user.permission);
                     Functions.setLocal('token', res.data.token);
+                    Functions.setLocal('lang', user.lang);
 
                     // activate logout button
                     document.getElementById('userLogout').addEventListener('click', Functions.flushLocal);

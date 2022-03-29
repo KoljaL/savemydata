@@ -11,8 +11,9 @@ export default {
         'select-Staff': 'Mitarbeiter auswählen',
         'select-Customer': 'Kunden auswählen',
         // headlines
-        'staff_fields': 'Mitarbeiter Tabelle',
-        'customer_fields': 'Kunden Tabelle',
+        'staff_table': 'Mitarbeiter Tabelle',
+        'customer_table': 'Kunden Tabelle',
+        'project_table': 'Projekt Tabelle',
         'Staff-Profile': 'Mitarbeiter Profil',
         "Customer-Profile": 'Kunden Profil',
         // Sidebar
@@ -22,6 +23,7 @@ export default {
         'S_profile-form': 'Profil Elemente',
         'S_customer': 'Kunden',
         'S_customer-profile': 'Kundenprofil',
+        'S_projects': 'Projekte',
         'S_solarsystem': 'Sonnensystem',
         'S_form': 'Formulare',
         'S_form1': 'Formular I',
@@ -48,6 +50,7 @@ export default {
         'F_phone': 'Telefon',
         'F_instaname': 'Instagram',
         'F_birthdate': 'Geburtsdatum',
+        'F_title': 'Titel',
 
     },
     'en': {
@@ -62,8 +65,9 @@ export default {
         'select-Staff': 'Select Staff',
         'select-Customer': 'Select Customer',
         // headlines
-        'staff_fields': 'Staff Table',
-        'customer_fields': 'Customer Table',
+        'staff_table': 'Staff Table',
+        'customer_table': 'Customer Table',
+        'project_table': 'Project Table',
         'Staff-Profile': 'Staff Profile',
         "Customer-Profile": 'Customer Profile',
         //sidebar
@@ -73,6 +77,7 @@ export default {
         'S_profile-form': 'Profile Elements',
         'S_customer': 'Customer',
         'S_customer-profile': 'Customerprofile',
+        'S_projects': 'Projects',
         'S_solarsystem': 'Solarsystem',
         'S_form': 'Forms',
         'S_form1': 'Form I',
@@ -99,5 +104,6 @@ export default {
         'F_phone': 'Phone',
         'F_instaname': 'Instagram',
         'F_birthdate': 'Date of Birth',
+        'F_title': 'Title',
     }
 }

@@ -13,6 +13,11 @@ export default {
             window.tableName = 'customer';
             window.formTableName = 'customer_fields';
         }
+        if (action === 'project') {
+            window.slugName = 'Project';
+            window.tableName = 'project';
+            window.formTableName = '';
+        }
         return await Content(data);
     },
 };
@@ -99,7 +104,7 @@ let Content = async(data) => {
 
     //headline
     let Headline = document.createElement('H2');
-    Headline.dataset.lang = formTableName;
+    Headline.dataset.lang = tableName + '_table';
     Headline.innerHTML = slugName + ' Table'
     TableHeader.appendChild(Headline);
 
@@ -124,6 +129,7 @@ let Content = async(data) => {
     // CONTENT
     let TableContent = document.createElement('table');
     TableContent.id = 'TableContent';
+    TableContent.classList.add(tableName);
     //add to wrapper
     TableWrapper.appendChild(TableHeader);
     TableWrapper.appendChild(TableContent);
@@ -155,18 +161,40 @@ async function createTable(data, TableContent) {
 
     for (let element of data) {
         let row = TableContent.insertRow();
-        var ID;
+        var user_id, project_id;
         for (let key in element) {
             let cell = row.insertCell();
             // add the obj key as classname 
             cell.classList.add(key);
-            if (key === 'id') {
-                ID = element[key];
+
+            // make the profile links
+            if (tableName === 'staff' || tableName === 'customer') {
+                if (key === 'id') {
+                    user_id = element[key];
+                }
+                if (key === 'username') {
+                    element[key] = /*MTML*/ `<a href="#${tableName}/profile/${user_id}">${element[key]}</a>`;
+                }
+                cell.innerHTML = element[key];
             }
-            if (key === 'username') {
-                element[key] = /*MTML*/ `<a href="#${tableName}/profile/${ID}">${element[key]}</a>`;
+            // make project title link
+            if (tableName === 'project') {
+                if (key === 'customer_id') {
+                    project_id = element[key];
+                }
+                if (key === 'username') {
+                    element[key] = /*MTML*/ `<a href="#customer/profile/${project_id}">${element[key]}</a>`;
+                }
+
+                if (key === 'id') {
+                    project_id = element[key];
+                }
+                if (key === 'title') {
+                    element[key] = /*MTML*/ `<a href="#${tableName}/id/${project_id}">${element[key]}</a>`;
+                }
+                cell.innerHTML = element[key];
             }
-            cell.innerHTML = element[key];
+
         }
     }
 

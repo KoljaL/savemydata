@@ -180,62 +180,27 @@ let getUserData = async(userID) => {
                     Functions.setInnerHTML('Userdata', innerHTML);
                 }
             })
+            // load CKEditor if found
             .then(() => {
-                InlineEditor
-                    .create(document.querySelector('#editor'))
-                    .then(editor => {
-                        window.editor = editor;
+                if (document.querySelector('#editor')) {
+                    InlineEditor
+                        .create(document.querySelector('#editor'))
+                        .then(editor => {
+                            window.editor = editor;
+                            detectFocusOut(editor);
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
 
-                        detectFocusOut(editor);
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
-
-                function detectFocusOut(editor) {
-                    editor.ui.focusTracker.on('change:isFocused', (evt, name, isFocused) => {
-                        if (!isFocused) {
-                            console.log(editor.getData());
-                        }
-                    });
+                    function detectFocusOut(editor) {
+                        editor.ui.focusTracker.on('change:isFocused', (evt, name, isFocused) => {
+                            if (!isFocused) {
+                                console.log(editor.getData());
+                            }
+                        });
+                    }
                 }
-
-
-
-                // tinymce.init({
-                //     selector: '#myeditablediv',
-                //     menubar: false,
-                //     inline: true,
-                //     plugins: ["link", "lists", "powerpaste", "autolink", "tinymcespellchecker"],
-                //     toolbar: [
-                //         "undo redo | bold italic underline | fontselect fontsizeselect",
-                //         "forecolor backcolor | alignleft aligncenter alignright alignfull | numlist bullist outdent indent"
-                //     ],
-                //     valid_elements: "p[style],strong,em,span[style],a[href],ul,ol,li",
-                //     valid_styles: {
-                //         "*": "font-size,font-family,color,text-decoration,text-align"
-                //     },
-                //     powerpaste_word_import: "clean",
-                //     powerpaste_html_import: "clean"
-
-                // });
-
-                // function setupEditor(editor) {
-                //     editor.on('FocusOut', function(tiny) {
-                //         var myContent = tinymce.activeEditor.getContent();
-                //         console.log('Editor was clicked');
-                //         console.log(myContent);
-                //         console.log(tiny.target.parentElement);
-                //     });
-                // }
-
-                // function setupEditor(editor) {
-                //     editor.on('click', function() {
-                //         console.log('Editor was clicked');
-                //     });
-                // }
-                // deb('tinymce')
-
             })
     }
 };

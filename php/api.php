@@ -84,15 +84,15 @@ if ( isset( $uri[$api + 3] ) ) {
 if ( !file_exists( $db_path ) ) {
     $db = new PDO( 'sqlite:'.$db_path );
     init_customertable();
-    init_usertable();
+    init_stafftable();
     init_staff_fields_table();
     init_appointment_table();
     init_project_table();
     include './dummy_content.php';
     create_dummy_staff( 10 );
-    create_dummy_customer( 90 );
-    create_dummy_project( 250 );
-    create_dummy_appointment( 530 );
+    create_dummy_customer( 9 );
+    create_dummy_project( 5 );
+    create_dummy_appointment( 30 );
     echo "init done";
     exit;
 } else {
@@ -120,7 +120,7 @@ if ( $request ) {
 //DEBUG
 //DEBUG
 if ( 'do' === $API_endpoint ) {
-    get_ramdon_id_from( 'staff' );
+    get_projects_as_table( 'staff' );
     exit;
 }
 if ( 'reset' === $API_endpoint ) {
@@ -189,6 +189,14 @@ case 'login':
     login_user( $request );
     break;
 
+case 'get_projects_as_table':
+    get_projects_as_table( $request );
+    break;
+
+case 'get_project':
+    get_project( $request );
+    break;
+
 case 'edit_single_field':
     edit_single_field( $request );
     break;
@@ -220,8 +228,82 @@ default:
 //////////////////////////////////////////////////////////////////////////////////////
 */
 
+function get_project( $param ) {
+    if ( isAllowed() ) {
+        global $db, $API_param, $API_value;
+
+        $stmt = $db->prepare( "SELECT * FROM project WHERE id = $API_param" );
+        $stmt->execute();
+        $project  = $stmt->fetch( PDO::FETCH_ASSOC );
+        $response = [];
+        if ( $project ) {
+            $project['username'] = get_username_by_id( 'customer', $project['customer_id'] );
+
+            $response['code'] = 200;
+            $response['data'] = $project;
+
+        } else {
+            $response['code']    = 400;
+            $response['message'] = 'no form profile found';
+        }
+        return_JSON( $response );
+
+    } else {
+        $response['code']    = 400;
+        $response['message'] = 'vorbidden';
+        return_JSON( $response );
+    }
+}
 // https://phpdelusions.net/pdo_examples/select
 // https://code-boxx.com/php-user-role-management-system/
+
+function get_projects_as_table( $param ) {
+    if ( isAllowed() ) {
+        global $db, $API_param, $API_value;
+
+        if ( '' !== $API_value ) {
+            $where = ' WHERE id = '.$API_value;
+        } else {
+            $where = '';
+        }
+        $stmt = $db->prepare( "SELECT * FROM project $where" );
+        $stmt->execute();
+        $projects = $stmt->fetchAll( PDO::FETCH_ASSOC );
+
+        $response = [];
+        if ( $projects ) {
+
+            // get the username and remove the comments
+            foreach ( $projects as $key => $value ) {
+                $projects[$key]['username'] = get_username_by_id( 'customer', $value['customer_id'] );
+                unset( $projects[$key]['comment_staff'] );
+                unset( $projects[$key]['comment_customer'] );
+            }
+            $response['code'] = 200;
+            $response['data'] = $projects;
+
+        } else {
+            $response['code']    = 400;
+            $response['table']   = $projects;
+            $response['message'] = 'no form profile found';
+        }
+        return_JSON( $response );
+
+    } else {
+        $response['code']    = 400;
+        $response['message'] = 'vorbidden';
+        return_JSON( $response );
+    }
+}
+
+function get_username_by_id( $table, $id ) {
+    global $db;
+    $stmt = $db->prepare( "SELECT id, username FROM $table WHERE id = $id" );
+    $stmt->execute();
+    $user = $stmt->fetch( PDO::FETCH_ASSOC );
+    // print_r( $user );
+    return $user['username'];
+}
 
 /*
 //
@@ -597,7 +679,8 @@ function login_user( $request ) {
             'id'         => $user['id'],
             'username'   => $user['username'],
             'role'       => $user['role'],
-            'permission' => $user['permission']
+            'permission' => $user['permission'],
+            'lang'       => $user['lang']
         ];
 
         $response['code']          = 200;
@@ -764,7 +847,6 @@ function return_JSON( $response ) {
 
 function init_staff_fields_table() {
     global $db;
-    // create user table
     $db->exec( 'CREATE TABLE IF NOT EXISTS staff_fields(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL DEFAULT "",
@@ -778,7 +860,6 @@ function init_staff_fields_table() {
         date TEXT NOT NULL DEFAULT ""
     )' );
 
-    // create first users
     $userfields = [
         ['pos' => '10', 'row' => '1', 'name' => 'username', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Username', 'db' => 'username/staff/id'],
         ['pos' => '20', 'row' => '1', 'name' => 'email', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Email', 'db' => 'email/staff/id'],
@@ -786,15 +867,14 @@ function init_staff_fields_table() {
         ['pos' => '10', 'row' => '2', 'name' => 'firstname', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Firstname', 'db' => 'firstname/staff/id'],
         ['pos' => '20', 'row' => '2', 'name' => 'lastname', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Lastname', 'db' => 'lastname/staff/id'],
         ['pos' => '30', 'row' => '2', 'name' => 'instaname', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Instaname', 'db' => 'instaname/staff/id'],
-        ['pos' => '30', 'row' => '2', 'name' => 'birthdate', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Birthdate', 'db' => 'birthdate/staff/id'],
         ['pos' => '10', 'row' => '3', 'name' => 'comment', 'type' => 'textarea', 'widths' => '400/550/600', 'edit' => 'hide', 'label' => 'Comment', 'db' => 'comment/staff/id'],
         ['pos' => '10', 'row' => '4', 'name' => 'role', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Role', 'db' => 'role/staff/id'],
-        ['pos' => '20', 'row' => '4', 'name' => 'permission', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Permission', 'db' => 'permission/staff/id']
+        ['pos' => '20', 'row' => '4', 'name' => 'permission', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Permission', 'db' => 'permission/staff/id'],
+        ['pos' => '20', 'row' => '4', 'name' => 'lang', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Language', 'db' => 'lang/staff/id']
     ];
     foreach ( $userfields as $field ) {
         insert_into_db( $field, 'staff_fields' );
     }
-    // create customer table
     $db->exec( 'CREATE TABLE IF NOT EXISTS customer_fields(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL DEFAULT "",
@@ -807,7 +887,6 @@ function init_staff_fields_table() {
         db TEXT NOT NULL DEFAULT "",
         date TEXT NOT NULL DEFAULT ""
     )' );
-    // create first users
     $customerfields = [
         ['pos' => '10', 'row' => '1', 'name' => 'username', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Username', 'db' => 'username/customer/id'],
         ['pos' => '20', 'row' => '1', 'name' => 'email', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Email', 'db' => 'email/customer/id'],
@@ -815,7 +894,6 @@ function init_staff_fields_table() {
         ['pos' => '10', 'row' => '2', 'name' => 'firstname', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Firstname', 'db' => 'firstname/customer/id'],
         ['pos' => '30', 'row' => '2', 'name' => 'instaname', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Instaname', 'db' => 'instaname/customer/id'],
         ['pos' => '30', 'row' => '2', 'name' => 'birthdate', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Birthdate', 'db' => 'birthdate/customer/id'],
-
         ['pos' => '20', 'row' => '2', 'name' => 'street', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Street', 'db' => 'street/customer/id'],
         ['pos' => '20', 'row' => '2', 'name' => 'street_nr', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Street_nr', 'db' => 'street_nr/customer/id'],
         ['pos' => '20', 'row' => '2', 'name' => 'city', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'City', 'db' => 'city/customer/id'],
@@ -847,7 +925,7 @@ function init_staff_fields_table() {
  * Create a user table in the database
  *
  */
-function init_usertable() {
+function init_stafftable() {
     global $db;
     // create user table
     $db->exec( 'CREATE TABLE staff(
@@ -860,6 +938,7 @@ function init_usertable() {
             comment TEXT NOT NULL DEFAULT "",
             role TEXT NOT NULL DEFAULT "",
             permission TEXT NOT NULL DEFAULT "",
+            lang TEXT NOT NULL DEFAULT "en",
             date TEXT NOT NULL DEFAULT ""
         )' );
 
@@ -943,8 +1022,9 @@ function init_project_table() {
     // create user table
     $db->exec( 'CREATE TABLE project(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            titel TEXT NOT NULL DEFAULT "",
+            title TEXT NOT NULL DEFAULT "",
             customer_id TEXT NOT NULL DEFAULT "",
+            staff_id TEXT NOT NULL DEFAULT "",
             comment_staff TEXT NOT NULL DEFAULT "",
             comment_customer TEXT NOT NULL DEFAULT "",
             date TEXT NOT NULL  DEFAULT ""
@@ -956,7 +1036,7 @@ function init_appointment_table() {
     // create user table
     $db->exec( 'CREATE TABLE appointment(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            titel TEXT NOT NULL DEFAULT "",
+            title TEXT NOT NULL DEFAULT "",
             start_time TEXT NOT NULL DEFAULT "",
             end_time TEXT NOT NULL DEFAULT "",
             duration TEXT NOT NULL DEFAULT "",
@@ -1030,8 +1110,9 @@ function create_dummy_customer( $count ) {
 function create_dummy_project( $count ) {
     for ( $i = 0; $i < $count; $i++ ) {
         $project = [
-            'titel'            => random_body(),
+            'title'            => random_body(),
             'customer_id'      => get_ramdon_id_from( 'customer' ),
+            'staff_id'         => get_ramdon_id_from( 'staff' ),
             'comment_staff'    => random_text(),
             'comment_customer' => random_text()
         ];

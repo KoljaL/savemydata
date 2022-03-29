@@ -6,7 +6,17 @@ export default {
         let list = await getUserList(table);
         // deb(list)
 
-        var name = (table === 'customer') ? 'Customer' : 'Staff';
+        if (table === 'staff') {
+            window.slugName = 'Staff';
+            window.tableName = 'staff';
+        }
+        if (table === 'customer') {
+            window.slugName = 'Customer';
+            window.tableName = 'customer';
+        }
+
+
+
         if ('dropdown' === type) {
             // deb(table)
             // deb(name)
@@ -15,8 +25,8 @@ export default {
                 innerHTML += `<option value="${key.id}">${key.username}</option>`;
             })
             return /*html*/ ` 
-                <select id="UserListSelect" name=user>
-                    <option value="" hidden disabled selected data-lang="select-${name}">Select ${name}</option>
+                <select id="UserListSelect" name="${tableName}_id">
+                    <option value="" hidden disabled selected data-lang="select-${slugName}">Select ${slugName}</option>
                     ${innerHTML}
                 </select> `;
             LanguageSwitch.render();
