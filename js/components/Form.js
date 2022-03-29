@@ -198,6 +198,7 @@ let Forms = {
 
 
         if (d.type === 'textarea') {
+            deb(u[d.name])
             return /*HTML*/ `
                 <div class="FF-item" style="${flexWidth}">
                     <textarea 

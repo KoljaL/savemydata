@@ -24,9 +24,10 @@ fieldset {
     margin: .5em;
 }
 
-:not([data-theme*='boxes']) .FF-row {
+div:not([data-theme*='boxes']) .FF-row {
     outline: black solid 1px;
     border-radius: .5em;
+    /* DIE SOLLTEN NICHT ANGEZEIGT WERDEN */
 }
 
 .FF-item {
@@ -70,6 +71,7 @@ input[type='time'] {
     transition: all 0.5s ease-in-out;
     border-radius: 0.2em;
     font-size: 1em;
+    font-family: 'Public Sans';
 }
 
 .FF-item textarea {
@@ -111,6 +113,7 @@ div.FF-item input:focus {
     border: none;
     outline: black solid 1px;
     box-shadow: 2px 2px 0 black;
+    border-radius: 0;
     transform: translate(2px, 2px);
     transition: 0.1s;
 }
