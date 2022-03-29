@@ -373,6 +373,16 @@ let Functions = {
             result += characters.charAt(Math.floor(Math.random() * charactersLength));
         }
         return result;
+    },
+
+    validForm: (form) => {
+        for (let i = 0; i < form.length; i++) {
+            // deb(form[i])
+            if (!form[i].value) {
+                return false;
+            }
+        }
+        return true;
     }
 
 

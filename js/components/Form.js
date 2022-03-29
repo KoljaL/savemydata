@@ -195,22 +195,7 @@ let Forms = {
                     <label data-lang="F_${d.label.toLowerCase()}" for=${d.name}>${d.label}</label>
                 </div>`;
         }
-        // return textarea element  
-        if (d.type === 'editor') {
-            return /*HTML*/ `
-                <div class="FF-item" style="${flexWidth}">
-                    <div
-                    id="editor"                    
-                    class="${hideEdit}" 
-                    name=${d.name} 
-                    type="${d.type}" 
-                    placeholder="${d.placeholder}" 
-                    ${dataDB}
-                    required>${u[d.name]}</div>
-                    <label data-lang="F_${d.label.toLowerCase()}" for=${d.name}>${d.label}</label>
-                </div>`;
 
-        }
 
         if (d.type === 'textarea') {
             return /*HTML*/ `

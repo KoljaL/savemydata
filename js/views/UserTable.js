@@ -96,7 +96,7 @@ let newItem = async() => {
         if (el.target.id === 'newProjectButton') {
             event.preventDefault();
             let form = el.target.form;
-            if (validForm(form)) {
+            if (Functions.validForm(form)) {
                 let newEntryForm = new FormData(form);
                 Functions.getAPIdata('new_entry_in/project', newEntryForm)
                     .then((res) => {
@@ -112,13 +112,3 @@ let newItem = async() => {
         }
     })
 };
-
-function validForm(form) {
-    for (let i = 0; i < form.length; i++) {
-        // deb(form[i])
-        if (!form[i].value) {
-            return false;
-        }
-    }
-    return true;
-}

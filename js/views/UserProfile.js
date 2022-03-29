@@ -180,28 +180,7 @@ let getUserData = async(userID) => {
                     Functions.setInnerHTML('Userdata', innerHTML);
                 }
             })
-            // load CKEditor if found
-            .then(() => {
-                if (document.querySelector('#editor')) {
-                    InlineEditor
-                        .create(document.querySelector('#editor'))
-                        .then(editor => {
-                            window.editor = editor;
-                            detectFocusOut(editor);
-                        })
-                        .catch(error => {
-                            console.error(error);
-                        });
 
-                    function detectFocusOut(editor) {
-                        editor.ui.focusTracker.on('change:isFocused', (evt, name, isFocused) => {
-                            if (!isFocused) {
-                                console.log(editor.getData());
-                            }
-                        });
-                    }
-                }
-            })
     }
 };
 

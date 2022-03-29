@@ -89,9 +89,9 @@ if ( !file_exists( $db_path ) ) {
     init_appointment_table();
     init_project_table();
     include './dummy_content.php';
-    create_dummy_staff( 10 );
-    create_dummy_customer( 9 );
-    create_dummy_project( 5 );
+    create_dummy_staff( 3 );
+    create_dummy_customer( 5 );
+    create_dummy_project( 15 );
     create_dummy_appointment( 30 );
     echo "init done";
     exit;
