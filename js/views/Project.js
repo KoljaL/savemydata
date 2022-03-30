@@ -6,7 +6,6 @@ let Project = {
         await Style();
         await Content();
         await ProjectContent(id);
-        await editProjectButton();
     }
 };
 
@@ -125,12 +124,12 @@ let ProjectContent = async(id) => {
         .then((res) => {
             if (res.code === 200) {
                 let data = res.data
-                    // deb(data);
+                deb(data);
                 document.getElementById('debug').innerHTML = JSON.stringify(data, undefined, 4);
 
-                deb(data.comment_staff)
+                // deb(data.comment_staff)
                 let rows = data.comment_staff.split('\n').length;
-                deb(rows)
+                // deb(rows)
                 let innerHTML = /*HTML*/ `
                     <div id=ProjectHeader>
                         <div class=Headline>
@@ -154,6 +153,11 @@ let ProjectContent = async(id) => {
                         </div>
                         <div id=ProjectAppointments>
                             ${showAppointments(data.appointments)}
+                        </div>
+                        <br>
+                        <div id=ProjectImages>
+                        <h3 data-lang="F_images">Images</h3>
+                            ${uploadFile({origin: 'project',origin_id:data.id,})}
                         </div>
                     </div>
                 `;
@@ -209,25 +213,16 @@ let showAppointments = (Appointments) => {
     // <a href="#Appointment-id:${date.appointment_post_id}">${moment(date.date).format('DD.MM.YYYY HH:mm')}</a>
     var dates = [];
     if (Appointments) {
-
-
         // sort by date
         dates = Appointments.sort(function(a, b) {
             return new Date(b.start_time) - new Date(a.start_time);
         });
         // deb(dates)
-
         // create table
-        let HTML = /*HTML*/ `
-            <table class=dataTable>
-                <div id=Appointments>
-                    <h3>Appointments</h3>`;
+        let HTML = /*HTML*/ `<table class=dataTable><div id=Appointments><h3 data-lang="H_appointments">Appointments</h3>`;
         dates.forEach((date) => {
-            HTML += /*HTML*/ `<tr>
-                            <td class=numeric >
-                                <a href="#Appointment-id:${date.id}">${date.start_time}</a>
-                            </td>
-                        </tr>`;
+
+            HTML += /*HTML*/ `<tr><td class=numeric ><a href="#Appointment-id:${date.id}">${Functions.formatDate(date.start_time)}</a></td></tr>`;
         });
         HTML += /*HTML*/ `</div></table>`;
 
@@ -241,6 +236,31 @@ let showAppointments = (Appointments) => {
 /**
  * It makes the edit button clickable and makes the fields editable.
  */
-let editProjectButton = async(userID) => {
+let uploadFile = (d) => {
+    document.addEventListener('change', (el) => {
+        if (el.target.id === 'uploadFile') {
+            event.preventDefault();
+            let files = el.target.files;
+            deb(el.target.form)
+            deb(files)
+            const formData = new FormData(el.target.form);
+            formData.append('imgFILE', files[0]);
+            Functions.getAPIdata('upload_file', formData)
+
+        }
+    })
+    let innerHTML = /*HTML*/ `
+    <div id=uploadImage>
+        <form id=uploadFileForm>
+            <input for=uploadFileForm type="hidden" name="origin" id="origin"  value="${d.origin}" />
+            <input for=uploadFileForm type="hidden" name="origin_id" id="origin_id"  value="${d.origin_id}" />
+            <label class="button border-boxes">upload Image
+                <input for=uploadFileForm id="uploadFile" type="file" accept="image/*" capture="camera" style="display:none">
+            </label>
+        </form>
+    </div>   
+    `;
+
+    return innerHTML;
 
 };

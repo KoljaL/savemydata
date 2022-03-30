@@ -88,6 +88,7 @@ if ( !file_exists( $db_path ) ) {
     init_staff_fields_table();
     init_appointment_table();
     init_project_table();
+    init_files_table();
     include './dummy_content.php';
     create_dummy_staff( 3 );
     create_dummy_customer( 5 );
@@ -205,9 +206,9 @@ case 'get_data_from':
     get_data_from( $request );
     break;
 
-// case 'edit_profile_form':
-//     edit_profile_form( $request );
-//     break;
+case 'upload_file':
+    upload_file( $request );
+    break;
 
     break;
 default:
@@ -227,6 +228,41 @@ default:
 //                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////
 */
+// https://phpdelusions.net/pdo_examples/select
+// https://code-boxx.com/php-user-role-management-system/
+
+function upload_file( $param ) {
+    if ( isAllowed() ) {
+        global $db, $API_param, $API_value;
+
+        $response = [];
+
+        $uploaddir  = '../userdata/';
+        $uploadfile = $uploaddir.basename( $_FILES['userfile']['name'] );
+
+        if ( move_uploaded_file( $_FILES['userfile']['tmp_name'], $uploadfile ) ) {
+
+            $response['code'] = 200;
+            $response['data'] = $uploadfile;
+
+        } else {
+            $response['code']    = 400;
+            $response['message'] = 'no file uploaded';
+            $response['$_FILES'] = $_FILES;
+            $response['$param']  = $param;
+        }
+        return_JSON( $response );
+
+    } else {
+        $response['code']    = 400;
+        $response['message'] = 'vorbidden';
+        return_JSON( $response );
+    }
+}
+
+//
+//
+//
 
 function get_project( $param ) {
     if ( isAllowed() ) {
@@ -261,8 +297,6 @@ function get_project( $param ) {
         return_JSON( $response );
     }
 }
-// https://phpdelusions.net/pdo_examples/select
-// https://code-boxx.com/php-user-role-management-system/
 
 function get_projects_as_table( $param ) {
     if ( isAllowed() ) {
@@ -1051,6 +1085,18 @@ function init_appointment_table() {
             project_id TEXT NOT NULL DEFAULT "",
             customer_id TEXT NOT NULL DEFAULT "",
             public TEXT NOT NULL DEFAULT 0,
+            date TEXT NOT NULL  DEFAULT ""
+        )' );
+}
+
+function init_files_table() {
+    global $db;
+    // create user table
+    $db->exec( 'CREATE TABLE files(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            origin TEXT NOT NULL DEFAULT "",
+            origin_id TEXT NOT NULL DEFAULT "",
+            path TEXT NOT NULL DEFAULT "",
             date TEXT NOT NULL  DEFAULT ""
         )' );
 }

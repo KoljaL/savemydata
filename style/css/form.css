@@ -1,3 +1,21 @@
+.border-boxes {
+    border: none;
+    outline: black solid 1px;
+    box-shadow: 4px 4px 0 black;
+    border-radius: 0;
+}
+
+.button {
+    padding: .5em;
+    cursor: pointer;
+}
+
+.button.border-boxes:active {
+    box-shadow: 2px 2px 0 black;
+    transform: translate(2px, 2px);
+    transition: 0.1s;
+}
+
 .FF-form {
     border-radius: 10px;
     background-color: var(--bg_2);

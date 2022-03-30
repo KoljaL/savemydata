@@ -365,6 +365,7 @@ let Functions = {
         }
     },
 
+    /* This is a function that generates a random string of a given length. */
     makeid: (length) => {
         var result = '';
         var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -375,6 +376,7 @@ let Functions = {
         return result;
     },
 
+    /* The above code is checking to see if the form is valid. */
     validForm: (form) => {
         for (let i = 0; i < form.length; i++) {
             // deb(form[i])
@@ -383,6 +385,18 @@ let Functions = {
             }
         }
         return true;
+    },
+
+
+    /* Formatting the date to a more readable format. */
+    formatDate: (str) => {
+        let d = new Date(str);
+        let year = d.getFullYear();
+        let month = ('0' + (d.getMonth() + 1)).slice(-2)
+        let day = ('0' + (d.getDate())).slice(-2)
+        let hour = ('0' + (d.getHours())).slice(-2)
+        let minute = ('0' + (d.getMinutes())).slice(-2)
+        return `${day}.${month}.${year} &nbsp; ${hour}:${minute}`
     }
 
 

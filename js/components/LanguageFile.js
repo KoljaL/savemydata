@@ -16,6 +16,8 @@ export default {
         'project_table': 'Projekt Tabelle',
         'Staff-Profile': 'Mitarbeiter Profil',
         "Customer-Profile": 'Kunden Profil',
+        "H_appointments": 'Termine',
+        'H_project': 'Projekt:',
         // Sidebar
         'S_menu': 'Menü',
         'S_staff': 'Mitarbeiter',
@@ -70,6 +72,8 @@ export default {
         'project_table': 'Project Table',
         'Staff-Profile': 'Staff Profile',
         "Customer-Profile": 'Customer Profile',
+        "H_appointments": 'Appointments',
+        'H_project': 'Project:',
         //sidebar
         'S_menu': 'Menu',
         'S_staff': 'Staff',
