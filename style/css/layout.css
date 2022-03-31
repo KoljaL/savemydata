@@ -866,3 +866,21 @@ footer .withLove img {
     -webkit-mask-image: url(../img/icons/updown.svg);
     mask-image: url(../img/icons/updown.svg);
 }
+
+
+/*
+//  
+//  #### ##     ##    ###     ######   ########  ######
+//   ##  ###   ###   ## ##   ##    ##  ##       ##    ##
+//   ##  #### ####  ##   ##  ##        ##       ##
+//   ##  ## ### ## ##     ## ##   #### ######    ######
+//   ##  ##     ## ######### ##    ##  ##             ##
+//   ##  ##     ## ##     ## ##    ##  ##       ##    ##
+//  #### ##     ## ##     ##  ######   ########  ######
+//  
+*/
+
+.thumbnailWrapper {
+    border: 1px solid black;
+    width: max-content;
+}

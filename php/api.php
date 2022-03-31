@@ -109,6 +109,8 @@ if ( !file_exists( $db_path ) ) {
 $request = json_decode( file_get_contents( 'php://input' ), true );
 if ( $request ) {
     $keys = preg_replace( '/[^a-z0-9_]+/i', '', array_keys( $request ) );
+} else {
+    $request = $_POST;
 }
 
 /*
@@ -138,7 +140,6 @@ if ( 'login' === $API_endpoint ) {
     exit;
 } else {
     if ( isset( $request['user_token'] ) ) {
-
         $TOKEN = JWT::decode( $request['user_token'], new Key( $JWT_key, 'HS256' ) );
         $TOKEN = json_decode( json_encode( $TOKEN ), true );
     } else {
@@ -233,17 +234,29 @@ default:
 
 function upload_file( $param ) {
     if ( isAllowed() ) {
-        global $db, $API_param, $API_value;
+        global $db, $API_param, $API_value, $TOKEN;
+
+        // set filename and dir
+        $uploaddir  = '../userdata/uploads/'.$param['origin'].'/'.$param['origin_id'].'/';
+        $uploadfile = $uploaddir.basename( $_FILES['file']['name'] );
+
+        // create folder if not exists
+        if ( !is_dir( '../userdata/uploads/'.$param['origin'].'/'.$param['origin_id'] ) ) {
+            mkdir( '../userdata/uploads/'.$param['origin'].'/'.$param['origin_id'] );
+        }
 
         $response = [];
+        if ( move_uploaded_file( $_FILES['file']['tmp_name'], $uploadfile ) ) {
+            // prepare filepath for DOM
+            $file_path = str_replace( '../', '', $uploadfile );
 
-        $uploaddir  = '../userdata/';
-        $uploadfile = $uploaddir.basename( $_FILES['userfile']['name'] );
+            // insert ino DB: missing NAME, FILETYPE DATE
+            $sql = "INSERT INTO files (origin, origin_id, path, date) VALUES (?,?,?,?)";
+            $db->prepare( $sql )->execute( [$param['origin'], $param['origin_id'], $file_path, 'data'] );
 
-        if ( move_uploaded_file( $_FILES['userfile']['tmp_name'], $uploadfile ) ) {
-
-            $response['code'] = 200;
-            $response['data'] = $uploadfile;
+            $response['code']               = 200;
+            $response['data']['path_thumb'] = $file_path;
+            $response['data']['path_full']  = $file_path;
 
         } else {
             $response['code']    = 400;
@@ -258,6 +271,7 @@ function upload_file( $param ) {
         $response['POST']    = $_POST;
         $response['FILES']   = $_FILES;
         $response['param']   = $param;
+        $response['$TOKEN']  = $TOKEN;
         $response['message'] = 'vorbidden to upload file';
         return_JSON( $response );
     }
@@ -757,7 +771,7 @@ function login_user( $request ) {
  * @param param the parameters that are passed to the function
  * @param table The name of the table to insert into.
  */
-function insert_into_db( $param, $table ) {
+function insert_into_db( $param, $table, $output = true ) {
     global $db;
     // print_r( $param );
 
@@ -824,7 +838,7 @@ function insert_into_db( $param, $table ) {
     $count = $stmt->rowCount();
 
     $response = [];
-    if ( $count ) {
+    if ( $count && $output ) {
 
         $response['data']['id'] = $db->lastInsertId();
         $response['code']       = 200;

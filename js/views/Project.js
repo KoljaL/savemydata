@@ -156,15 +156,13 @@ let ProjectContent = async(id) => {
                         </div>
                         <br>
                         <div id=ProjectImages>
-                        <h3 data-lang="F_images">Images</h3>
+                            <h3 data-lang="F_images">Images</h3>
+                            <div id=thumbnails></div>
+                            ${getImages({origin: 'project',origin_id:data.id,})}
                             ${uploadFile({origin: 'project',origin_id:data.id,})}
                         </div>
                     </div>
                 `;
-
-
-
-
                 Functions.setInnerHTML('ProjectContent', innerHTML);
             } else {
                 document.getElementById('ProjectFormError').innerHTML = res.message;
@@ -232,6 +230,18 @@ let showAppointments = (Appointments) => {
 
 }
 
+
+
+let getImages = (d) => {
+    // NEW ENDPOINT....
+    Functions.getAPIdata(`get_data_from/${d.origin}/${d.origin_id}`)
+        .then((res) => {
+            deb(res);
+            if (res.code === 200) {}
+        });
+
+};
+
 /**
  * It makes the edit button clickable and makes the fields editable.
  */
@@ -240,12 +250,26 @@ let uploadFile = (d) => {
         if (el.target.id === 'uploadFile') {
             event.preventDefault();
             let files = el.target.files;
-            deb(el.target.form);
-            deb(files[0]);
+            // deb(el.target.form);
+            // deb(files[0]);
             const formData = new FormData(el.target.form);
             formData.append('file', files[0]);
             // Functions.debFormData(formData);
-            Functions.uploadToAPI('upload_file', formData);
+            Functions.uploadToAPI('upload_file', formData)
+                .then((res) => {
+                    // deb(res);
+                    if (res.code === 200) {
+                        let data = res.data;
+                        deb(data.path_full)
+
+                        let thumbnailWrapper = document.createElement('DIV');
+                        thumbnailWrapper.classList.add('thumbnailWrapper');
+                        let img = document.createElement('img');
+                        img.src = data.path_full;
+                        thumbnailWrapper.append(img);
+                        document.getElementById('thumbnails').append(thumbnailWrapper);
+                    }
+                });
 
         }
     })
