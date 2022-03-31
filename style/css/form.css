@@ -40,12 +40,12 @@ fieldset {
     box-shadow: var(--box-shadow);
     padding: .3em;
     margin: .5em;
+    border-radius: .5em;
 }
 
-div:not([data-theme*='boxes']) .FF-row {
+[data-theme*='boxes'] .FF-row {
     outline: black solid 1px;
-    border-radius: .5em;
-    /* DIE SOLLTEN NICHT ANGEZEIGT WERDEN */
+    border-radius: 0;
 }
 
 .FF-item {

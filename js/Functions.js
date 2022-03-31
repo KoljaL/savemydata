@@ -274,10 +274,12 @@ let Functions = {
         // if called without the formData parameter
         if (formData === '') {
             formData = new FormData();
+            deb('new FormData')
         }
         // almost always add the token
         if (URL !== 'login') {
-            // formData.append('user_id', Functions.getLocal('id'));
+            deb('append user token')
+                // formData.append('user_id', Functions.getLocal('id'));
             formData.append('user_token', Functions.getLocal('token'));
         }
         // if fornData was just a node, make real FormData of it
@@ -286,15 +288,35 @@ let Functions = {
         }
 
         // deb(formData)
+        Functions.debFormData(formData);
+
         URL = 'api/' + URL;
         formData = JSON.stringify(Object.fromEntries(formData));
+        deb(formData)
         const response = await fetch(URL, {
             method: 'POST',
             credentials: 'same-origin',
             body: formData,
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json', },
+        });
+        const data = await response.json();
+        return data;
+    },
+
+    uploadToAPI: async(URL, formData) => {
+
+        formData.append('user_token', Functions.getLocal('token'));
+
+        // deb(formData)
+        Functions.debFormData(formData);
+
+        URL = 'api/' + URL;
+        deb(formData)
+        const response = await fetch(URL, {
+            method: 'POST',
+            credentials: 'same-origin',
+            body: formData,
+            headers: { 'Content-Type': 'multipart/form-data' },
         });
         const data = await response.json();
         return data;

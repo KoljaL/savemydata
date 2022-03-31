@@ -255,7 +255,10 @@ function upload_file( $param ) {
 
     } else {
         $response['code']    = 400;
-        $response['message'] = 'vorbidden';
+        $response['POST']    = $_POST;
+        $response['FILES']   = $_FILES;
+        $response['param']   = $param;
+        $response['message'] = 'vorbidden to upload file';
         return_JSON( $response );
     }
 }
