@@ -2,16 +2,16 @@ import Functions from '../Functions.js';
 import Images from '../components/Images.js';
 import AppointmentsList from '../components/AppointmentsList.js';
 
-let Project = {
+let Appointment = {
     render: async(id) => {
-        Functions.pageTitle(`Project`)
+        Functions.pageTitle(`Appointment`)
         await Style();
         await Content();
-        await ProjectContent(id);
+        await AppointmentContent(id);
     }
 };
 
-export default Project;
+export default Appointment;
 
 
 
@@ -26,10 +26,10 @@ export default Project;
 */
 let Style = async() => {
     let styleTags = /*CSS*/ `
-        #ProjectWrapper {
+        #AppointmentWrapper {
             padding:1em;
         }   
-        #ProjectHeader {
+        #AppointmentHeader {
             display: flex;
             justify-content:space-between;
             align-items: baseline;
@@ -41,26 +41,26 @@ let Style = async() => {
             align-items: baseline;
           }
         .Headline h2{margin-bottom:.0em;}
-        #ProjectContent h3{margin-top:.0em;}
+        #AppointmentContent h3{margin-top:.0em;}
 
        
-        #ProjectText .FF-row{
+        #AppointmentText .FF-row{
             margin:0 0 1em 0;
             padding:0;
         }
-        #ProjectText .FF-item{
+        #AppointmentText .FF-item{
             margin: 0;
         }
 
 
-        #deleteProjectButton:empty,
-        #editProjectButton:empty{
+        #deleteAppointmentButton:empty,
+        #editAppointmentButton:empty{
             border: none;
             outline: none;
             background: transparent;
         }
-        #deleteProjectButton,
-        #editProjectButton{ 
+        #deleteAppointmentButton,
+        #editAppointmentButton{ 
             font-size: 14px;
             cursor:pointer;
             color: var(--font_0);
@@ -73,16 +73,16 @@ let Style = async() => {
             font-size: 1em;
             margin-left: 1em;
         }
-        #deleteProjectButton:hover{
+        #deleteAppointmentButton:hover{
             color: var(--fontRed);
         }
          
-        #editProjectButton:hover{
+        #editAppointmentButton:hover{
             color: var(--fontBlue);
         }
        
     `;
-    Functions.createStyle('Project_hfdi_style', styleTags);
+    Functions.createStyle('Appointment_jdow_style', styleTags);
 };
 
 
@@ -103,10 +103,10 @@ let Style = async() => {
  */
 let Content = async() => {
     let innerHTML = /*HTML*/ `
-    <div id=ProjectWrapper>
-       <div id=ProjectContent></div>
-       <div id=ProjectAppointments></div>
-       <textarea rows="50" id=debug style="display:none" ></textarea>
+    <div id=AppointmentWrapper>
+       <div id=AppointmentContent></div>
+       <div id=AppointmentAppointments></div>
+       <textarea rows="50" id=debug  ></textarea>
     </div>`;
     await Functions.setInnerHTML('main', innerHTML);
 }
@@ -121,101 +121,102 @@ let Content = async() => {
 ##       ##     ## ##    ##   ##  ##   ###
 ########  #######   ######   #### ##    ##
 */
-let ProjectContent = async(id) => {
-        Functions.getAPIdata('get_project/' + id)
+let AppointmentContent = async(id) => {
+        Functions.getAPIdata('get_appointment/' + id)
             .then((res) => {
                 if (res.code === 200) {
                     let data = res.data
-                    deb(data);
+                    deb(res);
                     document.getElementById('debug').innerHTML = JSON.stringify(data, undefined, 4);
-                    Functions.pageTitle(`Project ${data.title}`)
 
                     // deb(data.comment_staff)
-                    let rows = data.comment_staff.split('\n').length;
+                    let rows = data.comment.split('\n').length + 2;
                     // deb(rows)
                     let innerHTML = /*HTML*/ `
-                    <div id=ProjectHeader>
+                    <div id=AppointmentHeader>
                         <div class=Headline>
-                            <h2 data-lang="H_project">Project: </h2>
+                            <h2 data-lang="H_appointment">Appointment: </h2>
                             <h2>&nbsp; ${data.title}</h2><br>
                         </div>
                         <div class="ActionButtons">
-                            <span class=boxShadow id="editProjectButton"></span>
-                            <span class=boxShadow id="deleteProjectButton"></span>
+                            <span class=boxShadow id="editAppointmentButton"></span>
+                            <span class=boxShadow id="deleteAppointmentButton"></span>
                         </div>        
                     </div>
                     <h3><a href="#customer/profile/${data.customer_id}"> ${data.customername}</a></h3>
-                    <div id=ProjectBody>
-                        <div id=ProjectText>
-                        <h3 data-lang="F_comment">Comment</h3>
+                    <div id=AppointmentBody>
+                        <div id=AppointmentText>
+                            <br>
+                            <div class="FF-row">
+                                <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px;;">
+                                    <input id="firstname" class="hideEdit" name="firstname" type="datetime-local" placeholder="" value="${data.start_time}" data-db="start_time/appointment/id/2" required="">
+                                    <label data-lang="F_date" for="firstname">Date</label>
+                                </div>
+                                <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px;;">
+                                    <input id="lastname" class="hideEdit" name="lastname" type="text" placeholder="" value="${data.duration}" data-db="duration/appointment/id/2" required="">
+                                    <label data-lang="F_duration" for="lastname">Duration</label>
+                                </div> 
+                            </div>
+
+                            <h3 data-lang="F_comment">Comment</h3>
                             <div class="FF-row">
                                 <div class="FF-item boxShadow" style="min-width:250px; flex-basis:550px; max-width:100%;">
-                                    <textarea id="comment" rows="${rows}" style="height: max-content;" class="hideEdit" name="comment" type="textarea" placeholder="" data-db="comment_staff/project/id/${id}" required="">${data.comment_staff}</textarea>
+                                    <textarea id="comment" rows="${rows}" style="height: max-content;" class="hideEdit" name="comment" type="textarea" placeholder="" data-db="comment/appointment/id/${id}" required="">${data.comment}</textarea>
                                 </div>
                             </div>
                         </div>
-                        <div id=ProjectAppointments></div>
                         <br>
-                        <div id=ProjectImages>
+                        <div id=AppointmentImages>
                             <h3 data-lang="F_images">Images</h3>
                             <div id=thumbnails></div>
                             <div id=fileUpload></div>
-                            ${Images.render({origin: 'project',origin_id:data.id})}
+                            ${Images.render({origin: 'appointment',origin_id:data.id})}
                         </div>
-                    </div>
-                `;
-                    Functions.setInnerHTML('ProjectContent', innerHTML);
+                    </div>`;
+                    Functions.setInnerHTML('AppointmentContent', innerHTML);
 
                     return data;
                 } else {
-                    document.getElementById('ProjectFormError').innerHTML = res.message;
+                    deb(res.message);
                 }
-            })
-            // show Appointments
-            .then((data) => {
-                let app = AppointmentsList.render(data.appointments)
-                Functions.setInnerHTML('ProjectAppointments', app);
             })
             //
             // edit and delete button
             //
             .then(() => {
                 if (Functions.getLocal('role') === '0' || Functions.getLocal('id') === userID) {
-                    Functions.setInnerHTML('editProjectButton', 'Edit')
+                    Functions.setInnerHTML('editAppointmentButton', 'Edit')
                         .then(() => {
-                            document.getElementById('editProjectButton').dataset.lang = 'edit'
+                            document.getElementById('editAppointmentButton').dataset.lang = 'edit'
 
-                            document.getElementById('editProjectButton').addEventListener('click', function() {
-                                document.querySelectorAll('#ProjectBody input,#ProjectBody textarea, #ProjectBody .thumbnailWrapper').forEach((input) => {
+                            document.getElementById('editAppointmentButton').addEventListener('click', function() {
+                                document.querySelectorAll('#AppointmentBody input,#AppointmentBody textarea, #AppointmentBody .thumbnailWrapper').forEach((input) => {
                                     // make fields editable
                                     input.classList.toggle('hideEdit');
                                     // updata db on focusout
                                     input.removeEventListener('focusout', singeEditEvent)
                                     input.addEventListener('focusout', singeEditEvent)
-
-
                                 });
                             });
                         });
 
                     // set text, make the button visible
-                    Functions.setInnerHTML('deleteProjectButton', 'Delete');
-                    document.getElementById('deleteProjectButton').dataset.lang = 'delete'
-
-                    document.getElementById('deleteProjectButton').addEventListener('click', function() {
-                        Functions.getAPIdata(`delete_entry_in/project/${id}`)
+                    Functions.setInnerHTML('deleteAppointmentButton', 'Delete');
+                    document.getElementById('deleteAppointmentButton').dataset.lang = 'delete'
+                    document.getElementById('deleteAppointmentButton').addEventListener('click', function() {
+                        Functions.getAPIdata(`delete_entry_in/appointment/${id}`)
                             .then((res) => {
                                 // deb(res);
                                 if (res.code === 200) {
-                                    Message.warn('Project removed');
-                                    window.location.hash = '#project/table/';
+                                    Message.warn('Appointment removed');
+                                    window.location.hash = '#appointment/table/';
                                 }
                             });
                     });
                 }
             });
 
-    } //ProjectContent
+    } //AppointmentContent
 
 var singeEditEvent = function singleEdit(el) {
     // update a single value in db

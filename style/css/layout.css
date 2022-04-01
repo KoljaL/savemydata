@@ -90,7 +90,8 @@
     --border_0: #313132;
     --outline: none;
     --box-shadow: none;
-    --text-shadow: 0.03em 0.03em white;
+    --text-shadow: 0.03em 0.03em #aaa;
+    --fontBlue: #175580;
 }
 
 [data-theme='light-boxes'] {
@@ -109,7 +110,8 @@
     --border_0: #313132;
     --outline: black solid 1px;
     --box-shadow: 4px 4px 0 black;
-    --text-shadow: 0.03em 0.03em white;
+    --text-shadow: 0.03em 0.03em #aaa;
+    --fontBlue: #175580;
 }
 
 
@@ -871,6 +873,16 @@ footer .withLove img {
 .updown_icon {
     -webkit-mask-image: url(../img/icons/updown.svg);
     mask-image: url(../img/icons/updown.svg);
+}
+
+.appointment_icon {
+    -webkit-mask-image: url(../img/icons/appointment.svg);
+    mask-image: url(../img/icons/appointment.svg);
+}
+
+.project_icon {
+    -webkit-mask-image: url(../img/icons/project.svg);
+    mask-image: url(../img/icons/project.svg);
 }
 
 

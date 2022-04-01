@@ -84,23 +84,20 @@ if ( isset( $uri[$api + 3] ) ) {
  */
 if ( !file_exists( $db_path ) ) {
     $db = new PDO( 'sqlite:'.$db_path );
+    init_db();
+    create_dummy_data();
+} else {
+    $db = new PDO( 'sqlite:'.$db_path );
+}
+
+function init_db() {
     init_customertable();
     init_stafftable();
     init_staff_fields_table();
     init_appointment_table();
     init_project_table();
     init_files_table();
-    include './dummy_content.php';
-    create_dummy_staff( 3 );
-    create_dummy_customer( 5 );
-    create_dummy_project( 15 );
-    create_dummy_appointment( 30 );
-    echo "init done";
-    exit;
-} else {
-    $db = new PDO( 'sqlite:'.$db_path );
 }
-
 /*
  *
  * Reading the JSON data from the client and decoding it.
@@ -124,11 +121,16 @@ if ( $request ) {
 //DEBUG
 //DEBUG
 if ( 'do' === $API_endpoint ) {
-    get_projects_as_table( 'staff' );
+    create_dummy_appointment( '4' );
     exit;
 }
 if ( 'reset' === $API_endpoint ) {
-    unlink( $db_path );
+    if ( is_file( $db_path ) ) {
+        unlink( $db_path );
+    }
+    $db = new PDO( 'sqlite:'.$db_path );
+    init_db();
+    create_dummy_data();
 }
 //DEBUG
 //DEBUG
@@ -169,9 +171,9 @@ if ( 'login' === $API_endpoint ) {
  *
  */
 switch ( $API_endpoint ) {
-case 'userprofile':
-    get_user_profile( $request );
-    break;
+// case 'userprofile':
+//     get_user_profile( $request );
+//     break;
 
 case 'get_list_from':
     get_list_from( $request );
@@ -219,9 +221,15 @@ case 'get_files_from':
 case 'get_appointments_from':
     get_appointments_from( $request );
     break;
+case 'get_appointments_as_table':
+    get_appointments_as_table( $request );
+    break;
 
 case 'get_projects_from':
     get_projects_from( $request );
+    break;
+case 'get_appointment':
+    get_appointment( $request );
     break;
 
     break;
@@ -246,6 +254,79 @@ default:
 // https://code-boxx.com/php-user-role-management-system/
 // https://www.php-einfach.de/mysql-tutorial/crashkurs-pdo/
 
+function get_appointments_as_table( $param ) {
+    if ( isAllowed() ) {
+        global $db, $API_param, $API_value;
+
+        if ( '' !== $API_value ) {
+            $where = ' WHERE id = '.$API_value;
+        } else {
+            $where = '';
+        }
+        $stmt = $db->prepare( "SELECT * FROM appointment $where" );
+        $stmt->execute();
+        $projects = $stmt->fetchAll( PDO::FETCH_ASSOC );
+
+        $response = [];
+        if ( $projects ) {
+
+            // get the username and remove the comments
+            foreach ( $projects as $key => $value ) {
+                $projects[$key]['username']    = get_name_by_id( 'customer', $value['customer_id'] );
+                $projects[$key]['staffname']   = get_name_by_id( 'staff', $value['staff_id'] );
+                $projects[$key]['projectname'] = get_name_by_id( 'project', $value['project_id'], 'title' );
+                unset( $projects[$key]['comment_staff'] );
+                unset( $projects[$key]['comment_customer'] );
+            }
+            $response['code'] = 200;
+            $response['data'] = $projects;
+        } else {
+            $response['code']    = 400;
+            $response['table']   = $projects;
+            $response['message'] = 'no form profile found';
+        }
+        return_JSON( $response );
+    } else {
+        $response['code']    = 400;
+        $response['message'] = 'vorbidden';
+        return_JSON( $response );
+    }
+}
+
+function get_appointment( $param ) {
+    if ( isAllowed() ) {
+        global $db, $API_param, $API_value;
+
+        $stmt = $db->prepare( "SELECT * FROM appointment WHERE id = :id" );
+        $stmt->execute( [':id' => $API_param] );
+
+        $appointments = $stmt->fetch( PDO::FETCH_ASSOC );
+
+        $response = [];
+        if ( $appointments ) {
+            $appointments['customername'] = get_name_by_id( 'customer', $appointments['customer_id'] );
+            $appointments['staffname']    = get_name_by_id( 'staff', $appointments['staff_id'] );
+            $appointments['projectname']  = get_name_by_id( 'project', $appointments['project_id'], 'title' );
+
+            $response['code'] = 200;
+            $response['data'] = $appointments;
+        } else {
+            $response['code']    = 400;
+            $response['message'] = 'no file found';
+        }
+        return_JSON( $response );
+    } else {
+        $response['code']    = 400;
+        $response['message'] = 'vorbidden';
+        return_JSON( $response );
+    }
+}
+
+/**
+ *
+ * This function is used to get all the projects from the database
+ *
+ */
 function get_projects_from( $param ) {
     if ( isAllowed() ) {
         global $db, $API_param, $API_value;
@@ -263,7 +344,7 @@ function get_projects_from( $param ) {
         $projects = $stmt->fetchAll( PDO::FETCH_ASSOC );
 
         $response = [];
-        if ( $param ) {
+        if ( $projects ) {
 
             $response['code'] = 200;
             $response['data'] = $projects;
@@ -278,13 +359,24 @@ function get_projects_from( $param ) {
         return_JSON( $response );
     }
 }
-
+/**
+ *
+ * This function is used to get all the appointments of a specific customer
+ *
+ */
 function get_appointments_from( $param ) {
     if ( isAllowed() ) {
         global $db, $API_param, $API_value;
 
-        $stmt = $db->prepare( "SELECT * FROM appointment WHERE customer_id = :customer_id" );
-        $stmt->execute( [':customer_id' => $API_param] );
+        if ( 'customer' == $API_param ) {
+            $stmt = $db->prepare( "SELECT * FROM appointment WHERE customer_id = :id" );
+        }
+
+        if ( 'staff' == $API_param ) {
+            $stmt = $db->prepare( "SELECT * FROM appointment WHERE customer_id = :id" );
+        }
+
+        $stmt->execute( [':id' => $API_value] );
 
         $files = $stmt->fetchAll( PDO::FETCH_ASSOC );
 
@@ -305,6 +397,11 @@ function get_appointments_from( $param ) {
     }
 }
 
+/**
+ *
+ * Get all files from a specific origin (customer, project, appointment)
+ *
+ */
 function get_files_from( $param ) {
     if ( isAllowed() ) {
         global $db, $API_param, $API_value;
@@ -331,6 +428,11 @@ function get_files_from( $param ) {
     }
 }
 
+/**
+ *
+ * Upload a file to the server
+ *
+ */
 function upload_file( $param ) {
     if ( isAllowed() ) {
         global $db, $API_param, $API_value, $TOKEN;
@@ -374,10 +476,11 @@ function upload_file( $param ) {
     }
 }
 
-//
-//
-//
-
+/**
+ *
+ * Get a project by id
+ *
+ */
 function get_project( $param ) {
     if ( isAllowed() ) {
         global $db, $API_param, $API_value;
@@ -392,8 +495,8 @@ function get_project( $param ) {
             $appointments            = $stmt->fetchAll( PDO::FETCH_ASSOC );
             $project['appointments'] = $appointments;
 
-            $project['customername'] = get_username_by_id( 'customer', $project['customer_id'] );
-            $project['staffname']    = get_username_by_id( 'staff', $project['staff_id'] );
+            $project['customername'] = get_name_by_id( 'customer', $project['customer_id'] );
+            $project['staffname']    = get_name_by_id( 'staff', $project['staff_id'] );
 
             $response['code'] = 200;
             $response['data'] = $project;
@@ -409,6 +512,11 @@ function get_project( $param ) {
     }
 }
 
+/**
+ *
+ * This function is used to get the projects as a table
+ *
+ */
 function get_projects_as_table( $param ) {
     if ( isAllowed() ) {
         global $db, $API_param, $API_value;
@@ -427,7 +535,7 @@ function get_projects_as_table( $param ) {
 
             // get the username and remove the comments
             foreach ( $projects as $key => $value ) {
-                $projects[$key]['username'] = get_username_by_id( 'customer', $value['customer_id'] );
+                $projects[$key]['username'] = get_name_by_id( 'customer', $value['customer_id'] );
                 unset( $projects[$key]['comment_staff'] );
                 unset( $projects[$key]['comment_customer'] );
             }
@@ -446,19 +554,29 @@ function get_projects_as_table( $param ) {
     }
 }
 
-function get_username_by_id( $table, $id ) {
+/**
+ *
+ * Given a table name and an id, return the username of the user with that id
+ *
+ */
+function get_name_by_id( $table, $id, $name = 'username' ) {
     global $db;
-    $stmt = $db->prepare( "SELECT id, username FROM $table WHERE id = $id" );
+    $stmt = $db->prepare( "SELECT id, $name FROM $table WHERE id = $id" );
     $stmt->execute();
     $user = $stmt->fetch( PDO::FETCH_ASSOC );
     // print_r( $user );
-    if ( isset( $user['username'] ) ) {
-        return $user['username'];
+    if ( isset( $user[$name] ) ) {
+        return $user[$name];
     } else {
-        return 'Custonmer removed';
+        return 'Entry removed';
     }
 }
 
+/**
+ *
+ * Generate a random string of characters
+ *
+ */
 function rndStr( $length = 10 ) {
     $characters       = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $charactersLength = strlen( $characters );
@@ -485,40 +603,39 @@ function rndStr( $length = 10 ) {
  * This function is used to get all the profile form from the database
  *
  */
-
 function get_data_from( $param ) {
-    // if ( isAllowed() ) {
-    global $db, $API_param, $API_value;
-    $table = $API_param;
+    if ( isAllowed() ) {
+        global $db, $API_param, $API_value;
+        $table = $API_param;
 
-    if ( '' !== $API_value ) {
-        $where = ' WHERE id = '.$API_value;
-    } else {
-        $where = '';
-    }
-    $stmt = $db->prepare( "SELECT * FROM $table $where" );
-    $stmt->execute();
-    $form = $stmt->fetchAll( PDO::FETCH_ASSOC );
-
-    $response = [];
-    if ( $form ) {
-        foreach ( $form as $key => $value ) {
-            unset( $form[$key]['password'] );
+        if ( '' !== $API_value ) {
+            $where = ' WHERE id = '.$API_value;
+        } else {
+            $where = '';
         }
-        $response['code'] = 200;
-        $response['data'] = $form;
+        $stmt = $db->prepare( "SELECT * FROM $table $where" );
+        $stmt->execute();
+        $form = $stmt->fetchAll( PDO::FETCH_ASSOC );
+
+        $response = [];
+        if ( $form ) {
+            foreach ( $form as $key => $value ) {
+                unset( $form[$key]['password'] );
+            }
+            $response['code'] = 200;
+            $response['data'] = $form;
+        } else {
+            $response['code']    = 400;
+            $response['table']   = $form;
+            $response['message'] = 'no form profile found';
+        }
+        return_JSON( $response );
+
     } else {
         $response['code']    = 400;
-        $response['table']   = $form;
-        $response['message'] = 'no form profile found';
+        $response['message'] = 'vorbidden';
+        return_JSON( $response );
     }
-    return_JSON( $response );
-
-    // } else {
-    //     $response['code']    = 400;
-    //     $response['message'] = 'vorbidden';
-    //     return_JSON( $response );
-    // }
 }
 
 /*
@@ -544,11 +661,20 @@ function delete_entry_in( $param ) {
         $table    = $API_param;
         $id       = $API_value;
 
+        if ( 'files' === $table ) {
+            $stmt = $db->prepare( "SELECT * FROM $table WHERE id =? " );
+            $stmt->execute( [$API_value] );
+            $image = $stmt->fetch( PDO::FETCH_ASSOC );
+            $path  = $image['path'];
+            unlink( '../'.$path );
+        }
+
         $stmt = $db->prepare( "DELETE FROM $table WHERE id =?" );
         $stmt->execute( [$id] );
         $count = $stmt->rowCount();
 
         if ( $count ) {
+
             $response['code'] = 200;
             $response['data'] = $count;
         } else {
@@ -1094,13 +1220,13 @@ function init_stafftable() {
 
     // create first users
     $admin = ['username' => 'admin', 'password' => 'password', 'firstname' => 'admin', 'lastname' => 'admin', 'email' => 'admin@admin.org', 'comment' => 'lorem iopsum', 'role' => '0', 'permission' => '0'];
-    $user  = ['username' => 'user', 'password' => 'password', 'firstname' => 'user', 'lastname' => 'user', 'email' => 'user@user.org', 'comment' => 'lorem iopsum', 'role' => '1', 'permission' => '0'];
+    // $user  = ['username' => 'user', 'password' => 'password', 'firstname' => 'user', 'lastname' => 'user', 'email' => 'user@user.org', 'comment' => 'lorem iopsum', 'role' => '1', 'permission' => '0'];
     insert_into_db( $admin, 'staff' );
-    insert_into_db( $user, 'staff' );
+    // insert_into_db( $user, 'staff' );
 
     // send response
     // $response['code']    = 200;
-    // $response['message'] = 'usertable created';
+    // $response['message'] = 'user table created';
 
     // return_JSON( $response );
 }
@@ -1140,31 +1266,31 @@ function init_customertable() {
             date TEXT NOT NULL  DEFAULT ""
         )' );
 
-    // create first users
-    $first_customer = [
-        'username'   => 'customer',
-        'password'   => 'password',
-        'firstname'  => 'customer',
-        'lastname'   => 'customer',
-        'email'      => 'customer@customer.org',
-        'phone'      => '555-123456789',
-        'street'     => 'Sesam',
-        'street_nr'  => '10',
-        'city'       => 'Clondyke',
-        'city_nr'    => '10',
-        'comment'    => 'lorem iopsum',
-        'role'       => '10',
-        'permission' => '10'
-    ];
+    // // create first users
+    // $first_customer = [
+    //     'username'   => 'customer',
+    //     'password'   => 'password',
+    //     'firstname'  => 'customer',
+    //     'lastname'   => 'customer',
+    //     'email'      => 'customer@customer.org',
+    //     'phone'      => '555-123456789',
+    //     'street'     => 'Sesam',
+    //     'street_nr'  => '10',
+    //     'city'       => 'Clondyke',
+    //     'city_nr'    => '10',
+    //     'comment'    => 'lorem iopsum',
+    //     'role'       => '10',
+    //     'permission' => '10'
+    // ];
 
-    // create_customer( $first_customer );
-    insert_into_db( $first_customer, 'customer' );
+    // // create_customer( $first_customer );
+    // insert_into_db( $first_customer, 'customer' );
 
-    // send response
-    $response['code']    = 200;
-    $response['message'] = 'customertable created';
+    // // send response
+    // $response['code']    = 200;
+    // $response['message'] = 'customertable created';
 
-    return_JSON( $response );
+    // return_JSON( $response );
 }
 
 function init_project_table() {
@@ -1193,6 +1319,7 @@ function init_appointment_table() {
             staff_id TEXT NOT NULL DEFAULT "",
             project_id TEXT NOT NULL DEFAULT "",
             customer_id TEXT NOT NULL DEFAULT "",
+            comment TEXT NOT NULL DEFAULT "",
             public TEXT NOT NULL DEFAULT 0,
             date TEXT NOT NULL  DEFAULT ""
         )' );
@@ -1222,6 +1349,17 @@ function init_files_table() {
 //
 */
 // CREATE DUMMY USER
+
+function create_dummy_data() {
+    include './dummy_content.php';
+    create_dummy_staff( 3 );
+    create_dummy_customer( 5 );
+    create_dummy_project( 15 );
+    create_dummy_appointment( 30 );
+    echo "init done";
+    exit;
+}
+
 function create_dummy_staff( $count ) {
     for ( $i = 0; $i < $count; $i++ ) {
         $random_name = random_name();
@@ -1282,7 +1420,24 @@ function create_dummy_project( $count ) {
 }
 
 function create_dummy_appointment( $count ) {
+    global $db;
     for ( $i = 0; $i < $count; $i++ ) {
+
+        // get real projects
+        $stmt = $db->prepare( "SELECT * FROM project" );
+        $stmt->execute();
+        $user          = $stmt->fetchAll();
+        $count_user    = count( $user );
+        $j             = rand( 0, $count_user - 1 );
+        $customer_id   = $user[$j]['customer_id'];
+        $staff_id      = $user[$j]['staff_id'];
+        $project_id    = $user[$j]['id'];
+        $project_title = $user[$j]['title'];
+        // echo $customer_id;
+        // echo $staff_id;
+        // echo $project_id;
+        // exit;
+
         $days = 20;
         // random numbers
         if ( rand( 0, 1 ) ) {
@@ -1305,9 +1460,11 @@ function create_dummy_appointment( $count ) {
             'start_time'  => $random_datetime_start,
             'end_time'    => $random_datetime_end,
             'duration'    => $random_duration,
-            'staff_id'    => get_ramdon_id_from( 'staff' ),
-            'project_id'  => get_ramdon_id_from( 'project' ),
-            'customer_id' => get_ramdon_id_from( 'customer' ),
+            'title'       => $project_title,
+            'staff_id'    => $staff_id,
+            'project_id'  => $project_id,
+            'customer_id' => $customer_id,
+            'comment'     => random_text(),
             'public'      => random_int( 0, 1 )
         ];
         insert_into_db( $project, 'appointment' );

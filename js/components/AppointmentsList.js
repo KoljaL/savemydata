@@ -33,7 +33,7 @@ let showAppointments = (Appointments) => {
         // create table
         let HTML = /*HTML*/ `<div id=Appointments><h3 data-lang="H_appointments">Appointments</h3><table class="dataTable boxShadow">`;
         dates.forEach((date) => {
-            HTML += /*HTML*/ `<tr><td class=numeric ><a href="#Appointment-id:${date.id}">${Functions.formatDate(date.start_time)}</a></td></tr>`;
+            HTML += /*HTML*/ `<tr><td class=numeric ><a href="#appointment/id/${date.id}">${Functions.formatDate(date.start_time)}</a></td></tr>`;
         });
         HTML += /*HTML*/ `</table></div>`;
         return HTML;

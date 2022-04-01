@@ -20,8 +20,13 @@ export default {
             window.tableName = 'project';
             window.formTableName = 'project_fields';
         }
+        if (action === 'appointment') {
+            window.slugName = 'Appointment';
+            window.tableName = 'appointment';
+            window.formTableName = 'project_fields';
+        }
 
-        Functions.pageTitle(`User Table`);
+        Functions.pageTitle(`${slugName} Table`);
         Style();
         Content(action);
         newItem();
@@ -34,10 +39,23 @@ export default {
 let Style = async() => {
     let styleTags = /*CSS*/ ` 
     /* table.project .staff_id,*/
+    table.appointment .staff_id,
+    table.appointment .project_id,
+    table.appointment .customer_id,
+    table.appointment .date,
+    table.appointment .end_time,
     table.project .customer_id,
     table.project .date{
         display:none;
     }
+
+    .start_time,.duration,.public {
+        font-variant-numeric: tabular-nums;
+        font-family: 'Zilla Slab Medium', sans-serif;
+        font-size: 1.1em;
+    }
+
+
     `;
     Functions.createStyle('UserTable_style', styleTags);
 };
@@ -50,15 +68,19 @@ let Content = async(action) => {
     // deb(tableName)
     if ('project' == tableName) {
         data = await Functions.getAPIdata('get_projects_as_table/' + tableName);
+    }
+    if ('appointment' == tableName) {
+        data = await Functions.getAPIdata('get_appointments_as_table/' + tableName);
     } else {
         data = await Functions.getAPIdata('get_data_from/' + tableName);
     }
     data = data.data;
+    // deb(data)
+    // deb(tableName)
 
 
     let innerHTML = /*HTML*/ `
         <div id="UserTableWrapper" class="template"> 
-         
             <div id="UserTable">${await CreateTable.render(data,action)}</div>
         </div>`;
 

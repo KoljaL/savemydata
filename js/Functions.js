@@ -216,7 +216,10 @@ let Functions = {
                 }
             }
         } else {
-            parentDIV.removeChild(document.getElementById('spinnerFrame'));
+            if (document.getElementById('spinnerFrame')) {
+                document.getElementById('spinnerFrame').remove();
+            }
+            // parentDIV.removeChild(document.getElementById('spinnerFrame'));
         }
     },
 

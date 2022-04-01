@@ -25,11 +25,8 @@ let showProjects = (Projects) => {
     // make an array of all appointments 
     var dates = [];
     if (Projects) {
-        // sort by date
-
-        deb(Projects)
-            // create table
-        let HTML = /*HTML*/ `<div id=Projects><h3 data-lang="H_appointments">Projects</h3><table class="dataTable boxShadow">`;
+        // deb(Projects)
+        let HTML = /*HTML*/ `<div id=Projects><h3 data-lang="H_projects">Projects</h3><table class="dataTable boxShadow">`;
         Projects.forEach((Project) => {
             HTML += /*HTML*/ `<tr><td><a href="#project/id/${Project.id}">${Project.title}</a></td></tr>`;
         });

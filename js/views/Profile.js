@@ -60,9 +60,7 @@ let Style = async() => {
             background: var(--bg_3);
             line-height: 1.2em;
             padding: 0.3em .3em .2em .4em;
-            outline: var(--border_0) solid 1px;
             transition: all 0.5s ease-in-out;
-            border-radius: 0.2em;
             font-size: 1em;
             margin-left: 1em;
         }
@@ -99,13 +97,13 @@ let Style = async() => {
 let Content = async(userID) => {
     let innerHTML = /*HTML*/ `
         <div id="T_UserLoginForm" class="template"> 
-            <div id=UserProfileHeader>
-                <h2 data-lang="${slugName}-Profile">UserProfile</h2> 
+            <div id=UserProfileHeader> 
+                <h2 data-lang="${slugName}-Profile">Profile</h2> 
                 <div class="ActionButtons">
                     <div id=UserProfileList></div>
-                    <span id="editUserButton"></span>
-                    <span id="newUserButton"></span>
-                    <span id="deleteUserButton"></span>
+                    <span id="editUserButton" class=boxShadow></span>
+                    <span id="newUserButton" class=boxShadow></span>
+                    <span id="deleteUserButton" class=boxShadow></span>
                 </div>
             </div>
            
@@ -141,6 +139,9 @@ let getUserData = async(userID) => {
                 if (res.code === 200) {
                     const user = res.data[0];
                     window.userName = user.username;
+
+                    Functions.pageTitle(`${userName}'s Profile`);
+
 
                     if (formFields.code === 200) {
                         formFields = formFields.data;
@@ -178,7 +179,7 @@ let getUserData = async(userID) => {
                     Functions.setInnerHTML('Userdata', innerHTML);
 
                     // get AppointmentsList
-                    Functions.getAPIdata(`get_appointments_from/${userID}`)
+                    Functions.getAPIdata(`get_appointments_from/${tableName}/${userID}`)
                         .then((res) => {
                             // deb(res);
                             if (res.code === 200) {
@@ -190,7 +191,7 @@ let getUserData = async(userID) => {
                         });
 
                     // get ProjectsList
-                    Functions.getAPIdata(`get_projects_from/customer/${userID}`)
+                    Functions.getAPIdata(`get_projects_from/${tableName}/${userID}`)
                         .then((res) => {
                             // deb(res);
                             if (res.code === 200) {

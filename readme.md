@@ -97,7 +97,7 @@ Endpoint Variables: `$API_endpoint/$API_param/$API_value`
 - calls: `insert_into_db()`
 
 
-#### `init_usertable()`
+#### `init_Table()`
 - called by: `/xxx`   
 - creates the table `user` and insertes fields
 - calls: `insert_into_db()`

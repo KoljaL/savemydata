@@ -8,18 +8,14 @@ import Functions from './Functions.js';
 // VIEWS
 import Default from './views/Default.js';
 import UserLogin from './views/UserLogin.js';
-import UserTable from './views/UserTable.js';
-import UserProfile from './views/UserProfile.js';
+import Table from './views/Table.js';
+import Appointment from './views/Appointment.js';
+import Profile from './views/Profile.js';
 import Project from './views/Project.js';
 import UserProfileForm from './views/UserProfileForm.js';
 import LanguageSwitch from './components/LanguageSwitch.js';
 
 
-// dummy
-import Form from './views/dummy/Form.js';
-import Form1 from './views/dummy/Form1.js';
-import Form2 from './views/dummy/Form2.js';
-import Solar from './views/dummy/Solar.js';
 
 // LanguageSwitch.render();
 // COMPONENTS
@@ -38,6 +34,7 @@ async function router() {
     // deb(request);
 
     // remove the opycity class, wait, call async switch :-)
+    Functions.loadingDots('body', true)
     document.getElementById('main').classList.remove('visible');
     await Functions.sleep(100);
     (async() => {
@@ -51,13 +48,13 @@ async function router() {
             case 'staff':
                 switch (API_key) {
                     case 'profile':
-                        await UserProfile.render(API_value, 'staff')
+                        await Profile.render(API_value, 'staff')
                         break;
                     case 'table':
-                        await UserTable.render(API_page)
+                        await Table.render(API_page)
                         break;
                     default:
-                        await UserTable.render()
+                        await Table.render()
                         break;
                 }
                 break;
@@ -72,7 +69,7 @@ async function router() {
                         break;
 
                         // default:
-                        //     await UserTable.render()
+                        //     await Table.render()
                         //     break;
                 }
                 break;
@@ -80,10 +77,10 @@ async function router() {
             case 'customer':
                 switch (API_key) {
                     case 'profile':
-                        await UserProfile.render(API_value, 'customer')
+                        await Profile.render(API_value, 'customer')
                         break;
                     case 'table':
-                        await UserTable.render(API_page)
+                        await Table.render(API_page)
                         break;
                 }
                 break;
@@ -94,28 +91,24 @@ async function router() {
                         await Project.render(API_value)
                         break;
                     case 'table':
-                        await UserTable.render(API_page)
+                        await Table.render(API_page)
+                        break;
+                }
+                break;
+
+            case 'appointment':
+                switch (API_key) {
+                    case 'id':
+                        await Appointment.render(API_value)
+                        break;
+                    case 'table':
+                        await Table.render(API_page)
                         break;
                 }
                 break;
 
 
 
-            case 'form':
-                await Form.render();
-                break;
-
-            case 'form1':
-                await Form1.render();
-                break;
-
-            case 'form2':
-                await Form2.render();
-                break;
-
-            case 'solar':
-                await Solar.render();
-                break;
 
             default:
                 await Default.render();
@@ -127,6 +120,7 @@ async function router() {
     // when content is loaded, turn bach the opacity :-)
     await Functions.sleep(700)
         .then(() => {
+            Functions.loadingDots('body', false);
             LanguageSwitch.render();
             document.getElementById('main').classList.add('visible');
         }).then(() => {

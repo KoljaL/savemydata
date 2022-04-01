@@ -18,6 +18,11 @@ export default {
             window.tableName = 'project';
             window.formTableName = '';
         }
+        if (action === 'appointment') {
+            window.slugName = 'Appointment';
+            window.tableName = 'appointment';
+            window.formTableName = '';
+        }
         return await Content(data);
     },
 };
@@ -83,7 +88,7 @@ let Style = async() => {
     }
 
     `;
-    Functions.createStyle('CreateTable_style', styleTags);
+    Functions.createStyle('CreateTable_oajd_style', styleTags);
 };
 
 /**
@@ -144,8 +149,8 @@ let Content = async(data) => {
 
 
 async function createTable(data, TableContent) {
-    // https://www.valentinog.com/blog/html-table/
-
+    deb(data)
+        // https://www.valentinog.com/blog/html-table/
     let head = Object.keys(data[0]);
 
     let thead = TableContent.createTHead();
@@ -161,7 +166,7 @@ async function createTable(data, TableContent) {
 
     for (let element of data) {
         let row = TableContent.insertRow();
-        var user_id, project_id;
+        var user_id, project_id, staff_id, project_id, customer_id, appointment_id;
         for (let key in element) {
             let cell = row.insertCell();
             // add the obj key as classname 
@@ -192,6 +197,40 @@ async function createTable(data, TableContent) {
                 if (key === 'title') {
                     element[key] = /*MTML*/ `<a href="#${tableName}/id/${project_id}">${element[key]}</a>`;
                 }
+                cell.innerHTML = element[key];
+            }
+
+            if (tableName === 'appointment') {
+                if (key === 'customer_id') {
+                    customer_id = element[key];
+                }
+                if (key === 'username') {
+                    element[key] = /*MTML*/ `<a href="#customer/profile/${customer_id}">${element[key]}</a>`;
+                }
+
+                if (key === 'id') {
+                    appointment_id = element[key];
+                }
+                if (key === 'title') {
+                    element[key] = /*MTML*/ `<a href="#${tableName}/id/${appointment_id}">${element[key]}</a>`;
+                }
+
+
+                if (key === 'staff_id') {
+                    staff_id = element[key];
+                }
+                if (key === 'staffname') {
+                    element[key] = /*MTML*/ `<a href="#staff/profile/${staff_id}">${element[key]}</a>`;
+                }
+
+
+                if (key === 'project_id') {
+                    project_id = element[key];
+                }
+                if (key === 'projectname') {
+                    element[key] = /*MTML*/ `<a href="#project/id/${project_id}">${element[key]}</a>`;
+                }
+
                 cell.innerHTML = element[key];
             }
 

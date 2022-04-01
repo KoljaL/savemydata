@@ -18,6 +18,7 @@ export default {
         "Customer-Profile": 'Kunden Profil',
         "H_appointments": 'Termine',
         'H_project': 'Projekt:',
+        'H_projects': 'Projekte',
         // Sidebar
         'S_menu': 'Menü',
         'S_staff': 'Mitarbeiter',
@@ -28,8 +29,7 @@ export default {
         'S_projects': 'Projekte',
         'S_solarsystem': 'Sonnensystem',
         'S_form': 'Formulare',
-        'S_form1': 'Formular I',
-        'S_form2': 'Formular II',
+        'S_appointment': 'Termin',
         'S_dummy': 'Platzhalter',
         // profil elemente
         'P_edit_entry': 'Eintäge editieren',
@@ -53,6 +53,11 @@ export default {
         'F_instaname': 'Instagram',
         'F_birthdate': 'Geburtsdatum',
         'F_title': 'Titel',
+        'F_start_time': 'Beginn',
+        'F_duration': 'Dauer',
+        'F_staffname': 'Mitarbeiter',
+        'F_projectname': 'Projekt',
+        'F_public': 'öffentlich',
 
     },
     'en': {
@@ -74,6 +79,7 @@ export default {
         "Customer-Profile": 'Customer Profile',
         "H_appointments": 'Appointments',
         'H_project': 'Project:',
+        'H_projects': 'Projects',
         //sidebar
         'S_menu': 'Menu',
         'S_staff': 'Staff',
@@ -83,9 +89,7 @@ export default {
         'S_customer-profile': 'Customerprofile',
         'S_projects': 'Projects',
         'S_solarsystem': 'Solarsystem',
-        'S_form': 'Forms',
-        'S_form1': 'Form I',
-        'S_form2': 'Form II',
+        'S_appointment': 'Appointment',
         'S_dummy': 'Dummy',
         // profil elemente
         'P_edit_entry': 'Edit Entry',
@@ -109,5 +113,10 @@ export default {
         'F_instaname': 'Instagram',
         'F_birthdate': 'Date of Birth',
         'F_title': 'Title',
+        'F_start_time': 'Start',
+        'F_duration': 'Duration',
+        'F_staffname': 'Staff',
+        'F_projectname': 'Project',
+        'F_public': 'Public',
     }
 }

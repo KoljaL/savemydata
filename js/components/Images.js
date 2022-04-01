@@ -57,7 +57,7 @@ let getImages = (d) => {
             if (body.getAttribute('uploadFileEvent') !== 'true') {
                 body.setAttribute('uploadFileEvent', true)
                 body.addEventListener('change', uploadFileEvent)
-                deb('addEv')
+                    // deb('uploadFileEvent')
             }
 
             function uploadFileEvent(el) {
@@ -100,7 +100,7 @@ let getImages = (d) => {
 
                     }
                     if (el.target.className === 'deleteButton') {
-                        deb(el.target)
+                        // deb(el.target)
                         Functions.getAPIdata(`delete_entry_in/files/${el.target.dataset.delete}`)
                             .then((res) => {
                                 // deb(res);

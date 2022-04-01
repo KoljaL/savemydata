@@ -25,7 +25,7 @@ export default {
                 innerHTML += `<option value="${key.id}">${key.username}</option>`;
             })
             return /*html*/ ` 
-                <select id="UserListSelect" name="${tableName}_id">
+                <select id="UserListSelect" class=boxShadow name="${tableName}_id">
                     <option value="" hidden disabled selected data-lang="select-${slugName}">Select ${slugName}</option>
                     ${innerHTML}
                 </select> `;
