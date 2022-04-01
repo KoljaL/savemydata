@@ -29,7 +29,7 @@ let Style = async() => {
     }
  
     `;
-    Functions.createStyle('UserProfile_style', styleTags);
+    Functions.createStyle('LanguageSwitch_jdzr_style', styleTags);
 };
 
 

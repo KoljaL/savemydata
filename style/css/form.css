@@ -1,6 +1,13 @@
 .border-boxes {
     border: none;
     outline: black solid 1px;
+    box-shadow: none;
+    border-radius: 5px;
+}
+
+[data-theme*="boxes"] .border-boxes {
+    border: none;
+    outline: black solid 1px;
     box-shadow: 4px 4px 0 black;
     border-radius: 0;
 }

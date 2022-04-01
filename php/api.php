@@ -20,6 +20,7 @@ error_reporting( E_ALL );
 require __DIR__.'/vendor/autoload.php';
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+
 $JWT_key = 'example_key';
 
 /*
@@ -211,6 +212,10 @@ case 'upload_file':
     upload_file( $request );
     break;
 
+case 'get_files_from':
+    get_files_from( $request );
+    break;
+
     break;
 default:
     // echo 'Endpoint <b>'.$API_endpoint.'</b> not found';
@@ -231,6 +236,33 @@ default:
 */
 // https://phpdelusions.net/pdo_examples/select
 // https://code-boxx.com/php-user-role-management-system/
+// https://www.php-einfach.de/mysql-tutorial/crashkurs-pdo/
+
+function get_files_from( $param ) {
+    if ( isAllowed() ) {
+        global $db, $API_param, $API_value;
+
+        $stmt = $db->prepare( "SELECT * FROM files WHERE origin = :origin AND origin_id = :origin_id" );
+        $stmt->execute( [':origin' => $API_param, ':origin_id' => $API_value] );
+
+        $files = $stmt->fetchAll( PDO::FETCH_ASSOC );
+
+        $response = [];
+        if ( $param ) {
+
+            $response['code'] = 200;
+            $response['data'] = $files;
+        } else {
+            $response['code']    = 400;
+            $response['message'] = 'no file found';
+        }
+        return_JSON( $response );
+    } else {
+        $response['code']    = 400;
+        $response['message'] = 'vorbidden';
+        return_JSON( $response );
+    }
+}
 
 function upload_file( $param ) {
     if ( isAllowed() ) {
@@ -254,10 +286,9 @@ function upload_file( $param ) {
             $sql = "INSERT INTO files (origin, origin_id, path, date) VALUES (?,?,?,?)";
             $db->prepare( $sql )->execute( [$param['origin'], $param['origin_id'], $file_path, 'data'] );
 
-            $response['code']               = 200;
-            $response['data']['path_thumb'] = $file_path;
-            $response['data']['path_full']  = $file_path;
-
+            $response['code']         = 200;
+            $response['data']['id']   = $db->lastInsertId();
+            $response['data']['path'] = $file_path;
         } else {
             $response['code']    = 400;
             $response['message'] = 'no file uploaded';
@@ -265,7 +296,6 @@ function upload_file( $param ) {
             $response['$param']  = $param;
         }
         return_JSON( $response );
-
     } else {
         $response['code']    = 400;
         $response['POST']    = $_POST;
@@ -290,7 +320,6 @@ function get_project( $param ) {
         $project  = $stmt->fetch( PDO::FETCH_ASSOC );
         $response = [];
         if ( $project ) {
-
             $stmt = $db->prepare( "SELECT * FROM appointment WHERE project_id = $API_param" );
             $stmt->execute();
             $appointments            = $stmt->fetchAll( PDO::FETCH_ASSOC );
@@ -301,13 +330,11 @@ function get_project( $param ) {
 
             $response['code'] = 200;
             $response['data'] = $project;
-
         } else {
             $response['code']    = 400;
             $response['message'] = 'no form profile found';
         }
         return_JSON( $response );
-
     } else {
         $response['code']    = 400;
         $response['message'] = 'vorbidden';
@@ -339,14 +366,12 @@ function get_projects_as_table( $param ) {
             }
             $response['code'] = 200;
             $response['data'] = $projects;
-
         } else {
             $response['code']    = 400;
             $response['table']   = $projects;
             $response['message'] = 'no form profile found';
         }
         return_JSON( $response );
-
     } else {
         $response['code']    = 400;
         $response['message'] = 'vorbidden';
@@ -401,7 +426,6 @@ function get_data_from( $param ) {
         }
         $response['code'] = 200;
         $response['data'] = $form;
-
     } else {
         $response['code']    = 400;
         $response['table']   = $form;
@@ -444,17 +468,14 @@ function delete_entry_in( $param ) {
         $count = $stmt->rowCount();
 
         if ( $count ) {
-
             $response['code'] = 200;
             $response['data'] = $count;
-
         } else {
             $response['code']    = 400;
             $response['data']    = $count;
             $response['message'] = 'no user found';
         }
         return_JSON( $response );
-
     } else {
         $response['code']    = 400;
         $response['message'] = 'vorbidden';
@@ -480,14 +501,12 @@ function delete_entry_in( $param ) {
  */
 function new_user( $param ) {
     if ( isAllowed() ) {
-
         global $db;
         $response = [];
         $table    = $param['table'];
         unset( $param['table'] );
         // create_user( $param );
         insert_into_db( $param, $table );
-
     } else {
         $response['code']    = 400;
         $response['message'] = 'vorbidden';
@@ -497,7 +516,6 @@ function new_user( $param ) {
 
 function new_entry_in( $param ) {
     if ( isAllowed() ) {
-
         global $db, $API_param;
         $response = [];
         $table    = $API_param;
@@ -505,7 +523,6 @@ function new_entry_in( $param ) {
         unset( $param['user_token'] );
         // create_user( $param );
         insert_into_db( $param, $table );
-
     } else {
         $response['code']    = 400;
         $response['message'] = 'vorbidden';
@@ -598,7 +615,6 @@ function edit_single_field( $param ) {
 
         // check if colums exists
         try {
-
             $stmt   = $db->prepare( "SELECT $param[update] from $param[table];" );
             $update = $stmt->execute();
         } catch ( Exception $e ) {
@@ -614,7 +630,6 @@ function edit_single_field( $param ) {
         if ( $count ) {
             $response['code'] = 200;
             $response['data'] = $update;
-
         } else {
             $response['code']    = 400;
             $response['message'] = 'no field updated';
@@ -684,7 +699,6 @@ function get_user_profile( $param ) {
             unset( $user['password'] );
             $response['code'] = 200;
             $response['data'] = $user;
-
         } else {
             $response['code']    = 400;
             $response['message'] = 'no user found';
@@ -839,7 +853,6 @@ function insert_into_db( $param, $table, $output = true ) {
 
     $response = [];
     if ( $count && $output ) {
-
         $response['data']['id'] = $db->lastInsertId();
         $response['code']       = 200;
         $response['message']    = 'insert successfull';
@@ -875,7 +888,6 @@ function return_JSON( $response ) {
     global $request, $API_endpoint, $API_param, $API_value;
 
     if ( 'reset' !== $API_endpoint ) {
-
         $response['GET']['$API_endpoint'] = $API_endpoint;
         $response['GET']['$API_param']    = $API_param;
         $response['GET']['$API_value']    = $API_value;
@@ -964,7 +976,6 @@ function init_staff_fields_table() {
     foreach ( $customerfields as $field ) {
         insert_into_db( $field, 'customer_fields' );
     }
-
 }
 
 /*
@@ -1173,7 +1184,6 @@ function create_dummy_customer( $count ) {
         ];
         // create_customer( $user );
         insert_into_db( $customer, 'customer' );
-
     }
 }
 

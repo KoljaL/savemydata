@@ -265,6 +265,8 @@ a {
 
 .numeric {
     font-variant-numeric: tabular-nums;
+    font-family: 'Zilla Slab Medium', sans-serif;
+    font-size: 1.1em;
 }
 
 
@@ -880,7 +882,61 @@ footer .withLove img {
 //  
 */
 
+#thumbnails {
+    display: flex;
+    flex-wrap: wrap;
+}
+
 .thumbnailWrapper {
+    position: relative;
     border: 1px solid black;
+    margin-right: .5em;
+    margin-bottom: .5em;
+}
+
+[data-theme*="boxes"] .thumbnailWrapper {
+    box-shadow: 4px 4px 0 black;
+}
+
+.thumbnailWrapper img {
+    width: 100px;
+    height: 100px;
+}
+
+.thumbnailImage {
+    cursor: pointer;
+}
+
+.thumbnailWrapper .deleteButton {
+    display: none;
+}
+
+.thumbnailWrapper.hideEdit .deleteButton {
+    display: block;
+    position: absolute;
+    right: 0;
+    padding: .1em;
+    cursor: pointer;
+}
+
+.popupWrapper {
+    cursor: not-allowed;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 1000;
+    transform: translate(-50%, -50%);
+    padding: 1em;
+    background: var(--bg_1);
+    outline: black solid 1px;
+}
+
+[data-theme*="boxes"] .popupWrapper {
+    box-shadow: 4px 4px 0 black;
+}
+
+.popupWrapper img {
     width: max-content;
+    max-width: 90vw;
+    height: auto;
 }

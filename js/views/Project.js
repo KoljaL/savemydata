@@ -1,4 +1,5 @@
 import Functions from '../Functions.js';
+import Images from '../components/Images.js';
 
 let Project = {
     render: async(id) => {
@@ -124,7 +125,7 @@ let ProjectContent = async(id) => {
         .then((res) => {
             if (res.code === 200) {
                 let data = res.data
-                deb(data);
+                    // deb(data);
                 document.getElementById('debug').innerHTML = JSON.stringify(data, undefined, 4);
 
                 // deb(data.comment_staff)
@@ -156,10 +157,11 @@ let ProjectContent = async(id) => {
                         </div>
                         <br>
                         <div id=ProjectImages>
-                            <h3 data-lang="F_images">Images</h3>
-                            <div id=thumbnails></div>
-                            ${getImages({origin: 'project',origin_id:data.id,})}
-                            ${uploadFile({origin: 'project',origin_id:data.id,})}
+                        <h3 data-lang="F_images">Images</h3>
+                        <div id=thumbnails></div>
+                        <div id=fileUpload></div>
+                        ${Images.render({origin: 'project',origin_id:data.id})}
+             
                         </div>
                     </div>
                 `;
@@ -168,41 +170,45 @@ let ProjectContent = async(id) => {
                 document.getElementById('ProjectFormError').innerHTML = res.message;
             }
         })
-        .then(() => {
-            if (Functions.getLocal('role') === '0' || Functions.getLocal('id') === userID) {
-                Functions.setInnerHTML('editProjectButton', 'Edit')
-                    .then(() => {
-                        document.getElementById('editProjectButton').dataset.lang = 'edit'
 
-                        document.getElementById('editProjectButton').addEventListener('click', function() {
-                            document.querySelectorAll('#ProjectBody input,#ProjectBody textarea').forEach((input) => {
-                                // make fields editable
-                                input.classList.toggle('hideEdit');
-                                // updata db on focusout
-                                input.addEventListener('focusout', function(el) {
-                                    // update a single value in db
-                                    Functions.singleEdit(el.target);
-                                });
+    //
+    // edit and delete button
+    //
+    .then(() => {
+        if (Functions.getLocal('role') === '0' || Functions.getLocal('id') === userID) {
+            Functions.setInnerHTML('editProjectButton', 'Edit')
+                .then(() => {
+                    document.getElementById('editProjectButton').dataset.lang = 'edit'
+
+                    document.getElementById('editProjectButton').addEventListener('click', function() {
+                        document.querySelectorAll('#ProjectBody input,#ProjectBody textarea, #ProjectBody .thumbnailWrapper').forEach((input) => {
+                            // make fields editable
+                            input.classList.toggle('hideEdit');
+                            // updata db on focusout
+                            input.addEventListener('focusout', function(el) {
+                                // update a single value in db
+                                Functions.singleEdit(el.target);
                             });
                         });
                     });
-
-                // set text, make the button visible
-                Functions.setInnerHTML('deleteProjectButton', 'Delete');
-                document.getElementById('deleteProjectButton').dataset.lang = 'delete'
-
-                document.getElementById('deleteProjectButton').addEventListener('click', function() {
-                    Functions.getAPIdata(`delete_entry_in/project/${id}`)
-                        .then((res) => {
-                            // deb(res);
-                            if (res.code === 200) {
-                                Message.warn('Project removed');
-                                window.location.hash = '#project/table/';
-                            }
-                        });
                 });
-            }
-        });
+
+            // set text, make the button visible
+            Functions.setInnerHTML('deleteProjectButton', 'Delete');
+            document.getElementById('deleteProjectButton').dataset.lang = 'delete'
+
+            document.getElementById('deleteProjectButton').addEventListener('click', function() {
+                Functions.getAPIdata(`delete_entry_in/project/${id}`)
+                    .then((res) => {
+                        // deb(res);
+                        if (res.code === 200) {
+                            Message.warn('Project removed');
+                            window.location.hash = '#project/table/';
+                        }
+                    });
+            });
+        }
+    });
 
 }
 let showAppointments = (Appointments) => {
@@ -225,65 +231,7 @@ let showAppointments = (Appointments) => {
 
         return HTML;
     } else {
-        return '';
+        return 'no Appointments';
     }
 
 }
-
-
-
-let getImages = (d) => {
-    // NEW ENDPOINT....
-    Functions.getAPIdata(`get_data_from/${d.origin}/${d.origin_id}`)
-        .then((res) => {
-            deb(res);
-            if (res.code === 200) {}
-        });
-
-};
-
-/**
- * It makes the edit button clickable and makes the fields editable.
- */
-let uploadFile = (d) => {
-    document.addEventListener('change', (el) => {
-        if (el.target.id === 'uploadFile') {
-            event.preventDefault();
-            let files = el.target.files;
-            // deb(el.target.form);
-            // deb(files[0]);
-            const formData = new FormData(el.target.form);
-            formData.append('file', files[0]);
-            // Functions.debFormData(formData);
-            Functions.uploadToAPI('upload_file', formData)
-                .then((res) => {
-                    // deb(res);
-                    if (res.code === 200) {
-                        let data = res.data;
-                        deb(data.path_full)
-
-                        let thumbnailWrapper = document.createElement('DIV');
-                        thumbnailWrapper.classList.add('thumbnailWrapper');
-                        let img = document.createElement('img');
-                        img.src = data.path_full;
-                        thumbnailWrapper.append(img);
-                        document.getElementById('thumbnails').append(thumbnailWrapper);
-                    }
-                });
-
-        }
-    })
-    let innerHTML = /*HTML*/ `
-    <div id=uploadImage>
-        <form id=uploadFileForm>
-            <input for=uploadFileForm type="hidden" name="origin" id="origin"  value="${d.origin}" />
-            <input for=uploadFileForm type="hidden" name="origin_id" id="origin_id"  value="${d.origin_id}" />
-            <label class="button border-boxes" for="uploadFile">upload</label>
-                <input for=uploadFileForm id="uploadFile" type="file" accept="image/*" capture="camera" style="display:none">
-        </form>
-    </div>   
-    `;
-
-    return innerHTML;
-
-};
