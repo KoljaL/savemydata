@@ -564,6 +564,10 @@ nav #expandSubLists {
     mask-repeat: no-repeat;
 }
 
+.small nav #expandSubLists {
+    display: none;
+}
+
 nav #expandSubLists:hover {
     background-color: var(--fontBlue);
 }

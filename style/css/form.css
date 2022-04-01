@@ -49,8 +49,8 @@ fieldset {
     flex-wrap: wrap;
     outline: var(--outline);
     box-shadow: var(--box-shadow);
-    padding: .3em;
-    margin: .5em;
+    padding: 1em 0 0;
+    margin: 1em;
     border-radius: .5em;
 }
 
