@@ -2,6 +2,9 @@ import Functions from '../Functions.js';
 import UserList from '../components/UserList.js';
 import Form from '../components/Form.js';
 import LanguageSwitch from '../components/LanguageSwitch.js';
+import Images from '../components/Images.js';
+import Appointments from '../components/Appointments.js';
+
 
 export default {
     render: async(userID, action) => {
@@ -18,7 +21,7 @@ export default {
         // deb(action)
         Functions.pageTitle(`${slugName} Profile`);
         await Style();
-        await Content();
+        await Content(userID);
         getUserData(userID);
         dropDownEvent(tableName);
         await newUserButton();
@@ -92,7 +95,7 @@ let Style = async() => {
 /**
  * This function is used to render the content of the page
  */
-let Content = async() => {
+let Content = async(userID) => {
     let innerHTML = /*HTML*/ `
         <div id="T_UserLoginForm" class="template"> 
             <div id=UserProfileHeader>
@@ -107,6 +110,15 @@ let Content = async() => {
            
             <div id=editArea>
                 <div id=Userdata></div>
+                <div id=UserAppointments>
+                </div>
+                <br>
+                <div id=ProjectImages>
+                    <h3 data-lang="F_images">Images</h3>
+                    <div id=thumbnails></div>
+                    <div id=fileUpload></div>
+                    ${Images.render({origin: 'customer',origin_id:userID})}
+                </div>
             </div>
         </div>`;
     await Functions.setInnerHTML('main', innerHTML);
@@ -117,15 +129,10 @@ let Content = async() => {
  */
 let getUserData = async(userID) => {
     if (userID) {
-
         const currentUserRole = Functions.getLocal('role');
 
         var formFields = await Functions.getAPIdata('get_data_from/' + window.formTableName);
 
-        // var formData = new FormData();
-        // formData.append('id', userID);
-        // formData.append('table', 'staff');
-        // getAPIdata (endpoint, formID)
         Functions.getAPIdata(`get_data_from/${tableName}/${userID}`)
             .then((res) => {
                 // deb(res);
@@ -149,30 +156,36 @@ let getUserData = async(userID) => {
                         // start with a form and the first row
                         var innerHTML = '<form id=userProfilForm>';
                         innerHTML += '<div class="FF-row">';
-
                         var row = 1;
                         formFields.forEach((formField) => {
-
                             // for the next row, close the old one and open the new row
                             if (formField.row * 1 > row) {
                                 innerHTML += '</div>';
                                 innerHTML += '<div class="FF-row">';
                                 row++;
                             }
-
                             // create the form field
                             innerHTML += Form.inputTextDB(formField, user);
-
                         });
                         // close last row & form 
                         innerHTML += '</div>';
                         innerHTML += '</form>';
-
                     }
-
 
                     // copy to DOM
                     Functions.setInnerHTML('Userdata', innerHTML);
+
+                    // get Appointments
+                    Functions.getAPIdata(`get_appointments_from/${userID}`)
+                        .then((res) => {
+                            // deb(res);
+                            if (res.code === 200) {
+                                deb(res.data)
+                                let app = Appointments.render(res.data)
+                                Functions.setInnerHTML('UserAppointments', app);
+
+                            }
+                        });
                 }
                 // return error message
                 else {
@@ -214,7 +227,7 @@ let editUserButton = async(userID) => {
             document.getElementById('editUserButton').dataset.lang = 'edit'
 
             document.getElementById('editUserButton').addEventListener('click', function() {
-                document.querySelectorAll('#editArea input,#editArea textarea').forEach((input) => {
+                document.querySelectorAll('#editArea input,#editArea textarea, #editArea .thumbnailWrapper').forEach((input) => {
                     // make fields editable
                     input.classList.toggle('hideEdit');
                     // updata db on focusout

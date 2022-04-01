@@ -216,6 +216,10 @@ case 'get_files_from':
     get_files_from( $request );
     break;
 
+case 'get_appointments_from':
+    get_appointments_from( $request );
+    break;
+
     break;
 default:
     // echo 'Endpoint <b>'.$API_endpoint.'</b> not found';
@@ -237,6 +241,32 @@ default:
 // https://phpdelusions.net/pdo_examples/select
 // https://code-boxx.com/php-user-role-management-system/
 // https://www.php-einfach.de/mysql-tutorial/crashkurs-pdo/
+
+function get_appointments_from( $param ) {
+    if ( isAllowed() ) {
+        global $db, $API_param, $API_value;
+
+        $stmt = $db->prepare( "SELECT * FROM appointment WHERE customer_id = :customer_id" );
+        $stmt->execute( [':customer_id' => $API_param] );
+
+        $files = $stmt->fetchAll( PDO::FETCH_ASSOC );
+
+        $response = [];
+        if ( $param ) {
+
+            $response['code'] = 200;
+            $response['data'] = $files;
+        } else {
+            $response['code']    = 400;
+            $response['message'] = 'no file found';
+        }
+        return_JSON( $response );
+    } else {
+        $response['code']    = 400;
+        $response['message'] = 'vorbidden';
+        return_JSON( $response );
+    }
+}
 
 function get_files_from( $param ) {
     if ( isAllowed() ) {
@@ -385,7 +415,11 @@ function get_username_by_id( $table, $id ) {
     $stmt->execute();
     $user = $stmt->fetch( PDO::FETCH_ASSOC );
     // print_r( $user );
-    return $user['username'];
+    if ( isset( $user['username'] ) ) {
+        return $user['username'];
+    } else {
+        return 'Custonmer removed';
+    }
 }
 
 /*

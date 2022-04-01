@@ -30,10 +30,10 @@ let getImages = (d) => {
     //
     Functions.getAPIdata(`get_files_from/${d.origin}/${d.origin_id}`)
         .then((res) => {
-            deb(res);
+            // deb(res);
             if (res.code === 200) {
                 let files = res.data;
-                deb(files)
+                // deb(files)
                 files.forEach(file => {
                     addImage(file);
                 });
@@ -47,7 +47,7 @@ let getImages = (d) => {
                     <form id=uploadFileForm>
                         <input for=uploadFileForm type="hidden" name="origin" id="origin"  value="${d.origin}" />
                         <input for=uploadFileForm type="hidden" name="origin_id" id="origin_id"  value="${d.origin_id}" />
-                        <label class="button border-boxes" for="uploadFile">upload</label>
+                        <label class="button boxShadow" for="uploadFile">upload</label>
                             <input for=uploadFileForm id="uploadFile" type="file" accept="image/*" capture="camera" style="display:none">
                     </form> `;
             Functions.setInnerHTML('fileUpload', innerHTML);
@@ -59,16 +59,19 @@ let getImages = (d) => {
                     const formData = new FormData(el.target.form);
                     formData.append('file', el.target.files[0]);
                     // Functions.debFormData(formData);
-                    Functions.uploadToAPI('upload_file', formData)
-                        .then((res) => {
-                            // deb(res);
-                            if (res.code === 200) {
-                                addImage(res.data);
-                                Functions.loadingDots('fileUpload', false)
-                            } else {
-                                Functions.loadingDots('fileUpload', false)
-                            }
-                        });
+                    setTimeout(() => {
+
+                        Functions.uploadToAPI('upload_file', formData)
+                            .then((res) => {
+                                // deb(res);
+                                if (res.code === 200) {
+                                    addImage(res.data);
+                                    Functions.loadingDots('fileUpload', false)
+                                } else {
+                                    Functions.loadingDots('fileUpload', false)
+                                }
+                            });
+                    }, 200);
                 }
             })
         })
@@ -104,6 +107,7 @@ function addImage(file) {
     // wrapper
     let thumbnailWrapper = document.createElement('DIV');
     thumbnailWrapper.classList.add('thumbnailWrapper');
+    thumbnailWrapper.classList.add('boxShadow');
     // thumbnail
     deb(file)
     let img = document.createElement('img');
@@ -124,6 +128,8 @@ function addImage(file) {
     // popup
     let popupWrapper = document.createElement('DIV');
     popupWrapper.classList.add('popupWrapper');
+    popupWrapper.classList.add('boxShadow');
+
     popupWrapper.style.display = 'none';
     let img_popup = document.createElement('img');
     img_popup.src = file.path;

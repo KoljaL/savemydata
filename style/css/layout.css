@@ -912,6 +912,9 @@ footer .withLove img {
 }
 
 .thumbnailWrapper.hideEdit .deleteButton {
+    font-family: 'Zilla Slab Medium', sans-serif;
+    font-weight: bold;
+    color: var(--fontRed);
     display: block;
     position: absolute;
     right: 0;
@@ -921,13 +924,13 @@ footer .withLove img {
 
 .popupWrapper {
     cursor: not-allowed;
-    position: absolute;
+    position: fixed;
     top: 50%;
     left: 50%;
     z-index: 1000;
     transform: translate(-50%, -50%);
     padding: 1em;
-    background: var(--bg_1);
+    background: var(--bg_3);
     outline: black solid 1px;
 }
 
@@ -937,6 +940,7 @@ footer .withLove img {
 
 .popupWrapper img {
     width: max-content;
+    padding: 0;
     max-width: 90vw;
     height: auto;
 }
