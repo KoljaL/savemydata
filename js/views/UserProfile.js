@@ -3,7 +3,8 @@ import UserList from '../components/UserList.js';
 import Form from '../components/Form.js';
 import LanguageSwitch from '../components/LanguageSwitch.js';
 import Images from '../components/Images.js';
-import Appointments from '../components/Appointments.js';
+import AppointmentsList from '../components/AppointmentsList.js';
+import ProjectsList from '../components/ProjectsList.js';
 
 
 export default {
@@ -110,9 +111,10 @@ let Content = async(userID) => {
            
             <div id=editArea>
                 <div id=Userdata></div>
-                <div id=UserAppointments>
+                <div style="display:flex;gap: 1em;">
+                    <div id=UserProjects></div>
+                    <div id=UserAppointments></div>
                 </div>
-                <br>
                 <div id=ProjectImages>
                     <h3 data-lang="F_images">Images</h3>
                     <div id=thumbnails></div>
@@ -175,14 +177,26 @@ let getUserData = async(userID) => {
                     // copy to DOM
                     Functions.setInnerHTML('Userdata', innerHTML);
 
-                    // get Appointments
+                    // get AppointmentsList
                     Functions.getAPIdata(`get_appointments_from/${userID}`)
                         .then((res) => {
                             // deb(res);
                             if (res.code === 200) {
-                                deb(res.data)
-                                let app = Appointments.render(res.data)
+                                // deb(res.data)
+                                let app = AppointmentsList.render(res.data)
                                 Functions.setInnerHTML('UserAppointments', app);
+
+                            }
+                        });
+
+                    // get ProjectsList
+                    Functions.getAPIdata(`get_projects_from/customer/${userID}`)
+                        .then((res) => {
+                            // deb(res);
+                            if (res.code === 200) {
+                                // deb(res.data)
+                                let app = ProjectsList.render(res.data)
+                                Functions.setInnerHTML('UserProjects', app);
 
                             }
                         });

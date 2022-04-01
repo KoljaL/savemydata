@@ -52,54 +52,66 @@ let getImages = (d) => {
                     </form> `;
             Functions.setInnerHTML('fileUpload', innerHTML);
             // upload image & indert into DOM
-            document.addEventListener('change', (el) => {
+
+            // add eventListener only once!
+            if (body.getAttribute('uploadFileEvent') !== 'true') {
+                body.setAttribute('uploadFileEvent', true)
+                body.addEventListener('change', uploadFileEvent)
+                deb('addEv')
+            }
+
+            function uploadFileEvent(el) {
                 if (el.target.id === 'uploadFile') {
                     Functions.loadingDots('fileUpload', true)
                     event.preventDefault();
                     const formData = new FormData(el.target.form);
                     formData.append('file', el.target.files[0]);
                     // Functions.debFormData(formData);
-                    setTimeout(() => {
 
-                        Functions.uploadToAPI('upload_file', formData)
-                            .then((res) => {
-                                // deb(res);
-                                if (res.code === 200) {
-                                    addImage(res.data);
-                                    Functions.loadingDots('fileUpload', false)
-                                } else {
-                                    Functions.loadingDots('fileUpload', false)
-                                }
-                            });
-                    }, 200);
+                    Functions.uploadToAPI('upload_file', formData)
+                        .then((res) => {
+                            // deb(res);
+                            if (res.code === 200) {
+                                addImage(res.data);
+                                Functions.loadingDots('fileUpload', false)
+                            } else {
+                                Functions.loadingDots('fileUpload', false)
+                            }
+                        });
                 }
-            })
+            } //uploadFileEvent
+
+
         })
         //
         // lightbox
         //
         .then(() => {
-            document.addEventListener('click', (el) => {
-                if (el.target.className === 'thumbnailImage') {
-                    el.target.nextSibling.style.display = 'block';
+            if (body.getAttribute('imageEvents') !== 'true') {
+                body.setAttribute('imageEvents', true)
 
-                }
-                if (el.target.className === 'popupImage') {
-                    el.target.parentElement.style.display = 'none';
+                body.addEventListener('click', (el) => {
+                    if (el.target.className === 'thumbnailImage') {
+                        el.target.nextSibling.style.display = 'block';
 
-                }
-                if (el.target.className === 'deleteButton') {
-                    deb(el.target)
-                    Functions.getAPIdata(`delete_entry_in/files/${el.target.dataset.delete}`)
-                        .then((res) => {
-                            // deb(res);
-                            if (res.code === 200) {
-                                el.target.parentElement.remove()
-                                Message.warn('Image removed');
-                            }
-                        });
-                }
-            });
+                    }
+                    if (el.target.className === 'popupImage') {
+                        el.target.parentElement.style.display = 'none';
+
+                    }
+                    if (el.target.className === 'deleteButton') {
+                        deb(el.target)
+                        Functions.getAPIdata(`delete_entry_in/files/${el.target.dataset.delete}`)
+                            .then((res) => {
+                                // deb(res);
+                                if (res.code === 200) {
+                                    el.target.parentElement.remove()
+                                    Message.warn('Image removed');
+                                }
+                            });
+                    }
+                });
+            }
         })
 };
 
@@ -109,7 +121,7 @@ function addImage(file) {
     thumbnailWrapper.classList.add('thumbnailWrapper');
     thumbnailWrapper.classList.add('boxShadow');
     // thumbnail
-    deb(file)
+    // deb(file)
     let img = document.createElement('img');
     img.src = file.path;
     img.classList.add('thumbnailImage');

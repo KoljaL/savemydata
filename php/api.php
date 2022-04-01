@@ -220,6 +220,10 @@ case 'get_appointments_from':
     get_appointments_from( $request );
     break;
 
+case 'get_projects_from':
+    get_projects_from( $request );
+    break;
+
     break;
 default:
     // echo 'Endpoint <b>'.$API_endpoint.'</b> not found';
@@ -241,6 +245,39 @@ default:
 // https://phpdelusions.net/pdo_examples/select
 // https://code-boxx.com/php-user-role-management-system/
 // https://www.php-einfach.de/mysql-tutorial/crashkurs-pdo/
+
+function get_projects_from( $param ) {
+    if ( isAllowed() ) {
+        global $db, $API_param, $API_value;
+
+        if ( 'customer' == $API_param ) {
+            $stmt = $db->prepare( "SELECT * FROM project WHERE customer_id = :id" );
+        }
+
+        if ( 'staff' == $API_param ) {
+            $stmt = $db->prepare( "SELECT * FROM project WHERE customer_id = :id" );
+        }
+
+        $stmt->execute( [':id' => $API_value] );
+
+        $projects = $stmt->fetchAll( PDO::FETCH_ASSOC );
+
+        $response = [];
+        if ( $param ) {
+
+            $response['code'] = 200;
+            $response['data'] = $projects;
+        } else {
+            $response['code']    = 400;
+            $response['message'] = 'no file found';
+        }
+        return_JSON( $response );
+    } else {
+        $response['code']    = 400;
+        $response['message'] = 'vorbidden';
+        return_JSON( $response );
+    }
+}
 
 function get_appointments_from( $param ) {
     if ( isAllowed() ) {
@@ -300,7 +337,7 @@ function upload_file( $param ) {
 
         // set filename and dir
         $uploaddir  = '../userdata/uploads/'.$param['origin'].'/'.$param['origin_id'].'/';
-        $uploadfile = $uploaddir.basename( $_FILES['file']['name'] );
+        $uploadfile = $uploaddir.rndStr( 4 ).'_'.basename( $_FILES['file']['name'] );
 
         // create folder if not exists
         if ( !is_dir( '../userdata/uploads/'.$param['origin'].'/'.$param['origin_id'] ) ) {
@@ -420,6 +457,16 @@ function get_username_by_id( $table, $id ) {
     } else {
         return 'Custonmer removed';
     }
+}
+
+function rndStr( $length = 10 ) {
+    $characters       = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen( $characters );
+    $randomString     = '';
+    for ( $i = 0; $i < $length; $i++ ) {
+        $randomString .= $characters[rand( 0, $charactersLength - 1 )];
+    }
+    return $randomString;
 }
 
 /*

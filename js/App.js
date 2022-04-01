@@ -39,7 +39,7 @@ async function router() {
 
     // remove the opycity class, wait, call async switch :-)
     document.getElementById('main').classList.remove('visible');
-    await Functions.sleep(200);
+    await Functions.sleep(100);
     (async() => {
 
         switch (API_page) {
@@ -125,7 +125,7 @@ async function router() {
 
     })()
     // when content is loaded, turn bach the opacity :-)
-    await Functions.sleep(300)
+    await Functions.sleep(700)
         .then(() => {
             LanguageSwitch.render();
             document.getElementById('main').classList.add('visible');

@@ -12,7 +12,7 @@ export default {
  */
 let Style = async() => {
     let styleTags = /*CSS*/ `
-    .dataTable{
+    .dataTable{ 
         padding:.5em;
     }
 

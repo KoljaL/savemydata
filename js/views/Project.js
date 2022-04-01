@@ -1,6 +1,6 @@
 import Functions from '../Functions.js';
 import Images from '../components/Images.js';
-import Appointments from '../components/Appointments.js';
+import AppointmentsList from '../components/AppointmentsList.js';
 
 let Project = {
     render: async(id) => {
@@ -153,9 +153,7 @@ let ProjectContent = async(id) => {
                                 </div>
                             </div>
                         </div>
-                        <div id=ProjectAppointments>
-                            
-                        </div>
+                        <div id=ProjectAppointments></div>
                         <br>
                         <div id=ProjectImages>
                             <h3 data-lang="F_images">Images</h3>
@@ -174,7 +172,7 @@ let ProjectContent = async(id) => {
             })
             .then((data) => {
                 deb(data.appointments)
-                let app = Appointments.render(data.appointments)
+                let app = AppointmentsList.render(data.appointments)
                 deb(app)
                 Functions.setInnerHTML('ProjectAppointments', app);
 
@@ -193,10 +191,10 @@ let ProjectContent = async(id) => {
                                     // make fields editable
                                     input.classList.toggle('hideEdit');
                                     // updata db on focusout
-                                    input.addEventListener('focusout', function(el) {
-                                        // update a single value in db
-                                        Functions.singleEdit(el.target);
-                                    });
+                                    input.removeEventListener('focusout', singeEditEvent)
+                                    input.addEventListener('focusout', singeEditEvent)
+
+
                                 });
                             });
                         });
@@ -218,28 +216,9 @@ let ProjectContent = async(id) => {
                 }
             });
 
-    }
-    // let showAppointments = (Appointments) => {
-    //     // deb(Appointments)
-    //     // make an array of all appointments 
-    //     // <a href="#Appointment-id:${date.appointment_post_id}">${moment(date.date).format('DD.MM.YYYY HH:mm')}</a>
-    //     var dates = [];
-    //     if (Appointments) {
-    //         // sort by date
-    //         dates = Appointments.sort(function(a, b) {
-    //             return new Date(b.start_time) - new Date(a.start_time);
-    //         });
-    //         // deb(dates)
-    //         // create table
-    //         let HTML = /*HTML*/ `<table class=dataTable><div id=Appointments><h3 data-lang="H_appointments">Appointments</h3>`;
-    //         dates.forEach((date) => {
-    //             HTML += /*HTML*/ `<tr><td class=numeric ><a href="#Appointment-id:${date.id}">${Functions.formatDate(date.start_time)}</a></td></tr>`;
-    //         });
-    //         HTML += /*HTML*/ `</div></table>`;
+    } //ProjectContent
 
-//         return HTML;
-//     } else {
-//         return 'no Appointments';
-//     }
-
-// }
+var singeEditEvent = function singleEdit(el) {
+    // update a single value in db
+    Functions.singleEdit(el.target);
+};

@@ -195,7 +195,8 @@ let Functions = {
                 for (let i = 0; i < 12; i++) {
                     window.setTimeout(function() {
                         if (document.getElementById('dotID_' + i)) {
-                            spinnerFrame.removeChild(document.getElementById('dotID_' + i));
+                            // spinnerFrame.removeChild(document.getElementById('dotID_' + i));
+                            document.getElementById('dotID_' + i).remove();
                         }
 
                         let dot = document.createElement('div');
