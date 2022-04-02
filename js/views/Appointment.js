@@ -106,7 +106,7 @@ let Content = async() => {
     <div id=AppointmentWrapper>
        <div id=AppointmentContent></div>
        <div id=AppointmentAppointments></div>
-       <textarea rows="50" id=debug  ></textarea>
+       <textarea rows="50" id=debug style="display:none;" ></textarea>
     </div>`;
     await Functions.setInnerHTML('main', innerHTML);
 }
@@ -148,12 +148,12 @@ let AppointmentContent = async(id) => {
                         <div id=AppointmentText>
                             <br>
                             <div class="FF-row">
-                                <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px;;">
-                                    <input id="firstname" class="hideEdit" name="firstname" type="datetime-local" placeholder="" value="${data.start_time}" data-db="start_time/appointment/id/2" required="">
+                                <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px;">
+                                    <input id="firstname" class="hideEdit" name="firstname" type="datetime-local" placeholder="" value="${data.start_time}" data-db="start_time/appointment/id/${id}" required="">
                                     <label data-lang="F_date" for="firstname">Date</label>
                                 </div>
                                 <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px;;">
-                                    <input id="lastname" class="hideEdit" name="lastname" type="text" placeholder="" value="${data.duration}" data-db="duration/appointment/id/2" required="">
+                                    <input id="lastname" class="hideEdit" name="lastname" type="text" placeholder="" value="${data.duration}" data-db="duration/appointment/id/${id}" required="">
                                     <label data-lang="F_duration" for="lastname">Duration</label>
                                 </div> 
                             </div>

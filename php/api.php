@@ -1450,7 +1450,7 @@ function create_dummy_appointment( $count ) {
         $durations       = [30, 60, 90, 120, 150, 180];
         $random_duration = $durations[mt_rand( 0, 5 )];
         // startdate
-        $random_datetime_start = $random_date.' '.$random_hour.':'.$random_minute.':00';
+        $random_datetime_start = $random_date.'T'.$random_hour.':'.$random_minute;
         // enddate is startdate + duration
         $datetime = new DateTime( $random_datetime_start );
         $datetime->add( new DateInterval( 'PT'.$random_duration.'M' ) );
@@ -1458,7 +1458,7 @@ function create_dummy_appointment( $count ) {
 
         $project = [
             'start_time'  => $random_datetime_start,
-            'end_time'    => $random_datetime_end,
+            // 'end_time'    => $random_datetime_end,
             'duration'    => $random_duration,
             'title'       => $project_title,
             'staff_id'    => $staff_id,
