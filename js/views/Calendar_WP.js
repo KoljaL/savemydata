@@ -338,7 +338,7 @@ let getSchedules = async(DateRange) => {
                 // var schedules = [];
                 for (let i = 0; i < data_length; i++) {
 
-                    deb(data[i])
+                    // deb(data[i])
 
                     let startDatetime = new Date(data[i].start_date + ' ' + data[i].start_time);
                     let endDatetime = new Date(startDatetime.getTime() + data[i].duration * 60000);
@@ -360,7 +360,7 @@ let getSchedules = async(DateRange) => {
                         },
                     };
                 }
-                deb(schedules);
+                // deb(schedules);
                 return schedules;
 
             }
@@ -511,69 +511,13 @@ let Appointments = {
          * It sets up the event listeners for the menu and calendar.
          */
         function setEventListener() {
-            $('#menu-navi').on('click', onClickNavi);
-            $('#toggleView a[role="menuitem"]').on('click', onClickMenu);
-            $('#lnb-calendars').on('change', onChangeCalendars);
-            window.addEventListener('resize', resizeThrottled);
+            // document.querySelector('#lnb-calendars').addEventListener('change', onChangeCalendars);
+            // window.addEventListener('resize', resizeThrottled);
         }
 
-        /**
-         * When the user clicks on the menu item, the calendar will change to the corresponding view
-         * @param e - The event object.
-         */
-        function onClickMenu(e) {
-            var target = $(e.target).closest('a[role="menuitem"]')[0];
-            var action = getDataAction(target);
-            var options = cal.getOptions();
-            var viewName = '';
 
-            switch (action) {
-                case 'toggle-daily':
-                    viewName = 'day';
-                    break;
-                case 'toggle-weekly':
-                    viewName = 'week';
-                    break;
-                case 'toggle-monthly':
-                    options.month.visibleWeeksCount = 0;
-                    viewName = 'month';
-                    break;
-                default:
-                    break;
-            }
-            cal.setOptions(options, true);
-            cal.changeView(viewName, true);
-            setRenderRangeText();
-            getNewSchedules();
-        }
 
-        /**
-         * When the user clicks on the navigation buttons,
-         * the calendar moves to the next or previous month or to the current month
-         * @param e - The event object.
-         * @returns Nothing.
-         */
-        function onClickNavi(e) {
-            var action = getDataAction(e.target);
 
-            switch (action) {
-                case 'move-prev':
-                    cal.prev();
-                    getNewSchedules();
-                    break;
-                case 'move-next':
-                    cal.next();
-                    getNewSchedules();
-                    break;
-                case 'move-today':
-                    cal.today();
-                    getNewSchedules();
-                    break;
-                default:
-                    return;
-            }
-            setRenderRangeText();
-        }
 
         /*
         ########   #######  ########  ##     ## ########
@@ -750,34 +694,17 @@ let Appointments = {
             document.getElementById('CreateAppointmentPopupSubmit').addEventListener('click', function(event) {
                 event.preventDefault();
                 const formData = new FormData(CreateAppointmentPopupForm);
-
-
-                const data = JSON.stringify(Object.fromEntries(formData));
-                // deb(Object.fromEntries(formData));
-                // fetch(WP_URL + '/wp-json/tcapi/createappointment', {
-                //         method: 'POST',
-                //         credentials: 'same-origin',
-                //         body: data,
-                //         headers: {
-                //             'Content-Type': 'application/json',
-                //             accept: 'application/json',
-                //             Authorization: `Bearer ${localStorage.getItem('TC_token')}`,
-                //         },
-                //     })
-
                 Functions.getAPIdata('new_entry_in/appointment', formData)
-
-                .then((res) => res.json())
                     .then(function(res) {
                         console.log(res);
-                        // if (res.case === 'create') {
-                        //     vt.success(`New Appointment created `);
-                        // }
-                        // if (res.case === 'update') {
-                        //     vt.info(`Appointment updated`);
-                        // }
-                        // getNewSchedules();
-                        // document.getElementById('PopupWrapper').remove();
+                        if (res.case === 'create') {
+                            Message.success(`New Appointment created `);
+                        }
+                        if (res.case === 'update') {
+                            Message.info(`Appointment updated`);
+                        }
+                        getNewSchedules();
+                        document.getElementById('PopupWrapper').remove();
 
                     });
 
@@ -794,6 +721,74 @@ let Appointments = {
         ##       ##     ## ##   ### ##    ##    ##     ##  ##     ## ##   ### ##    ##
         ##        #######  ##    ##  ######     ##    ####  #######  ##    ##  ######
         */
+
+
+
+        /**
+         * 
+         * Toggle View between month, week and day
+         * 
+         */
+        document.querySelectorAll('a[role="menuitem"]').forEach(view => {
+            // deb(view)
+            view.addEventListener('click', (el) => {
+                // deb(el.target.dataset.action)
+                let action = el.target.dataset.action;
+                var options = cal.getOptions();
+                var viewName = '';
+
+                switch (action) {
+                    case 'toggle-daily':
+                        viewName = 'day';
+                        break;
+                    case 'toggle-weekly':
+                        viewName = 'week';
+                        break;
+                    case 'toggle-monthly':
+                        options.month.visibleWeeksCount = 0;
+                        viewName = 'month';
+                        break;
+                    default:
+                        break;
+                }
+                cal.setOptions(options, true);
+                cal.changeView(viewName, true);
+                setRenderRangeText();
+                getNewSchedules();
+            })
+        });
+
+
+
+        /**
+         * When the user clicks on the navigation buttons,
+         * the calendar moves to the next or previous month or to the current month
+         * @param e - The event object.
+         * @returns Nothing.
+         */
+        document.querySelector('#menu-navi').addEventListener('click', (e) => {
+            var action = getDataAction(e.target);
+
+            switch (action) {
+                case 'move-prev':
+                    cal.prev();
+                    getNewSchedules();
+                    break;
+                case 'move-next':
+                    cal.next();
+                    getNewSchedules();
+                    break;
+                case 'move-today':
+                    cal.today();
+                    getNewSchedules();
+                    break;
+                default:
+                    return;
+            }
+            setRenderRangeText();
+        });
+
+
 
         /**
          * It gets the schedules from the database and renders them on the calendar.
@@ -826,11 +821,12 @@ let Appointments = {
         }
 
         /**
-         * When the user changes the checkbox for a calendar, the function changes the checkbox for that
-         * calendar and all the other calendars
-         * @param e - The event object.
-         * @returns Nothing.
+         * 
+         * When the user changes the checkbox for a calendar, the function changes the checkbox for that calendar and all the other calendars
+         * 
          */
+        document.querySelector('#lnb-calendars').addEventListener('change', (onChangeCalendars));
+
         function onChangeCalendars(e) {
             // deb('onChangeCalendars')
             // deb(e)
