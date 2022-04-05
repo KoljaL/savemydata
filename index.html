@@ -32,6 +32,8 @@
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="icon" href="style/img/browser/icon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="style/css/layout.css">
+    <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.css" />
+
     <link rel="stylesheet" href="style/css/form.css">
     <style>
 
@@ -94,6 +96,14 @@
                         <span class="link_text"><span class="icon appointment_icon"></span><span data-lang="S_appointment">Appointment</span></span>
                     </li>
 
+                    <li data-link="calendar">
+                        <span class="link_text"><span class="icon calendar_icon"></span><span data-lang="S_calendar">Calendar</span></span>
+                    </li>
+
+                    <li data-link="calendar_wp">
+                        <span class="link_text"><span class="icon calendar_icon"></span><span data-lang="S_calendar">CalendarWP</span></span>
+                    </li>
+
 
                     <!-- 
 
@@ -151,6 +161,7 @@
 
                 </ul>
             </div>
+            <div id="calendarSidebar"></div>
             <div class="sidebar_footer"></div>
         </nav>
 
@@ -172,10 +183,16 @@
         </footer>
         <div id="selectLanguageDIV"></div>
     </div>
+    <script src="https://uicdn.toast.com/tui.code-snippet/v1.5.2/tui-code-snippet.min.js"></script>
+    <script src="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.min.js"></script>
+    <script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.min.js"></script>
+    <script src="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="js/Layout.js"></script>
     <script type="module" src="js/App.js"></script>
-
-
+    <script>
+    </script>
 </body>
 
 </html>
