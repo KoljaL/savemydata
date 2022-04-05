@@ -28,7 +28,7 @@
     <meta name="author" content="KoljaL" />
     <meta name="copyright" content="MIT" />
     <!-- <base href="http://127.0.0.1:5501/" /> -->
-    <link rel="manifest" href="style/manifest.json">
+    <link rel="manifest" href="manifest.json">
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="icon" href="style/img/browser/icon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="style/css/layout.css">
@@ -40,7 +40,10 @@
 
 <body id="body" class="darkWrapper">
     <script>
-        if (localStorage.getItem('DF_token')) document.getElementById('body').classList.remove('darkWrapper')
+        if (localStorage.getItem('DF_token')) {
+            document.getElementById('body').classList.remove('darkWrapper')
+            deb('darkWra')
+        }
     </script>
     <div id="PRL">
         <header>

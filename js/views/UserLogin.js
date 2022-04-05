@@ -132,6 +132,7 @@ let Login = async() => {
 
                     // add username & avatar to sidebar
                     Functions.setUsername(user.username, user.id);
+                    deb('Userlogin')
 
                     // save userdata in localStorage
                     Functions.setLocal('username', user.username);
@@ -144,8 +145,8 @@ let Login = async() => {
                     // activate logout button
                     document.getElementById('userLogout').addEventListener('click', Functions.flushLocal);
                     //  redirect to user profile
-                    // window.location.hash = '#user/profile/' + user.id;
-                    window.location.hash = '';
+                    window.location.hash = '#staff/profile/' + user.id;
+                    // window.location.hash = '';
 
                 } else {
                     document.getElementById('UserLoginFormError').innerHTML = res.message;

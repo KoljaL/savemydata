@@ -6,9 +6,24 @@
  * Created on Thu Mar 17 2022 at 02:20:53
  *
  */
-ini_set( 'display_errors', 1 );
-ini_set( 'display_startup_errors', 1 );
-error_reporting( E_ALL );
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+
+/*
+ *
+ * preflight for CORS
+ *
+ */
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: *');
+    header('Access-Control-Allow-Headers: *');
+    header('Access-Control-Max-Age: 1728000');
+    die();
+}
+
 
 /*
  *
@@ -36,22 +51,22 @@ $db_path = '../userdata/db/database.sqlite';
  * Created on Thu Mar 17 2022 at 02:22:13
  *
  */
-$uri = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
-$uri = explode( '/', $uri );
+$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$uri = explode('/', $uri);
 // $API_endpoint = end( $uri );
 
 // print_r( $uri );
-$api          = array_search( 'api', $uri );
+$api          = array_search('api', $uri);
 $API_endpoint = '';
 $API_param    = '';
 $API_value    = '';
-if ( isset( $uri[$api + 1] ) ) {
+if (isset($uri[$api + 1])) {
     $API_endpoint = $uri[$api + 1];
 }
-if ( isset( $uri[$api + 2] ) ) {
+if (isset($uri[$api + 2])) {
     $API_param = $uri[$api + 2];
 }
-if ( isset( $uri[$api + 3] ) ) {
+if (isset($uri[$api + 3])) {
     $API_value = $uri[$api + 3];
 }
 // echo "<br>";
@@ -82,15 +97,16 @@ if ( isset( $uri[$api + 3] ) ) {
  * Created on Thu Mar 17 2022 at 02:22:51
  *
  */
-if ( !file_exists( $db_path ) ) {
-    $db = new PDO( 'sqlite:'.$db_path );
+if (!file_exists($db_path)) {
+    $db = new PDO('sqlite:'.$db_path);
     init_db();
     create_dummy_data();
 } else {
-    $db = new PDO( 'sqlite:'.$db_path );
+    $db = new PDO('sqlite:'.$db_path);
 }
 
-function init_db() {
+function init_db()
+{
     init_customertable();
     init_stafftable();
     init_staff_fields_table();
@@ -104,9 +120,9 @@ function init_db() {
  * Created on Thu Mar 17 2022 at 02:18:40
  *
  */
-$request = json_decode( file_get_contents( 'php://input' ), true );
-if ( $request ) {
-    $keys = preg_replace( '/[^a-z0-9_]+/i', '', array_keys( $request ) );
+$request = json_decode(file_get_contents('php://input'), true);
+if ($request) {
+    $keys = preg_replace('/[^a-z0-9_]+/i', '', array_keys($request));
 } else {
     $request = $_POST;
 }
@@ -120,31 +136,31 @@ if ( $request ) {
 //DEBUG
 //DEBUG
 //DEBUG
-if ( 'do' === $API_endpoint ) {
-    create_dummy_appointment( '4' );
+if ('do' === $API_endpoint) {
+    create_dummy_appointment('4');
     exit;
 }
-if ( 'reset' === $API_endpoint ) {
-    if ( is_file( $db_path ) ) {
-        unlink( $db_path );
+if ('reset' === $API_endpoint) {
+    if (is_file($db_path)) {
+        unlink($db_path);
     }
-    $db = new PDO( 'sqlite:'.$db_path );
+    $db = new PDO('sqlite:'.$db_path);
     init_db();
     create_dummy_data();
 }
 //DEBUG
 //DEBUG
 //DEBUG
-if ( 'login' === $API_endpoint ) {
+if ('login' === $API_endpoint) {
     // make backup
 
-    login_user( $request );
+    login_user($request);
     require __DIR__.'/backup.php';
     exit;
 } else {
-    if ( isset( $request['user_token'] ) ) {
-        $TOKEN = JWT::decode( $request['user_token'], new Key( $JWT_key, 'HS256' ) );
-        $TOKEN = json_decode( json_encode( $TOKEN ), true );
+    if (isset($request['user_token'])) {
+        $TOKEN = JWT::decode($request['user_token'], new Key($JWT_key, 'HS256'));
+        $TOKEN = json_decode(json_encode($TOKEN), true);
     } else {
         echo "no key";
         // exit;
@@ -170,66 +186,66 @@ if ( 'login' === $API_endpoint ) {
  * Then it will call the corresponding function.
  *
  */
-switch ( $API_endpoint ) {
+switch ($API_endpoint) {
 // case 'userprofile':
 //     get_user_profile( $request );
 //     break;
 
 case 'get_list_from':
-    get_list_from( $request );
+    get_list_from($request);
     break;
 
 case 'newuser':
-    new_user( $request );
+    new_user($request);
     break;
 
 case 'new_entry_in':
-    new_entry_in( $request );
+    new_entry_in($request);
     break;
 case 'delete_entry_in':
-    delete_entry_in( $request );
+    delete_entry_in($request);
     break;
 
 case 'login':
-    login_user( $request );
+    login_user($request);
     break;
 
 case 'get_projects_as_table':
-    get_projects_as_table( $request );
+    get_projects_as_table($request);
     break;
 
 case 'get_project':
-    get_project( $request );
+    get_project($request);
     break;
 
 case 'edit_single_field':
-    edit_single_field( $request );
+    edit_single_field($request);
     break;
 
 case 'get_data_from':
-    get_data_from( $request );
+    get_data_from($request);
     break;
 
 case 'upload_file':
-    upload_file( $request );
+    upload_file($request);
     break;
 
 case 'get_files_from':
-    get_files_from( $request );
+    get_files_from($request);
     break;
 
 case 'get_appointments_from':
-    get_appointments_from( $request );
+    get_appointments_from($request);
     break;
 case 'get_appointments_as_table':
-    get_appointments_as_table( $request );
+    get_appointments_as_table($request);
     break;
 
 case 'get_projects_from':
-    get_projects_from( $request );
+    get_projects_from($request);
     break;
 case 'get_appointment':
-    get_appointment( $request );
+    get_appointment($request);
     break;
 
     break;
@@ -254,29 +270,30 @@ default:
 // https://code-boxx.com/php-user-role-management-system/
 // https://www.php-einfach.de/mysql-tutorial/crashkurs-pdo/
 
-function get_appointments_as_table( $param ) {
-    if ( isAllowed() ) {
+function get_appointments_as_table($param)
+{
+    if (isAllowed()) {
         global $db, $API_param, $API_value;
 
-        if ( '' !== $API_value ) {
+        if ('' !== $API_value) {
             $where = ' WHERE id = '.$API_value;
         } else {
             $where = '';
         }
-        $stmt = $db->prepare( "SELECT * FROM appointment $where" );
+        $stmt = $db->prepare("SELECT * FROM appointment $where");
         $stmt->execute();
-        $projects = $stmt->fetchAll( PDO::FETCH_ASSOC );
+        $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $response = [];
-        if ( $projects ) {
+        if ($projects) {
 
             // get the username and remove the comments
-            foreach ( $projects as $key => $value ) {
-                $projects[$key]['username']    = get_name_by_id( 'customer', $value['customer_id'] );
-                $projects[$key]['staffname']   = get_name_by_id( 'staff', $value['staff_id'] );
-                $projects[$key]['projectname'] = get_name_by_id( 'project', $value['project_id'], 'title' );
-                unset( $projects[$key]['comment_staff'] );
-                unset( $projects[$key]['comment_customer'] );
+            foreach ($projects as $key => $value) {
+                $projects[$key]['username']    = get_name_by_id('customer', $value['customer_id']);
+                $projects[$key]['staffname']   = get_name_by_id('staff', $value['staff_id']);
+                $projects[$key]['projectname'] = get_name_by_id('project', $value['project_id'], 'title');
+                unset($projects[$key]['comment_staff']);
+                unset($projects[$key]['comment_customer']);
             }
             $response['code'] = 200;
             $response['data'] = $projects;
@@ -285,28 +302,29 @@ function get_appointments_as_table( $param ) {
             $response['table']   = $projects;
             $response['message'] = 'no form profile found';
         }
-        return_JSON( $response );
+        return_JSON($response);
     } else {
         $response['code']    = 400;
         $response['message'] = 'vorbidden';
-        return_JSON( $response );
+        return_JSON($response);
     }
 }
 
-function get_appointment( $param ) {
-    if ( isAllowed() ) {
+function get_appointment($param)
+{
+    if (isAllowed()) {
         global $db, $API_param, $API_value;
 
-        $stmt = $db->prepare( "SELECT * FROM appointment WHERE id = :id" );
-        $stmt->execute( [':id' => $API_param] );
+        $stmt = $db->prepare("SELECT * FROM appointment WHERE id = :id");
+        $stmt->execute([':id' => $API_param]);
 
-        $appointments = $stmt->fetch( PDO::FETCH_ASSOC );
+        $appointments = $stmt->fetch(PDO::FETCH_ASSOC);
 
         $response = [];
-        if ( $appointments ) {
-            $appointments['customername'] = get_name_by_id( 'customer', $appointments['customer_id'] );
-            $appointments['staffname']    = get_name_by_id( 'staff', $appointments['staff_id'] );
-            $appointments['projectname']  = get_name_by_id( 'project', $appointments['project_id'], 'title' );
+        if ($appointments) {
+            $appointments['customername'] = get_name_by_id('customer', $appointments['customer_id']);
+            $appointments['staffname']    = get_name_by_id('staff', $appointments['staff_id']);
+            $appointments['projectname']  = get_name_by_id('project', $appointments['project_id'], 'title');
 
             $response['code'] = 200;
             $response['data'] = $appointments;
@@ -314,11 +332,11 @@ function get_appointment( $param ) {
             $response['code']    = 400;
             $response['message'] = 'no file found';
         }
-        return_JSON( $response );
+        return_JSON($response);
     } else {
         $response['code']    = 400;
         $response['message'] = 'vorbidden';
-        return_JSON( $response );
+        return_JSON($response);
     }
 }
 
@@ -327,36 +345,36 @@ function get_appointment( $param ) {
  * This function is used to get all the projects from the database
  *
  */
-function get_projects_from( $param ) {
-    if ( isAllowed() ) {
+function get_projects_from($param)
+{
+    if (isAllowed()) {
         global $db, $API_param, $API_value;
 
-        if ( 'customer' == $API_param ) {
-            $stmt = $db->prepare( "SELECT * FROM project WHERE customer_id = :id" );
+        if ('customer' == $API_param) {
+            $stmt = $db->prepare("SELECT * FROM project WHERE customer_id = :id");
         }
 
-        if ( 'staff' == $API_param ) {
-            $stmt = $db->prepare( "SELECT * FROM project WHERE customer_id = :id" );
+        if ('staff' == $API_param) {
+            $stmt = $db->prepare("SELECT * FROM project WHERE customer_id = :id");
         }
 
-        $stmt->execute( [':id' => $API_value] );
+        $stmt->execute([':id' => $API_value]);
 
-        $projects = $stmt->fetchAll( PDO::FETCH_ASSOC );
+        $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $response = [];
-        if ( $projects ) {
-
+        if ($projects) {
             $response['code'] = 200;
             $response['data'] = $projects;
         } else {
             $response['code']    = 400;
             $response['message'] = 'no file found';
         }
-        return_JSON( $response );
+        return_JSON($response);
     } else {
         $response['code']    = 400;
         $response['message'] = 'vorbidden';
-        return_JSON( $response );
+        return_JSON($response);
     }
 }
 /**
@@ -364,36 +382,36 @@ function get_projects_from( $param ) {
  * This function is used to get all the appointments of a specific customer
  *
  */
-function get_appointments_from( $param ) {
-    if ( isAllowed() ) {
+function get_appointments_from($param)
+{
+    if (isAllowed()) {
         global $db, $API_param, $API_value;
 
-        if ( 'customer' == $API_param ) {
-            $stmt = $db->prepare( "SELECT * FROM appointment WHERE customer_id = :id" );
+        if ('customer' == $API_param) {
+            $stmt = $db->prepare("SELECT * FROM appointment WHERE customer_id = :id");
         }
 
-        if ( 'staff' == $API_param ) {
-            $stmt = $db->prepare( "SELECT * FROM appointment WHERE customer_id = :id" );
+        if ('staff' == $API_param) {
+            $stmt = $db->prepare("SELECT * FROM appointment WHERE customer_id = :id");
         }
 
-        $stmt->execute( [':id' => $API_value] );
+        $stmt->execute([':id' => $API_value]);
 
-        $files = $stmt->fetchAll( PDO::FETCH_ASSOC );
+        $files = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $response = [];
-        if ( $param ) {
-
+        if ($param) {
             $response['code'] = 200;
             $response['data'] = $files;
         } else {
             $response['code']    = 400;
             $response['message'] = 'no file found';
         }
-        return_JSON( $response );
+        return_JSON($response);
     } else {
         $response['code']    = 400;
         $response['message'] = 'vorbidden';
-        return_JSON( $response );
+        return_JSON($response);
     }
 }
 
@@ -402,29 +420,29 @@ function get_appointments_from( $param ) {
  * Get all files from a specific origin (customer, project, appointment)
  *
  */
-function get_files_from( $param ) {
-    if ( isAllowed() ) {
+function get_files_from($param)
+{
+    if (isAllowed()) {
         global $db, $API_param, $API_value;
 
-        $stmt = $db->prepare( "SELECT * FROM files WHERE origin = :origin AND origin_id = :origin_id" );
-        $stmt->execute( [':origin' => $API_param, ':origin_id' => $API_value] );
+        $stmt = $db->prepare("SELECT * FROM files WHERE origin = :origin AND origin_id = :origin_id");
+        $stmt->execute([':origin' => $API_param, ':origin_id' => $API_value]);
 
-        $files = $stmt->fetchAll( PDO::FETCH_ASSOC );
+        $files = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $response = [];
-        if ( $param ) {
-
+        if ($param) {
             $response['code'] = 200;
             $response['data'] = $files;
         } else {
             $response['code']    = 400;
             $response['message'] = 'no file found';
         }
-        return_JSON( $response );
+        return_JSON($response);
     } else {
         $response['code']    = 400;
         $response['message'] = 'vorbidden';
-        return_JSON( $response );
+        return_JSON($response);
     }
 }
 
@@ -433,27 +451,28 @@ function get_files_from( $param ) {
  * Upload a file to the server
  *
  */
-function upload_file( $param ) {
-    if ( isAllowed() ) {
+function upload_file($param)
+{
+    if (isAllowed()) {
         global $db, $API_param, $API_value, $TOKEN;
 
         // set filename and dir
         $uploaddir  = '../userdata/uploads/'.$param['origin'].'/'.$param['origin_id'].'/';
-        $uploadfile = $uploaddir.rndStr( 4 ).'_'.basename( $_FILES['file']['name'] );
+        $uploadfile = $uploaddir.rndStr(4).'_'.basename($_FILES['file']['name']);
 
         // create folder if not exists
-        if ( !is_dir( '../userdata/uploads/'.$param['origin'].'/'.$param['origin_id'] ) ) {
-            mkdir( '../userdata/uploads/'.$param['origin'].'/'.$param['origin_id'] );
+        if (!is_dir('../userdata/uploads/'.$param['origin'].'/'.$param['origin_id'])) {
+            mkdir('../userdata/uploads/'.$param['origin'].'/'.$param['origin_id']);
         }
 
         $response = [];
-        if ( move_uploaded_file( $_FILES['file']['tmp_name'], $uploadfile ) ) {
+        if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
             // prepare filepath for DOM
-            $file_path = str_replace( '../', '', $uploadfile );
+            $file_path = str_replace('../', '', $uploadfile);
 
             // insert ino DB: missing NAME, FILETYPE DATE
             $sql = "INSERT INTO files (origin, origin_id, path, date) VALUES (?,?,?,?)";
-            $db->prepare( $sql )->execute( [$param['origin'], $param['origin_id'], $file_path, 'data'] );
+            $db->prepare($sql)->execute([$param['origin'], $param['origin_id'], $file_path, 'data']);
 
             $response['code']         = 200;
             $response['data']['id']   = $db->lastInsertId();
@@ -464,7 +483,7 @@ function upload_file( $param ) {
             $response['$_FILES'] = $_FILES;
             $response['$param']  = $param;
         }
-        return_JSON( $response );
+        return_JSON($response);
     } else {
         $response['code']    = 400;
         $response['POST']    = $_POST;
@@ -472,7 +491,7 @@ function upload_file( $param ) {
         $response['param']   = $param;
         $response['$TOKEN']  = $TOKEN;
         $response['message'] = 'vorbidden to upload file';
-        return_JSON( $response );
+        return_JSON($response);
     }
 }
 
@@ -481,22 +500,23 @@ function upload_file( $param ) {
  * Get a project by id
  *
  */
-function get_project( $param ) {
-    if ( isAllowed() ) {
+function get_project($param)
+{
+    if (isAllowed()) {
         global $db, $API_param, $API_value;
 
-        $stmt = $db->prepare( "SELECT * FROM project WHERE id = $API_param" );
+        $stmt = $db->prepare("SELECT * FROM project WHERE id = $API_param");
         $stmt->execute();
-        $project  = $stmt->fetch( PDO::FETCH_ASSOC );
+        $project  = $stmt->fetch(PDO::FETCH_ASSOC);
         $response = [];
-        if ( $project ) {
-            $stmt = $db->prepare( "SELECT * FROM appointment WHERE project_id = $API_param" );
+        if ($project) {
+            $stmt = $db->prepare("SELECT * FROM appointment WHERE project_id = $API_param");
             $stmt->execute();
-            $appointments            = $stmt->fetchAll( PDO::FETCH_ASSOC );
+            $appointments            = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $project['appointments'] = $appointments;
 
-            $project['customername'] = get_name_by_id( 'customer', $project['customer_id'] );
-            $project['staffname']    = get_name_by_id( 'staff', $project['staff_id'] );
+            $project['customername'] = get_name_by_id('customer', $project['customer_id']);
+            $project['staffname']    = get_name_by_id('staff', $project['staff_id']);
 
             $response['code'] = 200;
             $response['data'] = $project;
@@ -504,11 +524,11 @@ function get_project( $param ) {
             $response['code']    = 400;
             $response['message'] = 'no form profile found';
         }
-        return_JSON( $response );
+        return_JSON($response);
     } else {
         $response['code']    = 400;
         $response['message'] = 'vorbidden';
-        return_JSON( $response );
+        return_JSON($response);
     }
 }
 
@@ -517,27 +537,28 @@ function get_project( $param ) {
  * This function is used to get the projects as a table
  *
  */
-function get_projects_as_table( $param ) {
-    if ( isAllowed() ) {
+function get_projects_as_table($param)
+{
+    if (isAllowed()) {
         global $db, $API_param, $API_value;
 
-        if ( '' !== $API_value ) {
+        if ('' !== $API_value) {
             $where = ' WHERE id = '.$API_value;
         } else {
             $where = '';
         }
-        $stmt = $db->prepare( "SELECT * FROM project $where" );
+        $stmt = $db->prepare("SELECT * FROM project $where");
         $stmt->execute();
-        $projects = $stmt->fetchAll( PDO::FETCH_ASSOC );
+        $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $response = [];
-        if ( $projects ) {
+        if ($projects) {
 
             // get the username and remove the comments
-            foreach ( $projects as $key => $value ) {
-                $projects[$key]['username'] = get_name_by_id( 'customer', $value['customer_id'] );
-                unset( $projects[$key]['comment_staff'] );
-                unset( $projects[$key]['comment_customer'] );
+            foreach ($projects as $key => $value) {
+                $projects[$key]['username'] = get_name_by_id('customer', $value['customer_id']);
+                unset($projects[$key]['comment_staff']);
+                unset($projects[$key]['comment_customer']);
             }
             $response['code'] = 200;
             $response['data'] = $projects;
@@ -546,11 +567,11 @@ function get_projects_as_table( $param ) {
             $response['table']   = $projects;
             $response['message'] = 'no form profile found';
         }
-        return_JSON( $response );
+        return_JSON($response);
     } else {
         $response['code']    = 400;
         $response['message'] = 'vorbidden';
-        return_JSON( $response );
+        return_JSON($response);
     }
 }
 
@@ -559,13 +580,14 @@ function get_projects_as_table( $param ) {
  * Given a table name and an id, return the username of the user with that id
  *
  */
-function get_name_by_id( $table, $id, $name = 'username' ) {
+function get_name_by_id($table, $id, $name = 'username')
+{
     global $db;
-    $stmt = $db->prepare( "SELECT id, $name FROM $table WHERE id = $id" );
+    $stmt = $db->prepare("SELECT id, $name FROM $table WHERE id = $id");
     $stmt->execute();
-    $user = $stmt->fetch( PDO::FETCH_ASSOC );
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
     // print_r( $user );
-    if ( isset( $user[$name] ) ) {
+    if (isset($user[$name])) {
         return $user[$name];
     } else {
         return 'Entry removed';
@@ -577,12 +599,13 @@ function get_name_by_id( $table, $id, $name = 'username' ) {
  * Generate a random string of characters
  *
  */
-function rndStr( $length = 10 ) {
+function rndStr($length = 10)
+{
     $characters       = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $charactersLength = strlen( $characters );
+    $charactersLength = strlen($characters);
     $randomString     = '';
-    for ( $i = 0; $i < $length; $i++ ) {
-        $randomString .= $characters[rand( 0, $charactersLength - 1 )];
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
     }
     return $randomString;
 }
@@ -603,24 +626,25 @@ function rndStr( $length = 10 ) {
  * This function is used to get all the profile form from the database
  *
  */
-function get_data_from( $param ) {
-    if ( isAllowed() ) {
+function get_data_from($param)
+{
+    if (isAllowed()) {
         global $db, $API_param, $API_value;
         $table = $API_param;
 
-        if ( '' !== $API_value ) {
+        if ('' !== $API_value) {
             $where = ' WHERE id = '.$API_value;
         } else {
             $where = '';
         }
-        $stmt = $db->prepare( "SELECT * FROM $table $where" );
+        $stmt = $db->prepare("SELECT * FROM $table $where");
         $stmt->execute();
-        $form = $stmt->fetchAll( PDO::FETCH_ASSOC );
+        $form = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $response = [];
-        if ( $form ) {
-            foreach ( $form as $key => $value ) {
-                unset( $form[$key]['password'] );
+        if ($form) {
+            foreach ($form as $key => $value) {
+                unset($form[$key]['password']);
             }
             $response['code'] = 200;
             $response['data'] = $form;
@@ -629,12 +653,11 @@ function get_data_from( $param ) {
             $response['table']   = $form;
             $response['message'] = 'no form profile found';
         }
-        return_JSON( $response );
-
+        return_JSON($response);
     } else {
         $response['code']    = 400;
         $response['message'] = 'vorbidden';
-        return_JSON( $response );
+        return_JSON($response);
     }
 }
 
@@ -654,27 +677,27 @@ function get_data_from( $param ) {
  * This function deletes a user from the database
  *
  */
-function delete_entry_in( $param ) {
-    if ( isAllowed() ) {
+function delete_entry_in($param)
+{
+    if (isAllowed()) {
         global $db, $API_param, $API_value;
         $response = [];
         $table    = $API_param;
         $id       = $API_value;
 
-        if ( 'files' === $table ) {
-            $stmt = $db->prepare( "SELECT * FROM $table WHERE id =? " );
-            $stmt->execute( [$API_value] );
-            $image = $stmt->fetch( PDO::FETCH_ASSOC );
+        if ('files' === $table) {
+            $stmt = $db->prepare("SELECT * FROM $table WHERE id =? ");
+            $stmt->execute([$API_value]);
+            $image = $stmt->fetch(PDO::FETCH_ASSOC);
             $path  = $image['path'];
-            unlink( '../'.$path );
+            unlink('../'.$path);
         }
 
-        $stmt = $db->prepare( "DELETE FROM $table WHERE id =?" );
-        $stmt->execute( [$id] );
+        $stmt = $db->prepare("DELETE FROM $table WHERE id =?");
+        $stmt->execute([$id]);
         $count = $stmt->rowCount();
 
-        if ( $count ) {
-
+        if ($count) {
             $response['code'] = 200;
             $response['data'] = $count;
         } else {
@@ -682,11 +705,11 @@ function delete_entry_in( $param ) {
             $response['data']    = $count;
             $response['message'] = 'no user found';
         }
-        return_JSON( $response );
+        return_JSON($response);
     } else {
         $response['code']    = 400;
         $response['message'] = 'vorbidden';
-        return_JSON( $response );
+        return_JSON($response);
     }
 }
 
@@ -706,34 +729,36 @@ function delete_entry_in( $param ) {
  * Create a new user
  *
  */
-function new_user( $param ) {
-    if ( isAllowed() ) {
+function new_user($param)
+{
+    if (isAllowed()) {
         global $db;
         $response = [];
         $table    = $param['table'];
-        unset( $param['table'] );
+        unset($param['table']);
         // create_user( $param );
-        insert_into_db( $param, $table );
+        insert_into_db($param, $table);
     } else {
         $response['code']    = 400;
         $response['message'] = 'vorbidden';
-        return_JSON( $response );
+        return_JSON($response);
     }
 }
 
-function new_entry_in( $param ) {
-    if ( isAllowed() ) {
+function new_entry_in($param)
+{
+    if (isAllowed()) {
         global $db, $API_param;
         $response = [];
         $table    = $API_param;
-        unset( $param['user_id'] );
-        unset( $param['user_token'] );
+        unset($param['user_id']);
+        unset($param['user_token']);
         // create_user( $param );
-        insert_into_db( $param, $table );
+        insert_into_db($param, $table);
     } else {
         $response['code']    = 400;
         $response['message'] = 'vorbidden';
-        return_JSON( $response );
+        return_JSON($response);
     }
 }
 
@@ -753,24 +778,25 @@ function new_entry_in( $param ) {
  * This function is used to get all the users from the database
  * Depending on the $param['table'] it will respond staff or customer data
  */
-function get_list_from( $param ) {
-    if ( isAllowed() ) {
+function get_list_from($param)
+{
+    if (isAllowed()) {
         global $db, $API_param, $API_value;
 
         $table = $API_param;
 
-        if ( '' !== $API_value ) {
+        if ('' !== $API_value) {
             $columns = $API_value;
         } else {
             $columns = '*';
         }
 
-        $stmt = $db->prepare( "SELECT $columns FROM $table" );
+        $stmt = $db->prepare("SELECT $columns FROM $table");
         $stmt->execute();
-        $users = $stmt->fetchAll( PDO::FETCH_ASSOC );
+        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $response = [];
-        if ( $users ) {
+        if ($users) {
             $response['code'] = 200;
             $response['data'] = $users;
         } else {
@@ -779,11 +805,11 @@ function get_list_from( $param ) {
         }
 
         // return response
-        return_JSON( $response );
+        return_JSON($response);
     } else {
         $response['code']    = 400;
         $response['message'] = 'vorbidden';
-        return_JSON( $response );
+        return_JSON($response);
     }
 }
 
@@ -803,38 +829,39 @@ function get_list_from( $param ) {
  * This function is used to update a single field in a table
  *
  */
-function edit_single_field( $param ) {
-    if ( isAllowed() ) {
+function edit_single_field($param)
+{
+    if (isAllowed()) {
 
         // special case for password update
-        if ( 'password' === $param['update'] ) {
+        if ('password' === $param['update']) {
             // if new passwort is emopty, do not set and return
-            if ( '' === $param['value'] ) {
+            if ('' === $param['value']) {
                 $response['code'] = 300;
-                return_JSON( $response );
+                return_JSON($response);
                 exit;
             }
             // hash password
-            $param['value'] = password_hash( $param['value'], PASSWORD_DEFAULT );
+            $param['value'] = password_hash($param['value'], PASSWORD_DEFAULT);
         }
         global $db;
         $response = [];
 
         // check if colums exists
         try {
-            $stmt   = $db->prepare( "SELECT $param[update] from $param[table];" );
+            $stmt   = $db->prepare("SELECT $param[update] from $param[table];");
             $update = $stmt->execute();
-        } catch ( Exception $e ) {
-            $db->exec( "ALTER TABLE $param[table] ADD COLUMN '$param[update]' TEXT NOT NULL DEFAULT '' " );
+        } catch (Exception $e) {
+            $db->exec("ALTER TABLE $param[table] ADD COLUMN '$param[update]' TEXT NOT NULL DEFAULT '' ");
         }
 
         $sql    = "UPDATE $param[table] SET $param[update]=? WHERE $param[where]=?";
-        $stmt   = $db->prepare( $sql );
-        $update = $stmt->execute( [$param['value'], $param['equal']] );
+        $stmt   = $db->prepare($sql);
+        $update = $stmt->execute([$param['value'], $param['equal']]);
         // count is the way to get 'true' if row is updated
         $count = $stmt->rowCount();
 
-        if ( $count ) {
+        if ($count) {
             $response['code'] = 200;
             $response['data'] = $update;
         } else {
@@ -843,13 +870,13 @@ function edit_single_field( $param ) {
         }
 
         // return response
-        return_JSON( $response );
+        return_JSON($response);
     }
     // not allowed
     else {
         $response['code']    = 400;
         $response['message'] = 'vorbidden';
-        return_JSON( $response );
+        return_JSON($response);
     }
 }
 
@@ -869,9 +896,10 @@ function edit_single_field( $param ) {
  * If the user is the owner of the token or the user is an admin, then return true
  *
  */
-function isAllowed( $action = '' ) {
+function isAllowed($action = '')
+{
     global $TOKEN, $request;
-    if ( "0" === $TOKEN['role'] ) {
+    if ("0" === $TOKEN['role']) {
         return true;
     }
 }
@@ -892,18 +920,19 @@ function isAllowed( $action = '' ) {
  * This function is used to get a user profile
  *
  */
-function get_user_profile( $param ) {
-    if ( isAllowed() ) {
+function get_user_profile($param)
+{
+    if (isAllowed()) {
         global $db;
 
         $table = $param['table'];
-        $stmt  = $db->prepare( "SELECT * FROM $table WHERE id=?" );
-        $stmt->execute( [$param['id']] );
-        $user = $stmt->fetch( PDO::FETCH_ASSOC );
+        $stmt  = $db->prepare("SELECT * FROM $table WHERE id=?");
+        $stmt->execute([$param['id']]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         $response = [];
-        if ( $user ) {
-            unset( $user['password'] );
+        if ($user) {
+            unset($user['password']);
             $response['code'] = 200;
             $response['data'] = $user;
         } else {
@@ -912,11 +941,11 @@ function get_user_profile( $param ) {
         }
 
         // return response
-        return_JSON( $response );
+        return_JSON($response);
     } else {
         $response['code']    = 400;
         $response['message'] = 'vorbidden';
-        return_JSON( $response );
+        return_JSON($response);
     }
 }
 
@@ -938,20 +967,21 @@ function get_user_profile( $param ) {
  * @param request - The request object.
  *
  */
-function login_user( $request ) {
+function login_user($request)
+{
     global $db, $JWT_key;
 
     // check if userlogin is email or name
-    $userlogin = ( filter_var( $request['userlogin'], FILTER_VALIDATE_EMAIL ) ) ? 'email' : 'username';
+    $userlogin = (filter_var($request['userlogin'], FILTER_VALIDATE_EMAIL)) ? 'email' : 'username';
 
     // find user in table
-    $stmt = $db->prepare( "SELECT * FROM staff WHERE $userlogin =?" );
-    $stmt->execute( [$request['userlogin']] );
+    $stmt = $db->prepare("SELECT * FROM staff WHERE $userlogin =?");
+    $stmt->execute([$request['userlogin']]);
     $user = $stmt->fetch();
 
     // if found user, create data
     $response = [];
-    if ( $user && password_verify( $request['password'], $user['password'] ) ) {
+    if ($user && password_verify($request['password'], $user['password'])) {
 
         // generate token payload
         $token_payload = [
@@ -964,7 +994,7 @@ function login_user( $request ) {
 
         $response['code']          = 200;
         $response['message']       = $user['username'].' logged in';
-        $response['data']['token'] = JWT::encode( $token_payload, $JWT_key, 'HS256' );
+        $response['data']['token'] = JWT::encode($token_payload, $JWT_key, 'HS256');
         $response['data']['user']  = $token_payload;
     } else {
         $response['code']    = 400;
@@ -972,7 +1002,7 @@ function login_user( $request ) {
     }
 
     // return response
-    return_JSON( $response );
+    return_JSON($response);
 }
 
 /*
@@ -992,18 +1022,19 @@ function login_user( $request ) {
  * @param param the parameters that are passed to the function
  * @param table The name of the table to insert into.
  */
-function insert_into_db( $param, $table, $output = true ) {
+function insert_into_db($param, $table, $output = true)
+{
     global $db;
     // print_r( $param );
 
     //
     // get EXISTING COLUMNS from db table
     //
-    $stmt = $db->query( "PRAGMA table_info($table)" );
+    $stmt = $db->query("PRAGMA table_info($table)");
     $stmt->execute();
-    $table_info     = $stmt->fetchAll( PDO::FETCH_ASSOC );
+    $table_info     = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $columns_exists = [];
-    foreach ( $table_info as $key => $value ) {
+    foreach ($table_info as $key => $value) {
         $columns_exists[] = $table_info[$key]['name'];
     }
     // print_r( $columns_exists );
@@ -1011,27 +1042,27 @@ function insert_into_db( $param, $table, $output = true ) {
     //
     // get NEEDED COLUMNS from parameters & add date
     //
-    $columns_needed_array   = array_keys( $param );
+    $columns_needed_array   = array_keys($param);
     $columns_needed_array[] = 'date';
-    $columns_needed         = implode( ',', $columns_needed_array );
+    $columns_needed         = implode(',', $columns_needed_array);
     $columns_needed         = $columns_needed;
     // print_r( $columns_needed );
 
     //
     // find MISSING COLUMNS & create them
-    $missing_columns = array_diff( $columns_needed_array, $columns_exists );
+    $missing_columns = array_diff($columns_needed_array, $columns_exists);
     // print_r( $missing_columns );
-    if ( $missing_columns ) {
-        foreach ( $missing_columns as $key => $column ) {
-            $db->exec( "ALTER TABLE $table ADD COLUMN '$column' TEXT NOT NULL DEFAULT '' " );
+    if ($missing_columns) {
+        foreach ($missing_columns as $key => $column) {
+            $db->exec("ALTER TABLE $table ADD COLUMN '$column' TEXT NOT NULL DEFAULT '' ");
         }
     }
 
     //
     // prepare amount of PLACEHOLDERS
-    $count       = count( $param ) + 1;
+    $count       = count($param) + 1;
     $placeholder = '?';
-    for ( $i = 1; $i < $count; $i++ ) {
+    for ($i = 1; $i < $count; $i++) {
         $placeholder .= ',?';
     }
     // print_r( $placeholder );
@@ -1040,26 +1071,26 @@ function insert_into_db( $param, $table, $output = true ) {
     // prepare VARS from parameters & add date
     //
     $vars = [];
-    foreach ( $param as $key => $value ) {
-        if ( 'password' === $key ) {
-            $value = password_hash( $value, PASSWORD_DEFAULT );
+    foreach ($param as $key => $value) {
+        if ('password' === $key) {
+            $value = password_hash($value, PASSWORD_DEFAULT);
         }
         $vars[] = $value;
     }
-    $vars[] = date( 'd.m.Y H:i:s' );
+    $vars[] = date('d.m.Y H:i:s');
     // print_r( $vars );
 
     //
     // INSERT INTO
     //
     // echo "INSERT INTO $table ($columns_needed) VALUES ($placeholder)";
-    $stmt = $db->prepare( "INSERT INTO $table ($columns_needed) VALUES ($placeholder)" );
-    $stmt->execute( $vars );
+    $stmt = $db->prepare("INSERT INTO $table ($columns_needed) VALUES ($placeholder)");
+    $stmt->execute($vars);
 
     $count = $stmt->rowCount();
 
     $response = [];
-    if ( $count && $output ) {
+    if ($count && $output) {
         $response['data']['id'] = $db->lastInsertId();
         $response['code']       = 200;
         $response['message']    = 'insert successfull';
@@ -1071,7 +1102,7 @@ function insert_into_db( $param, $table, $output = true ) {
     }
 
     // return response
-    return_JSON( $response );
+    return_JSON($response);
 }
 
 /*
@@ -1091,21 +1122,22 @@ function insert_into_db( $param, $table, $output = true ) {
  *
  */
 //  header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
-function return_JSON( $response ) {
+function return_JSON($response)
+{
     global $request, $API_endpoint, $API_param, $API_value;
 
-    if ( 'reset' !== $API_endpoint ) {
+    if ('reset' !== $API_endpoint) {
         $response['GET']['$API_endpoint'] = $API_endpoint;
         $response['GET']['$API_param']    = $API_param;
         $response['GET']['$API_value']    = $API_value;
 
         $response['POST'] = $request;
-        header( 'Access-Control-Allow-Origin: *' );
-        header( 'Content-Type: application/json; charset=UTF-8' );
-        header( 'Access-Control-Allow-Methods: POST' );
-        header( 'Access-Control-Max-Age: 3600' );
-        header( 'Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With' );
-        echo json_encode( $response );
+        header('Access-Control-Allow-Origin: *');
+        header('Content-Type: application/json; charset=UTF-8');
+        header('Access-Control-Allow-Methods: POST');
+        header('Access-Control-Max-Age: 3600');
+        header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
+        echo json_encode($response);
     }
     // exit;
 }
@@ -1122,9 +1154,10 @@ function return_JSON( $response ) {
 //
 */
 
-function init_staff_fields_table() {
+function init_staff_fields_table()
+{
     global $db;
-    $db->exec( 'CREATE TABLE IF NOT EXISTS staff_fields(
+    $db->exec('CREATE TABLE IF NOT EXISTS staff_fields(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL DEFAULT "",
         label TEXT NOT NULL DEFAULT "",
@@ -1135,7 +1168,7 @@ function init_staff_fields_table() {
         edit TEXT NOT NULL DEFAULT "",
         db TEXT NOT NULL DEFAULT "",
         date TEXT NOT NULL DEFAULT ""
-    )' );
+    )');
 
     $userfields = [
         ['pos' => '10', 'row' => '1', 'name' => 'username', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Username', 'db' => 'username/staff/id'],
@@ -1149,10 +1182,10 @@ function init_staff_fields_table() {
         ['pos' => '20', 'row' => '4', 'name' => 'permission', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Permission', 'db' => 'permission/staff/id'],
         ['pos' => '20', 'row' => '4', 'name' => 'lang', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Language', 'db' => 'lang/staff/id']
     ];
-    foreach ( $userfields as $field ) {
-        insert_into_db( $field, 'staff_fields' );
+    foreach ($userfields as $field) {
+        insert_into_db($field, 'staff_fields');
     }
-    $db->exec( 'CREATE TABLE IF NOT EXISTS customer_fields(
+    $db->exec('CREATE TABLE IF NOT EXISTS customer_fields(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL DEFAULT "",
         label TEXT NOT NULL DEFAULT "",
@@ -1163,7 +1196,7 @@ function init_staff_fields_table() {
         edit TEXT NOT NULL DEFAULT "",
         db TEXT NOT NULL DEFAULT "",
         date TEXT NOT NULL DEFAULT ""
-    )' );
+    )');
     $customerfields = [
         ['pos' => '10', 'row' => '1', 'name' => 'username', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Username', 'db' => 'username/customer/id'],
         ['pos' => '20', 'row' => '1', 'name' => 'email', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Email', 'db' => 'email/customer/id'],
@@ -1180,8 +1213,8 @@ function init_staff_fields_table() {
         ['pos' => '10', 'row' => '4', 'name' => 'role', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Role', 'db' => 'role/customer/id'],
         ['pos' => '20', 'row' => '4', 'name' => 'permission', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Permission', 'db' => 'permission/customer/id']
     ];
-    foreach ( $customerfields as $field ) {
-        insert_into_db( $field, 'customer_fields' );
+    foreach ($customerfields as $field) {
+        insert_into_db($field, 'customer_fields');
     }
 }
 
@@ -1201,10 +1234,11 @@ function init_staff_fields_table() {
  * Create a user table in the database
  *
  */
-function init_stafftable() {
+function init_stafftable()
+{
     global $db;
     // create user table
-    $db->exec( 'CREATE TABLE staff(
+    $db->exec('CREATE TABLE staff(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT NOT NULL DEFAULT "",
             password TEXT NOT NULL DEFAULT "",
@@ -1216,12 +1250,12 @@ function init_stafftable() {
             permission TEXT NOT NULL DEFAULT "",
             lang TEXT NOT NULL DEFAULT "en",
             date TEXT NOT NULL DEFAULT ""
-        )' );
+        )');
 
     // create first users
     $admin = ['username' => 'admin', 'password' => 'password', 'firstname' => 'admin', 'lastname' => 'admin', 'email' => 'admin@admin.org', 'comment' => 'lorem iopsum', 'role' => '0', 'permission' => '0'];
     // $user  = ['username' => 'user', 'password' => 'password', 'firstname' => 'user', 'lastname' => 'user', 'email' => 'user@user.org', 'comment' => 'lorem iopsum', 'role' => '1', 'permission' => '0'];
-    insert_into_db( $admin, 'staff' );
+    insert_into_db($admin, 'staff');
     // insert_into_db( $user, 'staff' );
 
     // send response
@@ -1245,10 +1279,11 @@ function init_stafftable() {
 /**
  * Create a table in the database
  */
-function init_customertable() {
+function init_customertable()
+{
     global $db;
     // create user table
-    $db->exec( 'CREATE TABLE customer(
+    $db->exec('CREATE TABLE customer(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT NOT NULL DEFAULT "",
             password TEXT NOT NULL DEFAULT "",
@@ -1264,7 +1299,7 @@ function init_customertable() {
             role TEXT NOT NULL DEFAULT "",
             permission TEXT NOT NULL DEFAULT "",
             date TEXT NOT NULL  DEFAULT ""
-        )' );
+        )');
 
     // // create first users
     // $first_customer = [
@@ -1293,10 +1328,11 @@ function init_customertable() {
     // return_JSON( $response );
 }
 
-function init_project_table() {
+function init_project_table()
+{
     global $db;
     // create user table
-    $db->exec( 'CREATE TABLE project(
+    $db->exec('CREATE TABLE project(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL DEFAULT "",
             customer_id TEXT NOT NULL DEFAULT "",
@@ -1304,13 +1340,14 @@ function init_project_table() {
             comment_staff TEXT NOT NULL DEFAULT "",
             comment_customer TEXT NOT NULL DEFAULT "",
             date TEXT NOT NULL  DEFAULT ""
-        )' );
+        )');
 }
 
-function init_appointment_table() {
+function init_appointment_table()
+{
     global $db;
     // create user table
-    $db->exec( 'CREATE TABLE appointment(
+    $db->exec('CREATE TABLE appointment(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL DEFAULT "",
             start_time TEXT NOT NULL DEFAULT "",
@@ -1322,19 +1359,20 @@ function init_appointment_table() {
             comment TEXT NOT NULL DEFAULT "",
             public TEXT NOT NULL DEFAULT 0,
             date TEXT NOT NULL  DEFAULT ""
-        )' );
+        )');
 }
 
-function init_files_table() {
+function init_files_table()
+{
     global $db;
     // create user table
-    $db->exec( 'CREATE TABLE files(
+    $db->exec('CREATE TABLE files(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             origin TEXT NOT NULL DEFAULT "",
             origin_id TEXT NOT NULL DEFAULT "",
             path TEXT NOT NULL DEFAULT "",
             date TEXT NOT NULL  DEFAULT ""
-        )' );
+        )');
 }
 
 /*
@@ -1350,18 +1388,20 @@ function init_files_table() {
 */
 // CREATE DUMMY USER
 
-function create_dummy_data() {
+function create_dummy_data()
+{
     include './dummy_content.php';
-    create_dummy_staff( 3 );
-    create_dummy_customer( 5 );
-    create_dummy_project( 15 );
-    create_dummy_appointment( 30 );
+    create_dummy_staff(3);
+    create_dummy_customer(5);
+    create_dummy_project(15);
+    create_dummy_appointment(30);
     echo "init done";
     exit;
 }
 
-function create_dummy_staff( $count ) {
-    for ( $i = 0; $i < $count; $i++ ) {
+function create_dummy_staff($count)
+{
+    for ($i = 0; $i < $count; $i++) {
         $random_name = random_name();
         $email       = $random_name[0]."@".$random_name[1].".com";
         $staff       = [
@@ -1372,16 +1412,17 @@ function create_dummy_staff( $count ) {
             'instaname'  => $random_name[1].'_'.$random_name[0],
             'email'      => $email,
             'comment'    => random_text(),
-            'role'       => random_int( 1, 5 ),
-            'permission' => random_int( 1, 5 ).','.random_int( 1, 5 ).','.random_int( 1, 5 )
+            'role'       => random_int(1, 5),
+            'permission' => random_int(1, 5).','.random_int(1, 5).','.random_int(1, 5)
         ];
-        insert_into_db( $staff, 'staff' );
+        insert_into_db($staff, 'staff');
         // create_user( $user );
     }
 }
 
-function create_dummy_customer( $count ) {
-    for ( $i = 0; $i < $count; $i++ ) {
+function create_dummy_customer($count)
+{
+    for ($i = 0; $i < $count; $i++) {
         $random_name = random_name();
         $email       = $random_name[0]."@".$random_name[1].".com";
         $customer    = [
@@ -1392,43 +1433,45 @@ function create_dummy_customer( $count ) {
             'lastname'   => $random_name[1],
             'email'      => $email,
             'comment'    => random_text(),
-            'phone'      => random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ).random_int( 1, 9 ).'-'.random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ).random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ),
+            'phone'      => random_int(1, 9).random_int(0, 9).random_int(0, 9).random_int(1, 9).'-'.random_int(1, 9).random_int(0, 9).random_int(0, 9).random_int(1, 9).random_int(0, 9).random_int(0, 9),
             'street'     => random_street(),
-            'street_nr'  => random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ),
-            'birthdate'  => random_int( 1, 30 ).'.'.random_int( 0, 12 ).'.'.random_int( 1960, 2002 ),
+            'street_nr'  => random_int(1, 9).random_int(0, 9).random_int(0, 9),
+            'birthdate'  => random_int(1, 30).'.'.random_int(0, 12).'.'.random_int(1960, 2002),
             'city'       => random_city(),
-            'city_nr'    => random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ).random_int( 1, 9 ).random_int( 0, 9 ),
+            'city_nr'    => random_int(1, 9).random_int(0, 9).random_int(0, 9).random_int(1, 9).random_int(0, 9),
             'role'       => '10',
             'permission' => '10'
         ];
         // create_customer( $user );
-        insert_into_db( $customer, 'customer' );
+        insert_into_db($customer, 'customer');
     }
 }
 
-function create_dummy_project( $count ) {
-    for ( $i = 0; $i < $count; $i++ ) {
+function create_dummy_project($count)
+{
+    for ($i = 0; $i < $count; $i++) {
         $project = [
             'title'            => random_body(),
-            'customer_id'      => get_ramdon_id_from( 'customer' ),
-            'staff_id'         => get_ramdon_id_from( 'staff' ),
+            'customer_id'      => get_ramdon_id_from('customer'),
+            'staff_id'         => get_ramdon_id_from('staff'),
             'comment_staff'    => random_text(),
             'comment_customer' => random_text()
         ];
-        insert_into_db( $project, 'project' );
+        insert_into_db($project, 'project');
     }
 }
 
-function create_dummy_appointment( $count ) {
+function create_dummy_appointment($count)
+{
     global $db;
-    for ( $i = 0; $i < $count; $i++ ) {
+    for ($i = 0; $i < $count; $i++) {
 
         // get real projects
-        $stmt = $db->prepare( "SELECT * FROM project" );
+        $stmt = $db->prepare("SELECT * FROM project");
         $stmt->execute();
         $user          = $stmt->fetchAll();
-        $count_user    = count( $user );
-        $j             = rand( 0, $count_user - 1 );
+        $count_user    = count($user);
+        $j             = rand(0, $count_user - 1);
         $customer_id   = $user[$j]['customer_id'];
         $staff_id      = $user[$j]['staff_id'];
         $project_id    = $user[$j]['id'];
@@ -1440,21 +1483,21 @@ function create_dummy_appointment( $count ) {
 
         $days = 20;
         // random numbers
-        if ( rand( 0, 1 ) ) {
-            $random_date = date( 'Y-m-d', strtotime( '+'.mt_rand( 0, $days ).' days' ) );
+        if (rand(0, 1)) {
+            $random_date = date('Y-m-d', strtotime('+'.mt_rand(0, $days).' days'));
         } else {
-            $random_date = date( 'Y-m-d', strtotime( '-'.mt_rand( 0, $days ).' days' ) );
+            $random_date = date('Y-m-d', strtotime('-'.mt_rand(0, $days).' days'));
         }
-        $random_hour     = str_pad( rand( 8, 18 ), 2, 0, STR_PAD_LEFT );
-        $random_minute   = str_pad( rand( 0, 59 ), 2, 0, STR_PAD_LEFT );
+        $random_hour     = str_pad(rand(8, 18), 2, 0, STR_PAD_LEFT);
+        $random_minute   = str_pad(rand(0, 59), 2, 0, STR_PAD_LEFT);
         $durations       = [30, 60, 90, 120, 150, 180];
-        $random_duration = $durations[mt_rand( 0, 5 )];
+        $random_duration = $durations[mt_rand(0, 5)];
         // startdate
         $random_datetime_start = $random_date.'T'.$random_hour.':'.$random_minute;
         // enddate is startdate + duration
-        $datetime = new DateTime( $random_datetime_start );
-        $datetime->add( new DateInterval( 'PT'.$random_duration.'M' ) );
-        $random_datetime_end = $datetime->format( 'Y-m-d H:i:s' );
+        $datetime = new DateTime($random_datetime_start);
+        $datetime->add(new DateInterval('PT'.$random_duration.'M'));
+        $random_datetime_end = $datetime->format('Y-m-d H:i:s');
 
         $project = [
             'start_time'  => $random_datetime_start,
@@ -1465,18 +1508,19 @@ function create_dummy_appointment( $count ) {
             'project_id'  => $project_id,
             'customer_id' => $customer_id,
             'comment'     => random_text(),
-            'public'      => random_int( 0, 1 )
+            'public'      => random_int(0, 1)
         ];
-        insert_into_db( $project, 'appointment' );
+        insert_into_db($project, 'appointment');
     }
 }
 
-function get_ramdon_id_from( $table ) {
+function get_ramdon_id_from($table)
+{
     global $db;
-    $stmt = $db->prepare( "SELECT id FROM $table" );
+    $stmt = $db->prepare("SELECT id FROM $table");
     $stmt->execute();
-    $IDs = $stmt->fetchAll( PDO::FETCH_ASSOC );
+    $IDs = $stmt->fetchAll(PDO::FETCH_ASSOC);
     // print_r( $IDs );
-    $i = random_int( 0, count( $IDs ) - 1 );
+    $i = random_int(0, count($IDs) - 1);
     return $IDs[$i]['id'];
 }

@@ -43,6 +43,7 @@ async function router() {
 
             case '/':
                 await UserLogin.render();
+                deb('App Login')
                 break;
 
             case 'staff':
