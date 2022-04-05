@@ -1,6 +1,6 @@
 import Functions from '../Functions.js';
 import UserList from '../components/UserList.js';
-// import AppointmentPopup from '../components/CalendarPopup.js';
+import AppointmentPopup from '../components/CalendarPopup.js';
 
 // GLOBAL VARS
 var CalendarList = [];
@@ -115,9 +115,9 @@ let Style = async() => {
 
         #customSchedulePopup{
             position:fixed;
-            box-shadow: 4px 4px 0 var(--InputShadowHover);
-            background: var(--InputBackground);
-            outline: var(--InputBorder) solid 1px;
+            box-shadow: 4px 4px 0 black;
+            background: var(--bg_3);
+            outline: black solid 1px;
             opacity: 1;
             transition: opacity 1000ms;
             position: absolute;  
@@ -337,20 +337,26 @@ let getSchedules = async(DateRange) => {
                 // deb(data);
                 // var schedules = [];
                 for (let i = 0; i < data_length; i++) {
+
+                    deb(data[i])
+
+                    let startDatetime = new Date(data[i].start_date + ' ' + data[i].start_time);
+                    let endDatetime = new Date(startDatetime.getTime() + data[i].duration * 60000);
+
                     schedules[i] = {
                         id: data[i].id,
                         calendarId: data[i].staff_id,
-                        title: data[i].username,
+                        title: data[i].username + '\n' + data[i].title,
                         body: data[i].comment,
                         category: 'time',
                         dueDateClass: '',
-                        start: data[i].start_time,
-                        end: data[i].end_time,
+                        start: startDatetime,
+                        end: endDatetime,
                         raw: {
+                            title: data[i].title,
                             customer_id: data[i].customer_id,
                             project_id: data[i].project_id,
                             appointment_id: data[i].id,
-                            appointment_post_id: data[i].post_id,
                         },
                     };
                 }
@@ -647,22 +653,23 @@ let Appointments = {
 
                 // fill form in popup with data 
                 document.getElementById('ApPoID').value = data.id;
-                document.getElementById('ApPoTitle').innerHTML = data.title;
+                document.getElementById('ApPoLegend').innerHTML = data.title;
                 document.getElementById('CreateAppointmentPopupSubmit').innerHTML = 'Save';
                 document.getElementById('customSchedulePopupEdit').innerHTML = 'Edit';
                 document.getElementById('ApPoDate').value = startDate;
                 document.getElementById('ApPoTime').value = startTime;
+                document.getElementById('ApPoTitle').value = data.raw.title;
                 document.getElementById('ApPoDuration').value = duration;
                 document.getElementById('ApPoText').innerHTML = data.body;
                 // create dropdown menues and fill with options
                 await CreateSchedule(data.raw.customer_id);
                 // select current option in dropdown menues
-                document.getElementById('StaffListSelect').value = data.calendarId;
+                document.getElementById('staffListSelect').value = data.calendarId;
                 document.getElementById('customerListSelect').value = data.raw.customer_id;
                 // make links to data sites
-                document.getElementById('ApPoCustomerLink').innerHTML = /*HTML*/ `<a class=button href="#Customer-data:${data.raw.customer_id}">Profile</a>`;
-                document.getElementById('ApPoProjectLink').innerHTML = /*HTML*/ `<a class=button href="#Project-data:${data.raw.project_id}">Project</a>`;
-                document.getElementById('ApPoAppointmentLink').innerHTML = /*HTML*/ `<a class=button href="#Appointment-data:${data.raw.appointment_post_id}">Appointment</a>`;
+                document.getElementById('ApPoCustomerLink').innerHTML = /*HTML*/ `<a class=button href="/#customer/profile/${data.raw.customer_id}">Profile</a>`;
+                document.getElementById('ApPoProjectLink').innerHTML = /*HTML*/ `<a class=button href="#project/id/${data.raw.project_id}">Project</a>`;
+                document.getElementById('ApPoAppointmentLink').innerHTML = /*HTML*/ `<a class=button href="#appointment/id/${data.id}">Appointment</a>`;
 
                 // get all formfieleds  and make them non editable
                 var allInputs = document.querySelectorAll('input, select, textarea, button');
@@ -719,27 +726,20 @@ let Appointments = {
              * @param customer_id - The ID of the customer you want to get projects for.
              */
             function getcustomerprojects(customer_id) {
-                // deb(customer_id);
-                fetch(WP_URL + '/wp-json/tcapi/getcustomerprojects', {
-                        method: 'POST',
-                        credentials: 'same-origin',
-                        body: JSON.stringify({
-                            customer: customer_id,
-                        }),
-                        headers: {
-                            'Content-Type': 'application/json',
-                            accept: 'application/json',
-                            Authorization: `Bearer ${localStorage.getItem('TC_token')}`,
-                        },
+                Functions.getAPIdata('get_list_from/project/id,title,customer_id')
+                    .then((res) => {
+                        if (200 === res.code) {
+                            deb(res.data);
+                            deb(customer_id)
+
+                            const customer_projects = res.data.filter(id => id.customer_id === customer_id);
+
+                            deb(customer_projects)
+
+                            document.getElementById('customerProjects').innerHTML = Object.keys(customer_projects)
+                                .map((key) => `<option value="${customer_projects[key].id}">${customer_projects[key].title}</option>`).join('');
+                        }
                     })
-                    .then((res) => res.json())
-                    .then(function(res) {
-                        // console.log(res);
-                        // CREATE
-                        document.getElementById('customerProjects').innerHTML = Object.keys(res)
-                            .map((key) => `<option value="${res[key].id}">${res[key].title}</option>`)
-                            .join('');
-                    });
             } //getcustomerprojects()
 
 
@@ -750,31 +750,38 @@ let Appointments = {
             document.getElementById('CreateAppointmentPopupSubmit').addEventListener('click', function(event) {
                 event.preventDefault();
                 const formData = new FormData(CreateAppointmentPopupForm);
+
+
                 const data = JSON.stringify(Object.fromEntries(formData));
                 // deb(Object.fromEntries(formData));
-                fetch(WP_URL + '/wp-json/tcapi/createappointment', {
-                        method: 'POST',
-                        credentials: 'same-origin',
-                        body: data,
-                        headers: {
-                            'Content-Type': 'application/json',
-                            accept: 'application/json',
-                            Authorization: `Bearer ${localStorage.getItem('TC_token')}`,
-                        },
-                    })
-                    .then((res) => res.json())
+                // fetch(WP_URL + '/wp-json/tcapi/createappointment', {
+                //         method: 'POST',
+                //         credentials: 'same-origin',
+                //         body: data,
+                //         headers: {
+                //             'Content-Type': 'application/json',
+                //             accept: 'application/json',
+                //             Authorization: `Bearer ${localStorage.getItem('TC_token')}`,
+                //         },
+                //     })
+
+                Functions.getAPIdata('new_entry_in/appointment', formData)
+
+                .then((res) => res.json())
                     .then(function(res) {
-                        // console.log(res);
-                        if (res.case === 'create') {
-                            vt.success(`New Appointment created `);
-                        }
-                        if (res.case === 'update') {
-                            vt.info(`Appointment updated`);
-                        }
-                        getNewSchedules();
-                        document.getElementById('PopupWrapper').remove();
+                        console.log(res);
+                        // if (res.case === 'create') {
+                        //     vt.success(`New Appointment created `);
+                        // }
+                        // if (res.case === 'update') {
+                        //     vt.info(`Appointment updated`);
+                        // }
+                        // getNewSchedules();
+                        // document.getElementById('PopupWrapper').remove();
 
                     });
+
+
             });
         } // CreateSchedule()
 
@@ -798,7 +805,6 @@ let Appointments = {
                 endDate: moment(cal.getDateRangeEnd().getTime()).format('YYYY-MM-DD') + ' 23:59:59',
             };
             await getSchedules(DateRange);
-            deb(schedules);
             cal.clear();
             cal.createSchedules(schedules);
             cal.render();

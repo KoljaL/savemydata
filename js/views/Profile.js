@@ -221,7 +221,7 @@ let dropDownEvent = async(tableName) => {
         let innerHTML = await UserList.render('dropdown', tableName);
         await Functions.setInnerHTML('UserProfileList', innerHTML)
             .then(() => {
-                document.getElementById('UserListSelect').addEventListener('change', (el) => {
+                document.getElementById(tableName + 'ListSelect').addEventListener('change', (el) => {
                     Message.info('User Profile: ' + el.target.options[el.target.selectedIndex].text);
                     // Message.success()
                     // Message.error()

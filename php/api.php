@@ -10,20 +10,18 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-
 /*
  *
  * preflight for CORS
  *
  */
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+if ('OPTIONS' === $_SERVER['REQUEST_METHOD']) {
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: *');
     header('Access-Control-Allow-Headers: *');
     header('Access-Control-Max-Age: 1728000');
     die();
 }
-
 
 /*
  *
@@ -187,75 +185,74 @@ if ('login' === $API_endpoint) {
  *
  */
 switch ($API_endpoint) {
-// case 'userprofile':
-//     get_user_profile( $request );
-//     break;
 
-case 'get_list_from':
-    get_list_from($request);
-    break;
+    case 'get_list_from':
+        get_list_from($request);
+        break;
 
-case 'newuser':
-    new_user($request);
-    break;
+    case 'newuser':
+        new_user($request);
+        break;
 
-case 'new_entry_in':
-    new_entry_in($request);
-    break;
-case 'delete_entry_in':
-    delete_entry_in($request);
-    break;
+    case 'new_entry_in':
+        new_entry_in($request);
+        break;
 
-case 'login':
-    login_user($request);
-    break;
+    case 'delete_entry_in':
+        delete_entry_in($request);
+        break;
 
-case 'get_projects_as_table':
-    get_projects_as_table($request);
-    break;
+    case 'login':
+        login_user($request);
+        break;
 
-case 'get_project':
-    get_project($request);
-    break;
+    case 'get_projects_as_table':
+        get_projects_as_table($request);
+        break;
 
-case 'edit_single_field':
-    edit_single_field($request);
-    break;
+    case 'get_project':
+        get_project($request);
+        break;
 
-case 'get_data_from':
-    get_data_from($request);
-    break;
+    case 'edit_single_field':
+        edit_single_field($request);
+        break;
 
-case 'upload_file':
-    upload_file($request);
-    break;
+    case 'get_data_from':
+        get_data_from($request);
+        break;
 
-case 'get_files_from':
-    get_files_from($request);
-    break;
+    case 'upload_file':
+        upload_file($request);
+        break;
 
-case 'get_appointments_from':
-    get_appointments_from($request);
-    break;
-case 'get_appointments_as_table':
-    get_appointments_as_table($request);
-    break;
+    case 'get_files_from':
+        get_files_from($request);
+        break;
 
-case 'get_projects_from':
-    get_projects_from($request);
-    break;
+    case 'get_appointments_from':
+        get_appointments_from($request);
 
-case 'get_appointment':
-    get_appointment($request);
-    break;
+        break;
+    case 'get_appointments_as_table':
+        get_appointments_as_table($request);
+        break;
+
+    case 'get_projects_from':
+        get_projects_from($request);
+        break;
+
+    case 'get_appointment':
+        get_appointment($request);
+        break;
+
     case 'get_calendar_dates':
         get_calendar_dates($request);
         break;
 
-    break;
-default:
-    // echo 'Endpoint <b>'.$API_endpoint.'</b> not found';
-    break;
+    default:
+        // echo 'Endpoint <b>'.$API_endpoint.'</b> not found';
+        break;
 }
 /*
 //////////////////////////////////////////////////////////////////////////////////////
@@ -274,9 +271,11 @@ default:
 // https://code-boxx.com/php-user-role-management-system/
 // https://www.php-einfach.de/mysql-tutorial/crashkurs-pdo/
 
-
-
-
+/**
+ *
+ * This function is used to get the calendar dates
+ *
+ */
 function get_calendar_dates($param)
 {
     if (isAllowed()) {
@@ -316,9 +315,6 @@ function get_calendar_dates($param)
         return_JSON($response);
     }
 }
-
-
-
 
 /**
  *
@@ -1089,6 +1085,10 @@ function insert_into_db($param, $table, $output = true)
     global $db;
     // print_r( $param );
 
+    if (isset($param['id']) && $param['id']==='') {
+        unset($param['id']);
+    }
+
     //
     // get EXISTING COLUMNS from db table
     //
@@ -1145,8 +1145,8 @@ function insert_into_db($param, $table, $output = true)
     //
     // INSERT INTO
     //
-    // echo "INSERT INTO $table ($columns_needed) VALUES ($placeholder)";
-    $stmt = $db->prepare("INSERT INTO $table ($columns_needed) VALUES ($placeholder)");
+    // $stmt = $db->prepare("INSERT INTO $table ($columns_needed) VALUES ($placeholder)");
+    $stmt = $db->prepare("INSERT OR REPLACE INTO $table ($columns_needed) VALUES ($placeholder)");
     $stmt->execute($vars);
 
     $count = $stmt->rowCount();
@@ -1412,16 +1412,17 @@ function init_appointment_table()
     $db->exec('CREATE TABLE appointment(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL DEFAULT "",
+            start_date TEXT NOT NULL DEFAULT "",
             start_time TEXT NOT NULL DEFAULT "",
-            end_time TEXT NOT NULL DEFAULT "",
             duration TEXT NOT NULL DEFAULT "",
             staff_id TEXT NOT NULL DEFAULT "",
             project_id TEXT NOT NULL DEFAULT "",
             customer_id TEXT NOT NULL DEFAULT "",
             comment TEXT NOT NULL DEFAULT "",
-            public TEXT NOT NULL DEFAULT 0,
             date TEXT NOT NULL  DEFAULT ""
         )');
+    // end_time TEXT NOT NULL DEFAULT "",
+            // public TEXT NOT NULL DEFAULT 0,
 }
 
 function init_files_table()
@@ -1456,7 +1457,7 @@ function create_dummy_data()
     create_dummy_staff(3);
     create_dummy_customer(5);
     create_dummy_project(15);
-    create_dummy_appointment(30);
+    create_dummy_appointment(3);
     echo "init done";
     exit;
 }
@@ -1556,22 +1557,25 @@ function create_dummy_appointment($count)
         $random_duration = $durations[mt_rand(0, 5)];
         // startdate
         // $random_datetime_start = $random_date.'T'.$random_hour.':'.$random_minute;
-        $random_datetime_start = $random_date.' '.$random_hour.':'.$random_minute.':00';
+        $random_date_start = $random_date;
+        $random_time_start = $random_hour.':'.$random_minute;
         // enddate is startdate + duration
-        $datetime = new DateTime($random_datetime_start);
-        $datetime->add(new DateInterval('PT'.$random_duration.'M'));
-        $random_datetime_end = $datetime->format('Y-m-d H:i:s');
+        // $datetime = new DateTime($random_datetime_start);
+        // $datetime->add(new DateInterval('PT'.$random_duration.'M'));
+        // $random_datetime_end = $datetime->format('Y-m-d H:i:s');
 
         $project = [
-            'start_time'  => $random_datetime_start,
-            'end_time'    => $random_datetime_end,
+            'start_date'  => $random_date_start,
+            'start_time'  => $random_time_start,
+            // 'start_time'  => $random_datetime_start,
+            // 'end_time'    => $random_datetime_end,
             'duration'    => $random_duration,
             'title'       => $project_title,
             'staff_id'    => $staff_id,
             'project_id'  => $project_id,
             'customer_id' => $customer_id,
             'comment'     => random_text(),
-            'public'      => random_int(0, 1)
+            // 'public'      => random_int(0, 1)
         ];
         insert_into_db($project, 'appointment');
     }
