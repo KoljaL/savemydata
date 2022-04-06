@@ -12,7 +12,7 @@
     border-radius: 0;
 }
 
-.boxShadow:empty {
+span.boxShadow:empty {
     display: none;
 }
 
@@ -161,6 +161,7 @@ div.FF-item label {
     transition: all 0.5s ease-in-out;
 }
 
+div.FF-item label.isTop,
 div.FF-item textarea:not(:placeholder-shown)+label,
 div.FF-item input:valid+label,
 div.FF-item input:focus+label {

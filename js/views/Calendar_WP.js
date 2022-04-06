@@ -27,10 +27,14 @@ let Style = async() => {
             cursor:pointer;
         }
         #menu .button{
-            width: max-content
+            width: max-content;
+            
         }
-        #menu span{
-            padding-left:2em
+        #menu {
+            display:flex;
+            justify-content: space-around;
+            align-items: end;
+            padding-left:0em;
         }
         #calendar {
             position: relative;
@@ -43,6 +47,7 @@ let Style = async() => {
             font-size: 1.5em;
             position: relative;
             top: 5px;
+            width:250px;
         }
         #lnb-calendars{
             padding-top:1em;
@@ -115,9 +120,7 @@ let Style = async() => {
 
         #customSchedulePopup{
             position:fixed;
-            box-shadow: 4px 4px 0 black;
             background: var(--bg_3);
-            outline: black solid 1px;
             opacity: 1;
             transition: opacity 1000ms;
             position: absolute;  
@@ -191,13 +194,23 @@ let Style = async() => {
         }
 
         #popupDataLinks > span{
-            padding-left:.5em;
+            position: relative;
+            bottom: 5px;
         }
+        #menu-navi > span,
+        #toggleView > span,
+        #popupDataLinks > span,
         #popupOptions > span{
             margin-left:.5em;
         }
 
-        
+        #menu-navi > span:hover,
+        #toggleView > span:hover,
+        #popupDataLinks > span:hover,
+        #popupOptions > span:hover{
+            color: var(--fontBlue);
+        }
+
         .tui-full-calendar-weekday-grid-date{
             cursor: pointer;
 
@@ -248,25 +261,21 @@ let Sidebar = async() => {
 */
 let Content = async() => {
     let innerHTML = /*HTML*/ `
-        <div id="right">
             <div id="menu">
-                <span id="toggleView"> 
-                    <a class="button" role="menuitem" data-action="toggle-daily">Daily</a>
-                    <a class="button" role="menuitem" data-action="toggle-weekly">Weekly</a>
-                    <a class="button" role="menuitem" data-action="toggle-monthly">Month</a>
-                </span>
-                <span id="menu-navi">
-                    <button type="button" class="button" data-action="move-prev"><</button>
-                    <button type="button" class="button" data-action="move-today">Today</button>
-                    <button type="button" class="button" data-action="move-next">></button>
-                </span>
-                <span id="renderRange" class="render-range"></span>
-                <span>
-                    <a class="button" id="getInfo">getInfo</a>
-                </span>
+                <div id="menu-navi">
+                    <span type="button" class="button boxShadow" data-action="move-prev"><</span>
+                    <span type="button" class="button boxShadow" data-action="move-today">Today</span>
+                    <span type="button" class="button boxShadow" data-action="move-next">></span>
+                </div>
+                <div id="renderRange" class="render-range"></div>
+                <div id="toggleView"> 
+                    <span class="button boxShadow" role="menuitem" data-action="toggle-daily">Daily</span>
+                    <span class="button boxShadow" role="menuitem" data-action="toggle-weekly">Weekly</span>
+                    <span class="button boxShadow" role="menuitem" data-action="toggle-monthly">Month</span>
+                </div>
+            
             </div>
             <div id="calendar"></div>
-        </div>
     `;
     await Functions.setInnerHTML('main', innerHTML);
 };
@@ -389,15 +398,13 @@ let Appointments = {
         // get StaffList
         await getCalendars();
 
-        document.getElementById('getInfo').addEventListener('click', (e) => {
-            // deb(cal.getOptions());
-            deb(CalendarList);
-            // deb(cal.getViewName());
-            // let startDate = new Date(cal.getDateRangeStart()._date);
-            // let endDate = new Date(cal.getDateRangeEnd()._date);
-            // deb(startDate);
-            // deb(endDate);
-        });
+        // deb(cal.getOptions());
+        // deb(CalendarList);
+        // deb(cal.getViewName());
+        // let startDate = new Date(cal.getDateRangeStart()._date);
+        // let endDate = new Date(cal.getDateRangeEnd()._date);
+        // deb(startDate);
+        // deb(endDate);
 
         /*
 
@@ -547,13 +554,13 @@ let Appointments = {
             let Popup = document.createElement('div');
             Popup.id = 'PopupWrapper';
             Popup.innerHTML = /*HTML*/ `
-                <div id=customSchedulePopup >
+                <div id=customSchedulePopup  class="boxShadow">
 
                     <div class=popupHeader>    
                         <span id=popupOptions>
-                            <span class=button id=customSchedulePopupDrag>Drag</span>
-                            <span class=button id=customSchedulePopupEdit></span>
-                            <span class=button id=customSchedulePopupClose>Close</span>
+                            <span class="button boxShadow" id=customSchedulePopupDrag>Drag</span>
+                            <span class="button boxShadow" id=customSchedulePopupEdit></span>
+                            <span class="button boxShadow" id=customSchedulePopupClose>Close</span>
                         </span>
                     </div>
 
@@ -562,9 +569,9 @@ let Appointments = {
 
                     <div class=popupFooter>
                         <span id=popupDataLinks>
-                          <span id=ApPoCustomerLink></span> 
-                          <span id=ApPoProjectLink></span> 
-                          <span id=ApPoAppointmentLink></span> 
+                          <span class="button boxShadow" id=ApPoCustomerLink></span> 
+                          <span class="button boxShadow" id=ApPoProjectLink></span> 
+                          <span class="button boxShadow" id=ApPoAppointmentLink></span> 
                         </span>
                     </div>
 

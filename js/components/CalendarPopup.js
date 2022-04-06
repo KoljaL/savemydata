@@ -6,9 +6,7 @@ import UserList from '../components/UserList.js';
 let Style = async() => {
     let styleTags = /*CSS*/ `
         #CreateAppointmentPopup {
-            width: max-content;
-            position: relative;
-            top: -15px;
+            width: max-content; 
         }
         #CreateAppointmentPopup textarea {
             width: 400px;
@@ -16,9 +14,10 @@ let Style = async() => {
         #CreateAppointmentPopup button{
             height: 29.6px;
             width:100px;
-        } 
-        #customerProjects {
-            width: 400px;
+        }  
+        #CreateAppointmentPopupSubmit{
+            position:relative;
+            top:1.2em;
         }
     `;
     Functions.createStyle('CreateAppointmentPopup', styleTags);
@@ -35,35 +34,43 @@ let CreateAppointmentPopup = {
                     <legend id=ApPoLegend>Create new Appointment</legend>
                     <form id="CreateAppointmentPopupForm" action="" method="post" autocomplete="off">
                         <input name=id type=hidden id=ApPoID value=''>
-                        <div class="InputElement">
-                            <label class="isTop">Staff</label>
-                            ${await UserList.render('dropdown', 'staff')}
-                        </div>
-                        <div class="InputElement">
-                            <label class="isTop">Title</label>
-                            <input id=ApPoTitle type="text" name="title" value="" />
-                        </div> 
-                        <div class="InputElement">
-                            <label class="isTop">Customer</label>
-                            ${await UserList.render('dropdown', 'customer')}
+                        
+                        <div class=FF-row>
+                            <div class="FF-item">
+                                <label class="isTop">Staff</label>
+                                ${await UserList.render('dropdown', 'staff')}
+                            </div>
+                            <div class="FF-item">
+                                <label class="isTop">Customer</label>
+                                ${await UserList.render('dropdown', 'customer')}
+                            </div>
                         </div>
                         
-                        <div class="InputElement">
-                            <label class="isTop">Project</label>
-                            <select id="customerProjects" name="project_id"></select>
-                        </div>
-                        <div class=inputGroup>
-                            <div class="InputElement">
-                                <label class="isTop">Date</label>
-                                <input id=ApPoDate type="date" name="start_date" value="" />
+                        <div class=FF-row>
+                            <div class="FF-item">
+                                <label class="isTop">Title</label>
+                                <input id=ApPoTitle type="text"  class="boxShadow" name="title" value="" />
                             </div> 
-                            <div class="InputElement">
-                                <label class="isTop">Time</label>
-                                <input id=ApPoTime type="time" name="start_time"  value=""/>
+                            
+                            <div class="FF-item">
+                                <label class="isTop">Project</label>
+                                <select id="customerProjects" class="boxShadow" name="project_id"></select>
                             </div>
-                            <div class="InputElement">
+                        </div>
+
+
+                        <div class=FF-row>
+                            <div class="FF-item">
+                                <label class="isTop">Date</label>
+                                <input id=ApPoDate type="date"  class="boxShadow" name="start_date" value="" />
+                            </div> 
+                            <div class="FF-item">
+                                <label class="isTop">Time</label>
+                                <input id=ApPoTime type="time"  class="boxShadow" name="start_time"  value=""/>
+                            </div>
+                            <div class="FF-item">
                                 <label class="isTop">Duration</label>
-                                <select id=ApPoDuration name="duration" />
+                                <select id=ApPoDuration class="boxShadow"  name="duration" />
                                     <option value=30>0,5</option>
                                     <option value=60>1</option>
                                     <option value=90>1,5</option>
@@ -79,12 +86,15 @@ let CreateAppointmentPopup = {
                                 </select>
                             </div>
                         </div>
-                        <div class="TextareaElement">
-                            <label class=isTop>Comment</label>
-                            <textarea id=ApPoText type="textarea" name="comment" placeholder="No newsletter please..."></textarea>
+
+                        <div class=FF-row>
+                            <div class="FF-item">
+                                <label class=isTop>Comment</label>
+                                <textarea id=ApPoText  type="textarea" class="boxShadow" name="comment" placeholder="No newsletter please..."></textarea>
+                            </div>
                         </div>
 
-                        <button id="CreateAppointmentPopupSubmit" class="button">Create</button>
+                        <span id="CreateAppointmentPopupSubmit" class="button boxShadow">Create</span>
                     </form>
                 </fieldset>
             </div>
