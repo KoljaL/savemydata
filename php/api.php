@@ -9,7 +9,7 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
+$start = microtime(true);
 /*
  *
  * preflight for CORS
@@ -135,7 +135,7 @@ if ($request) {
 //DEBUG
 //DEBUG
 if ('do' === $API_endpoint) {
-    create_dummy_appointment('4');
+    create_dummy_data();
     exit;
 }
 if ('reset' === $API_endpoint) {
@@ -1210,13 +1210,14 @@ function insert_into_db($param, $table, $output = true)
 //  header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
 function return_JSON($response)
 {
-    global $request, $API_endpoint, $API_param, $API_value;
+    global $request, $API_endpoint, $API_param, $API_value,$start;
 
     if ('reset' !== $API_endpoint) {
         $response['GET']['API_endpoint'] = $API_endpoint;
         $response['GET']['API_param']    = $API_param;
         $response['GET']['API_value']    = $API_value;
         $response['POST'] = $request;
+
 
         header('Access-Control-Allow-Origin: *');
         header('Content-Type: application/json; charset=UTF-8');
@@ -1477,12 +1478,17 @@ function init_files_table()
 
 function create_dummy_data()
 {
+    global $start;
     include './dummy_content.php';
-    create_dummy_staff(3);
-    create_dummy_customer(5);
-    create_dummy_project(15);
-    create_dummy_appointment(300);
-    echo "init done";
+    create_dummy_staff(100);
+    create_dummy_customer(1500);
+    create_dummy_project(15000);
+    create_dummy_appointment(30000);
+    // create_dummy_staff(10);
+    // create_dummy_customer(15);
+    // create_dummy_project(15);
+    // create_dummy_appointment(300);
+    echo round((microtime(true) - $start)/60, 2).'s';
     exit;
 }
 
@@ -1568,7 +1574,7 @@ function create_dummy_appointment($count)
         // echo $project_id;
         // exit;
 
-        $days = 50;
+        $days = 550;
         // random numbers
         if (rand(0, 1)) {
             $random_date = date('Y-m-d', strtotime('+'.mt_rand(0, $days).' days'));
