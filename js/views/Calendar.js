@@ -336,13 +336,18 @@ let getCalendars = async() => {
  ######   ########    ##        ######   ######  ##     ## ######## ########   #######  ######## ########  ######
 */
 let getSchedules = async(DateRange) => {
-    await Functions.getAPIdata('get_appointments_as_table')
+    deb(DateRange)
+
+    let formData = new FormData();
+    formData.append('startDate', DateRange.startDate);
+    formData.append('endDate', DateRange.endDate);
+    await Functions.getAPIdata('get_appointments_as_table', formData)
         .then((res) => {
             // deb(res);
             if (200 === res.code) {
                 let data = res.data
                 var data_length = Object.keys(data).length;
-                // deb(data);
+                deb(data);
                 // var schedules = [];
                 for (let i = 0; i < data_length; i++) {
 
@@ -802,8 +807,8 @@ let Appointments = {
 
         async function getNewSchedules() {
             let DateRange = {
-                startDate: moment(cal.getDateRangeStart().getTime()).format('YYYY-MM-DD') + ' 00:00:00',
-                endDate: moment(cal.getDateRangeEnd().getTime()).format('YYYY-MM-DD') + ' 23:59:59',
+                startDate: moment(cal.getDateRangeStart().getTime()).format('YYYY-MM-DD'),
+                endDate: moment(cal.getDateRangeEnd().getTime()).format('YYYY-MM-DD'),
             };
             await getSchedules(DateRange);
             cal.clear();

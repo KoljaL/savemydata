@@ -332,11 +332,22 @@ function get_appointments_as_table($param)
         } else {
             $where = '';
         }
-        $stmt = $db->prepare("SELECT * FROM appointment $where");
+
+        if (isset($param['startDate'])) {
+            $startDate= $param['startDate'];
+            $endDate = $param['endDate'];
+            $from_to = "WHERE start_date BETWEEN '$startDate' AND '$endDate'";
+        } else {
+            $from_to = '';
+        }
+        
+        $stmt = $db->prepare("SELECT * FROM appointment $from_to");
         $stmt->execute();
         $appointments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $response = [];
+        $response['$from_to'] = $from_to;
+
         if ($appointments) {
 
             // get the username and remove the comments
@@ -352,7 +363,7 @@ function get_appointments_as_table($param)
         } else {
             $response['code']    = 400;
             $response['table']   = $appointments;
-            $response['message'] = 'no form profile found';
+            $response['message'] = 'no dates found';
         }
         return_JSON($response);
     } else {
