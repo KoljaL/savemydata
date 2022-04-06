@@ -30,7 +30,7 @@ let getImages = (d) => {
     //
     Functions.getAPIdata(`get_files_from/${d.origin}/${d.origin_id}`)
         .then((res) => {
-            // deb(res);
+            deb(res);
             if (res.code === 200) {
                 let files = res.data;
                 // deb(files)
@@ -48,7 +48,7 @@ let getImages = (d) => {
                         <input for=uploadFileForm type="hidden" name="origin" id="origin"  value="${d.origin}" />
                         <input for=uploadFileForm type="hidden" name="origin_id" id="origin_id"  value="${d.origin_id}" />
                         <label class="button boxShadow" for="uploadFile">upload</label>
-                            <input for=uploadFileForm id="uploadFile" type="file" accept="image/*" capture="camera" style="display:none">
+                        <input for=uploadFileForm id="uploadFile" type="file" accept="image/*" capture="camera" style="display:none">
                     </form> `;
             Functions.setInnerHTML('fileUpload', innerHTML);
             // upload image & indert into DOM
@@ -116,6 +116,7 @@ let getImages = (d) => {
 };
 
 function addImage(file) {
+    // deb(file)
     // wrapper
     let thumbnailWrapper = document.createElement('DIV');
     thumbnailWrapper.classList.add('thumbnailWrapper');

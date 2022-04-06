@@ -65,45 +65,41 @@ let Content = async() => {
     let innerHTML = /*HTML*/ `
     <div id=UserLoginWrapper>
         <div id="UserLoginForm">
-            <fieldset>
-            <legend>Staff Login</legend>
+        <div class="FF-row">
             <form id="loginForm" action="" method="post" autocomplete="off">
 
 
-            <!-- login -->
-            ${Form.inputText({
-                name: "userlogin",
-                type: "text",
-                // widths: "100/150/300", 
-                label: "Login",
-                placeholder: "Username or Email",
-                value: "admin",
-            })}
+                <!-- login -->
+                ${Form.inputText({
+                    name: "userlogin",
+                    type: "text",
+                    widths: "100/150/200", 
+                    label: "Login",
+                    placeholder: "Username or Email",
+                    value: "admin",
+                })}
 
-            <!-- password -->
-            ${Form.inputText({
-                name: "password",
-                type: "password",
-                widths: "100px/150/300em",
-            
-                label: "Password",
-                placeholder: "secret...",
-                value: "password",
-            })}
+                <!-- password -->
+                ${Form.inputText({
+                    name: "password",
+                    type: "password",
+                    widths: "100/150/200",
+                
+                    label: "Password",
+                    placeholder: "secret...",
+                    value: "password",
+                })}
 
-
-                <div class="FF-row">
-                <div class="FF-item" style="flex-basis: 150px; min-width: 100px; max-width: 300px;">
-                    <input id="loginSubmit"  type="submit" value="Login">
+    
+                    <div class="FF-item" style="flex-basis: 150px; min-width: 100px; max-width: 200px;">
+                        <input id="loginSubmit"  type="submit" value="Login">
+                    </div>
                 </div>
-            </div>
-              
-
-
-                </form>
-            </fieldset>
+           
+            </form>
 
             <div id="UserLoginFormError" class="template hide"></div>
+            </div>
             </div>
     </div>`;
     await Functions.setInnerHTML('main', innerHTML);

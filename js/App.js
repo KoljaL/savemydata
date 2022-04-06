@@ -11,7 +11,6 @@ import UserLogin from './views/UserLogin.js';
 import Table from './views/Table.js';
 import Appointment from './views/Appointment.js';
 import Calendar from './views/Calendar.js';
-import Calendar_WP from './views/Calendar_WP.js';
 import Profile from './views/Profile.js';
 import Project from './views/Project.js';
 import UserProfileForm from './views/UserProfileForm.js';
@@ -39,6 +38,8 @@ async function router() {
     Functions.loadingDots('body', true)
     document.getElementById('main').classList.remove('visible');
     await Functions.sleep(200);
+    Functions.setInnerHTML('calendarSidebar', '');
+
     (async() => {
 
         switch (API_page) {
@@ -114,12 +115,6 @@ async function router() {
             case 'calendar':
                 await Calendar.render(API_key, API_value)
                 break;
-
-            case 'calendar_wp':
-                await Calendar_WP.render(API_key, API_value)
-                break;
-
-
 
 
             default:

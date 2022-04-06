@@ -160,7 +160,7 @@ if ('login' === $API_endpoint) {
         $TOKEN = JWT::decode($request['user_token'], new Key($JWT_key, 'HS256'));
         $TOKEN = json_decode(json_encode($TOKEN), true);
     } else {
-        echo "no key";
+        // echo "no key";
         // exit;
     }
 }
@@ -483,15 +483,26 @@ function get_files_from($param)
     if (isAllowed()) {
         global $db, $API_param, $API_value;
 
+        // $stmt = $db->prepare("SELECT * FROM appointment WHERE customer_id = :origin_id");
+        // $stmt->execute([':origin_id' => $API_value]);
+
+
+
         $stmt = $db->prepare("SELECT * FROM files WHERE origin = :origin AND origin_id = :origin_id");
         $stmt->execute([':origin' => $API_param, ':origin_id' => $API_value]);
 
-        $files = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+        // $stmt = $db->prepare("SELECT * FROM 'files' WHERE 'origin' = 'appointment' AND 'origin_id' = '3'");
+        // $stmt->execute();
+        $files = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
         $response = [];
         if ($param) {
             $response['code'] = 200;
             $response['data'] = $files;
+            $response['stmt'] = json_encode($db);
+            // $response['$stmt-'] = $stmt->debugDumpParams();
+            ;
         } else {
             $response['code']    = 400;
             $response['message'] = 'no file found';
@@ -503,7 +514,7 @@ function get_files_from($param)
         return_JSON($response);
     }
 }
-
+ 
 /**
  *
  * Upload a file to the server
@@ -530,7 +541,7 @@ function upload_file($param)
 
             // insert ino DB: missing NAME, FILETYPE DATE
             $sql = "INSERT INTO files (origin, origin_id, path, date) VALUES (?,?,?,?)";
-            $db->prepare($sql)->execute([$param['origin'], $param['origin_id'], $file_path, 'data']);
+            $db->prepare($sql)->execute([$param['origin'], $param['origin_id'], $file_path, date('d.m.Y H:i:s')]);
 
             $response['code']         = 200;
             $response['data']['id']   = $db->lastInsertId();
@@ -956,6 +967,8 @@ function edit_single_field($param)
  */
 function isAllowed($action = '')
 {
+    return true;
+
     global $TOKEN, $request;
     if ("0" === $TOKEN['role']) {
         return true;
@@ -1189,11 +1202,11 @@ function return_JSON($response)
     global $request, $API_endpoint, $API_param, $API_value;
 
     if ('reset' !== $API_endpoint) {
-        $response['GET']['$API_endpoint'] = $API_endpoint;
-        $response['GET']['$API_param']    = $API_param;
-        $response['GET']['$API_value']    = $API_value;
-
+        $response['GET']['API_endpoint'] = $API_endpoint;
+        $response['GET']['API_param']    = $API_param;
+        $response['GET']['API_value']    = $API_value;
         $response['POST'] = $request;
+
         header('Access-Control-Allow-Origin: *');
         header('Content-Type: application/json; charset=UTF-8');
         header('Access-Control-Allow-Methods: POST');
@@ -1457,7 +1470,7 @@ function create_dummy_data()
     create_dummy_staff(3);
     create_dummy_customer(5);
     create_dummy_project(15);
-    create_dummy_appointment(3);
+    create_dummy_appointment(300);
     echo "init done";
     exit;
 }
@@ -1544,7 +1557,7 @@ function create_dummy_appointment($count)
         // echo $project_id;
         // exit;
 
-        $days = 20;
+        $days = 50;
         // random numbers
         if (rand(0, 1)) {
             $random_date = date('Y-m-d', strtotime('+'.mt_rand(0, $days).' days'));

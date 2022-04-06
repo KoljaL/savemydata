@@ -149,8 +149,8 @@ let Content = async(data) => {
 
 
 async function createTable(data, TableContent) {
-    deb(data)
-        // https://www.valentinog.com/blog/html-table/
+    // deb(data)
+    // https://www.valentinog.com/blog/html-table/
     let head = Object.keys(data[0]);
 
     let thead = TableContent.createTHead();

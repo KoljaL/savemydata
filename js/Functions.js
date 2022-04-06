@@ -291,8 +291,9 @@ let Functions = {
         }
 
         // URL = 'https://dev.rasal.de/savemydata/api/' + URL;
-        URL = 'http://localhost/savemydata/api/' + URL;
+        // URL = 'http://localhost/savemydata/api/' + URL;
         // URL = 'api/' + URL;
+        URL = 'savemydata/api/' + URL;
         formData = JSON.stringify(Object.fromEntries(formData));
         // deb(formData)
         const response = await fetch(URL, {

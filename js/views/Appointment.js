@@ -46,10 +46,10 @@ let Style = async() => {
        
         #AppointmentText .FF-row{
             margin:0 0 1em 0;
-            padding:0;
+            padding: 2em 1em 1em 1em;
         }
         #AppointmentText .FF-item{
-            margin: 0;
+            margin: 0 1em 0 0;
         }
 
 
@@ -129,7 +129,7 @@ let AppointmentContent = async(id) => {
                     deb(res);
                     document.getElementById('debug').innerHTML = JSON.stringify(data, undefined, 4);
 
-                    // deb(data.comment_staff)
+                    // make rows for textarea
                     let rows = data.comment.split('\n').length + 2;
                     // deb(rows)
                     let innerHTML = /*HTML*/ `
@@ -148,20 +148,24 @@ let AppointmentContent = async(id) => {
                         <div id=AppointmentText>
                             <br>
                             <div class="FF-row">
-                                <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px;">
-                                    <input id="firstname" class="hideEdit" name="firstname" type="datetime-local" placeholder="" value="${data.start_time}" data-db="start_time/appointment/id/${id}" required="">
+                                <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:150px;">
+                                    <input id="firstname" class="hideEdit boxShadow" name="firstname" type="date" placeholder="" value="${data.start_date}" data-db="start_date/appointment/id/${id}" required="">
                                     <label data-lang="F_date" for="firstname">Date</label>
                                 </div>
-                                <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px;;">
-                                    <input id="lastname" class="hideEdit" name="lastname" type="text" placeholder="" value="${data.duration}" data-db="duration/appointment/id/${id}" required="">
+                                <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:150px;">
+                                    <input id="firstname" class="hideEdit boxShadow" name="firstname" type="time" placeholder="" value="${data.start_time}" data-db="start_time/appointment/id/${id}" required="">
+                                    <label data-lang="F_time" for="firstname">Time</label>
+                                </div>                                
+                                <div class="FF-item" style="min-width:50px; flex-basis:50px; max-width:50px;">
+                                    <input id="lastname" class="hideEdit boxShadow" name="lastname" type="text" placeholder="" value="${data.duration}" data-db="duration/appointment/id/${id}" required="">
                                     <label data-lang="F_duration" for="lastname">Duration</label>
                                 </div> 
                             </div>
 
                             <h3 data-lang="F_comment">Comment</h3>
                             <div class="FF-row">
-                                <div class="FF-item boxShadow" style="min-width:250px; flex-basis:550px; max-width:100%;">
-                                    <textarea id="comment" rows="${rows}" style="height: max-content;" class="hideEdit" name="comment" type="textarea" placeholder="" data-db="comment/appointment/id/${id}" required="">${data.comment}</textarea>
+                                <div class="FF-item" style="min-width:250px; flex-basis:550px; max-width:100%;">
+                                    <textarea id="comment" rows="${rows}" style="height: max-content;" class="hideEdit boxShadow" name="comment" type="textarea" placeholder="" data-db="comment/appointment/id/${id}" required="">${data.comment}</textarea>
                                 </div>
                             </div>
                         </div>

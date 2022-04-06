@@ -12,6 +12,7 @@
     border-radius: 0;
 }
 
+table.boxShadow:empty,
 span.boxShadow:empty {
     display: none;
 }
@@ -66,6 +67,7 @@ fieldset {
     min-width: 50px;
     max-width: 200px;
     margin: 1em;
+    padding-top: .5em;
 }
 
 .small .FF-item {
@@ -166,7 +168,7 @@ div.FF-item textarea:not(:placeholder-shown)+label,
 div.FF-item input:valid+label,
 div.FF-item input:focus+label {
     transition: all 0.5s ease-in-out;
-    top: -1.6em;
+    top: -1em;
     font-size: 0.9em;
     color: var(--font_2);
 }
