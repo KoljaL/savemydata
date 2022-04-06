@@ -1267,7 +1267,8 @@ function init_staff_fields_table()
         ['pos' => '10', 'row' => '3', 'name' => 'comment', 'type' => 'textarea', 'widths' => '400/550/600', 'edit' => 'hide', 'label' => 'Comment', 'db' => 'comment/staff/id'],
         ['pos' => '10', 'row' => '4', 'name' => 'role', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Role', 'db' => 'role/staff/id'],
         ['pos' => '20', 'row' => '4', 'name' => 'permission', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Permission', 'db' => 'permission/staff/id'],
-        ['pos' => '20', 'row' => '4', 'name' => 'lang', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Language', 'db' => 'lang/staff/id']
+        ['pos' => '30', 'row' => '4', 'name' => 'lang', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Language', 'db' => 'lang/staff/id'],
+        ['pos' => '40', 'row' => '4', 'name' => 'color', 'type' => 'color', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Color', 'db' => 'color/staff/id'],
     ];
     foreach ($userfields as $field) {
         insert_into_db($field, 'staff_fields');
@@ -1335,21 +1336,16 @@ function init_stafftable()
             comment TEXT NOT NULL DEFAULT "",
             role TEXT NOT NULL DEFAULT "",
             permission TEXT NOT NULL DEFAULT "",
+            color TEXT NOT NULL DEFAULT "#f6b73c",
             lang TEXT NOT NULL DEFAULT "en",
             date TEXT NOT NULL DEFAULT ""
         )');
 
     // create first users
     $admin = ['username' => 'admin', 'password' => 'password', 'firstname' => 'admin', 'lastname' => 'admin', 'email' => 'admin@admin.org', 'comment' => 'lorem iopsum', 'role' => '0', 'permission' => '0'];
-    // $user  = ['username' => 'user', 'password' => 'password', 'firstname' => 'user', 'lastname' => 'user', 'email' => 'user@user.org', 'comment' => 'lorem iopsum', 'role' => '1', 'permission' => '0'];
     insert_into_db($admin, 'staff');
+    // $user  = ['username' => 'user', 'password' => 'password', 'firstname' => 'user', 'lastname' => 'user', 'email' => 'user@user.org', 'comment' => 'lorem iopsum', 'role' => '1', 'permission' => '0'];
     // insert_into_db( $user, 'staff' );
-
-    // send response
-    // $response['code']    = 200;
-    // $response['message'] = 'user table created';
-
-    // return_JSON( $response );
 }
 
 /*
@@ -1372,6 +1368,7 @@ function init_customertable()
     // create user table
     $db->exec('CREATE TABLE customer(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            staff_id TEXT NOT NULL DEFAULT "",
             username TEXT NOT NULL DEFAULT "",
             password TEXT NOT NULL DEFAULT "",
             firstname TEXT NOT NULL DEFAULT "",
@@ -1387,32 +1384,6 @@ function init_customertable()
             permission TEXT NOT NULL DEFAULT "",
             date TEXT NOT NULL  DEFAULT ""
         )');
-
-    // // create first users
-    // $first_customer = [
-    //     'username'   => 'customer',
-    //     'password'   => 'password',
-    //     'firstname'  => 'customer',
-    //     'lastname'   => 'customer',
-    //     'email'      => 'customer@customer.org',
-    //     'phone'      => '555-123456789',
-    //     'street'     => 'Sesam',
-    //     'street_nr'  => '10',
-    //     'city'       => 'Clondyke',
-    //     'city_nr'    => '10',
-    //     'comment'    => 'lorem iopsum',
-    //     'role'       => '10',
-    //     'permission' => '10'
-    // ];
-
-    // // create_customer( $first_customer );
-    // insert_into_db( $first_customer, 'customer' );
-
-    // // send response
-    // $response['code']    = 200;
-    // $response['message'] = 'customertable created';
-
-    // return_JSON( $response );
 }
 
 function init_project_table()
@@ -1480,15 +1451,15 @@ function create_dummy_data()
 {
     global $start;
     include './dummy_content.php';
-    create_dummy_staff(100);
-    create_dummy_customer(1500);
-    create_dummy_project(15000);
-    create_dummy_appointment(30000);
-    // create_dummy_staff(10);
-    // create_dummy_customer(15);
-    // create_dummy_project(15);
-    // create_dummy_appointment(300);
-    echo round((microtime(true) - $start)/60, 2).'s';
+    // create_dummy_staff(100);
+    // create_dummy_customer(1500);
+    // create_dummy_project(15000);
+    // create_dummy_appointment(30000);
+    create_dummy_staff(10);
+    create_dummy_customer(15);
+    create_dummy_project(15);
+    create_dummy_appointment(300);
+    echo 'datasets created in: '.round((microtime(true) - $start), 1).'s';
     exit;
 }
 
@@ -1506,7 +1477,8 @@ function create_dummy_staff($count)
             'email'      => $email,
             'comment'    => random_text(),
             'role'       => random_int(1, 5),
-            'permission' => random_int(1, 5).','.random_int(1, 5).','.random_int(1, 5)
+            'permission' => random_int(1, 5).','.random_int(1, 5).','.random_int(1, 5),
+            'color'      => random_color(),
         ];
         insert_into_db($staff, 'staff');
         // create_user( $user );
@@ -1519,6 +1491,7 @@ function create_dummy_customer($count)
         $random_name = random_name();
         $email       = $random_name[0]."@".$random_name[1].".com";
         $customer    = [
+            'staff_id'         => get_ramdon_id_from('staff'),
             'username'   => 'C_'.$random_name[0].'_'.$random_name[1],
             'instaname'  => $random_name[1].'_'.$random_name[0],
             'password'   => 'password',

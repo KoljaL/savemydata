@@ -289,23 +289,22 @@ let Content = async() => {
  ######   ########    ##        ######  ######## ##     ## ######## ##    ## ########  ##     ## ##     ##
 */
 let getCalendars = async() => {
-    await Functions.getAPIdata('get_list_from/staff/id,username')
+    await Functions.getAPIdata('get_list_from/staff/id,username,color')
         .then((res) => {
             // deb(res);
             if (200 === res.code) {
                 let data = res.data
                 var data_length = Object.keys(data).length;
                 // deb(data)
-                let colors = ['#DFFF00', '#FFBF00', '#FF7F50', '#DE3163', '#9FE2BF', '#40E0D0', '#6495ED', '#9E5FFF', '#CCCCFF', '#90EE90', '#AFE1AF', '#A95C68', '#E5AA70', '#87CEEB', '#FFBF00', '#FF7F50', '#DE3163', '#9FE2BF', '#40E0D0', '#6495ED', '#9E5FFF', '#CCCCFF', '#90EE90', '#AFE1AF', '#A95C68', '#E5AA70', '#87CEEB', '#FFBF00', '#FF7F50', '#DE3163', '#9FE2BF', '#40E0D0', '#6495ED', '#9E5FFF', '#CCCCFF', '#90EE90', '#AFE1AF', '#A95C68', '#E5AA70', '#87CEEB', '#FFBF00', '#FF7F50', '#DE3163', '#9FE2BF', '#40E0D0', '#6495ED', '#9E5FFF', '#CCCCFF', '#90EE90', '#AFE1AF', '#A95C68', '#E5AA70', '#87CEEB', '#FFBF00', '#FF7F50', '#DE3163', '#9FE2BF', '#40E0D0', '#6495ED', '#9E5FFF', '#CCCCFF', '#90EE90', '#AFE1AF', '#A95C68', '#E5AA70', '#87CEEB', '#FFBF00', '#FF7F50', '#DE3163', '#9FE2BF', '#40E0D0', '#6495ED', '#9E5FFF', '#CCCCFF', '#90EE90', '#AFE1AF', '#A95C68', '#E5AA70', '#87CEEB'];
                 var calendar = [];
                 for (var i = 0; i < data_length; i++) {
                     calendar[i] = {
                         id: data[i].id,
                         name: data[i].username,
                         color: '#FFFFFF',
-                        bgColor: colors[i],
-                        dragBgColor: colors[i],
-                        borderColor: colors[i],
+                        bgColor: data[i].color,
+                        dragBgColor: data[i].color,
+                        borderColor: data[i].color,
                     }
                 }
                 // deb(calendar);
@@ -336,7 +335,7 @@ let getCalendars = async() => {
  ######   ########    ##        ######   ######  ##     ## ######## ########   #######  ######## ########  ######
 */
 let getSchedules = async(DateRange) => {
-    deb(DateRange)
+    // deb(DateRange)
 
     let formData = new FormData();
     formData.append('startDate', DateRange.startDate);
@@ -347,7 +346,7 @@ let getSchedules = async(DateRange) => {
             if (200 === res.code) {
                 let data = res.data
                 var data_length = Object.keys(data).length;
-                deb(data);
+                // deb(data);
                 // var schedules = [];
                 for (let i = 0; i < data_length; i++) {
 

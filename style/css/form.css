@@ -91,7 +91,8 @@ input[type='url'],
 input[type='datetime-local'],
 input[type='email'],
 input[type='password'],
-input[type='time'] {
+input[type='time'],
+input[type=color] {
     width: 100%;
     color: var(--font_0);
     background: var(--bg_3);
@@ -103,6 +104,21 @@ input[type='time'] {
     border-radius: 0.2em;
     font-size: 1em;
     font-family: 'Public Sans';
+}
+
+input[type=color] {
+    width: 40px;
+    padding: 0.2em;
+    border: none;
+    background: none;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+    border: solid 1px #000;
 }
 
 .FF-item textarea {
@@ -159,7 +175,7 @@ div.FF-item label {
     font-size: 1em;
     padding: 0.3em;
     left: 0.1em;
-    top: 0.05em;
+    /* top: 0.05em; */
     transition: all 0.5s ease-in-out;
 }
 

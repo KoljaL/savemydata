@@ -254,3 +254,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
     ThemeToggle.addEventListener('click', toggleTheme, false);
     document.getElementById('PRL').appendChild(ThemeToggle);
 });
+
+
+// var color_picker = document.getElementById("color-picker");
+// var color_picker_wrapper = document.getElementById("color-picker-wrapper");
+// color_picker.onchange = function() {
+//     color_picker_wrapper.style.backgroundColor = color_picker.value;
+// }
+// color_picker_wrapper.style.backgroundColor = color_picker.value;
