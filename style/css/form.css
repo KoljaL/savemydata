@@ -169,14 +169,14 @@ div.FF-item input:focus {
 div.FF-item label {
     font-family: 'Zilla Slab Medium', sans-serif;
     font-weight: 400;
-    color: var(--font_0);
+    color: var(--font_2);
     position: absolute;
     background: transparent;
     white-space: nowrap;
     font-size: 1em;
     padding: 0.3em;
     left: 0.1em;
-    /* top: 0.05em; */
+    top: 0.5em;
     transition: all 0.5s ease-in-out;
 }
 

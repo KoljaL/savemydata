@@ -23,6 +23,7 @@ export default {
         Functions.pageTitle(`${slugName} Profile`);
         await Style();
         await Content(userID);
+        if (tableName === 'staff') changeAvatar(userID);
         getUserData(userID);
         dropDownEvent(tableName);
         await newUserButton();
@@ -74,9 +75,10 @@ let Style = async() => {
         #editUserButton:hover{
             color: var(--fontBlue);
         }
-
+        #changeAvatar,
         #UserProfileList {
             display: inline-block;
+            margin-left: 1em;
         }
         #UserProfileHeader{
             display: flex;
@@ -101,14 +103,7 @@ let Content = async(userID) => {
             <div id=UserProfileHeader> 
                 <h2 data-lang="${slugName}-Profile">Profile</h2> 
                 <div class="ActionButtons">
-                <div style="display: inline-block;">
-                    <form id="uploadAvatarForm">
-                        <input for=uploadAvatarForm type="hidden" name="origin" id="origin"  value="${tableName}" />
-                        <input for=uploadAvatarForm type="hidden" name="origin_id" id="origin_id"  value="${userID}" />
-                        <label class="boxShadow" style="display: inline-block;" id=uploadAvatarLabel for="uploadAvatar">Avatar</label>
-                        <input for=uploadAvatarForm id="uploadAvatar" type="file" accept="image/*" capture="camera" style="display:none">
-                    </form>
-                </div>
+                    <div id="changeAvatar"></div>
                     <div id=UserProfileList></div>
                     <span id="editUserButton" class=boxShadow></span>
                     <span id="newUserButton" class=boxShadow></span>
@@ -121,13 +116,13 @@ let Content = async(userID) => {
                 <div style="display:flex;gap: 1em;">
                     <div id=UserProjects></div>
                     <div id=UserAppointments></div>
-                </div>
-
-                <div id=ProjectImages>
-                    <h3 data-lang="F_images">Images</h3>
-                    <div id=thumbnails></div>
-                    <div id=fileUpload></div>
-                    ${Images.render({origin: 'customer',origin_id:userID})}
+                    
+                    <div id=UserImages>
+                        <h3 data-lang="F_images">Images</h3>
+                        <div id=thumbnails></div>
+                        <div id=fileUpload></div>
+                        ${Images.render({origin: 'customer',origin_id:userID})}
+                    </div>
                 </div>
             </div>
         </div>`;
@@ -140,36 +135,48 @@ let Content = async(userID) => {
  * Avatar Upload
  *  
  */
-// TODO HTML inside the function and call only if is staffprofile
-document.body.addEventListener('change', (el) => {
-    if (el.target.id === 'uploadAvatar') {
-        // event.preventDefault();
-        Functions.loadingDots('fileUpload', true)
+function changeAvatar(userID) {
 
-        const formData = new FormData(el.target.form);
-        formData.append('avatar', tableName);
-        formData.append('file', el.target.files[0]);
-        // Functions.debFormData(formData);
+    let innerHTML = /*HTML*/ `
+        <form id="uploadAvatarForm">
+            <input for=uploadAvatarForm type="hidden" name="origin" id="origin"  value="${tableName}" />
+            <input for=uploadAvatarForm type="hidden" name="origin_id" id="origin_id"  value="${userID}" />
+            <label class="boxShadow" style="display: inline-block;" id=uploadAvatarLabel for="uploadAvatar">Avatar</label>
+            <input for=uploadAvatarForm id="uploadAvatar" type="file" accept="image/*" capture="camera" style="display:none">
+        </form>`;
+    Functions.setInnerHTML('changeAvatar', innerHTML);
 
-        Functions.uploadToAPI('upload_file', formData)
-            .then((res) => {
-                deb(res.data.path);
-                if (res.code === 200) {
-                    Functions.setLocal('avatarPath', res.data.path);
-
-                    // let innerHTML = /*HTML*/ `<img src="${res.data.path}" width="150px"  style="padding:0;">`;
-                    // Functions.setInnerHTML('uploadAvatarLabel', innerHTML);
-
-                    document.querySelector('nav .sidebar_userpanel img').src = res.data.path;
-                    // addImage(res.data);
-                    Functions.loadingDots('fileUpload', false)
-                } else {
-                    Functions.loadingDots('fileUpload', false)
-                }
-            });
+    // be shure to load the eventlistener only once
+    if (body.getAttribute('uploadAvatar') !== 'true') {
+        body.setAttribute('uploadAvatar', true)
+        document.body.addEventListener('change', (el) => {
+            if (el.target.id === 'uploadAvatar') {
+                // event.preventDefault();
+                Functions.loadingDots('fileUpload', true)
+                const formData = new FormData(el.target.form);
+                formData.append('avatar', tableName);
+                formData.append('file', el.target.files[0]);
+                // Functions.debFormData(formData);
+                Functions.uploadToAPI('upload_file', formData)
+                    .then((res) => {
+                        deb(res.data.path);
+                        if (res.code === 200) {
+                            Functions.setLocal('avatarPath', res.data.path);
+                            // let innerHTML = /*HTML*/ `<img src="${res.data.path}" width="150px"  style="padding:0;">`;
+                            // Functions.setInnerHTML('uploadAvatarLabel', innerHTML);
+                            if (Functions.getLocal('id') === userID) {
+                                document.querySelector('nav .sidebar_userpanel img').src = res.data.path;
+                            }
+                            // addImage(res.data);
+                            Functions.loadingDots('fileUpload', false)
+                        } else {
+                            Functions.loadingDots('fileUpload', false)
+                        }
+                    });
+            }
+        });
     }
-
-});
+}
 
 
 /**

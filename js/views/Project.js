@@ -154,13 +154,14 @@ let ProjectContent = async(id) => {
                                 </div>
                             </div>
                         </div>
-                        <div id=ProjectAppointments></div>
-                        <br>
-                        <div id=ProjectImages>
-                            <h3 data-lang="F_images">Images</h3>
-                            <div id=thumbnails></div>
-                            <div id=fileUpload></div>
-                            ${Images.render({origin: 'project',origin_id:data.id})}
+                        <div style="display:flex;gap: 1em;">
+                            <div id=ProjectAppointments></div>
+                            <div id=ProjectImages>
+                                <h3 data-lang="F_images">Images</h3>
+                                <div id=thumbnails></div>
+                                <div id=fileUpload></div>
+                                ${Images.render({origin: 'project',origin_id:data.id})}
+                            </div>
                         </div>
                     </div>
                 `;

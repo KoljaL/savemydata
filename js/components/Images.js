@@ -15,7 +15,7 @@ export default {
 let Style = async() => {
     let styleTags = /*CSS*/ `
     #uploadFileForm{
-        margin-top:2em;
+        margin-top:.5em;
     }
 
  
