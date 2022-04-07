@@ -533,7 +533,7 @@ let Appointments = {
             let schedule;
 
             // create popup div & load AppointmentPopup Form  into it
-            let Popup = document.createElement('div');
+            var Popup = document.createElement('div');
             Popup.id = 'PopupWrapper';
             Popup.style.opacity = 0;
             Popup.innerHTML = /*HTML*/ `
@@ -564,26 +564,36 @@ let Appointments = {
             // create drag element for Popup
             Functions.dragElement('customSchedulePopup', 'customSchedulePopupDrag');
 
-            // remove Popup from DOM
+
+
+
+            /**
+             * 
+             * When the user clicks on the close button or outside of the popup, the popup will disappear
+             * 
+             */
             document.getElementById('customSchedulePopupClose').addEventListener('click', closeSchedulePopup);
             document.getElementById('PopupWrapper').addEventListener('click', closeSchedulePopup);
 
-            function closeSchedulePopup() {
-                Popup.style.opacity = 0;
-                setTimeout(() => {
-                    Popup.remove();
-                }, 200);
-                // remove blue-framed box from calendar
-                if (document.querySelector('.tui-full-calendar-time-guide-creation')) {
-                    document.querySelector('.tui-full-calendar-time-guide-creation').remove();
+            function closeSchedulePopup(el) {
+                if (el.target.id === 'customSchedulePopupClose' || el.target.id === 'PopupWrapper') {
+                    Popup.style.opacity = 0;
+                    setTimeout(() => {
+                        Popup.remove();
+                    }, 200);
+                    // remove blue-framed box from calendar
+                    if (document.querySelector('.tui-full-calendar-time-guide-creation')) {
+                        document.querySelector('.tui-full-calendar-time-guide-creation').remove();
+                    }
                 }
-                // remove popup wrapper from calendar
-                // if (document.querySelector('#PopupWrapper')) {
-                //     document.querySelector('#PopupWrapper').remove();
-                // }
             };
 
-            // case 'view'
+
+            /**
+             * 
+             * fill popup with values for case view
+             * 
+             */
             if (e.schedule) {
                 let data = e.schedule;
                 // deb(data);
@@ -623,7 +633,11 @@ let Appointments = {
                     });
                 });
             }
-            // case 'create'
+            /**
+             * 
+             * empty popup form for case create
+             * 
+             */
             else {
                 // create dropdown menues and fill with options
                 await CreateSchedule();
@@ -642,7 +656,7 @@ let Appointments = {
             //
             setTimeout(() => {
                 Popup.style.opacity = 1;
-            }, 200);
+            }, 10);
 
         } // SchedulePopup()
 
