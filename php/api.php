@@ -1026,6 +1026,7 @@ function edit_single_field($param)
  * If the user is the owner of the token or the user is an admin, then return true
  *
  */
+
 function isAllowed($action = '')
 {
     return true;
@@ -1395,8 +1396,8 @@ function init_stafftable()
     // create first users
     $admin = ['username' => 'admin', 'password' => 'password', 'firstname' => 'admin', 'lastname' => 'admin', 'email' => 'admin@admin.org', 'comment' => 'lorem iopsum', 'role' => '0', 'permission' => '0'];
     insert_into_db($admin, 'staff');
-    // $user  = ['username' => 'user', 'password' => 'password', 'firstname' => 'user', 'lastname' => 'user', 'email' => 'user@user.org', 'comment' => 'lorem iopsum', 'role' => '1', 'permission' => '0'];
-    // insert_into_db( $user, 'staff' );
+    $user  = ['username' => 'user', 'password' => 'password', 'firstname' => 'user', 'lastname' => 'user', 'email' => 'user@user.org', 'comment' => 'lorem iopsum', 'role' => '1', 'permission' => '0'];
+    insert_into_db($user, 'staff');
 }
 
 /*
@@ -1520,7 +1521,7 @@ function create_dummy_staff($count)
         $random_name = random_name();
         $email       = $random_name[0]."@".$random_name[1].".com";
         $staff       = [
-            'username'   => 'S_'.$random_name[0].'_'.$random_name[1],
+            'username'   => 'S'.substr($random_name[0], 1).'_'.$random_name[1],
             'password'   => 'password',
             'firstname'  => $random_name[0],
             'lastname'   => $random_name[1],
@@ -1543,7 +1544,7 @@ function create_dummy_customer($count)
         $email       = $random_name[0]."@".$random_name[1].".com";
         $customer    = [
             'staff_id'   => get_ramdon_id_from('staff'),
-            'username'   => 'C_'.$random_name[0].'_'.$random_name[1],
+            'username'   => 'C'.substr($random_name[0], 1).'_'.$random_name[1],
             'instaname'  => $random_name[1].'_'.$random_name[0],
             'password'   => 'password',
             'firstname'  => $random_name[0],

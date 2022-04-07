@@ -5,8 +5,8 @@ export default {
     render: async() => {
         await Style();
         await Content();
-        Switch();
-        Init();
+        await Switch();
+        await Init();
 
 
 

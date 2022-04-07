@@ -53,7 +53,7 @@ let Style = async() => {
             padding-top:1em;
             padding-left:1em;
             width: 80% !important;
-            margin: 1em;
+            margin-left: -.5em;
             outline: var(--InputBorder) solid 1px;
             box-shadow: 4px 4px 0 var(--InputShadow);
         }
@@ -296,9 +296,10 @@ let getCalendars = async() => {
                 let data = res.data
                 var data_length = Object.keys(data).length;
                 // deb(data)
-                var calendar = [];
+                // if (staffCalendar) staffCalendar = undefined;
+                var staffCalendar = [];
                 for (var i = 0; i < data_length; i++) {
-                    calendar[i] = {
+                    staffCalendar[i] = {
                         id: data[i].id,
                         name: data[i].username,
                         color: '#FFFFFF',
@@ -307,10 +308,10 @@ let getCalendars = async() => {
                         borderColor: data[i].color,
                     }
                 }
-                // deb(calendar);
-                // return Promise.resolve(calendar);
-
-                calendar.forEach(function(cal) {
+                // deb('getCalendars Function', staffCalendar);
+                // return Promise.resolve(staffCalendar);
+                CalendarList.length = 0;
+                staffCalendar.forEach(function(cal) {
                     CalendarList.push(cal);
                 });
 
@@ -348,6 +349,7 @@ let getSchedules = async(DateRange) => {
                 var data_length = Object.keys(data).length;
                 // deb(data);
                 // var schedules = [];
+                schedules.length = 0;
                 for (let i = 0; i < data_length; i++) {
 
                     // deb(data[i])
@@ -392,22 +394,10 @@ let getSchedules = async(DateRange) => {
 let Appointments = {
     render: async() => {
         Functions.pageTitle('Calendar')
-            // load CSS
         await Style();
-        // load sidebar HTML
         await Sidebar();
-        // load content HTML
         await Content();
-        // get StaffList
         await getCalendars();
-
-        // deb(cal.getOptions());
-        // deb(CalendarList);
-        // deb(cal.getViewName());
-        // let startDate = new Date(cal.getDateRangeStart()._date);
-        // let endDate = new Date(cal.getDateRangeEnd()._date);
-        // deb(startDate);
-        // deb(endDate);
 
         /*
 
@@ -420,10 +410,6 @@ let Appointments = {
         #### ##    ## ####    ##        ######  ##     ## ######## ######## ##    ## ########  ##     ## ##     ##
 
         */
-
-        // load list of all calendars (staffs) from API
-        // var CalendarList = [];
-
 
 
         // load TUI calendar
@@ -544,18 +530,12 @@ let Appointments = {
          * @param mode - 'view' or 'create'
          */
         async function SchedulePopup(e, mode) {
-            let schedule
-                // OLD
-                // let xPos, yPos, schedule, data;
-                // if (mode === 'view') {xPos = e.event.clientX;yPos = e.event.clientY;}
-                // // clickSchedule hook has no cursorposition...
-                // if (mode === 'create') {xPos = 400;yPos = 200;}
-                // style="position:fixed; left:${xPos}px; top:${yPos}px;"
-
+            let schedule;
 
             // create popup div & load AppointmentPopup Form  into it
             let Popup = document.createElement('div');
             Popup.id = 'PopupWrapper';
+            Popup.style.opacity = 0;
             Popup.innerHTML = /*HTML*/ `
                 <div id=customSchedulePopup  class="boxShadow">
 
@@ -585,8 +565,14 @@ let Appointments = {
             Functions.dragElement('customSchedulePopup', 'customSchedulePopupDrag');
 
             // remove Popup from DOM
-            document.getElementById('customSchedulePopupClose').addEventListener('click', (event) => {
-                Popup.remove();
+            document.getElementById('customSchedulePopupClose').addEventListener('click', closeSchedulePopup);
+            document.getElementById('PopupWrapper').addEventListener('click', closeSchedulePopup);
+
+            function closeSchedulePopup() {
+                Popup.style.opacity = 0;
+                setTimeout(() => {
+                    Popup.remove();
+                }, 200);
                 // remove blue-framed box from calendar
                 if (document.querySelector('.tui-full-calendar-time-guide-creation')) {
                     document.querySelector('.tui-full-calendar-time-guide-creation').remove();
@@ -595,7 +581,7 @@ let Appointments = {
                 // if (document.querySelector('#PopupWrapper')) {
                 //     document.querySelector('#PopupWrapper').remove();
                 // }
-            });
+            };
 
             // case 'view'
             if (e.schedule) {
@@ -650,6 +636,14 @@ let Appointments = {
                 document.getElementById('ApPoTime').value = startTime;
                 document.getElementById('ApPoDuration').value = duration;
             }
+
+            //
+            // make popup visible
+            //
+            setTimeout(() => {
+                Popup.style.opacity = 1;
+            }, 200);
+
         } // SchedulePopup()
 
 
@@ -901,6 +895,7 @@ let Appointments = {
             var renderRange = document.getElementById('renderRange');
             var options = cal.getOptions();
             var viewName = cal.getViewName();
+
             var html = [];
             if (viewName === 'day') {
                 html.push(moment(cal.getDate().getTime()).format('DD. MM. YYYY'));
@@ -940,8 +935,16 @@ let Appointments = {
          */
         function setCalendarList() {
             var calendarList = document.getElementById('calendarList');
+            if (html) html = undefined;
+
             var html = [];
+            html.length = 0
+                // deb(html)
+                // deb('CalendarList', CalendarList);
+
             CalendarList.forEach(function(calendar) {
+                // deb('setCalendarList Function', calendar);
+                // deb(calendar.name)
                 html.push( /*HTML*/ `
                     <div class="lnb-calendars-item">
                         <label>

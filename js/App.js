@@ -38,15 +38,15 @@ async function router() {
     Functions.loadingDots('body', true)
     document.getElementById('main').classList.remove('visible');
     await Functions.sleep(200);
-    Functions.setInnerHTML('calendarSidebar', '');
-
-    (async() => {
-
+    // remove calendar sidebar 
+    await Functions.setInnerHTML('calendarSidebar', '');
+    await asyncSwitch(API_page);
+    // (async() => {
+    async function asyncSwitch(API_page) {
         switch (API_page) {
 
             case '/':
                 await UserLogin.render();
-                deb('App Login')
                 break;
 
             case 'staff':
@@ -122,10 +122,10 @@ async function router() {
                 break;
         }
 
-
-    })()
+    }
+    // })()
     // when content is loaded, turn bach the opacity :-)
-    await Functions.sleep(700)
+    await Functions.sleep(200)
         .then(() => {
             Functions.loadingDots('body', false);
             LanguageSwitch.render();

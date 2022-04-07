@@ -1,6 +1,11 @@
-# save my data
+# save my data  
 
 ## <sub>(draft title)</sub>
+
+## temporary links
+
+- [User Roles and Permissions with bitwise operators JS](https://codepen.io/monochromer/pen/OodNQm?editors=0110)
+- [User Roles and Permissions with bitwise operators PHP](https://stackoverflow.com/questions/2925245/user-role-permissions-for-different-modules-using-bitwise-operators)
 
 a simple framework to save various data based on users
 

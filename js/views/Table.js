@@ -27,9 +27,9 @@ export default {
         }
 
         Functions.pageTitle(`${slugName} Table`);
-        Style();
-        Content(action);
-        newItem();
+        await Style();
+        await Content(action);
+        await newItem();
     },
 };
 

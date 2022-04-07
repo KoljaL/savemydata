@@ -23,12 +23,12 @@ export default {
         Functions.pageTitle(`${slugName} Profile`);
         await Style();
         await Content(userID);
-        if (tableName === 'staff') changeAvatar(userID);
-        getUserData(userID);
-        dropDownEvent(tableName);
+        if (tableName === 'staff') await changeAvatar(userID);
+        await getUserData(userID);
+        await dropDownEvent(tableName);
         await newUserButton();
-        deleteUserButton(userID);
-        editUserButton(userID);
+        await deleteUserButton(userID);
+        await editUserButton(userID);
     },
 };
 
