@@ -3,6 +3,7 @@
     outline: black solid 1px;
     box-shadow: none;
     border-radius: 5px;
+    width: max-content;
 }
 
 [data-theme*="boxes"] .boxShadow {
@@ -12,7 +13,7 @@
     border-radius: 0;
 }
 
-table.boxShadow:empty,
+div.boxShadow>.dataTable:empty,
 span.boxShadow:empty {
     display: none;
 }
@@ -185,6 +186,7 @@ div.FF-item input:valid+label,
 div.FF-item input:focus+label {
     transition: all 0.5s ease-in-out;
     top: -1em;
+    left: -.2em;
     font-size: 0.9em;
     color: var(--font_2);
 }

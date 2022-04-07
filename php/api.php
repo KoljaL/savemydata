@@ -186,73 +186,77 @@ if ('login' === $API_endpoint) {
  */
 switch ($API_endpoint) {
 
-    case 'get_list_from':
-        get_list_from($request);
-        break;
+case 'get_list_from':
+    get_list_from($request);
+    break;
 
-    case 'newuser':
-        new_user($request);
-        break;
+case 'newuser':
+    new_user($request);
+    break;
 
-    case 'new_entry_in':
-        new_entry_in($request);
-        break;
+case 'new_entry_in':
+    new_entry_in($request);
+    break;
 
-    case 'delete_entry_in':
-        delete_entry_in($request);
-        break;
+case 'delete_entry_in':
+    delete_entry_in($request);
+    break;
 
-    case 'login':
-        login_user($request);
-        break;
+case 'login':
+    login_user($request);
+    break;
 
-    case 'get_projects_as_table':
-        get_projects_as_table($request);
-        break;
+case 'get_projects_as_table':
+    get_projects_as_table($request);
+    break;
 
-    case 'get_project':
-        get_project($request);
-        break;
+case 'get_project':
+    get_project($request);
+    break;
 
-    case 'edit_single_field':
-        edit_single_field($request);
-        break;
+case 'edit_single_field':
+    edit_single_field($request);
+    break;
 
-    case 'get_data_from':
-        get_data_from($request);
-        break;
+case 'get_data_from':
+    get_data_from($request);
+    break;
 
-    case 'upload_file':
-        upload_file($request);
-        break;
+case 'upload_file':
+    upload_file($request);
+    break;
 
-    case 'get_files_from':
-        get_files_from($request);
-        break;
+case 'upload_avatar':
+    upload_avatar($request);
+    break;
 
-    case 'get_appointments_from':
-        get_appointments_from($request);
+case 'get_files_from':
+    get_files_from($request);
+    break;
 
-        break;
-    case 'get_appointments_as_table':
-        get_appointments_as_table($request);
-        break;
+case 'get_appointments_from':
+    get_appointments_from($request);
 
-    case 'get_projects_from':
-        get_projects_from($request);
-        break;
+    break;
+case 'get_appointments_as_table':
+    get_appointments_as_table($request);
+    break;
 
-    case 'get_appointment':
-        get_appointment($request);
-        break;
+case 'get_projects_from':
+    get_projects_from($request);
+    break;
 
-    case 'get_calendar_dates':
-        get_calendar_dates($request);
-        break;
+case 'get_appointment':
+    get_appointment($request);
+    break;
 
-    default:
-        // echo 'Endpoint <b>'.$API_endpoint.'</b> not found';
-        break;
+case 'get_calendar_dates':
+    get_calendar_dates($request);
+    break;
+
+default:
+    // echo 'Endpoint <b>'.$API_endpoint.'</b> not found';
+    break;
 }
 /*
 //////////////////////////////////////////////////////////////////////////////////////
@@ -334,18 +338,18 @@ function get_appointments_as_table($param)
         }
 
         if (isset($param['startDate'])) {
-            $startDate= $param['startDate'];
-            $endDate = $param['endDate'];
-            $from_to = "WHERE start_date BETWEEN '$startDate' AND '$endDate'";
+            $startDate = $param['startDate'];
+            $endDate   = $param['endDate'];
+            $from_to   = "WHERE start_date BETWEEN '$startDate' AND '$endDate'";
         } else {
             $from_to = '';
         }
-        
+
         $stmt = $db->prepare("SELECT * FROM appointment $from_to");
         $stmt->execute();
         $appointments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $response = [];
+        $response             = [];
         $response['$from_to'] = $from_to;
 
         if ($appointments) {
@@ -497,16 +501,13 @@ function get_files_from($param)
         // $stmt = $db->prepare("SELECT * FROM appointment WHERE customer_id = :origin_id");
         // $stmt->execute([':origin_id' => $API_value]);
 
-
-
         $stmt = $db->prepare("SELECT * FROM files WHERE origin = :origin AND origin_id = :origin_id");
         $stmt->execute([':origin' => $API_param, ':origin_id' => $API_value]);
-
 
         // $stmt = $db->prepare("SELECT * FROM 'files' WHERE 'origin' = 'appointment' AND 'origin_id' = '3'");
         // $stmt->execute();
         $files = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
+
         $response = [];
         if ($param) {
             $response['code'] = 200;
@@ -525,13 +526,8 @@ function get_files_from($param)
         return_JSON($response);
     }
 }
- 
-/**
- *
- * Upload a file to the server
- *
- */
-function upload_file($param)
+
+function upload_avatar($param)
 {
     if (isAllowed()) {
         global $db, $API_param, $API_value, $TOKEN;
@@ -570,6 +566,60 @@ function upload_file($param)
         $response['FILES']   = $_FILES;
         $response['param']   = $param;
         $response['$TOKEN']  = $TOKEN;
+        $response['message'] = 'vorbidden to upload file';
+        return_JSON($response);
+    }
+}
+
+/**
+ *
+ * Upload a file to the server
+ *
+ */
+function upload_file($param)
+{
+    if (isAllowed()) {
+        global $db, $API_param, $API_value;
+
+        // set filename and dir
+        $uploaddir  = '../userdata/uploads/'.$param['origin'].'/'.$param['origin_id'].'/';
+        $uploadfile = $uploaddir.rndStr(4).'_'.basename($_FILES['file']['name']);
+
+        // create folder if not exists
+        if (!is_dir('../userdata/uploads/'.$param['origin'].'/'.$param['origin_id'])) {
+            mkdir('../userdata/uploads/'.$param['origin'].'/'.$param['origin_id']);
+        }
+
+        $response = [];
+        if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
+            // prepare filepath for DOM
+            $file_path = str_replace('../', '', $uploadfile);
+
+            if (isset($param['avatar'])) {
+                $usertype = $param['avatar'];
+                $sql = "UPDATE $usertype SET avatar=? WHERE id=?";
+                $db->prepare($sql)->execute([$file_path, $param['origin_id']]);
+            } else {
+                // TODO insert ino DB: missing NAME, FILETYPE DATE
+                $sql = "INSERT INTO files (origin, origin_id, path, date) VALUES (?,?,?,?)";
+                $db->prepare($sql)->execute([$param['origin'], $param['origin_id'], $file_path, date('d.m.Y H:i:s')]);
+            }
+
+            $response['code']         = 200;
+            $response['data']['id']   = $db->lastInsertId();
+            $response['data']['path'] = $file_path;
+        } else {
+            $response['code']    = 400;
+            $response['message'] = 'no file uploaded';
+            $response['$_FILES'] = $_FILES;
+            $response['$param']  = $param;
+        }
+        return_JSON($response);
+    } else {
+        $response['code']    = 400;
+        $response['POST']    = $_POST;
+        $response['FILES']   = $_FILES;
+        $response['param']   = $param;
         $response['message'] = 'vorbidden to upload file';
         return_JSON($response);
     }
@@ -1071,7 +1121,8 @@ function login_user($request)
             'username'   => $user['username'],
             'role'       => $user['role'],
             'permission' => $user['permission'],
-            'lang'       => $user['lang']
+            'lang'       => $user['lang'],
+            'avatar'     => $user['avatar'],
         ];
 
         $response['code']          = 200;
@@ -1109,7 +1160,7 @@ function insert_into_db($param, $table, $output = true)
     global $db;
     // print_r( $param );
 
-    if (isset($param['id']) && $param['id']==='') {
+    if (isset($param['id']) && '' === $param['id']) {
         unset($param['id']);
     }
 
@@ -1210,14 +1261,13 @@ function insert_into_db($param, $table, $output = true)
 //  header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
 function return_JSON($response)
 {
-    global $request, $API_endpoint, $API_param, $API_value,$start;
+    global $request, $API_endpoint, $API_param, $API_value, $start;
 
     if ('reset' !== $API_endpoint) {
         $response['GET']['API_endpoint'] = $API_endpoint;
         $response['GET']['API_param']    = $API_param;
         $response['GET']['API_value']    = $API_value;
-        $response['POST'] = $request;
-
+        $response['POST']                = $request;
 
         header('Access-Control-Allow-Origin: *');
         header('Content-Type: application/json; charset=UTF-8');
@@ -1268,7 +1318,7 @@ function init_staff_fields_table()
         ['pos' => '10', 'row' => '4', 'name' => 'role', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Role', 'db' => 'role/staff/id'],
         ['pos' => '20', 'row' => '4', 'name' => 'permission', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Permission', 'db' => 'permission/staff/id'],
         ['pos' => '30', 'row' => '4', 'name' => 'lang', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Language', 'db' => 'lang/staff/id'],
-        ['pos' => '40', 'row' => '4', 'name' => 'color', 'type' => 'color', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Color', 'db' => 'color/staff/id'],
+        ['pos' => '40', 'row' => '4', 'name' => 'color', 'type' => 'color', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Color', 'db' => 'color/staff/id']
     ];
     foreach ($userfields as $field) {
         insert_into_db($field, 'staff_fields');
@@ -1337,6 +1387,7 @@ function init_stafftable()
             role TEXT NOT NULL DEFAULT "",
             permission TEXT NOT NULL DEFAULT "",
             color TEXT NOT NULL DEFAULT "#f6b73c",
+            avatar TEXT NOT NULL DEFAULT "",
             lang TEXT NOT NULL DEFAULT "en",
             date TEXT NOT NULL DEFAULT ""
         )');
@@ -1418,7 +1469,7 @@ function init_appointment_table()
             date TEXT NOT NULL  DEFAULT ""
         )');
     // end_time TEXT NOT NULL DEFAULT "",
-            // public TEXT NOT NULL DEFAULT 0,
+    // public TEXT NOT NULL DEFAULT 0,
 }
 
 function init_files_table()
@@ -1478,7 +1529,7 @@ function create_dummy_staff($count)
             'comment'    => random_text(),
             'role'       => random_int(1, 5),
             'permission' => random_int(1, 5).','.random_int(1, 5).','.random_int(1, 5),
-            'color'      => random_color(),
+            'color'      => random_color()
         ];
         insert_into_db($staff, 'staff');
         // create_user( $user );
@@ -1491,7 +1542,7 @@ function create_dummy_customer($count)
         $random_name = random_name();
         $email       = $random_name[0]."@".$random_name[1].".com";
         $customer    = [
-            'staff_id'         => get_ramdon_id_from('staff'),
+            'staff_id'   => get_ramdon_id_from('staff'),
             'username'   => 'C_'.$random_name[0].'_'.$random_name[1],
             'instaname'  => $random_name[1].'_'.$random_name[0],
             'password'   => 'password',
@@ -1577,7 +1628,7 @@ function create_dummy_appointment($count)
             'staff_id'    => $staff_id,
             'project_id'  => $project_id,
             'customer_id' => $customer_id,
-            'comment'     => random_text(),
+            'comment'     => random_text()
             // 'public'      => random_int(0, 1)
         ];
         insert_into_db($project, 'appointment');

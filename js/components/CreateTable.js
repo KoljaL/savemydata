@@ -281,6 +281,7 @@ function sortTable(table) {
             // deb(table) // why has this table NO node selector in devTools
             switching = true;
             dir = "asc";
+            // TODO loadingSpinner
             while (switching) {
                 switching = false;
                 rows = table.rows;
@@ -311,6 +312,7 @@ function sortTable(table) {
                     }
                 }
             }
+
 
         }
 

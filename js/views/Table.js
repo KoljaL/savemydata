@@ -49,7 +49,7 @@ let Style = async() => {
         display:none;
     }
 
-    .start_time,.duration,.public {
+    .start_time,.start_date,.duration,.public {
         font-variant-numeric: tabular-nums;
         font-family: 'Zilla Slab Medium', sans-serif;
         font-size: 1.1em;
@@ -68,22 +68,44 @@ let Content = async(action) => {
     // deb(tableName)
     if ('project' == tableName) {
         data = await Functions.getAPIdata('get_projects_as_table/' + tableName);
+        data = data.data;
     }
+
     if ('appointment' == tableName) {
-        data = await Functions.getAPIdata('get_appointments_as_table/' + tableName);
+        let resp = await Functions.getAPIdata('get_appointments_as_table/' + tableName);
+        // TODO add new fields at  the end
+        // sort by list
+        let field_order = ["id", "title", "start_date", "start_time", "duration", "username", "projectname", "staffname", "comment"]
+        var presort_data = []
+        resp.data.forEach(d => {
+            let field = field_order.reduce((obj, v) => {
+                obj[v] = d[v];
+                return obj;
+            }, {});
+            presort_data.push(field)
+        });
+        data = presort_data;
     } else {
         data = await Functions.getAPIdata('get_data_from/' + tableName);
+        data = data.data;
     }
-    data = data.data;
-    // deb(data)
-    // deb(tableName)
 
-
+    /**
+     * 
+     *  call CreateTable component 
+     * 
+     */
     let innerHTML = /*HTML*/ `
         <div id="UserTableWrapper" class="template"> 
             <div id="UserTable">${await CreateTable.render(data,action)}</div>
         </div>`;
 
+
+    /**
+     * 
+     *  Used to create a new project. 
+     * 
+     */
     if ('project' == tableName) {
         let userList = await UserList.render('dropdown', 'customer');
         innerHTML += /*HTML*/ `

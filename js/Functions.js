@@ -337,9 +337,14 @@ let Functions = {
     */
 
     /* Setting the username in the navbar. */
-    setUsername: async(username, userID) => {
+    setUsername: async(username, userID, avatarPath) => {
+        if (!avatarPath) {
+            avatarPath = 'userdata/uploads/avatars/admin.png';
+            deb(avatarPath)
+
+        }
         document.querySelector('nav .sidebar_userpanel').innerHTML = /*HTML*/ `
-            <img src="userdata/uploads/avatars/${username}.png" width="40" height="40">
+            <img src="${avatarPath}" width="40" height="40">
             <span class=username  onclick='window.location.hash ="staff/profile/"+${userID}'>${username}</span>
             <span id=userLogout class="logout_icon"></span>`;
     },

@@ -153,7 +153,7 @@ function checkUserLoggedIn() {
     // if there is a token in localStorage, we aim that the user ist valid
     if (Functions.getLocal('token')) {
         // set name and avatar in sidebar
-        Functions.setUsername(Functions.getLocal('username'), Functions.getLocal('id'));
+        Functions.setUsername(Functions.getLocal('username'), Functions.getLocal('id'), Functions.getLocal('avatarPath'));
         // remove the darkWrapper from body
         document.getElementById('body').classList.remove('darkWrapper');
         // set logout Button

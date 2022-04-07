@@ -127,8 +127,8 @@ let Login = async() => {
                     document.getElementById('body').classList.remove('visible');
 
                     // add username & avatar to sidebar
-                    Functions.setUsername(user.username, user.id);
-                    deb('Userlogin')
+                    Functions.setUsername(user.username, user.id, user.avatar);
+                    deb(user.avatar)
 
                     // save userdata in localStorage
                     Functions.setLocal('username', user.username);
@@ -137,6 +137,7 @@ let Login = async() => {
                     Functions.setLocal('permission', user.permission);
                     Functions.setLocal('token', res.data.token);
                     Functions.setLocal('lang', user.lang);
+                    Functions.setLocal('avatarPath', user.avatar);
 
                     // activate logout button
                     document.getElementById('userLogout').addEventListener('click', Functions.flushLocal);
