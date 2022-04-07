@@ -125,7 +125,7 @@ async function router() {
     }
     // })()
     // when content is loaded, turn bach the opacity :-)
-    await Functions.sleep(200)
+    await Functions.sleep(400)
         .then(() => {
             Functions.loadingDots('body', false);
             LanguageSwitch.render();

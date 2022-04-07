@@ -121,7 +121,7 @@ let Content = async(userID) => {
                         <h3 data-lang="F_images">Images</h3>
                         <div id=thumbnails></div>
                         <div id=fileUpload></div>
-                        ${Images.render({origin: 'customer',origin_id:userID})}
+                        ${Images.render({origin: tableName,origin_id:userID,type:'image',name:'testname'})}
                     </div>
                 </div>
             </div>

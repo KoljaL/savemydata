@@ -30,7 +30,7 @@ let getImages = (d) => {
     //
     Functions.getAPIdata(`get_files_from/${d.origin}/${d.origin_id}`)
         .then((res) => {
-            deb(res);
+            // deb(res);
             if (res.code === 200) {
                 let files = res.data;
                 // deb(files)
@@ -47,6 +47,8 @@ let getImages = (d) => {
                     <form id=uploadFileForm>
                         <input for=uploadFileForm type="hidden" name="origin" id="origin"  value="${d.origin}" />
                         <input for=uploadFileForm type="hidden" name="origin_id" id="origin_id"  value="${d.origin_id}" />
+                        <input for=uploadFileForm type="hidden" name="type" id="type"  value="${d.type}" />
+                        <input for=uploadFileForm type="hidden" name="name" id="name"  value="${d.name}" />
                         <label class="button boxShadow" for="uploadFile">upload</label>
                         <input for=uploadFileForm id="uploadFile" type="file" accept="image/*" capture="camera" style="display:none">
                     </form> `;
@@ -92,11 +94,18 @@ let getImages = (d) => {
 
                 body.addEventListener('click', (el) => {
                     if (el.target.className === 'thumbnailImage') {
+                        el.target.nextSibling.style.opacity = '0';
                         el.target.nextSibling.style.display = 'block';
+                        setTimeout(() => {
+                            el.target.nextSibling.style.opacity = '1';
+                        }, 100);
 
                     }
                     if (el.target.className === 'popupImage') {
-                        el.target.parentElement.style.display = 'none';
+                        el.target.parentElement.style.opacity = '0';
+                        setTimeout(() => {
+                            el.target.parentElement.style.display = 'none';
+                        }, 200);
 
                     }
                     if (el.target.className === 'deleteButton') {
@@ -116,26 +125,23 @@ let getImages = (d) => {
 };
 
 function addImage(file) {
-    // deb(file)
-    // wrapper
+    deb(file)
+        // wrapper
     let thumbnailWrapper = document.createElement('DIV');
     thumbnailWrapper.classList.add('thumbnailWrapper');
     thumbnailWrapper.classList.add('boxShadow');
     // thumbnail
     // deb(file)
     let img = document.createElement('img');
-    img.src = file.path;
+    img.src = file.path_thumb;
     img.classList.add('thumbnailImage');
-    //
-    // data-db="comment_staff/project/id/3"
+
 
     let deleteButton = document.createElement('span');
     deleteButton.classList.add('deleteButton');
     deleteButton.innerHTML = 'X';
     deleteButton.dataset.delete = `${file.id}`
     thumbnailWrapper.append(deleteButton);
-
-
 
     thumbnailWrapper.append(img);
     // popup

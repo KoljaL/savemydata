@@ -580,40 +580,118 @@ function upload_file($param)
 {
     if (isAllowed()) {
         global $db, $API_param, $API_value;
-
+        include 'ImageResize.php';
         // set filename and dir
-        $uploaddir  = '../userdata/uploads/'.$param['origin'].'/'.$param['origin_id'].'/';
-        $uploadfile = $uploaddir.rndStr(4).'_'.basename($_FILES['file']['name']);
+        $uploaddir  = 'userdata/uploads/'.$param['origin'].'/'.$param['origin_id'];
+        $uploadfile = $uploaddir.'/'.rndStr(4).'_'.basename($_FILES['file']['name']);
 
         // create folder if not exists
-        if (!is_dir('../userdata/uploads/'.$param['origin'].'/'.$param['origin_id'])) {
-            mkdir('../userdata/uploads/'.$param['origin'].'/'.$param['origin_id']);
+        if (!is_dir('../'.$uploaddir)) {
+            mkdir('../'.$uploaddir);
         }
 
         $response = [];
-        if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
-            // prepare filepath for DOM
-            $file_path = str_replace('../', '', $uploadfile);
-
+        try {
+            //
+            // staff avatar
+            //
             if (isset($param['avatar'])) {
+                // resize &  save
+                $image = new \Gumlet\ImageResize($_FILES['file']['tmp_name']);
+                $image->crop(40, 40);
+                $image->save('../'.$uploadfile);
+                // add path to db
                 $usertype = $param['avatar'];
                 $sql = "UPDATE $usertype SET avatar=? WHERE id=?";
-                $db->prepare($sql)->execute([$file_path, $param['origin_id']]);
-            } else {
-                // TODO insert ino DB: missing NAME, FILETYPE DATE
-                $sql = "INSERT INTO files (origin, origin_id, path, date) VALUES (?,?,?,?)";
-                $db->prepare($sql)->execute([$param['origin'], $param['origin_id'], $file_path, date('d.m.Y H:i:s')]);
+                $db->prepare($sql)->execute([$uploadfile, $param['origin_id']]);
             }
+            //
+            // all other images
+            //
+            else {
+                // TODO insert ino DB: missing NAME, FILETYPE DATE
+                //thumbnail
+                $pos = strrpos($uploadfile, '.');
+                $uploadfile_thumb = substr_replace($uploadfile, '_thumb.', $pos, strlen('.'));
+                // resize & save
+                $image = new \Gumlet\ImageResize($_FILES['file']['tmp_name']);
+                $image->save('../'.$uploadfile);
+                $image->crop(100, 100);
+                $image->save('../'.$uploadfile_thumb);
 
+
+                // add path to db
+                $sql = "INSERT INTO files (
+                    origin, 
+                    origin_id, 
+                    path,
+                    path_thumb,
+                    type,
+                    name, 
+                    date
+                    ) VALUES (?,?,?,?,?,?,?)";
+
+                $db->prepare($sql)->execute([
+                    $param['origin'],
+                    $param['origin_id'],
+                    $uploadfile,
+                    $uploadfile_thumb,
+                    $param['type'],
+                    $param['name'],
+                    date('d.m.Y H:i:s')
+                ]);
+            }
+            
             $response['code']         = 200;
             $response['data']['id']   = $db->lastInsertId();
-            $response['data']['path'] = $file_path;
-        } else {
+            $response['data']['path'] = $uploadfile;
+            $response['data']['$image'] = $image;
+        } catch (ImageResizeException $e) {
             $response['code']    = 400;
-            $response['message'] = 'no file uploaded';
+            $response['message'] = $e->getMessage();
             $response['$_FILES'] = $_FILES;
             $response['$param']  = $param;
         }
+
+
+        // origin_id TEXT NOT NULL DEFAULT "",
+        // name TEXT NOT NULL DEFAULT "",
+        // type TEXT NOT NULL DEFAULT "",
+        // path TEXT NOT NULL DEFAULT "",
+        // path_thumb TEXT NOT NULL DEFAULT "",
+
+        // $response = [];
+        // if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
+        //     // prepare filepath for DOM
+        //     $file_path = str_replace('../', '', $uploadfile);
+
+        //     if (isset($param['avatar'])) {
+        //         $usertype = $param['avatar'];
+        //         $sql = "UPDATE $usertype SET avatar=? WHERE id=?";
+        //         $db->prepare($sql)->execute([$file_path, $param['origin_id']]);
+        //     } else {
+        //         // TODO insert ino DB: missing NAME, FILETYPE DATE
+        //         $sql = "INSERT INTO files (origin, origin_id, path, date) VALUES (?,?,?,?)";
+        //         $db->prepare($sql)->execute([$param['origin'], $param['origin_id'], $file_path, date('d.m.Y H:i:s')]);
+        //     }
+
+        //     $response['code']         = 200;
+        //     $response['data']['id']   = $db->lastInsertId();
+        //     $response['data']['path'] = $file_path;
+        //     $response['data']['$image'] = $image;
+        // } else {
+        //     $response['code']    = 400;
+        //     $response['message'] = 'no file uploaded';
+        //     $response['$_FILES'] = $_FILES;
+        //     $response['$param']  = $param;
+        // }
+
+
+
+
+
+
+
         return_JSON($response);
     } else {
         $response['code']    = 400;
@@ -1481,7 +1559,10 @@ function init_files_table()
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             origin TEXT NOT NULL DEFAULT "",
             origin_id TEXT NOT NULL DEFAULT "",
+            name TEXT NOT NULL DEFAULT "",
+            type TEXT NOT NULL DEFAULT "",
             path TEXT NOT NULL DEFAULT "",
+            path_thumb TEXT NOT NULL DEFAULT "",
             date TEXT NOT NULL  DEFAULT ""
         )');
 }
