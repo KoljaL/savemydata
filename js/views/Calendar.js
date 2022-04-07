@@ -363,6 +363,7 @@ let getSchedules = async(DateRange) => {
                         title: data[i].username + '\n' + data[i].title,
                         body: data[i].comment,
                         category: 'time',
+                        isReadOnly: true,
                         dueDateClass: '',
                         start: startDatetime,
                         end: endDatetime,

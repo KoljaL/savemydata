@@ -1,17 +1,17 @@
 # save my data  
-
-## <sub>(draft title)</sub>
+a simple framework to save various data based on users
 
 ## temporary links
 
 - [User Roles and Permissions with bitwise operators JS](https://codepen.io/monochromer/pen/OodNQm?editors=0110)
 - [User Roles and Permissions with bitwise operators PHP](https://stackoverflow.com/questions/2925245/user-role-permissions-for-different-modules-using-bitwise-operators)
 
-a simple framework to save various data based on users
 
 ## dependencies
 
 -   **Auth** [PHP-JWT](https://github.com/firebase/php-jwt)
+-   **Imgage resize** [php-image-resize](https://github.com/gumlet/php-image-resize)
+-   **Calendar** [pTUI Calendar](https://github.com/nhn/tui.calendar)
 
 ## Progressive Responsive Layout
 
