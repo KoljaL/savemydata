@@ -270,10 +270,12 @@ let Style = async() => {
             font-weight: bold
         }
 
+        .large #calendarSidebar,
         .medium #calendarSidebar {
             position: relative;
             left: 50px;
           }
+        .large.sidebar #calendarSidebar,
         .medium.sidebar #calendarSidebar {
             position: relative;
             left: 0px;
