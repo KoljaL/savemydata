@@ -6,10 +6,11 @@ import UserList from '../components/UserList.js';
 let Style = async() => {
     let styleTags = /*CSS*/ `
         #CreateAppointmentPopup {
-            width: max-content; 
+            // width: 600px;
+            max-width: 90vw; 
         }
         #CreateAppointmentPopup textarea {
-            width: 400px;
+            width: 100%;
         }
         #CreateAppointmentPopup button{
             height: 29.6px;
@@ -30,7 +31,6 @@ let CreateAppointmentPopup = {
 
         return /*HTML*/ `
             <div id="CreateAppointmentPopup" class="template">
-                <fieldset>
                     <legend id=ApPoLegend>Create new Appointment</legend>
                     <form id="CreateAppointmentPopupForm" action="" method="post" autocomplete="off">
                         <input name=id type=hidden id=ApPoID value=''>
@@ -96,7 +96,6 @@ let CreateAppointmentPopup = {
 
                         <span id="CreateAppointmentPopupSubmit" class="button boxShadow">Create</span>
                     </form>
-                </fieldset>
             </div>
         `;
     }

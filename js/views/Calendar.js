@@ -31,23 +31,67 @@ let Style = async() => {
             
         }
         #menu {
-            display:flex;
-            justify-content: space-around;
+            // display:flex;
+            // justify-content: space-around;
+            display: grid;
+            grid-template-areas: 'navi range view';
+            grid-template-rows: 1fr;
+            grid-template-columns: 1fr 2fr 1fr;
             align-items: end;
+            justify-items: center;
             padding-left:0em;
         }
-        #calendar {
-            position: relative;
-            //left: -20px;
-            right: 0;
-            bottom: 5px;
-            top: 20px;
+
+        #menu #menuNavi{
+            grid-area: navi; 
+            white-space: nowrap;
         }
-        #renderRange{
+        #menu #renderRange{
+            grid-area: range; 
             font-size: 1.5em;
             position: relative;
             top: 5px;
+            left:.5em;
             width:250px;
+            white-space: nowrap;
+        }
+        #menu #toggleView{
+            grid-area: view;
+            white-space: nowrap;
+        }
+
+        @media only screen and (max-width: 700px) {
+            #menu {
+                grid-template-areas: 'range range' 'navi view';
+                grid-template-rows:  1fr 1fr  ;
+                grid-template-columns: 1fr 1fr;
+            }
+            #menu #menuNavi{
+                justify-self: start;
+                // top: .5em;
+                position: relative;
+            }
+            #menu #renderRange{
+                justify-self: center;
+                top: -.5em;
+                position: relative;
+            }
+            #menu #toggleView{
+                justify-self: end;
+                // top: .5em;
+                position: relative;
+            }
+        }
+
+
+   
+
+
+        #calendar {
+            position: relative;
+            right: 0;
+            bottom: 5px;
+            top: 20px;
         }
         #lnb-calendars{
             padding-top:1em;
@@ -107,6 +151,13 @@ let Style = async() => {
             color: var(--InputText);
         }
 
+        .tui-full-calendar-timegrid-timezone{
+            width:0px!important;
+        }
+        .tui-full-calendar-dayname-leftmargin,
+        .tui-full-calendar-timegrid-right{
+            margin-left: 32px!important;
+        }
 
         #PopupWrapper {
             position: fixed;
@@ -197,14 +248,14 @@ let Style = async() => {
             position: relative;
             bottom: 5px;
         }
-        #menu-navi > span,
+        #menuNavi > span,
         #toggleView > span,
         #popupDataLinks > span,
         #popupOptions > span{
             margin-left:.5em;
         }
 
-        #menu-navi > span:hover,
+        #menuNavi > span:hover,
         #toggleView > span:hover,
         #popupDataLinks > span:hover,
         #popupOptions > span:hover{
@@ -261,7 +312,7 @@ let Sidebar = async() => {
 let Content = async() => {
     let innerHTML = /*HTML*/ `
             <div id="menu">
-                <div id="menu-navi">
+                <div id="menuNavi">
                     <span type="button" class="button boxShadow" data-action="move-prev"><</span>
                     <span type="button" class="button boxShadow" data-action="move-today">Today</span>
                     <span type="button" class="button boxShadow" data-action="move-next">></span>
@@ -785,7 +836,7 @@ let Appointments = {
          * @param e - The event object.
          * @returns Nothing.
          */
-        document.querySelector('#menu-navi').addEventListener('click', (e) => {
+        document.querySelector('#menuNavi').addEventListener('click', (e) => {
             var action = getDataAction(e.target);
 
             switch (action) {

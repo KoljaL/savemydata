@@ -136,6 +136,12 @@ div.FF-item>* {
     /* font-size: clamp(2vw, 2vw, 3vw); */
 }
 
+.small div.FF-item,
+.small div.FF-item>* {
+    font-size: 16px;
+    /* font-size: clamp(2vw, 2vw, 3vw); */
+}
+
 [data-theme='dark-boxes'] div.FF-item textarea,
 [data-theme='light-boxes'] div.FF-item textarea,
 [data-theme='dark-boxes'] div.FF-item input,
