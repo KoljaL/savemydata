@@ -270,6 +270,15 @@ let Style = async() => {
             font-weight: bold
         }
 
+        .medium #calendarSidebar {
+            position: relative;
+            left: 50px;
+          }
+        .medium.sidebar #calendarSidebar {
+            position: relative;
+            left: 0px;
+        }
+
     `;
     Functions.createStyle('Appointments', styleTags);
 };

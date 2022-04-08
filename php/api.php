@@ -226,9 +226,6 @@ case 'upload_file':
     upload_file($request);
     break;
 
-case 'upload_avatar':
-    upload_avatar($request);
-    break;
 
 case 'get_files_from':
     get_files_from($request);
@@ -498,14 +495,8 @@ function get_files_from($param)
     if (isAllowed()) {
         global $db, $API_param, $API_value;
 
-        // $stmt = $db->prepare("SELECT * FROM appointment WHERE customer_id = :origin_id");
-        // $stmt->execute([':origin_id' => $API_value]);
-
         $stmt = $db->prepare("SELECT * FROM files WHERE origin = :origin AND origin_id = :origin_id");
         $stmt->execute([':origin' => $API_param, ':origin_id' => $API_value]);
-
-        // $stmt = $db->prepare("SELECT * FROM 'files' WHERE 'origin' = 'appointment' AND 'origin_id' = '3'");
-        // $stmt->execute();
         $files = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $response = [];
@@ -526,50 +517,7 @@ function get_files_from($param)
         return_JSON($response);
     }
 }
-
-function upload_avatar($param)
-{
-    if (isAllowed()) {
-        global $db, $API_param, $API_value, $TOKEN;
-
-        // set filename and dir
-        $uploaddir  = '../userdata/uploads/'.$param['origin'].'/'.$param['origin_id'].'/';
-        $uploadfile = $uploaddir.rndStr(4).'_'.basename($_FILES['file']['name']);
-
-        // create folder if not exists
-        if (!is_dir('../userdata/uploads/'.$param['origin'].'/'.$param['origin_id'])) {
-            mkdir('../userdata/uploads/'.$param['origin'].'/'.$param['origin_id']);
-        }
-
-        $response = [];
-        if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
-            // prepare filepath for DOM
-            $file_path = str_replace('../', '', $uploadfile);
-
-            // insert ino DB: missing NAME, FILETYPE DATE
-            $sql = "INSERT INTO files (origin, origin_id, path, date) VALUES (?,?,?,?)";
-            $db->prepare($sql)->execute([$param['origin'], $param['origin_id'], $file_path, date('d.m.Y H:i:s')]);
-
-            $response['code']         = 200;
-            $response['data']['id']   = $db->lastInsertId();
-            $response['data']['path'] = $file_path;
-        } else {
-            $response['code']    = 400;
-            $response['message'] = 'no file uploaded';
-            $response['$_FILES'] = $_FILES;
-            $response['$param']  = $param;
-        }
-        return_JSON($response);
-    } else {
-        $response['code']    = 400;
-        $response['POST']    = $_POST;
-        $response['FILES']   = $_FILES;
-        $response['param']   = $param;
-        $response['$TOKEN']  = $TOKEN;
-        $response['message'] = 'vorbidden to upload file';
-        return_JSON($response);
-    }
-}
+ 
 
 /**
  *
@@ -609,8 +557,7 @@ function upload_file($param)
             // all other images
             //
             else {
-                // TODO insert ino DB: missing NAME, FILETYPE DATE
-                //thumbnail
+                // cerate thumbnail filename image.jpg -> image_thumb.jpg
                 $pos = strrpos($uploadfile, '.');
                 $uploadfile_thumb = substr_replace($uploadfile, '_thumb.', $pos, strlen('.'));
                 // resize & save
@@ -618,33 +565,15 @@ function upload_file($param)
                 $image->save('../'.$uploadfile);
                 $image->crop(100, 100);
                 $image->save('../'.$uploadfile_thumb);
-
-
                 // add path to db
-                $sql = "INSERT INTO files (
-                    origin, 
-                    origin_id, 
-                    path,
-                    path_thumb,
-                    type,
-                    name, 
-                    date
-                    ) VALUES (?,?,?,?,?,?,?)";
-
-                $db->prepare($sql)->execute([
-                    $param['origin'],
-                    $param['origin_id'],
-                    $uploadfile,
-                    $uploadfile_thumb,
-                    $param['type'],
-                    $param['name'],
-                    date('d.m.Y H:i:s')
-                ]);
+                $sql = "INSERT INTO files (origin, origin_id, path,path_thumb,type,name, date) VALUES (?,?,?,?,?,?,?)";
+                $db->prepare($sql)->execute([$param['origin'],$param['origin_id'],$uploadfile,$uploadfile_thumb,$param['type'],$param['name'],date('d.m.Y H:i:s')]);
             }
             
             $response['code']         = 200;
             $response['data']['id']   = $db->lastInsertId();
             $response['data']['path'] = $uploadfile;
+            $response['data']['path_thumb'] = $uploadfile_thumb;
             $response['data']['$image'] = $image;
         } catch (ImageResizeException $e) {
             $response['code']    = 400;
@@ -652,46 +581,6 @@ function upload_file($param)
             $response['$_FILES'] = $_FILES;
             $response['$param']  = $param;
         }
-
-
-        // origin_id TEXT NOT NULL DEFAULT "",
-        // name TEXT NOT NULL DEFAULT "",
-        // type TEXT NOT NULL DEFAULT "",
-        // path TEXT NOT NULL DEFAULT "",
-        // path_thumb TEXT NOT NULL DEFAULT "",
-
-        // $response = [];
-        // if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
-        //     // prepare filepath for DOM
-        //     $file_path = str_replace('../', '', $uploadfile);
-
-        //     if (isset($param['avatar'])) {
-        //         $usertype = $param['avatar'];
-        //         $sql = "UPDATE $usertype SET avatar=? WHERE id=?";
-        //         $db->prepare($sql)->execute([$file_path, $param['origin_id']]);
-        //     } else {
-        //         // TODO insert ino DB: missing NAME, FILETYPE DATE
-        //         $sql = "INSERT INTO files (origin, origin_id, path, date) VALUES (?,?,?,?)";
-        //         $db->prepare($sql)->execute([$param['origin'], $param['origin_id'], $file_path, date('d.m.Y H:i:s')]);
-        //     }
-
-        //     $response['code']         = 200;
-        //     $response['data']['id']   = $db->lastInsertId();
-        //     $response['data']['path'] = $file_path;
-        //     $response['data']['$image'] = $image;
-        // } else {
-        //     $response['code']    = 400;
-        //     $response['message'] = 'no file uploaded';
-        //     $response['$_FILES'] = $_FILES;
-        //     $response['$param']  = $param;
-        // }
-
-
-
-
-
-
-
         return_JSON($response);
     } else {
         $response['code']    = 400;
@@ -898,7 +787,9 @@ function delete_entry_in($param)
             $stmt->execute([$API_value]);
             $image = $stmt->fetch(PDO::FETCH_ASSOC);
             $path  = $image['path'];
+            $path_thumb  = $image['path_thumb'];
             unlink('../'.$path);
+            unlink('../'.$path_thumb);
         }
 
         $stmt = $db->prepare("DELETE FROM $table WHERE id =?");
