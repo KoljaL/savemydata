@@ -113,7 +113,7 @@ let Content = async(userID) => {
            
             <div id=editArea>
                 <div id=Userdata></div>
-                <div style="display:flex;gap: 1em;">
+                <div style="display:flex;gap: 1em;margin: 1em;">
                     <div id=UserProjects></div>
                     <div id=UserAppointments></div>
                     

@@ -16,12 +16,27 @@ let Style = async() => {
             height: 29.6px;
             width:100px;
         }  
-        #CreateAppointmentPopupSubmit{
+        #CreateAppointmentPopupForm{
             position:relative;
-            top:1.2em;
         }
+        #CreateAppointmentPopupSubmit{
+            display:none;
+            position:absolute;
+            color:var(--fontOrange);
+            left: 1em;
+        }
+
+        #ApPoLegend{
+            margin-bottom: 0;
+            position: relative;
+            top: 10px;
+            left: 1em;
+        }
+        .small #customSchedulePopup .FF-item {
+            max-width: 100%;
+          }
     `;
-    Functions.createStyle('CreateAppointmentPopup', styleTags);
+    Functions.createStyle('CreateAppointmentPopup_hgst_style', styleTags);
 };
 
 let CreateAppointmentPopup = {
@@ -31,7 +46,7 @@ let CreateAppointmentPopup = {
 
         return /*HTML*/ `
             <div id="CreateAppointmentPopup" class="template">
-                    <legend id=ApPoLegend>Create new Appointment</legend>
+                    <h2 id=ApPoLegend>Create new Appointment</h2>
                     <form id="CreateAppointmentPopupForm" action="" method="post" autocomplete="off">
                         <input name=id type=hidden id=ApPoID value=''>
                         
@@ -49,7 +64,7 @@ let CreateAppointmentPopup = {
                         <div class=FF-row>
                             <div class="FF-item">
                                 <label class="isTop">Title</label>
-                                <input id=ApPoTitle type="text"  class="boxShadow" name="title" value="" />
+                                <input for="CreateAppointmentPopupForm" id=ApPoTitle type="text"  class="boxShadow" name="title" value="" />
                             </div> 
                             
                             <div class="FF-item">

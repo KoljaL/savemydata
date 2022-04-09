@@ -72,12 +72,13 @@ let Content = async(action) => {
     }
 
     if ('appointment' == tableName) {
-        let resp = await Functions.getAPIdata('get_appointments_as_table/' + tableName);
+        let res = await Functions.getAPIdata('get_appointments_as_table/' + tableName);
+        // deb(res)
         // TODO add new fields at  the end
         // sort by list
-        let field_order = ["id", "title", "start_date", "start_time", "duration", "username", "projectname", "staffname", "comment"]
+        let field_order = ["id", "title", "start_date", "start_time", "duration", "username", "projectname", "staffname", "comment", "staff_id", "customer_id", "project_id"]
         var presort_data = []
-        resp.data.forEach(d => {
+        res.data.forEach(d => {
             let field = field_order.reduce((obj, v) => {
                 obj[v] = d[v];
                 return obj;
@@ -85,6 +86,8 @@ let Content = async(action) => {
             presort_data.push(field)
         });
         data = presort_data;
+
+        // data = res.data;
     } else {
         data = await Functions.getAPIdata('get_data_from/' + tableName);
         data = data.data;

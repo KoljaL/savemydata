@@ -163,7 +163,7 @@ let Style = async() => {
             position: fixed;
             height: 100%;
             width: 100%;
-            background: #00000080;
+            // background: #00000080;
             z-index: 50;
             top: 0;
             left: 0;
@@ -177,10 +177,13 @@ let Style = async() => {
             position: absolute;  
             top: 50%;
             left: 50%;
-            z-index: 1000;  
+            z-index: 100;  
             transform: translate(-50%, -50%);  
         }
-
+        .small #customSchedulePopup{
+            top:60px;
+            transform: translate(-50%, 0);
+        }
        
         #show_image_popup img{
             max-width: 90vw;
@@ -198,9 +201,9 @@ let Style = async() => {
             padding-bottom: 1em;
             display: flex;
             justify-content: end;
-            height: 1em;
+            height: 3em;
             position: relative;
-            top: -1em;
+            top: 1em;
             padding-right:1em;
         }
         #popupDataLinks a{
@@ -279,6 +282,10 @@ let Style = async() => {
         .medium.sidebar #calendarSidebar {
             position: relative;
             left: 0px;
+        }
+
+        .FF-item .boxShadow{
+            width:100%;
         }
 
     `;
@@ -431,6 +438,7 @@ let getSchedules = async(DateRange) => {
                         end: endDatetime,
                         raw: {
                             title: data[i].title,
+                            staff_id: data[i].staff_id,
                             customer_id: data[i].customer_id,
                             project_id: data[i].project_id,
                             appointment_id: data[i].id,
@@ -677,7 +685,7 @@ let Appointments = {
                 // create dropdown menues and fill with options
                 await CreateSchedule(data.raw.customer_id);
                 // select current option in dropdown menues
-                document.getElementById('staffListSelect').value = data.calendarId;
+                document.getElementById('staffListSelect').value = data.raw.staff_id;
                 document.getElementById('customerListSelect').value = data.raw.customer_id;
                 // make links to data sites
                 document.getElementById('ApPoCustomerLink').innerHTML = /*HTML*/ `<a class=button href="/#customer/profile/${data.raw.customer_id}">Profile</a>`;
@@ -712,6 +720,8 @@ let Appointments = {
                 document.getElementById('ApPoDate').value = startDate;
                 document.getElementById('ApPoTime').value = startTime;
                 document.getElementById('ApPoDuration').value = duration;
+                document.getElementById('staffListSelect').value = Functions.getLocal('id');
+
             }
 
             //
@@ -770,18 +780,50 @@ let Appointments = {
 
 
             //
+            // check if form is valid (completely filles)
+            //
+            const appointmentForm = document.getElementById('CreateAppointmentPopupForm');
+            const appointmentFormSubmit = document.getElementById('CreateAppointmentPopupSubmit');
+
+            // eventlistner for all input fields
+            for (let i = 0; i < appointmentForm.length; i++) {
+                const el = appointmentForm[i];
+                el.addEventListener('input', () => {
+                    // ceck if all fields has a value
+                    if (Functions.validForm(appointmentForm)) {
+                        appointmentFormSubmit.style.display = 'block';
+                    } else {
+                        appointmentFormSubmit.style.display = 'none';
+                    }
+                })
+            }
+
+
+            //
+            // first run on popup open, wait for values
+            //
+            setTimeout(() => {
+                if (Functions.validForm(appointmentForm)) {
+                    appointmentFormSubmit.style.display = 'block';
+                } else {
+                    appointmentFormSubmit.style.display = 'none';
+                }
+            }, 200);
+
+
+            //
             // SEND APPOINTMENT FORM DATA TO API
             //
-            document.getElementById('CreateAppointmentPopupSubmit').addEventListener('click', function(event) {
+            appointmentFormSubmit.addEventListener('click', function(event) {
                 event.preventDefault();
                 const formData = new FormData(CreateAppointmentPopupForm);
                 Functions.getAPIdata('new_entry_in/appointment', formData)
                     .then(function(res) {
-                        console.log(res);
-                        if (res.case === 'create') {
+                        deb(res);
+                        if (res.message === 'new') {
                             Message.success(`New Appointment created `);
                         }
-                        if (res.case === 'update') {
+                        if (res.message === 'updated') {
                             Message.info(`Appointment updated`);
                         }
                         getNewSchedules();

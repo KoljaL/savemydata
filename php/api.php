@@ -135,7 +135,8 @@ if ($request) {
 //DEBUG
 //DEBUG
 if ('do' === $API_endpoint) {
-    create_dummy_data();
+    // create_dummy_data();
+    get_name_by_id('staff', '1', $name = 'username');
     exit;
 }
 if ('reset' === $API_endpoint) {
@@ -679,6 +680,9 @@ function get_projects_as_table($param)
  */
 function get_name_by_id($table, $id, $name = 'username')
 {
+    if (!$id) {
+        return "no user ID";
+    }
     global $db;
     $stmt = $db->prepare("SELECT id, $name FROM $table WHERE id = $id");
     $stmt->execute();
@@ -690,7 +694,7 @@ function get_name_by_id($table, $id, $name = 'username')
         return 'Entry removed';
     }
 }
-
+ 
 /**
  *
  * Generate a random string of characters
@@ -1132,6 +1136,9 @@ function insert_into_db($param, $table, $output = true)
 
     if (isset($param['id']) && '' === $param['id']) {
         unset($param['id']);
+        $message = "new";
+    } else {
+        $message = "updated";
     }
 
     //
@@ -1200,7 +1207,7 @@ function insert_into_db($param, $table, $output = true)
     if ($count && $output) {
         $response['data']['id'] = $db->lastInsertId();
         $response['code']       = 200;
-        $response['message']    = 'insert successfull';
+        $response['message']    = $message;
         $response['param']      = $param;
     } else {
         $response['code']    = 400;
