@@ -248,10 +248,12 @@ case 'get_appointment':
     get_appointment($request);
     break;
 
-case 'get_calendar_dates':
-    get_calendar_dates($request);
-    break;
+ 
 
+case 'get_appointment_as_ics':
+    get_appointment_as_ics($request);
+    break;
+        
 default:
     // echo 'Endpoint <b>'.$API_endpoint.'</b> not found';
     break;
@@ -278,7 +280,7 @@ default:
  * This function is used to get the calendar dates
  *
  */
-function get_calendar_dates($param)
+function get_appointment_as_ics($param)
 {
     if (isAllowed()) {
         global $db, $API_param, $API_value;
@@ -290,24 +292,77 @@ function get_calendar_dates($param)
         }
         $stmt = $db->prepare("SELECT * FROM appointment $where");
         $stmt->execute();
-        $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $appointment = $stmt->fetch(PDO::FETCH_ASSOC);
 
         $response = [];
-        if ($projects) {
+        if ($appointment) {
+            $appointment['username']    = get_name_by_id('customer', $appointment['customer_id']);
+            $appointment['staffname']   = get_name_by_id('staff', $appointment['staff_id']);
+            $appointment['projectname'] = get_name_by_id('project', $appointment['project_id'], 'title');
 
-            // get the username and remove the comments
-            foreach ($projects as $key => $value) {
-                $projects[$key]['username']    = get_name_by_id('customer', $value['customer_id']);
-                $projects[$key]['staffname']   = get_name_by_id('staff', $value['staff_id']);
-                $projects[$key]['projectname'] = get_name_by_id('project', $value['project_id'], 'title');
-                unset($projects[$key]['comment_staff']);
-                unset($projects[$key]['comment_customer']);
+       
+
+            $datetime_start = date_create($appointment['start_date'].' '.$appointment['start_time']);
+            $start = $datetime_start->format('Ymd\THis');
+            // print_r($datetime_start);
+            // echo $start;
+
+            $datetime_end = $datetime_start->add(new DateInterval('PT' . $appointment['duration'] . 'M'));
+            $end = $datetime_end->format('Ymd\THis');
+
+            // print_r($datetime_end);
+
+
+            // exit;
+
+
+
+            $kb_start = $start;
+            $kb_end = $end;
+            $kb_current_time = date('Ymd\THis');
+            $kb_title = html_entity_decode($appointment['projectname'], ENT_COMPAT, 'UTF-8');
+            $kb_location = preg_replace('/([\,;])/', '\\\$1', $appointment['staffname']);
+            $kb_description = html_entity_decode($appointment['comment'], ENT_COMPAT, 'UTF-8');
+            $kb_url = 'https://dev.rasal.de/savemydata/#project/id/'.$appointment['project_id'];
+            
+            
+            
+            $eol = "\r\n";
+            // $eol = '<br>';
+            $kb_ics_content =
+            'BEGIN:VCALENDAR'.$eol.
+            'VERSION:2.0'.$eol.
+            'PRODID:-//dev.rasal//dev.rasal.de//DE'.$eol.
+            'CALSCALE:GREGORIAN'.$eol.
+            'BEGIN:VEVENT'.$eol.
+            'DTSTART:'.$kb_start.$eol.
+            'DTEND:'.$kb_end.$eol.
+            'LOCATION:'.$kb_location.$eol.
+            'DTSTAMP:'.$kb_current_time.$eol.
+            'SUMMARY:'.$kb_title.$eol.
+            'URL;VALUE=URI:'.$kb_url.$eol.
+            'DESCRIPTION:'.$kb_description.$eol.
+            'UID:'.$kb_current_time.'-'.$kb_start.'-'.$kb_end.$eol.
+            'END:VEVENT'.$eol.
+            'END:VCALENDAR';
+            
+            if ('fetch' === $API_param) {
+                header('Content-type: text/calendar; charset=utf-8');
+                header('Content-Disposition: attachment; filename=mohawk-event.ics');
+                echo $kb_ics_content;
+                exit;
             }
+
+
+
+
+
+
             $response['code'] = 200;
-            $response['data'] = $projects;
+            $response['data'] = $appointment;
         } else {
             $response['code']    = 400;
-            $response['table']   = $projects;
+            $response['table']   = $appointment;
             $response['message'] = 'no form profile found';
         }
         return_JSON($response);

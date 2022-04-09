@@ -137,6 +137,8 @@ let AppointmentContent = async(id) => {
                     </div>
                     <h3><a href="#customer/profile/${data.customer_id}"> ${data.customername}</a></h3>
                     <h4>Staff: <a href="#customer/profile/${data.staff_id}"> ${data.staffname}</a></h4>
+                    <a href="api/get_appointment_as_ics/fetch/${id}"><span class="button boxShadow" id="iCalButton">iCal</span></a>
+
                     <div id=AppointmentBody>
                         <div id=AppointmentText>
                             <br>
@@ -211,6 +213,23 @@ let AppointmentContent = async(id) => {
                             });
                     });
                 }
+                // iCal
+                // document.getElementById('iCalButton').addEventListener('click', () => {
+                //     // Functions.getAPIdata('get_appointment_as_ics/' + id)
+
+                //     let formData = new FormData();
+                //     formData.append('user_token', Functions.getLocal('token'));
+
+
+                //     fetch('api/get_appointment_as_ics/fetch/' + id, {
+                //         method: 'POST',
+                //         credentials: 'same-origin',
+                //         body: formData,
+                //         headers: { 'Content-Type': 'application/json', },
+                //     });
+
+
+                // })
             });
 
     } //AppointmentContent
