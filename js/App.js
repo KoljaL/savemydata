@@ -2,6 +2,7 @@
 
 // COMMON FUCTIONS
 import ("./components/ModalMessage.js");
+// import ("./components/Attention.js");
 import Functions from './Functions.js';
 
 

@@ -3,7 +3,7 @@
     outline: black solid 1px;
     box-shadow: none;
     border-radius: 5px;
-    width: max-content;
+    /* width: max-content; */
 }
 
 [data-theme*="boxes"] .boxShadow {
@@ -19,7 +19,16 @@ span.boxShadow:empty {
 }
 
 .button {
-    padding: .5em;
+    font-size: 14px;
+    cursor: pointer;
+    color: var(--font_0);
+    background: var(--bg_3);
+    line-height: 1.2em;
+    padding: 0.3em .3em .2em .4em;
+    transition: all 0.5s ease-in-out;
+    border-radius: 0.2em;
+    font-size: 1em;
+    margin-right: 1em;
     cursor: pointer;
 }
 

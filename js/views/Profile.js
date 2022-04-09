@@ -52,20 +52,7 @@ let Style = async() => {
             outline: none;
             background: transparent;
         }
-        #uploadAvatarLabel,
-        #deleteUserButton,
-        #newUserButton,
-        #editUserButton{ 
-            font-size: 14px;
-            cursor:pointer;
-            color: var(--font_0);
-            background: var(--bg_3);
-            line-height: 1.2em;
-            padding: 0.3em .3em .2em .4em;
-            transition: all 0.5s ease-in-out;
-            font-size: 1em;
-            margin-left: 1em;
-        }
+   
         #deleteUserButton:hover{
             color: var(--fontRed);
         }
@@ -78,7 +65,7 @@ let Style = async() => {
         #changeAvatar,
         #UserProfileList {
             display: inline-block;
-            margin-left: 1em;
+            margin-right: 1em;
         }
         #UserProfileHeader{
             display: flex;
@@ -105,9 +92,9 @@ let Content = async(userID) => {
                 <div class="ActionButtons">
                     <div id="changeAvatar"></div>
                     <div id=UserProfileList></div>
-                    <span id="editUserButton" class=boxShadow></span>
-                    <span id="newUserButton" class=boxShadow></span>
-                    <span id="deleteUserButton" class=boxShadow></span>
+                    <span id="editUserButton" class="boxShadow button"></span>
+                    <span id="newUserButton" class="boxShadow button"></span>
+                    <span id="deleteUserButton" class="boxShadow button"></span>
                 </div>
             </div>
            
@@ -141,7 +128,7 @@ function changeAvatar(userID) {
         <form id="uploadAvatarForm">
             <input for=uploadAvatarForm type="hidden" name="origin" id="origin"  value="${tableName}" />
             <input for=uploadAvatarForm type="hidden" name="origin_id" id="origin_id"  value="${userID}" />
-            <label class="boxShadow" style="display: inline-block;" id=uploadAvatarLabel for="uploadAvatar">Avatar</label>
+            <label class="boxShadow button" style="display: inline-block;" id=uploadAvatarLabel for="uploadAvatar">Avatar</label>
             <input for=uploadAvatarForm id="uploadAvatar" type="file" accept="image/*" capture="camera" style="display:none">
         </form>`;
     Functions.setInnerHTML('changeAvatar', innerHTML);

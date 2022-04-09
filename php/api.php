@@ -300,22 +300,13 @@ function get_appointment_as_ics($param)
             $appointment['staffname']   = get_name_by_id('staff', $appointment['staff_id']);
             $appointment['projectname'] = get_name_by_id('project', $appointment['project_id'], 'title');
 
-       
-
             $datetime_start = date_create($appointment['start_date'].' '.$appointment['start_time']);
             $start = $datetime_start->format('Ymd\THis');
-            // print_r($datetime_start);
-            // echo $start;
-
             $datetime_end = $datetime_start->add(new DateInterval('PT' . $appointment['duration'] . 'M'));
             $end = $datetime_end->format('Ymd\THis');
 
             // print_r($datetime_end);
-
-
             // exit;
-
-
 
             $kb_start = $start;
             $kb_end = $end;
@@ -352,12 +343,7 @@ function get_appointment_as_ics($param)
                 echo $kb_ics_content;
                 exit;
             }
-
-
-
-
-
-
+ 
             $response['code'] = 200;
             $response['data'] = $appointment;
         } else {
@@ -630,6 +616,7 @@ function upload_file($param)
             $response['data']['id']   = $db->lastInsertId();
             $response['data']['path'] = $uploadfile;
             $response['data']['path_thumb'] = $uploadfile_thumb;
+            $response['data']['name'] = $param['name'];
             $response['data']['$image'] = $image;
         } catch (ImageResizeException $e) {
             $response['code']    = 400;

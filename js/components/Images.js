@@ -45,10 +45,10 @@ let getImages = (d) => {
         .then(() => {
             let innerHTML = /*HTML*/ `
                     <form id=uploadFileForm>
-                        <input for=uploadFileForm type="hidden" name="origin" id="origin"  value="${d.origin}" />
-                        <input for=uploadFileForm type="hidden" name="origin_id" id="origin_id"  value="${d.origin_id}" />
-                        <input for=uploadFileForm type="hidden" name="type" id="type"  value="${d.type}" />
-                        <input for=uploadFileForm type="hidden" name="name" id="name"  value="${d.name}" />
+                        <input for=uploadFileForm type="hidden" name="origin" id="upload_origin"  value="${d.origin}" />
+                        <input for=uploadFileForm type="hidden" name="origin_id" id="upload_origin_id"  value="${d.origin_id}" />
+                        <input for=uploadFileForm type="hidden" name="type" id="upload_type"  value="${d.type}" />
+                        <input for=uploadFileForm type="hidden" name="name" id="upload_name"  value="${d.name}" />
                         <label class="button boxShadow" for="uploadFile">upload</label>
                         <input for=uploadFileForm id="uploadFile" type="file" accept="image/*" capture="camera" style="display:none">
                     </form> `;
@@ -59,17 +59,23 @@ let getImages = (d) => {
             if (body.getAttribute('uploadFileEvent') !== 'true') {
                 body.setAttribute('uploadFileEvent', true)
                 body.addEventListener('change', uploadFileEvent)
-                    // deb('uploadFileEvent')
             }
 
             function uploadFileEvent(el) {
                 if (el.target.id === 'uploadFile') {
-                    Functions.loadingDots('fileUpload', true)
                     event.preventDefault();
+                    Functions.loadingDots('fileUpload', true)
+
+                    let uploadName = (el.target.files[0].name).split('.')[0];
+                    uploadName = prompt("Please enter a name:", uploadName);
+                    // deb(uploadName)
+                    document.getElementById('upload_name').value = uploadName;
+
+                    // deb(el.target.form)
                     const formData = new FormData(el.target.form);
                     formData.append('file', el.target.files[0]);
+                    formData.append('name', document.getElementById('upload_name').value);
                     // Functions.debFormData(formData);
-
                     Functions.uploadToAPI('upload_file', formData)
                         .then((res) => {
                             // deb(res);
@@ -125,14 +131,16 @@ let getImages = (d) => {
 };
 
 function addImage(file) {
-    deb(file)
-        // wrapper
+    // deb(file)
+    // wrapper
     let thumbnailWrapper = document.createElement('DIV');
     thumbnailWrapper.classList.add('thumbnailWrapper');
     thumbnailWrapper.classList.add('boxShadow');
     // thumbnail
     // deb(file)
     let img = document.createElement('img');
+    img.title = file.name;
+    img.alt = file.name;
     img.src = file.path_thumb;
     img.classList.add('thumbnailImage');
 

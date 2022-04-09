@@ -59,20 +59,7 @@ let Style = async() => {
             outline: none;
             background: transparent;
         }
-        #deleteAppointmentButton,
-        #editAppointmentButton{ 
-            font-size: 14px;
-            cursor:pointer;
-            color: var(--font_0);
-            // background: var(--bg_3);
-            line-height: 1.2em;
-            padding: 0.3em .3em .2em .4em;
-            // outline: var(--border_0) solid 1px;
-            transition: all 0.5s ease-in-out;
-            // border-radius: 0.2em;
-            font-size: 1em;
-            margin-left: 1em;
-        }
+  
         #deleteAppointmentButton:hover{
             color: var(--fontRed);
         }
@@ -131,18 +118,18 @@ let AppointmentContent = async(id) => {
                             <h2>&nbsp; ${data.title}</h2><br>
                         </div>
                         <div class="ActionButtons">
-                            <span class=boxShadow id="editAppointmentButton"></span>
-                            <span class=boxShadow id="deleteAppointmentButton"></span>
+                            <a href="api/get_appointment_as_ics/fetch/${id}"><span class="button boxShadow" id="iCalButton">iCal</span></a>
+                            <span class="boxShadow button" id="editAppointmentButton"></span>
+                            <span class="boxShadow button" id="deleteAppointmentButton"></span>
                         </div>        
                     </div>
                     <h3><a href="#customer/profile/${data.customer_id}"> ${data.customername}</a></h3>
                     <h4>Staff: <a href="#customer/profile/${data.staff_id}"> ${data.staffname}</a></h4>
-                    <a href="api/get_appointment_as_ics/fetch/${id}"><span class="button boxShadow" id="iCalButton">iCal</span></a>
 
                     <div id=AppointmentBody>
                         <div id=AppointmentText>
                             <br>
-                            <div class="FF-row">
+                            <div class="FF-row"  style="padding-top:0;margin-top:-1em;">
                                 <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:150px;">
                                     <input id="firstname" class="hideEdit boxShadow" name="firstname" type="date" placeholder="" value="${data.start_date}" data-db="start_date/appointment/id/${id}" required="">
                                     <label data-lang="F_date" for="firstname">Date</label>
@@ -158,7 +145,7 @@ let AppointmentContent = async(id) => {
                             </div>
 
                             <h3 data-lang="F_comment">Comment</h3>
-                            <div class="FF-row">
+                            <div class="FF-row" style="padding-top:0;margin-top:-1em;">
                                 <div class="FF-item" style="min-width:250px; flex-basis:550px; max-width:100%;">
                                     <textarea id="comment" rows="${rows}" style="height: max-content;" class="hideEdit boxShadow" name="comment" type="textarea" placeholder="" data-db="comment/appointment/id/${id}" required="">${data.comment}</textarea>
                                 </div>
@@ -169,7 +156,7 @@ let AppointmentContent = async(id) => {
                             <h3 data-lang="F_images">Images</h3>
                             <div id=thumbnails></div>
                             <div id=fileUpload></div>
-                            ${Images.render({origin: 'appointment',origin_id:data.id})}
+                            ${Images.render({origin: 'appointment',origin_id:data.id,type:'image',name:'testname'})}
                         </div>
                     </div>`;
                     Functions.setInnerHTML('AppointmentContent', innerHTML);
