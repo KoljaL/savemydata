@@ -17,6 +17,9 @@ let Style = async() => {
     #uploadFileForm{
         margin-top:.5em;
     }
+    #thumbnails .thumbnailImage{
+        margin:.5em;
+    }
 
  
     `;

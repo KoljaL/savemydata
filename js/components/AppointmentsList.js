@@ -21,10 +21,10 @@ let Style = async() => {
     Functions.createStyle('Appointments_deko_style', styleTags);
 };
 let showAppointments = (Appointments) => {
-    // deb(Appointments)
-    // make an array of all appointments 
+    deb(Appointments)
+        // make an array of all appointments 
     var dates = [];
-    if (Appointments) {
+    if (Appointments.length > 0) {
         // sort by date
         dates = Appointments.sort(function(a, b) { return new Date(b.start_time) - new Date(a.start_time); });
         dates = Appointments.sort(function(a, b) { return new Date(b.start_date) - new Date(a.start_date); });
@@ -38,7 +38,9 @@ let showAppointments = (Appointments) => {
         HTML += /*HTML*/ `</table></div></div>`;
         return HTML;
     } else {
-        return 'no Appointments';
+        let HTML = /*HTML*/ `<div id=Appointments><h3 data-lang="H_appointments">Appointments</h3><div class=boxShadow><table class="dataTable">`;
+        HTML += /*HTML*/ `<tr><td class=numeric ><span>not yet</span></td></tr></table></div></div>`;
+        return HTML;
     }
 
 }

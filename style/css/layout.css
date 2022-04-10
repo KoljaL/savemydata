@@ -189,23 +189,13 @@
 */
 
 @font-face {
-    font-family: Crimson;
-    src: url(../fonts/CrimsonPro-Regular.ttf);
-}
-
-@font-face {
     font-family: 'Public Sans';
-    src: url(../fonts/PublicSans-Regular.ttf);
+    src: url("../fonts/PublicSans-Regular.woff2");
 }
 
 @font-face {
-    font-family: 'Zilla Slab Regular';
-    src: url(../fonts/ZillaSlab-Regular.otf);
-}
-
-@font-face {
-    font-family: 'Zilla Slab Medium';
-    src: url(../fonts/ZillaSlab-Medium.otf);
+    font-family: 'Zilla Slab';
+    src: url("../fonts/ZillaSlab-Regular.woff2");
 }
 
 
@@ -254,7 +244,7 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: 'Zilla Slab Medium', sans-serif;
+    font-family: 'Zilla Slab', sans-serif;
     font-weight: 400;
     letter-spacing: 0.1rem;
     text-shadow: var(--text-shadow);
@@ -267,7 +257,7 @@ a {
 
 .numeric {
     font-variant-numeric: tabular-nums;
-    font-family: 'Zilla Slab Medium', sans-serif;
+    font-family: 'Zilla Slab', sans-serif;
     font-size: 1.1em;
 }
 
@@ -453,10 +443,6 @@ main h2:first-of-type {
     margin-top: 0;
 }
 
-main img {
-    padding: 0.5em;
-}
-
 main.visible {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
@@ -481,7 +467,7 @@ nav .sidebar_header {
     align-items: center;
     padding: 1rem 1rem 0.5rem 1rem;
     font-size: 1.5em;
-    font-family: 'Zilla Slab Medium', sans-serif;
+    font-family: 'Zilla Slab', sans-serif;
     font-weight: 400;
     width: var(--sidebar_full_width);
 }
@@ -531,7 +517,7 @@ nav .sidebar_userpanel img {
 }
 
 nav .sidebar_userpanel .username {
-    font-family: 'Zilla Slab Medium', sans-serif;
+    font-family: 'Zilla Slab', sans-serif;
     font-size: 1.2em;
     cursor: pointer;
 }
@@ -632,7 +618,7 @@ nav li ul.subList li {
     display: inline-block;
     padding: 12px 0 12px 1em;
     width: 100%;
-    font-family: 'Zilla Slab Medium', sans-serif;
+    font-family: 'Zilla Slab', sans-serif;
     font-size: 1rem;
     letter-spacing: 0.1rem;
 }
@@ -885,6 +871,16 @@ footer .withLove img {
     mask-image: url(../img/icons/project.svg);
 }
 
+.arrow_left_icon {
+    -webkit-mask-image: url(../img/icons/arrow-left.svg);
+    mask-image: url(../img/icons/arrow-left.svg);
+}
+
+.arrow_right_icon {
+    -webkit-mask-image: url(../img/icons/arrow-right.svg);
+    mask-image: url(../img/icons/arrow-right.svg);
+}
+
 
 /*
 //  
@@ -928,7 +924,7 @@ footer .withLove img {
 }
 
 .thumbnailWrapper.hideEdit .deleteButton {
-    font-family: 'Zilla Slab Medium', sans-serif;
+    font-family: 'Zilla Slab', sans-serif;
     font-weight: bold;
     color: var(--fontRed);
     display: block;

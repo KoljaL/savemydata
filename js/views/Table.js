@@ -51,7 +51,7 @@ let Style = async() => {
 
     .start_time,.start_date,.duration,.public {
         font-variant-numeric: tabular-nums;
-        font-family: 'Zilla Slab Medium', sans-serif;
+        font-family: 'Zilla Slab', sans-serif;
         font-size: 1.1em;
     }
 

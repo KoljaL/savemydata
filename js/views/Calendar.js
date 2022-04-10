@@ -331,9 +331,9 @@ let Content = async() => {
     let innerHTML = /*HTML*/ `
             <div id="menu">
                 <div id="menuNavi">
-                    <span type="button" class="button boxShadow" data-action="move-prev"><</span>
+                    <span type="button" class="button boxShadow" data-action="move-prev"><span class="icon arrow_left_icon" style="width:15px;height:15px;"></span></span>
                     <span type="button" class="button boxShadow" data-action="move-today">Today</span>
-                    <span type="button" class="button boxShadow" data-action="move-next">></span>
+                    <span type="button" class="button boxShadow" data-action="move-next"><span class="icon arrow_right_icon" style="width:15px;height:15px;"></span></span>
                 </div>
                 <div id="renderRange" class="render-range"></div>
                 <div id="toggleView"> 

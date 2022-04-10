@@ -14,6 +14,7 @@
 }
 
 div.boxShadow>.dataTable:empty,
+div.boxShadow:empty,
 span.boxShadow:empty {
     display: none;
 }
@@ -182,7 +183,7 @@ div.FF-item input:focus {
 }
 
 div.FF-item label {
-    font-family: 'Zilla Slab Medium', sans-serif;
+    font-family: 'Zilla Slab', sans-serif;
     font-weight: 400;
     color: var(--font_2);
     position: absolute;
