@@ -552,7 +552,6 @@ let Appointments = {
         //
         await getNewSchedules();
         setRenderRangeText();
-        setEventListener();
         setCalendarList();
 
         /* making the calendar to be able to respond to events. */
@@ -573,14 +572,6 @@ let Appointments = {
                 }
             },
         });
-
-        /**
-         * It sets up the event listeners for the menu and calendar.
-         */
-        function setEventListener() {
-            // document.querySelector('#lnb-calendars').addEventListener('change', onChangeCalendars);
-            // window.addEventListener('resize', resizeThrottled);
-        }
 
 
 
