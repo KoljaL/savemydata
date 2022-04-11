@@ -29,19 +29,12 @@ if ('OPTIONS' === $_SERVER['REQUEST_METHOD']) {
  * Created on Thu Mar 17 2022 at 02:21:13
  *
  */
-
 require __DIR__.'/vendor/autoload.php';
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
 $JWT_key = 'example_key';
-
-/*
- *
- * path to db file
- *
- */
-$db_path = '../userdata/db/database.sqlite';
+ 
 
 /*
  *
@@ -49,33 +42,25 @@ $db_path = '../userdata/db/database.sqlite';
  * Created on Thu Mar 17 2022 at 02:22:13
  *
  */
-$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$uri = explode('/', $uri);
-// $API_endpoint = end( $uri );
-
-// print_r( $uri );
+$uri          = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$uri          = explode('/', $uri);
 $api          = array_search('api', $uri);
-$API_endpoint = '';
-$API_param    = '';
-$API_value    = '';
-if (isset($uri[$api + 1])) {
-    $API_endpoint = $uri[$api + 1];
-}
-if (isset($uri[$api + 2])) {
-    $API_param = $uri[$api + 2];
-}
-if (isset($uri[$api + 3])) {
-    $API_value = $uri[$api + 3];
-}
-// echo "<br>";
-// echo "<br>";
-// print_r( $API_endpoint );
-// echo "<br>";
-// print_r( $API_param );
-// echo "<br>";
-// print_r( $API_value );
+$API_endpoint = (isset($uri[$api + 1])) ? $uri[$api + 1] : '';
+$API_param    = (isset($uri[$api + 2])) ? $uri[$api + 2] : '';
+$API_value    = (isset($uri[$api + 3])) ? $uri[$api + 3] : '';
 
-// exit;
+// $API_endpoint = '';
+// $API_param    = '';
+// $API_value    = '';
+// if (isset($uri[$api + 1])) {
+//     $API_endpoint = $uri[$api + 1];
+// }
+// if (isset($uri[$api + 2])) {
+//     $API_param = $uri[$api + 2];
+// }
+// if (isset($uri[$api + 3])) {
+//     $API_value = $uri[$api + 3];
+// }
 
 /*
 //
@@ -95,6 +80,8 @@ if (isset($uri[$api + 3])) {
  * Created on Thu Mar 17 2022 at 02:22:51
  *
  */
+$db_path = '../userdata/db/database.sqlite';
+
 if (!file_exists($db_path)) {
     $db = new PDO('sqlite:'.$db_path);
     init_db();
@@ -542,7 +529,7 @@ function get_files_from($param)
         $files = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $response = [];
-        if ($param) {
+        if ($files) {
             $response['code'] = 200;
             $response['data'] = $files;
             $response['stmt'] = json_encode($db);
@@ -1046,10 +1033,10 @@ function isAllowed($action = '')
 {
     return true;
 
-    global $TOKEN, $request;
-    if ("0" === $TOKEN['role']) {
-        return true;
-    }
+    // global $TOKEN, $request;
+    // if ("0" === $TOKEN['role']) {
+    //     return true;
+    // }
 }
 
 /*
@@ -1280,13 +1267,14 @@ function insert_into_db($param, $table, $output = true)
 //  header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
 function return_JSON($response)
 {
-    global $request, $API_endpoint, $API_param, $API_value, $start;
+    global $request, $API_endpoint, $API_param, $API_value, $start, $TOKEN;
 
     if ('reset' !== $API_endpoint) {
         $response['GET']['API_endpoint'] = $API_endpoint;
         $response['GET']['API_param']    = $API_param;
         $response['GET']['API_value']    = $API_value;
         $response['POST']                = $request;
+        $response['TOKEN']               = $TOKEN;
 
         header('Access-Control-Allow-Origin: *');
         header('Content-Type: application/json; charset=UTF-8');

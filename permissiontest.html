@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=1, initial-scale=1.0">
+    <title>Permission Test</title>
+    <style>
+         :root {
+            --header_full_height: 60px;
+            --header_small_height: 50px;
+            --footer_height: 20px;
+            --sidebar_full_width: 220px;
+            --sidebar_small_width: 50px;
+            --bg_1: #27272b;
+            --bg_2: #232327;
+            --bg_3: #2c2c31;
+            --font_0: #d7d7d8;
+            --font_1: #d6d6d9;
+            --font_2: #696969;
+            --border_0: black;
+            --fontSalomon: #c19c90;
+            --fontBlue: #2798e4;
+            --fontViolet: #988cca;
+            --fontYellow: #c9ac57;
+            --fontOrange: #cb7832;
+            --fontRed: #e9553b;
+            --fontGreen: #6a8759;
+            --text-shadow: 0.1em 0.1em black;
+        }
+        
+        body {
+            background-color: #27272b;
+            color: #ccc;
+        }
+        
+        #wrapper {
+            display: flex;
+        }
+        
+        pre {
+            margin: 1em;
+            border: 2px solid grey;
+            border-radius: 10px;
+            padding: 1em;
+            padding-right: 7em;
+            margin: 5px;
+            width: max-content;
+            height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .string {
+            color: #6a8759;
+        }
+        
+        .number {
+            color: #cb7832;
+        }
+        
+        .boolean {
+            color: #2798e4;
+        }
+        
+        .null {
+            color: #988cca;
+        }
+        
+        .key {
+            color: #e9553b;
+        }
+        
+        h3 {
+            margin-top: 0;
+        }
+        
+        .input {
+            font-size: 14px;
+            color: var(--font_0);
+            background: var(--bg_3);
+            line-height: 1.2em;
+            padding: 0.3em .3em .2em .4em;
+            border-radius: 0.2em;
+            border: grey solid 1px;
+        }
+        
+        .button {
+            font-size: 14px;
+            cursor: pointer;
+            color: var(--fontBlue);
+            background: var(--bg_3);
+            line-height: 1.2em;
+            padding: 0.3em .3em .2em .4em;
+            border-radius: 0.2em;
+            border: grey solid 1px;
+        }
+        
+        .userdata {
+            color: #e9553b;
+            display: flex;
+            margin-left: 1em;
+        }
+        
+        .userdata span {
+            color: #2798e4;
+        }
+        
+        .formblock {
+            margin: 1em;
+            padding: 1em;
+            border: 2px solid grey;
+            border-radius: 10px;
+        }
+        
+        .formblock form>* {
+            display: block;
+            margin: .5em;
+        }
+        
+        #selectToken {
+            margin-left: 1em;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>API & Permission Test</h1>
+    <div id="wrapper">
+
+        <div id="input">
+
+            <!-- <select name="cars" id="endpoints">
+                <option value="api/get_files_from/staff/2">api/get_files_from/staff/2</option>
+                <option value="api/get_data_from/staff_fields">api/get_data_from/staff_fields</option>
+                <option value="api/get_data_from/staff/1">api/get_data_from/staff/1</option>
+                <option value="api/get_list_from/staff/id,username">api/get_list_from/staff/id,username</option>
+                <option value="api/get_appointments_from/staff/1">api/get_appointments_from/staff/1</option>
+              </select> -->
+            <div id="selectToken">
+                <label>Token </label>
+                <select id="token" class="input">
+                      <option value="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IjAiLCJwZXJtaXNzaW9uIjoiMCIsImxhbmciOiJlbiIsImF2YXRhciI6IiJ9.fgVd29isLdcAjLHuv-ArDXb9kbKsggBGjch_FbUJ4KE">admin</option>
+                      <option value="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIiLCJ1c2VybmFtZSI6InVzZXIiLCJyb2xlIjoiMSIsInBlcm1pc3Npb24iOiIwIiwibGFuZyI6ImVuIiwiYXZhdGFyIjoiIn0.7nM72u19LtW784oZyEq_AkGYitMZ5vOBBO6WMCilY8I">user</option>
+                    </select>
+            </div>
+
+
+            <div class="formblock">
+                <h3>api/get_files_from/staff/1</h3>
+                <form id="api/get_files_from/staff/1">
+                    <label>Endpoint
+                        <input form="api/get_files_from/staff/1" name=endpoint type="text"  class="input" value="api/get_files_from/staff/3">
+                    </label>
+                    <input form="api/get_files_from/staff/1" type="submit" class="button">
+                </form>
+            </div>
+
+
+            <div class="formblock">
+                <h3>api/get_data_from/staff_fields</h3>
+                <form id="api/get_data_from/staff_fields">
+                    <label>Endpoint
+                        <input form="api/get_data_from/staff_fields" name=endpoint type="text"  class="input" value="api/get_data_from/staff_fields">
+                    </label>
+                    <input form="api/get_data_from/staff_fields" type="submit" class="button">
+                </form>
+            </div>
+
+
+        </div>
+
+        <div>
+            <div class="userdata">
+                <div style="width: 90px;">Role <span id=role></span></div>
+                <div style="width: 150px;">Permission <span id=permission></span></div>
+                <div style="width: 70px;">ID <span id=id></span></div>
+                <div style="width: 150px;">Username <span id=username></span></div>
+            </div>
+            <pre id="outputtext"></pre>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        // localStorage.getItem('DF_token')
+        const deb = console.log.bind(window.console);
+        const admin_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IjAiLCJwZXJtaXNzaW9uIjoiMCIsImxhbmciOiJlbiIsImF2YXRhciI6IiJ9.fgVd29isLdcAjLHuv-ArDXb9kbKsggBGjch_FbUJ4KE";
+        const user_token = "eyJ0eXAiOivvJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IjAiLCJwZXJtaXNzaW9uIjoiMCIsImxhbmciOiJlbiIsImF2YXRhciI6IiJ9.fgVd29isLdcAjLHuv-ArDXb9kbKsggBGjch_FbUJ4KE";
+
+
+
+        let submitButtons = document.querySelectorAll('form input[type="submit"]')
+
+        document.querySelectorAll('form input[type="submit"]').forEach(button => {
+            button.addEventListener('click', (el) => {
+                el.preventDefault();
+                const endpoint = el.target.form.querySelector("[name='endpoint']").value
+
+                let token = document.getElementById('token').value;
+                let formData = new FormData();
+                formData.append('user_token', token);
+                formData = JSON.stringify(Object.fromEntries(formData));
+                // deb(formData)
+                fetch(endpoint, {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        body: formData,
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                    .then(res => res.json())
+                    .then((json) => {
+                        deb(json)
+                        if (json.code === 200) {
+                            document.getElementById('outputtext').innerHTML = syntaxHighlight(JSON.stringify(json.data, undefined, 4));
+                            document.getElementById('id').innerHTML = json.TOKEN.id;
+                            document.getElementById('username').innerHTML = json.TOKEN.username;
+                            document.getElementById('role').innerHTML = json.TOKEN.role;
+                            document.getElementById('permission').innerHTML = json.TOKEN.permission;
+                        } else if (json.code === 400) {
+                            document.getElementById('outputtext').innerHTML = json.message;
+                        }
+                    })
+
+            })
+        });
+
+
+
+
+
+        //
+        // dropdown
+        //
+        // document.getElementById('endpoints').addEventListener('change', (el) => {
+        //     let URL = el.target.value;
+        //     // URL = 'savemydata/' + URL;
+        //     let formData = new FormData();
+        //     formData.append('user_token', admin_token);
+        //     formData = JSON.stringify(Object.fromEntries(formData));
+        //     // deb(formData)
+        //     fetch(URL, {
+        //             method: 'POST',
+        //             credentials: 'same-origin',
+        //             body: formData,
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //             },
+        //         })
+        //         .then(res => res.json())
+        //         .then((json) => {
+        //             deb(json)
+        //             if (json.code === 200) {
+        //                 document.getElementById('outputtext').innerHTML = syntaxHighlight(JSON.stringify(json.data, undefined, 4));
+        //             } else if (json.code === 400) {
+        //                 document.getElementById('outputtext').innerHTML = json.message;
+        //             }
+        //         })
+        // })
+
+
+        //
+        // JSON HIGHLIGHTER
+        //
+        function syntaxHighlight(json) {
+            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function(match) {
+                var cls = 'number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'key';
+                    } else {
+                        cls = 'string';
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'boolean';
+                } else if (/null/.test(match)) {
+                    cls = 'null';
+                }
+                return '<span class="' + cls + '">' + match + '</span>';
+            });
+        }
+    </script>
+</body>
+
+</html>
