@@ -27,14 +27,15 @@
     <meta name="description" content="Classic but progressive template for data-driven pages." />
     <meta name="author" content="KoljaL" />
     <meta name="copyright" content="MIT" />
-    <!-- <base href="http://127.0.0.1:5501/" /> -->
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="icon" href="style/img/browser/icon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="style/css/layout.css">
-    <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.css" />
 
+    <!-- CSS -->
+    <link rel="stylesheet" href="style/css/layout.css">
     <link rel="stylesheet" href="style/css/form.css">
+    <link rel="stylesheet" href="./style/css/TUICalendar.css" />
+
     <style>
 
     </style>
@@ -96,72 +97,13 @@
                     <li data-link="calendar">
                         <span class="link_text"><span class="icon calendar_icon"></span><span data-lang="S_calendar">Calendar</span></span>
                     </li>
-
-
-
-
-                    <!-- 
-
-                    <li data-link="dummy">
-                        <span class="link_text"><span class="icon file_icon"></span><span data-lang="S_dummy">dummy</span></span>
-                        <ul class="subList">
-                            <li data-link="dummy"><span class="link_text"><span data-lang="S_dummy">dummy</span></span>
-                            </li>
-                            <li data-link="dummy"><span class="link_text"><span data-lang="S_dummy">dummy</span></span>
-                            </li>
-                            <li data-link="dummy"><span class="link_text"><span data-lang="S_dummy">dummy</span></span>
-                            </li>
-                            <li data-link="dummy"><span class="link_text"><span data-lang="S_dummy">dummy</span></span>
-                            </li>
-                            <li data-link="dummy"><span class="link_text"><span data-lang="S_dummy">dummy</span></span>
-                            </li>
-                            <li data-link="dummy"><span class="link_text"><span data-lang="S_dummy">dummy</span></span>
-                            </li>
-                        </ul>
-                    </li>
-                    <li data-link="dummy">
-                        <span class="link_text"><span class="icon file_icon"></span><span data-lang="S_dummy">dummy</span></span>
-                        <ul class="subList">
-                            <li data-link="dummy"><span class="link_text"><span data-lang="S_dummy">dummy</span></span>
-                            </li>
-                            <li data-link="dummy"><span class="link_text"><span data-lang="S_dummy">dummy</span></span>
-                            </li>
-                            <li data-link="dummy"><span class="link_text"><span data-lang="S_dummy">dummy</span></span>
-                            </li>
-                            <li data-link="dummy"><span class="link_text"><span data-lang="S_dummy">dummy</span></span>
-                            </li>
-                            <li data-link="dummy"><span class="link_text"><span data-lang="S_dummy">dummy</span></span>
-                            </li>
-                            <li data-link="dummy"><span class="link_text"><span data-lang="S_dummy">dummy</span></span>
-                            </li>
-                        </ul>
-                    </li>
-                    <li data-link="dummy">
-                        <span class="link_text"><span class="icon file_icon"></span><span data-lang="S_dummy">dummy</span></span>
-                        <ul class="subList">
-                            <li data-link="dummy"><span class="link_text"><span data-lang="S_dummy">dummy</span></span>
-                            </li>
-                            <li data-link="dummy"><span class="link_text"><span data-lang="S_dummy">dummy</span></span>
-                            </li>
-                            <li data-link="dummy"><span class="link_text"><span data-lang="S_dummy">dummy</span></span>
-                            </li>
-                            <li data-link="dummy"><span class="link_text"><span data-lang="S_dummy">dummy</span></span>
-                            </li>
-                            <li data-link="dummy"><span class="link_text"><span data-lang="S_dummy">dummy</span></span>
-                            </li>
-                            <li data-link="dummy"><span class="link_text"><span data-lang="S_dummy">dummy</span></span>
-                            </li>
-                        </ul>
-                    </li> -->
-
                 </ul>
             </div>
             <div id="calendarSidebar"></div>
             <div class="sidebar_footer"></div>
         </nav>
 
-        <main id="main" class="visible">
-        </main>
+        <main id="main" class="visible"></main>
 
         <footer>
             <a href="php/sqlite.php" target="_blanc">SQlite</a>
@@ -179,11 +121,12 @@
         </footer>
         <div id="selectLanguageDIV"></div>
     </div>
-    <script src="https://uicdn.toast.com/tui.code-snippet/v1.5.2/tui-code-snippet.min.js"></script>
-    <script src="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js"></script>
+
+    <script src="./js/components/TUISnippets.js"></script>
+    <script src="./js/components/TUICalendar.js"></script>
+    <script src="./js/components/Moment.js"></script>
     <script src="js/Layout.js"></script>
-    <script type="module" src="js/App.js"></script>
+    <script src="js/App.js" type="module"></script>
     <script>
     </script>
 

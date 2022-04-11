@@ -5,10 +5,7 @@ import UserList from '../components/UserList.js';
 
 let Style = async() => {
     let styleTags = /*CSS*/ `
-        #CreateAppointmentPopup {
-            // width: 600px;
-            max-width: 90vw; 
-        }
+
         #CreateAppointmentPopup textarea {
             width: 100%;
         }
@@ -24,6 +21,8 @@ let Style = async() => {
             position:absolute;
             color:var(--fontOrange);
             left: 1em;
+            bottom: -2.95em;
+            z-index:200;
         }
 
         #ApPoLegend{
@@ -75,15 +74,15 @@ let CreateAppointmentPopup = {
 
 
                         <div class=FF-row>
-                            <div class="FF-item">
+                            <div class="FF-item" style="max-width:140px;">
                                 <label class="isTop">Date</label>
                                 <input id=ApPoDate type="date"  class="boxShadow" name="start_date" value="" />
                             </div> 
-                            <div class="FF-item">
+                            <div class="FF-item" style="max-width:95px;">
                                 <label class="isTop">Time</label>
                                 <input id=ApPoTime type="time"  class="boxShadow" name="start_time"  value=""/>
                             </div>
-                            <div class="FF-item">
+                            <div class="FF-item" style="max-width:50px;">
                                 <label class="isTop">Duration</label>
                                 <select id=ApPoDuration class="boxShadow"  name="duration" />
                                     <option value=30>0,5</option>
@@ -103,7 +102,7 @@ let CreateAppointmentPopup = {
                         </div>
 
                         <div class=FF-row>
-                            <div class="FF-item">
+                            <div class="FF-item" style="max-width:100%;">
                                 <label class=isTop>Comment</label>
                                 <textarea id=ApPoText  type="textarea" class="boxShadow" name="comment" placeholder="No newsletter please..."></textarea>
                             </div>

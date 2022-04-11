@@ -200,23 +200,6 @@ let AppointmentContent = async(id) => {
                             });
                     });
                 }
-                // iCal
-                // document.getElementById('iCalButton').addEventListener('click', () => {
-                //     // Functions.getAPIdata('get_appointment_as_ics/' + id)
-
-                //     let formData = new FormData();
-                //     formData.append('user_token', Functions.getLocal('token'));
-
-
-                //     fetch('api/get_appointment_as_ics/fetch/' + id, {
-                //         method: 'POST',
-                //         credentials: 'same-origin',
-                //         body: formData,
-                //         headers: { 'Content-Type': 'application/json', },
-                //     });
-
-
-                // })
             });
 
     } //AppointmentContent

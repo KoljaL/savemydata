@@ -2,6 +2,12 @@ import Functions from '../Functions.js';
 import UserList from '../components/UserList.js';
 import AppointmentPopup from '../components/CalendarPopup.js';
 
+// fetchInject([
+//     'https://cdn.jsdelivr.net/momentjs/2.17.1/moment.min.js'
+//   ]).then(() => {
+//     console.log(`Finish in less than ${moment().endOf('year').fromNow(true)}`)
+//   })
+
 // GLOBAL VARS
 var CalendarList = [];
 var schedules = [];
@@ -83,7 +89,10 @@ let Style = async() => {
             }
         }
 
-
+        /* click through arrows*/
+        #menuNavi span span{
+            pointer-events: none;
+        }
    
 
 
@@ -158,6 +167,12 @@ let Style = async() => {
         .tui-full-calendar-timegrid-right{
             margin-left: 32px!important;
         }
+        .tui-full-calendar-weekday-grid-line {
+            padding: 3px;
+            border-top: 1px solid var(--font_0);
+            border-left: 1px solid var(--font_0);
+            border-right: 1px solid var(--font_0);
+        }
 
         #PopupWrapper {
             position: fixed;
@@ -179,12 +194,15 @@ let Style = async() => {
             left: 50%;
             z-index: 100;  
             transform: translate(-50%, -50%);  
+            min-width: 390px; 
         }
         .small #customSchedulePopup{
             top:60px;
             transform: translate(-50%, 0);
+            max-width: 90vw; 
+
         }
-       
+      
         #show_image_popup img{
             max-width: 90vw;
             height: auto;
@@ -203,16 +221,8 @@ let Style = async() => {
             justify-content: end;
             height: 3em;
             position: relative;
-            top: 1em;
-            padding-right:1em;
         }
-        #popupDataLinks a{
-            color: var(--InputText);
-            padding-right: 1em;
-        }
-        #popupDataLinks a:hover{
-            color: var(--fontGreen);
-        }
+     
         #customSchedulePopupClose{
             cursor: pointer;
             padding-right: 1em;
@@ -247,20 +257,20 @@ let Style = async() => {
             visibility: hidden;
         }
 
-        #popupDataLinks > span{
+        #popupDataLinks{
             position: relative;
-            bottom: 5px;
+            bottom: -.5em;
         }
         #menuNavi > span,
         #toggleView > span,
-        #popupDataLinks > span,
+        #popupDataLinks > span > a,
         #popupOptions > span{
-            margin-left:.5em;
+            color: var(--font_0);
         }
 
         #menuNavi > span:hover,
         #toggleView > span:hover,
-        #popupDataLinks > span:hover,
+        #popupDataLinks > span > a:hover,
         #popupOptions > span:hover{
             color: var(--fontBlue);
         }
@@ -679,9 +689,9 @@ let Appointments = {
                 document.getElementById('staffListSelect').value = data.raw.staff_id;
                 document.getElementById('customerListSelect').value = data.raw.customer_id;
                 // make links to data sites
-                document.getElementById('ApPoCustomerLink').innerHTML = /*HTML*/ `<a class=button href="/#customer/profile/${data.raw.customer_id}">Profile</a>`;
-                document.getElementById('ApPoProjectLink').innerHTML = /*HTML*/ `<a class=button href="#project/id/${data.raw.project_id}">Project</a>`;
-                document.getElementById('ApPoAppointmentLink').innerHTML = /*HTML*/ `<a class=button href="#appointment/id/${data.id}">Appointment</a>`;
+                document.getElementById('ApPoCustomerLink').innerHTML = /*HTML*/ `<a href="/#customer/profile/${data.raw.customer_id}">Profile</a>`;
+                document.getElementById('ApPoProjectLink').innerHTML = /*HTML*/ `<a  href="#project/id/${data.raw.project_id}">Project</a>`;
+                document.getElementById('ApPoAppointmentLink').innerHTML = /*HTML*/ `<a href="#appointment/id/${data.id}">Appointment</a>`;
 
                 // get all formfieleds  and make them non editable
                 var allInputs = document.querySelectorAll('input, select, textarea, button');

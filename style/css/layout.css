@@ -506,7 +506,7 @@ nav .sidebar_userpanel {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 1rem 0rem 0.5rem;
+    padding: 1rem 1rem 0rem 0.3rem;
     width: var(--sidebar_full_width);
 }
 

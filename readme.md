@@ -30,15 +30,7 @@ a simple framework to save various data based on users
 -   https://github.com/nivunkpv/Sqlite-Wrapper
 -   https://github.com/tommyknocker/pdo-database-class
 
- 
-----
-**Messages**
-```javascript
-Message.info('CustomerProfile:');
-Message.success('CustomerProfile:')
-Message.error('CustomerProfile:')
-Message.warn('CustomerProfile:')
-```
+  
 # Code
 just some explanations to remember
 
