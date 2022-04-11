@@ -138,7 +138,13 @@ let Content = async(action) => {
 
 
 let newItem = async() => {
-    document.addEventListener('click', (el) => {
+    // add eventListener only once!
+    if (body.getAttribute('newProjectEvent') !== 'true') {
+        body.setAttribute('newProjectEvent', true)
+        body.addEventListener('click', newProjectEvent)
+    }
+
+    function newProjectEvent(el) {
         // send new project form
         if (el.target.id === 'newProjectButton') {
             event.preventDefault();
@@ -153,9 +159,7 @@ let newItem = async() => {
                             window.location.hash = `#project/id/${res.data.id}`;
                         }
                     });
-            } else {
-                Message.error('Fill all Fields')
-            }
+            } else { Message.error('Fill all Fields') }
         }
-    })
+    }
 };

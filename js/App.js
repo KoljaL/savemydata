@@ -127,14 +127,15 @@ async function router() {
     // when content is loaded, turn bach the opacity :-)
     await Functions.sleep(400)
         .then(() => {
+            document.getElementById('main').classList.add('visible');
             Functions.loadingDots('body', false);
             LanguageSwitch.render();
-            document.getElementById('main').classList.add('visible');
-        }).then(() => {
-            setTimeout(() => {
-                LanguageSwitch.render();
-            }, 500);
         })
+        // .then(() => {
+        //     setTimeout(() => {
+        //         LanguageSwitch.render();
+        //     }, 500);
+        // })
 
 
 
