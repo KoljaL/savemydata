@@ -1,0 +1,6 @@
+{
+    "require": {
+        "firebase/php-jwt": "^6.0",
+        "opencage/geocode": "^3.1"
+    }
+}

@@ -6,6 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=1, initial-scale=1.0">
     <title>Permission Test</title>
+    <link rel="stylesheet" href="style/css/layout.css">
+    <link rel="stylesheet" href="style/css/form.css">
     <style>
          :root {
             --header_full_height: 60px;
@@ -73,6 +75,12 @@
         
         h3 {
             margin-top: 0;
+            color: var(--fontOrange)!important;
+        }
+        
+        #inputforms {
+            height: 85vh;
+            overflow-y: auto;
         }
         
         .input {
@@ -83,23 +91,28 @@
             padding: 0.3em .3em .2em .4em;
             border-radius: 0.2em;
             border: grey solid 1px;
+            display: block;
+            width: 100%;
         }
         
         .button {
             font-size: 14px;
             cursor: pointer;
-            color: var(--fontBlue);
+            color: var(--fontBlue)!important;
             background: var(--bg_3);
             line-height: 1.2em;
             padding: 0.3em .3em .2em .4em;
             border-radius: 0.2em;
             border: grey solid 1px;
+            width: 40%!important;
         }
         
         .userdata {
             color: #e9553b;
             display: flex;
             margin-left: 1em;
+            margin-top: .2em;
+            margin-bottom: 1.3em;
         }
         
         .userdata span {
@@ -111,6 +124,7 @@
             padding: 1em;
             border: 2px solid grey;
             border-radius: 10px;
+            width: 500px;
         }
         
         .formblock form>* {
@@ -119,7 +133,9 @@
         }
         
         #selectToken {
-            margin-left: 1em;
+            margin-left: 2em;
+            margin-bottom: 1em;
+            width: 500px;
         }
     </style>
 </head>
@@ -129,53 +145,204 @@
     <div id="wrapper">
 
         <div id="input">
-
-            <!-- <select name="cars" id="endpoints">
-                <option value="api/get_files_from/staff/2">api/get_files_from/staff/2</option>
-                <option value="api/get_data_from/staff_fields">api/get_data_from/staff_fields</option>
-                <option value="api/get_data_from/staff/1">api/get_data_from/staff/1</option>
-                <option value="api/get_list_from/staff/id,username">api/get_list_from/staff/id,username</option>
-                <option value="api/get_appointments_from/staff/1">api/get_appointments_from/staff/1</option>
-              </select> -->
             <div id="selectToken">
-                <label>Token </label>
                 <select id="token" class="input">
                       <option value="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IjAiLCJwZXJtaXNzaW9uIjoiMCIsImxhbmciOiJlbiIsImF2YXRhciI6IiJ9.fgVd29isLdcAjLHuv-ArDXb9kbKsggBGjch_FbUJ4KE">admin</option>
                       <option value="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIiLCJ1c2VybmFtZSI6InVzZXIiLCJyb2xlIjoiMSIsInBlcm1pc3Npb24iOiIwIiwibGFuZyI6ImVuIiwiYXZhdGFyIjoiIn0.7nM72u19LtW784oZyEq_AkGYitMZ5vOBBO6WMCilY8I">user</option>
                     </select>
             </div>
 
+            <div id="inputforms">
 
-            <div class="formblock">
-                <h3>api/get_files_from/staff/1</h3>
-                <form id="api/get_files_from/staff/1">
-                    <label>Endpoint
-                        <input form="api/get_files_from/staff/1" name=endpoint type="text"  class="input" value="api/get_files_from/staff/3">
+                <div class="formblock">
+                    <h3>get_files_from/staff/1</h3>
+                    <form id="get_files_from/staff/1">
+                        <label>Endpoint
+                        <input form="get_files_from/staff/1" name=endpoint type="text"  class="input" value="get_files_from/staff/3">
                     </label>
-                    <input form="api/get_files_from/staff/1" type="submit" class="button">
-                </form>
-            </div>
+                        <input form="get_files_from/staff/1" type="submit" class="button">
+                    </form>
+                </div>
 
 
-            <div class="formblock">
-                <h3>api/get_data_from/staff_fields</h3>
-                <form id="api/get_data_from/staff_fields">
-                    <label>Endpoint
-                        <input form="api/get_data_from/staff_fields" name=endpoint type="text"  class="input" value="api/get_data_from/staff_fields">
+                <div class="formblock">
+                    <h3>get_data_from/staff_fields</h3>
+                    <form id="get_data_from/staff_fields">
+                        <label>Endpoint
+                        <input form="get_data_from/staff_fields" name=endpoint type="text"  class="input" value="get_data_from/staff_fields">
                     </label>
-                    <input form="api/get_data_from/staff_fields" type="submit" class="button">
-                </form>
-            </div>
+                        <input form="get_data_from/staff_fields" type="submit" class="button">
+                    </form>
+                </div>
 
+
+                <div class="formblock">
+                    <h3>get_data_from/staff/1</h3>
+                    <form id="get_data_from/staff/1">
+                        <label>Endpoint
+                        <input form="get_data_from/staff/1" name=endpoint type="text"  class="input" value="get_data_from/staff/1">
+                    </label>
+                        <input form="get_data_from/staff/1" type="submit" class="button">
+                    </form>
+                </div>
+
+                <div class="formblock">
+                    <h3>get_list_from/staff/id,username</h3>
+                    <form id="get_list_from/staff/id,username">
+                        <label>Endpoint
+                        <input form="get_list_from/staff/id,username" name=endpoint type="text"  class="input" value="get_list_from/staff/id,username">
+                    </label>
+                        <input form="get_list_from/staff/id,username" type="submit" class="button">
+                    </form>
+                </div>
+
+
+                <div class="formblock">
+                    <h3>get_appointments_from/staff/1</h3>
+                    <form id="get_appointments_from/staff/1">
+                        <label>Endpoint
+                        <input form="get_appointments_from/staff/1" name=endpoint type="text"  class="input" value="get_appointments_from/staff/1">
+                    </label>
+                        <input form="get_appointments_from/staff/1" type="submit" class="button">
+                    </form>
+                </div>
+
+                <div class="formblock">
+                    <h3>get_data_from/staff_fields</h3>
+                    <form id="get_data_from/staff_fields">
+                        <label>Endpoint
+                        <input form="get_data_from/staff_fields" name=endpoint type="text"  class="input" value="get_data_from/staff_fields">
+                    </label>
+                        <input form="get_data_from/staff_fields" type="submit" class="button">
+                    </form>
+                </div>
+
+
+                <div class="formblock">
+                    <h3>get_data_from/staff</h3>
+                    <form id="get_data_from/staff">
+                        <label>Endpoint
+                        <input form="get_data_from/staff" name=endpoint type="text"  class="input" value="get_data_from/staff">
+                    </label>
+                        <input form="get_data_from/staff" type="submit" class="button">
+                    </form>
+                </div>
+
+
+                <div class="formblock">
+                    <h3>get_files_from/project/1</h3>
+                    <form id="get_files_from/project/1">
+                        <label>Endpoint
+                        <input form="get_files_from/project/1" name=endpoint type="text"  class="input" value="get_files_from/project/1">
+                    </label>
+                        <input form="get_files_from/project/1" type="submit" class="button">
+                    </form>
+                </div>
+
+
+                <div class="formblock">
+                    <h3>get_projects_as_table/project</h3>
+                    <form id="get_projects_as_table/project">
+                        <label>Endpoint
+                        <input form="get_projects_as_table/project" name=endpoint type="text"  class="input" value="get_projects_as_table/project">
+                    </label>
+                        <input form="get_projects_as_table/project" type="submit" class="button">
+                    </form>
+                </div>
+
+
+                <div class="formblock">
+                    <h3>get_data_from/project</h3>
+                    <form id="get_data_from/project">
+                        <label>Endpoint
+                        <input form="get_data_from/project" name=endpoint type="text"  class="input" value="get_data_from/project">
+                    </label>
+                        <input form="get_data_from/project" type="submit" class="button">
+                    </form>
+                </div>
+
+
+
+
+
+                <div class="formblock">
+                    <h3>get_list_from/customer/id,username</h3>
+                    <form id="get_list_from/customer/id,username">
+                        <label>Endpoint
+                        <input form="get_list_from/customer/id,username" name=endpoint type="text"  class="input" value="get_list_from/customer/id,username">
+                    </label>
+                        <input form="get_list_from/customer/id,username" type="submit" class="button">
+                    </form>
+                </div>
+
+
+
+
+                <div class="formblock">
+                    <h3>get_appointment/1</h3>
+                    <form id="get_appointment/1">
+                        <label>Endpoint
+                        <input form="get_appointment/1" name=endpoint type="text"  class="input" value="get_appointment/1">
+                    </label>
+                        <input form="get_appointment/1" type="submit" class="button">
+                    </form>
+                </div>
+
+
+
+                <div class="formblock">
+                    <h3>get_files_from/appointment/1</h3>
+                    <form id="get_files_from/appointment/1">
+                        <label>Endpoint
+                        <input form="get_files_from/appointment/1" name=endpoint type="text"  class="input" value="get_files_from/appointment/1">
+                    </label>
+                        <input form="get_files_from/appointment/1" type="submit" class="button">
+                    </form>
+                </div>
+
+
+                <div class="formblock">
+                    <h3>get_appointments_as_table/appointment</h3>
+                    <form id="get_appointments_as_table/appointment">
+                        <label>Endpoint
+                        <input form="get_appointments_as_table/appointment" name=endpoint type="text"  class="input" value="get_appointments_as_table/appointment">
+                    </label>
+                        <input form="get_appointments_as_table/appointment" type="submit" class="button">
+                    </form>
+                </div>
+
+
+
+                <div class="formblock">
+                    <h3>get_appointments_as_table</h3>
+                    <form id="get_appointments_as_table">
+                        <label>Endpoint
+                        <input form="get_appointments_as_table" name=endpoint type="text"  class="input" value="get_appointments_as_table">
+                    </label>
+                        <input form="get_appointments_as_table" type="submit" class="button">
+                    </form>
+                </div>
+            </div>
 
         </div>
 
+        <!-- OUTPUT -->
+
         <div>
             <div class="userdata">
-                <div style="width: 90px;">Role <span id=role></span></div>
-                <div style="width: 150px;">Permission <span id=permission></span></div>
-                <div style="width: 70px;">ID <span id=id></span></div>
-                <div style="width: 150px;">Username <span id=username></span></div>
+                <div>
+                    <div style="width: 90px;">Role <span id=role></span></div>
+                    <div style="width: 150px;">Permission <span id=permission></span></div>
+                </div>
+                <div>
+
+                    <div style="width: 70px;">ID <span id=id></span></div>
+                    <div style="width: 200px;">Username <span id=username></span></div>
+                </div>
+                <div>
+                    <div style="width: 400px;">Endpoint <span id=endpoint></span></div>
+                    <div style="width: 150px;">Duration <span id=duration></span></div>
+                </div>
             </div>
             <pre id="outputtext"></pre>
         </div>
@@ -188,13 +355,14 @@
         const admin_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IjAiLCJwZXJtaXNzaW9uIjoiMCIsImxhbmciOiJlbiIsImF2YXRhciI6IiJ9.fgVd29isLdcAjLHuv-ArDXb9kbKsggBGjch_FbUJ4KE";
         const user_token = "eyJ0eXAiOivvJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IjAiLCJwZXJtaXNzaW9uIjoiMCIsImxhbmciOiJlbiIsImF2YXRhciI6IiJ9.fgVd29isLdcAjLHuv-ArDXb9kbKsggBGjch_FbUJ4KE";
 
-
-
+        // https://api.opencagedata.com/geocode/v1/json?q=Bahnhofstr%2C%20M%C3%BCnster&key=6e52be8a19534da091331d2ca2c74252&language=de&pretty=1
         let submitButtons = document.querySelectorAll('form input[type="submit"]')
 
         document.querySelectorAll('form input[type="submit"]').forEach(button => {
             button.addEventListener('click', (el) => {
                 el.preventDefault();
+                document.getElementById('outputtext').innerHTML = 'loading';
+                var startTime = performance.now()
                 const endpoint = el.target.form.querySelector("[name='endpoint']").value
 
                 let token = document.getElementById('token').value;
@@ -202,7 +370,7 @@
                 formData.append('user_token', token);
                 formData = JSON.stringify(Object.fromEntries(formData));
                 // deb(formData)
-                fetch(endpoint, {
+                fetch('api/' + endpoint, {
                         method: 'POST',
                         credentials: 'same-origin',
                         body: formData,
@@ -219,9 +387,15 @@
                             document.getElementById('username').innerHTML = json.TOKEN.username;
                             document.getElementById('role').innerHTML = json.TOKEN.role;
                             document.getElementById('permission').innerHTML = json.TOKEN.permission;
+                            document.getElementById('endpoint').innerHTML = json.GET.API_endpoint;
                         } else if (json.code === 400) {
                             document.getElementById('outputtext').innerHTML = json.message;
                         }
+                    })
+                    .then(() => {
+                        let duration = `${performance.now() - startTime} ms`;
+                        document.getElementById('duration').innerHTML = duration;
+
                     })
 
             })
@@ -230,35 +404,6 @@
 
 
 
-
-        //
-        // dropdown
-        //
-        // document.getElementById('endpoints').addEventListener('change', (el) => {
-        //     let URL = el.target.value;
-        //     // URL = 'savemydata/' + URL;
-        //     let formData = new FormData();
-        //     formData.append('user_token', admin_token);
-        //     formData = JSON.stringify(Object.fromEntries(formData));
-        //     // deb(formData)
-        //     fetch(URL, {
-        //             method: 'POST',
-        //             credentials: 'same-origin',
-        //             body: formData,
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //             },
-        //         })
-        //         .then(res => res.json())
-        //         .then((json) => {
-        //             deb(json)
-        //             if (json.code === 200) {
-        //                 document.getElementById('outputtext').innerHTML = syntaxHighlight(JSON.stringify(json.data, undefined, 4));
-        //             } else if (json.code === 400) {
-        //                 document.getElementById('outputtext').innerHTML = json.message;
-        //             }
-        //         })
-        // })
 
 
         //

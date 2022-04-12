@@ -881,6 +881,11 @@ footer .withLove img {
     mask-image: url(../img/icons/arrow-right.svg);
 }
 
+.map_icon {
+    -webkit-mask-image: url(../img/icons/map.svg);
+    mask-image: url(../img/icons/map.svg);
+}
+
 
 /*
 //  

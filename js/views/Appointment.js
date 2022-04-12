@@ -93,7 +93,6 @@ let Content = async() => {
     <div id=AppointmentWrapper>
        <div id=AppointmentContent></div>
        <div id=AppointmentAppointments></div>
-       <textarea rows="50" id=debug style="display:none;" ></textarea>
     </div>`;
     await Functions.setInnerHTML('main', innerHTML);
 }
@@ -106,8 +105,12 @@ let AppointmentContent = async(id) => {
                 if (res.code === 200) {
                     let data = res.data
                     deb(res);
-                    document.getElementById('debug').innerHTML = JSON.stringify(data, undefined, 4);
-
+                    let map_link;
+                    if (data.map_link !== '') {
+                        map_link = `<a href=${data.map_link} class="icon map_icon" style="width:40px; height:40px;" target="_blanc"></a>`;
+                    } else {
+                        map_link = '';
+                    }
                     // make rows for textarea
                     let rows = data.comment.split('\n').length + 2;
                     // deb(rows)
@@ -129,7 +132,7 @@ let AppointmentContent = async(id) => {
                     <div id=AppointmentBody>
                         <div id=AppointmentText>
                             <br>
-                            <div class="FF-row"  style="padding-top:0;margin-top:-1em;">
+                            <div class="FF-row"  style="padding-top:1em;margin-top:-1em;">
                                 <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:150px;">
                                     <input id="firstname" class="hideEdit boxShadow" name="firstname" type="date" placeholder="" value="${data.start_date}" data-db="start_date/appointment/id/${id}" required="">
                                     <label data-lang="F_date" for="firstname">Date</label>
@@ -142,6 +145,16 @@ let AppointmentContent = async(id) => {
                                     <input id="lastname" class="hideEdit boxShadow" name="lastname" type="text" placeholder="" value="${data.duration}" data-db="duration/appointment/id/${id}" required="">
                                     <label data-lang="F_duration" for="lastname">Duration</label>
                                 </div> 
+                            </div>
+
+                            <h3 data-lang="F_location">Location</h3>
+                            <div class="FF-row" style="padding-top:1em;margin-top:-1em;">
+                                <div class="FF-item" style="min-width:250px; flex-basis:550px; max-width:100%;">
+                                    <input id="location" class="hideEdit boxShadow" name="location" type="text" placeholder="" value="${data.location}" data-db="location/appointment/id/${id}" required="">
+                                    <label data-lang="F_location" for="location">Adress</label>    
+                                </div>
+                                <span class="boxShadow button" id=locationLink>${map_link}</span>
+                                <span class="boxShadow button" id="getLocationLinkButton">get Map</span>
                             </div>
 
                             <h3 data-lang="F_comment">Comment</h3>
@@ -199,6 +212,22 @@ let AppointmentContent = async(id) => {
                                 }
                             });
                     });
+                    //
+                    // SET LOCATION LINK
+                    //
+                    document.getElementById('getLocationLinkButton').addEventListener('click', () => {
+                        let formData = new FormData();
+                        formData.append('id', id);
+                        formData.append('location', document.getElementById('location').value);
+                        Functions.getAPIdata('get_geocode', formData)
+                            .then((res) => {
+                                if (res.code === 200) {
+                                    let data = res.data
+                                    deb(res);
+                                    document.getElementById('locationLink').innerHTML = /*HTML*/ `<a href=${data.map_link} class="icon map_icon" style="width:40px; height:40px;" target="_blanc"></a>`;
+                                }
+                            });
+                    })
                 }
             });
 

@@ -4,12 +4,12 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit0c74a434d06e3c71796e909af87504c1
+class ComposerStaticInit509e0b09df3cdd67ef2f00f6e15f0bfa
 {
     public static $prefixLengthsPsr4 = array (
-        'S' => 
+        'O' => 
         array (
-            'SleekDB\\' => 8,
+            'OpenCage\\Geocoder\\' => 18,
         ),
         'F' => 
         array (
@@ -18,9 +18,9 @@ class ComposerStaticInit0c74a434d06e3c71796e909af87504c1
     );
 
     public static $prefixDirsPsr4 = array (
-        'SleekDB\\' => 
+        'OpenCage\\Geocoder\\' => 
         array (
-            0 => __DIR__ . '/..' . '/rakibtg/sleekdb/src',
+            0 => __DIR__ . '/..' . '/opencage/geocode/src',
         ),
         'Firebase\\JWT\\' => 
         array (
@@ -35,9 +35,9 @@ class ComposerStaticInit0c74a434d06e3c71796e909af87504c1
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit0c74a434d06e3c71796e909af87504c1::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit0c74a434d06e3c71796e909af87504c1::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit0c74a434d06e3c71796e909af87504c1::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit509e0b09df3cdd67ef2f00f6e15f0bfa::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit509e0b09df3cdd67ef2f00f6e15f0bfa::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit509e0b09df3cdd67ef2f00f6e15f0bfa::$classMap;
 
         }, null, ClassLoader::class);
     }

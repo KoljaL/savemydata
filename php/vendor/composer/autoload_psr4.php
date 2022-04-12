@@ -6,6 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'SleekDB\\' => array($vendorDir . '/rakibtg/sleekdb/src'),
+    'OpenCage\\Geocoder\\' => array($vendorDir . '/opencage/geocode/src'),
     'Firebase\\JWT\\' => array($vendorDir . '/firebase/php-jwt/src'),
 );

@@ -12,6 +12,7 @@ a simple framework to save various data based on users
 -   **Auth** [PHP-JWT](https://github.com/firebase/php-jwt)
 -   **Imgage resize** [php-image-resize](https://github.com/gumlet/php-image-resize)
 -   **Calendar** [pTUI Calendar](https://github.com/nhn/tui.calendar)
+-   **GeoCode** [OpenCageData](https://github.com/OpenCageData/php-opencage-geocode)
 
 ## Progressive Responsive Layout
 

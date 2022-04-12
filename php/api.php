@@ -123,7 +123,8 @@ if ($request) {
 //DEBUG
 if ('do' === $API_endpoint) {
     // create_dummy_data();
-    get_name_by_id('staff', '1', $name = 'username');
+    get_geocode('');
+    // get_name_by_id('staff', '1', $name = 'username');
     exit;
 }
 if ('reset' === $API_endpoint) {
@@ -241,6 +242,12 @@ case 'get_appointment_as_ics':
     get_appointment_as_ics($request);
     break;
         
+         
+
+case 'get_geocode':
+    get_geocode($request);
+    break;
+        
 default:
     // echo 'Endpoint <b>'.$API_endpoint.'</b> not found';
     break;
@@ -261,6 +268,34 @@ default:
 // https://phpdelusions.net/pdo_examples/select
 // https://code-boxx.com/php-user-role-management-system/
 // https://www.php-einfach.de/mysql-tutorial/crashkurs-pdo/
+
+
+function get_geocode($param)
+{
+    global $db;
+    // $param = [];
+    // $param['location']= 'Bahnhofstraße 1, 48143 Münster';
+
+    $geocoder = new \OpenCage\Geocoder\Geocoder('6e52be8a19534da091331d2ca2c74252');
+    $result = $geocoder->geocode($param['location']);
+    // print_r($result);
+
+    $geocode['data']['lat'] = $result['results'][0]['geometry']['lat'];
+    $geocode['data']['lng'] = $result['results'][0]['geometry']['lng'];
+    $geocode['data']['map_link'] = "https://www.openstreetmap.org/?mlat=".$geocode['data']['lat']."&mlon=".$geocode['data']['lng']."#map=16/".$geocode['data']['lat']."/".$geocode['data']['lng'];
+ 
+
+
+    $sql = "UPDATE appointment SET location=?, lat=?, lng=?, map_link=? WHERE id=?";
+    $db->prepare($sql)->execute([$param['location'], $geocode['data']['lat'], $geocode['data']['lng'], $geocode['data']['map_link'], $param['id']]);
+
+    $geocode['code'] = 200;
+
+    return_JSON($geocode);
+}
+
+
+
 
 /**
  *
@@ -424,6 +459,7 @@ function get_appointment($param)
             $appointments['customername'] = get_name_by_id('customer', $appointments['customer_id']);
             $appointments['staffname']    = get_name_by_id('staff', $appointments['staff_id']);
             $appointments['projectname']  = get_name_by_id('project', $appointments['project_id'], 'title');
+            $appointments['location']  = get_name_by_id('staff', $appointments['staff_id'], 'location');
 
             $response['code'] = 200;
             $response['data'] = $appointments;
@@ -499,7 +535,7 @@ function get_appointments_from($param)
         $files = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $response = [];
-        if ($param) {
+        if ($files) {
             $response['code'] = 200;
             $response['data'] = $files;
         } else {
@@ -1233,7 +1269,7 @@ function insert_into_db($param, $table, $output = true)
     $count = $stmt->rowCount();
 
     $response = [];
-    if ($count && $output) {
+    if ($count) {
         $response['data']['id'] = $db->lastInsertId();
         $response['code']       = 200;
         $response['message']    = $message;
@@ -1245,7 +1281,9 @@ function insert_into_db($param, $table, $output = true)
     }
 
     // return response
-    return_JSON($response);
+    if ($output) {
+        return_JSON($response);
+    }
 }
 
 /*
@@ -1322,6 +1360,7 @@ function init_staff_fields_table()
         ['pos' => '20', 'row' => '2', 'name' => 'lastname', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Lastname', 'db' => 'lastname/staff/id'],
         ['pos' => '30', 'row' => '2', 'name' => 'instaname', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Instaname', 'db' => 'instaname/staff/id'],
         ['pos' => '10', 'row' => '3', 'name' => 'comment', 'type' => 'textarea', 'widths' => '400/550/600', 'edit' => 'hide', 'label' => 'Comment', 'db' => 'comment/staff/id'],
+        ['pos' => '10', 'row' => '3', 'name' => 'location', 'type' => 'text', 'widths' => '400/550/600', 'edit' => 'hide', 'label' => 'Location', 'db' => 'location/staff/id'],
         ['pos' => '10', 'row' => '4', 'name' => 'role', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Role', 'db' => 'role/staff/id'],
         ['pos' => '20', 'row' => '4', 'name' => 'permission', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Permission', 'db' => 'permission/staff/id'],
         ['pos' => '30', 'row' => '4', 'name' => 'lang', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Language', 'db' => 'lang/staff/id'],
@@ -1391,6 +1430,7 @@ function init_stafftable()
             lastname TEXT NOT NULL DEFAULT "",
             email TEXT NOT NULL DEFAULT "",
             comment TEXT NOT NULL DEFAULT "",
+            location TEXT NOT NULL DEFAULT "",
             role TEXT NOT NULL DEFAULT "",
             permission TEXT NOT NULL DEFAULT "",
             color TEXT NOT NULL DEFAULT "#f6b73c",
@@ -1536,6 +1576,7 @@ function create_dummy_staff($count)
             'lastname'   => $random_name[1],
             'instaname'  => $random_name[1].'_'.$random_name[0],
             'email'      => $email,
+            'location'   => 'Bahnhofstraße 1, 48143 Münster',
             'comment'    => random_text(),
             'role'       => random_int(1, 5),
             'permission' => random_int(1, 5).','.random_int(1, 5).','.random_int(1, 5),
