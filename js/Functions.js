@@ -408,7 +408,7 @@ let Functions = {
     validForm: (form) => {
         for (let i = 0; i < form.length; i++) {
             // deb(form[i])
-            if (!form[i].value) {
+            if (!form[i].value && form[i].type !== 'hidden') {
                 return false;
             }
         }

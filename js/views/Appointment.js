@@ -67,7 +67,17 @@ let Style = async() => {
         #editAppointmentButton:hover{
             color: var(--fontBlue);
         }
-       
+
+        #AppointmentBody .map_icon{
+            position: relative;
+            top: 3px;
+            width:20px; 
+            height:20px;
+        } 
+        #locationLink,#getLocationLinkButton {
+            position: relative;
+            top: 4px;
+          }
     `;
     Functions.createStyle('Appointment_jdow_style', styleTags);
 };
@@ -105,11 +115,16 @@ let AppointmentContent = async(id) => {
                 if (res.code === 200) {
                     let data = res.data
                     deb(res);
-                    let map_link;
+                    let map_link, map_location;
                     if (data.map_link !== '') {
-                        map_link = `<a href=${data.map_link} class="icon map_icon" style="width:40px; height:40px;" target="_blanc"></a>`;
+                        map_link = `<a href=${data.map_link} class="icon map_icon"  target="_blanc"></a>`;
                     } else {
                         map_link = '';
+                    }
+                    if (data.location !== '') {
+                        map_location = data.location;
+                    } else {
+                        map_location = data.location_staff;
                     }
                     // make rows for textarea
                     let rows = data.comment.split('\n').length + 2;
@@ -149,12 +164,15 @@ let AppointmentContent = async(id) => {
 
                             <h3 data-lang="F_location">Location</h3>
                             <div class="FF-row" style="padding-top:1em;margin-top:-1em;">
-                                <div class="FF-item" style="min-width:250px; flex-basis:550px; max-width:100%;">
-                                    <input id="location" class="hideEdit boxShadow" name="location" type="text" placeholder="" value="${data.location}" data-db="location/appointment/id/${id}" required="">
+                                <div class="FF-item" style="min-width:250px; flex-basis:550px; max-width:300px;">
+                                    <input id="location" class="hideEdit boxShadow" name="location" type="text" placeholder="" value="${map_location}" data-db="location/appointment/id/${id}" required="">
                                     <label data-lang="F_location" for="location">Adress</label>    
                                 </div>
-                                <span class="boxShadow button" id=locationLink>${map_link}</span>
-                                <span class="boxShadow button" id="getLocationLinkButton">get Map</span>
+
+                                <div class="FF-item" style="min-width:250px; flex-basis:550px; max-width:300px;">
+                                    <span class="boxShadow button" id=locationLink>${map_link}</span>
+                                    <span class="boxShadow button" id="getLocationLinkButton">get Map</span>
+                                </div>
                             </div>
 
                             <h3 data-lang="F_comment">Comment</h3>
@@ -224,7 +242,10 @@ let AppointmentContent = async(id) => {
                                 if (res.code === 200) {
                                     let data = res.data
                                     deb(res);
-                                    document.getElementById('locationLink').innerHTML = /*HTML*/ `<a href=${data.map_link} class="icon map_icon" style="width:40px; height:40px;" target="_blanc"></a>`;
+                                    document.getElementById('locationLink').innerHTML = /*HTML*/ `<a href=${data.map_link} class="icon map_icon"  target="_blanc"></a>`;
+                                }
+                                if (res.code === 400) {
+                                    document.getElementById('locationLink').innerHTML = /*HTML*/ `<span data-lang="location_not_found">Location not found</span>`;
                                 }
                             });
                     })

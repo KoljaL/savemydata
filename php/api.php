@@ -270,7 +270,12 @@ default:
 // https://www.php-einfach.de/mysql-tutorial/crashkurs-pdo/
 
 
-function get_geocode($param)
+/**
+ *
+ * It takes a location string, sends it to the OpenCage API, and returns the latitude and longitude of the location
+ *
+ */
+function get_geocode($param, $output=true)
 {
     global $db;
     // $param = [];
@@ -279,19 +284,20 @@ function get_geocode($param)
     $geocoder = new \OpenCage\Geocoder\Geocoder('6e52be8a19534da091331d2ca2c74252');
     $result = $geocoder->geocode($param['location']);
     // print_r($result);
-
-    $geocode['data']['lat'] = $result['results'][0]['geometry']['lat'];
-    $geocode['data']['lng'] = $result['results'][0]['geometry']['lng'];
-    $geocode['data']['map_link'] = "https://www.openstreetmap.org/?mlat=".$geocode['data']['lat']."&mlon=".$geocode['data']['lng']."#map=16/".$geocode['data']['lat']."/".$geocode['data']['lng'];
- 
-
-
-    $sql = "UPDATE appointment SET location=?, lat=?, lng=?, map_link=? WHERE id=?";
-    $db->prepare($sql)->execute([$param['location'], $geocode['data']['lat'], $geocode['data']['lng'], $geocode['data']['map_link'], $param['id']]);
-
-    $geocode['code'] = 200;
-
-    return_JSON($geocode);
+    if ($result['results']) {
+        $geocode['code'] = 200;
+        $geocode['data']['lat'] = $result['results'][0]['geometry']['lat'];
+        $geocode['data']['lng'] = $result['results'][0]['geometry']['lng'];
+        $geocode['data']['map_link'] = "https://www.openstreetmap.org/?mlat=".$geocode['data']['lat']."&mlon=".$geocode['data']['lng']."#map=16/".$geocode['data']['lat']."/".$geocode['data']['lng'];
+        $sql = "UPDATE appointment SET location=?, lat=?, lng=?, map_link=? WHERE id=?";
+        $db->prepare($sql)->execute([$param['location'], $geocode['data']['lat'], $geocode['data']['lng'], $geocode['data']['map_link'], $param['id']]);
+    } else {
+        $geocode['code'] = 400;
+        $geocode['message'] = 'Location not found';
+    }
+    if ($output) {
+        return_JSON($geocode);
+    }
 }
 
 
@@ -330,39 +336,41 @@ function get_appointment_as_ics($param)
             // print_r($datetime_end);
             // exit;
 
-            $kb_start = $start;
-            $kb_end = $end;
-            $kb_current_time = date('Ymd\THis');
-            $kb_title = html_entity_decode($appointment['projectname'], ENT_COMPAT, 'UTF-8');
-            $kb_location = preg_replace('/([\,;])/', '\\\$1', $appointment['staffname']);
-            $kb_description = html_entity_decode($appointment['comment'], ENT_COMPAT, 'UTF-8');
-            $kb_url = 'https://dev.rasal.de/savemydata/#project/id/'.$appointment['project_id'];
+            $start = $start;
+            $end = $end;
+            $current_time = date('Ymd\THis');
+            $title = html_entity_decode($appointment['projectname'], ENT_COMPAT, 'UTF-8');
+            $location = preg_replace('/([\,;])/', '\\\$1', $appointment['location']);
+            $geo = $appointment['lat'].';'.$appointment['lng'];
+            $description = html_entity_decode($appointment['comment'], ENT_COMPAT, 'UTF-8');
+            $url = 'https://dev.rasal.de/savemydata/#project/id/'.$appointment['project_id'];
             
             
             
             $eol = "\r\n";
             // $eol = '<br>';
-            $kb_ics_content =
+            $ics_content =
             'BEGIN:VCALENDAR'.$eol.
             'VERSION:2.0'.$eol.
             'PRODID:-//dev.rasal//dev.rasal.de//DE'.$eol.
             'CALSCALE:GREGORIAN'.$eol.
             'BEGIN:VEVENT'.$eol.
-            'DTSTART:'.$kb_start.$eol.
-            'DTEND:'.$kb_end.$eol.
-            'LOCATION:'.$kb_location.$eol.
-            'DTSTAMP:'.$kb_current_time.$eol.
-            'SUMMARY:'.$kb_title.$eol.
-            'URL;VALUE=URI:'.$kb_url.$eol.
-            'DESCRIPTION:'.$kb_description.$eol.
-            'UID:'.$kb_current_time.'-'.$kb_start.'-'.$kb_end.$eol.
+            'DTSTART:'.$start.$eol.
+            'DTEND:'.$end.$eol.
+            'LOCATION:'.$location.$eol.
+            'GEO:'.$geo.$eol.
+            'DTSTAMP:'.$current_time.$eol.
+            'SUMMARY:'.$title.$eol.
+            'URL;VALUE=URI:'.$url.$eol.
+            'DESCRIPTION:'.$description.$eol.
+            'UID:'.$current_time.'-'.$start.'-'.$end.$eol.
             'END:VEVENT'.$eol.
             'END:VCALENDAR';
             
             if ('fetch' === $API_param) {
                 header('Content-type: text/calendar; charset=utf-8');
                 header('Content-Disposition: attachment; filename=mohawk-event.ics');
-                echo $kb_ics_content;
+                echo $ics_content;
                 exit;
             }
  
@@ -456,10 +464,10 @@ function get_appointment($param)
 
         $response = [];
         if ($appointments) {
-            $appointments['customername'] = get_name_by_id('customer', $appointments['customer_id']);
-            $appointments['staffname']    = get_name_by_id('staff', $appointments['staff_id']);
-            $appointments['projectname']  = get_name_by_id('project', $appointments['project_id'], 'title');
-            $appointments['location']  = get_name_by_id('staff', $appointments['staff_id'], 'location');
+            $appointments['customername']    = get_name_by_id('customer', $appointments['customer_id']);
+            $appointments['staffname']       = get_name_by_id('staff', $appointments['staff_id']);
+            $appointments['projectname']     = get_name_by_id('project', $appointments['project_id'], 'title');
+            $appointments['location_staff']  = get_name_by_id('staff', $appointments['staff_id'], 'location');
 
             $response['code'] = 200;
             $response['data'] = $appointments;
@@ -917,12 +925,26 @@ function new_entry_in($param)
 {
     if (isAllowed()) {
         global $db, $API_param;
+
+        if ($API_param === 'appointment') {
+            // get location from staff from appointment
+            $param['location'] = get_name_by_id('staff', $param['staff_id'], 'location');
+        }
         $response = [];
         $table    = $API_param;
         unset($param['user_id']);
         unset($param['user_token']);
         // create_user( $param );
         insert_into_db($param, $table);
+
+
+        if ($API_param === 'appointment') {
+            // get location from staff from appointment
+            // and call geocode API for lng & lat
+            $param['location'] = get_name_by_id('staff', $param['staff_id'], 'location');
+            $param['id'] = $db->lastInsertId();
+            get_geocode($param, false);
+        }
     } else {
         $response['code']    = 400;
         $response['message'] = 'vorbidden';
@@ -1352,7 +1374,7 @@ function init_staff_fields_table()
         date TEXT NOT NULL DEFAULT ""
     )');
 
-    $userfields = [
+    $stafffields = [
         ['pos' => '10', 'row' => '1', 'name' => 'username', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Username', 'db' => 'username/staff/id'],
         ['pos' => '20', 'row' => '1', 'name' => 'email', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Email', 'db' => 'email/staff/id'],
         ['pos' => '20', 'row' => '1', 'name' => 'password', 'type' => 'password', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'Password', 'db' => 'password/staff/id'],
@@ -1366,7 +1388,7 @@ function init_staff_fields_table()
         ['pos' => '30', 'row' => '4', 'name' => 'lang', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Language', 'db' => 'lang/staff/id'],
         ['pos' => '40', 'row' => '4', 'name' => 'color', 'type' => 'color', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Color', 'db' => 'color/staff/id']
     ];
-    foreach ($userfields as $field) {
+    foreach ($stafffields as $field) {
         insert_into_db($field, 'staff_fields');
     }
     $db->exec('CREATE TABLE IF NOT EXISTS customer_fields(
@@ -1513,6 +1535,10 @@ function init_appointment_table()
             project_id TEXT NOT NULL DEFAULT "",
             customer_id TEXT NOT NULL DEFAULT "",
             comment TEXT NOT NULL DEFAULT "",
+            location TEXT NOT NULL DEFAULT "",
+            lng TEXT NOT NULL DEFAULT "",
+            lat TEXT NOT NULL DEFAULT "",
+            map_link TEXT NOT NULL DEFAULT "",
             date TEXT NOT NULL  DEFAULT ""
         )');
     // end_time TEXT NOT NULL DEFAULT "",

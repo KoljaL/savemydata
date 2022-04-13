@@ -722,6 +722,7 @@ let Appointments = {
                 document.getElementById('ApPoTime').value = startTime;
                 document.getElementById('ApPoDuration').value = duration;
                 document.getElementById('staffListSelect').value = Functions.getLocal('id');
+                document.getElementById('CreateAppointmentPopupSubmit').style.display = 'block';
 
             }
 
