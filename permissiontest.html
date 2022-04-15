@@ -74,13 +74,17 @@
         }
         
         h3 {
-            margin-top: 0;
+            margin: 0;
             color: var(--fontOrange)!important;
         }
         
         #inputforms {
             height: 85vh;
             overflow-y: auto;
+        }
+        
+        form {
+            display: flex;
         }
         
         .input {
@@ -91,8 +95,8 @@
             padding: 0.3em .3em .2em .4em;
             border-radius: 0.2em;
             border: grey solid 1px;
-            display: block;
-            width: 100%;
+            display: inline-block;
+            width: 80%!important;
         }
         
         .button {
@@ -104,7 +108,7 @@
             padding: 0.3em .3em .2em .4em;
             border-radius: 0.2em;
             border: grey solid 1px;
-            width: 40%!important;
+            width: 20%!important;
         }
         
         .userdata {
@@ -157,21 +161,27 @@
                 <div class="formblock">
                     <h3>get_files_from/staff/1</h3>
                     <form id="get_files_from/staff/1">
-                        <label>Endpoint
-                        <input form="get_files_from/staff/1" name=endpoint type="text"  class="input" value="get_files_from/staff/3">
-                    </label>
-                        <input form="get_files_from/staff/1" type="submit" class="button">
+                        <input form="get_files_from/staff/1" name=endpoint type="text" class="input" value="get_files_from/staff/3">
+                        <input form="get_files_from/staff/1" type="submit" value="request" class="button">
                     </form>
                 </div>
 
 
                 <div class="formblock">
+                    <h3>get_files_from/staff/1</h3>
+                    <form id="get_files_from/staff/1">
+                        <input form="get_files_from/staff/1" name=endpoint type="text" class="input" value="get_files_from/staff/3">
+                        <input form="get_files_from/staff/1" type="submit" value="request" class="button">
+                    </form>
+                </div>
+
+
+
+                <div class="formblock">
                     <h3>get_data_from/staff_fields</h3>
                     <form id="get_data_from/staff_fields">
-                        <label>Endpoint
-                        <input form="get_data_from/staff_fields" name=endpoint type="text"  class="input" value="get_data_from/staff_fields">
-                    </label>
-                        <input form="get_data_from/staff_fields" type="submit" class="button">
+                        <input form="get_data_from/staff_fields" name=endpoint type="text" class="input" value="get_data_from/staff_fields">
+                        <input form="get_data_from/staff_fields" type="submit" value="request" class="button">
                     </form>
                 </div>
 
@@ -179,20 +189,16 @@
                 <div class="formblock">
                     <h3>get_data_from/staff/1</h3>
                     <form id="get_data_from/staff/1">
-                        <label>Endpoint
-                        <input form="get_data_from/staff/1" name=endpoint type="text"  class="input" value="get_data_from/staff/1">
-                    </label>
-                        <input form="get_data_from/staff/1" type="submit" class="button">
+                        <input form="get_data_from/staff/1" name=endpoint type="text" class="input" value="get_data_from/staff/1">
+                        <input form="get_data_from/staff/1" type="submit" value="request" class="button">
                     </form>
                 </div>
 
                 <div class="formblock">
                     <h3>get_list_from/staff/id,username</h3>
                     <form id="get_list_from/staff/id,username">
-                        <label>Endpoint
-                        <input form="get_list_from/staff/id,username" name=endpoint type="text"  class="input" value="get_list_from/staff/id,username">
-                    </label>
-                        <input form="get_list_from/staff/id,username" type="submit" class="button">
+                        <input form="get_list_from/staff/id,username" name=endpoint type="text" class="input" value="get_list_from/staff/id,username">
+                        <input form="get_list_from/staff/id,username" type="submit" value="request" class="button">
                     </form>
                 </div>
 
@@ -200,20 +206,16 @@
                 <div class="formblock">
                     <h3>get_appointments_from/staff/1</h3>
                     <form id="get_appointments_from/staff/1">
-                        <label>Endpoint
-                        <input form="get_appointments_from/staff/1" name=endpoint type="text"  class="input" value="get_appointments_from/staff/1">
-                    </label>
-                        <input form="get_appointments_from/staff/1" type="submit" class="button">
+                        <input form="get_appointments_from/staff/1" name=endpoint type="text" class="input" value="get_appointments_from/staff/1">
+                        <input form="get_appointments_from/staff/1" type="submit" value="request" class="button">
                     </form>
                 </div>
 
                 <div class="formblock">
                     <h3>get_data_from/staff_fields</h3>
                     <form id="get_data_from/staff_fields">
-                        <label>Endpoint
-                        <input form="get_data_from/staff_fields" name=endpoint type="text"  class="input" value="get_data_from/staff_fields">
-                    </label>
-                        <input form="get_data_from/staff_fields" type="submit" class="button">
+                        <input form="get_data_from/staff_fields" name=endpoint type="text" class="input" value="get_data_from/staff_fields">
+                        <input form="get_data_from/staff_fields" type="submit" value="request" class="button">
                     </form>
                 </div>
 
@@ -221,10 +223,8 @@
                 <div class="formblock">
                     <h3>get_data_from/staff</h3>
                     <form id="get_data_from/staff">
-                        <label>Endpoint
-                        <input form="get_data_from/staff" name=endpoint type="text"  class="input" value="get_data_from/staff">
-                    </label>
-                        <input form="get_data_from/staff" type="submit" class="button">
+                        <input form="get_data_from/staff" name=endpoint type="text" class="input" value="get_data_from/staff">
+                        <input form="get_data_from/staff" type="submit" value="request" class="button">
                     </form>
                 </div>
 
@@ -232,10 +232,8 @@
                 <div class="formblock">
                     <h3>get_files_from/project/1</h3>
                     <form id="get_files_from/project/1">
-                        <label>Endpoint
-                        <input form="get_files_from/project/1" name=endpoint type="text"  class="input" value="get_files_from/project/1">
-                    </label>
-                        <input form="get_files_from/project/1" type="submit" class="button">
+                        <input form="get_files_from/project/1" name=endpoint type="text" class="input" value="get_files_from/project/1">
+                        <input form="get_files_from/project/1" type="submit" value="request" class="button">
                     </form>
                 </div>
 
@@ -243,10 +241,8 @@
                 <div class="formblock">
                     <h3>get_projects_as_table/project</h3>
                     <form id="get_projects_as_table/project">
-                        <label>Endpoint
-                        <input form="get_projects_as_table/project" name=endpoint type="text"  class="input" value="get_projects_as_table/project">
-                    </label>
-                        <input form="get_projects_as_table/project" type="submit" class="button">
+                        <input form="get_projects_as_table/project" name=endpoint type="text" class="input" value="get_projects_as_table/project">
+                        <input form="get_projects_as_table/project" type="submit" value="request" class="button">
                     </form>
                 </div>
 
@@ -254,10 +250,8 @@
                 <div class="formblock">
                     <h3>get_data_from/project</h3>
                     <form id="get_data_from/project">
-                        <label>Endpoint
-                        <input form="get_data_from/project" name=endpoint type="text"  class="input" value="get_data_from/project">
-                    </label>
-                        <input form="get_data_from/project" type="submit" class="button">
+                        <input form="get_data_from/project" name=endpoint type="text" class="input" value="get_data_from/project">
+                        <input form="get_data_from/project" type="submit" value="request" class="button">
                     </form>
                 </div>
 
@@ -268,10 +262,8 @@
                 <div class="formblock">
                     <h3>get_list_from/customer/id,username</h3>
                     <form id="get_list_from/customer/id,username">
-                        <label>Endpoint
-                        <input form="get_list_from/customer/id,username" name=endpoint type="text"  class="input" value="get_list_from/customer/id,username">
-                    </label>
-                        <input form="get_list_from/customer/id,username" type="submit" class="button">
+                        <input form="get_list_from/customer/id,username" name=endpoint type="text" class="input" value="get_list_from/customer/id,username">
+                        <input form="get_list_from/customer/id,username" type="submit" value="request" class="button">
                     </form>
                 </div>
 
@@ -281,10 +273,8 @@
                 <div class="formblock">
                     <h3>get_appointment/1</h3>
                     <form id="get_appointment/1">
-                        <label>Endpoint
-                        <input form="get_appointment/1" name=endpoint type="text"  class="input" value="get_appointment/1">
-                    </label>
-                        <input form="get_appointment/1" type="submit" class="button">
+                        <input form="get_appointment/1" name=endpoint type="text" class="input" value="get_appointment/1">
+                        <input form="get_appointment/1" type="submit" value="request" class="button">
                     </form>
                 </div>
 
@@ -293,10 +283,8 @@
                 <div class="formblock">
                     <h3>get_files_from/appointment/1</h3>
                     <form id="get_files_from/appointment/1">
-                        <label>Endpoint
-                        <input form="get_files_from/appointment/1" name=endpoint type="text"  class="input" value="get_files_from/appointment/1">
-                    </label>
-                        <input form="get_files_from/appointment/1" type="submit" class="button">
+                        <input form="get_files_from/appointment/1" name=endpoint type="text" class="input" value="get_files_from/appointment/1">
+                        <input form="get_files_from/appointment/1" type="submit" value="request" class="button">
                     </form>
                 </div>
 
@@ -304,10 +292,8 @@
                 <div class="formblock">
                     <h3>get_appointments_as_table/appointment</h3>
                     <form id="get_appointments_as_table/appointment">
-                        <label>Endpoint
-                        <input form="get_appointments_as_table/appointment" name=endpoint type="text"  class="input" value="get_appointments_as_table/appointment">
-                    </label>
-                        <input form="get_appointments_as_table/appointment" type="submit" class="button">
+                        <input form="get_appointments_as_table/appointment" name=endpoint type="text" class="input" value="get_appointments_as_table/appointment">
+                        <input form="get_appointments_as_table/appointment" type="submit" value="request" class="button">
                     </form>
                 </div>
 
@@ -316,10 +302,8 @@
                 <div class="formblock">
                     <h3>get_appointments_as_table</h3>
                     <form id="get_appointments_as_table">
-                        <label>Endpoint
-                        <input form="get_appointments_as_table" name=endpoint type="text"  class="input" value="get_appointments_as_table">
-                    </label>
-                        <input form="get_appointments_as_table" type="submit" class="button">
+                        <input form="get_appointments_as_table" name=endpoint type="text" class="input" value="get_appointments_as_table">
+                        <input form="get_appointments_as_table" type="submit" value="request" class="button">
                     </form>
                 </div>
             </div>
@@ -361,6 +345,8 @@
         document.querySelectorAll('form input[type="submit"]').forEach(button => {
             button.addEventListener('click', (el) => {
                 el.preventDefault();
+                removeActive();
+                button.setAttribute('style', 'color:#e9553b !important');
                 document.getElementById('outputtext').innerHTML = 'loading';
                 var startTime = performance.now()
                 const endpoint = el.target.form.querySelector("[name='endpoint']").value
@@ -390,6 +376,8 @@
                             document.getElementById('endpoint').innerHTML = json.GET.API_endpoint;
                         } else if (json.code === 400) {
                             document.getElementById('outputtext').innerHTML = json.message;
+                        } else if (json.code === 403) {
+                            document.getElementById('outputtext').innerHTML = json.message;
                         }
                     })
                     .then(() => {
@@ -401,8 +389,12 @@
             })
         });
 
-
-
+        function removeActive() {
+            document.querySelectorAll('form input[type="submit"]').forEach(button => {
+                button.style.background = "";
+                button.style.color = "";
+            });
+        }
 
 
 

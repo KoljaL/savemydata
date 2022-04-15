@@ -30,6 +30,9 @@ a simple framework to save various data based on users
 -   https://github.com/vielhuber/dbhelper
 -   https://github.com/nivunkpv/Sqlite-Wrapper
 -   https://github.com/tommyknocker/pdo-database-class
+-   https://phpdelusions.net/pdo_examples/select
+-   https://code-boxx.com/php-user-role-management-system/
+-   https://www.php-einfach.de/mysql-tutorial/crashkurs-pdo/
 
   
 # Code

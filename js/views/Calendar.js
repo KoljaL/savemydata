@@ -223,17 +223,12 @@ let Style = async() => {
             position: relative;
         }
      
-        #customSchedulePopupClose{
-            cursor: pointer;
-            padding-right: 1em;
-        }
+        #customSchedulePopupClose,
         #customSchedulePopupEdit{
             cursor:pointer;
-            padding-right: 1em;
         }
         #customSchedulePopupDrag{
             cursor:move;
-            padding-right: 1em;
         }
         #customSchedulePopupDrag:hover{
             color: var(--fontGreen)
@@ -759,8 +754,9 @@ let Appointments = {
 
 
             /**
+             * 
              * This function is used to get the projects of a customer and fill the select field
-             * @param customer_id - The ID of the customer you want to get projects for.
+             * 
              */
             function getcustomerprojects(customer_id) {
                 Functions.getAPIdata('get_list_from/project/id,title,customer_id')

@@ -493,7 +493,7 @@ nav .sidebar_header #toggleSidebar:hover {
     mask-image: url(../img/icons/mark.svg);
 }
 
-.small #toggleSidebar {
+.small .sidebar_header #toggleSidebar {
     position: fixed;
     display: inline-block;
     top: 0.4em;

@@ -340,8 +340,7 @@ let Functions = {
     setUsername: async(username, userID, avatarPath) => {
         if (!avatarPath) {
             avatarPath = 'userdata/uploads/avatars/admin.png';
-            deb(avatarPath)
-
+            // deb(avatarPath)
         }
         document.querySelector('nav .sidebar_userpanel').innerHTML = /*HTML*/ `
             <img src="${avatarPath}" class=boxShadow width="40" height="40">
