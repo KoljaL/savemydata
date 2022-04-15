@@ -759,7 +759,7 @@ let Appointments = {
              * 
              */
             function getcustomerprojects(customer_id) {
-                Functions.getAPIdata('get_list_from/project/id,title,customer_id')
+                Functions.getAPIdata('get_list_from/project/id,title,customer_id,staff_id')
                     .then((res) => {
                         if (200 === res.code) {
                             // deb(res.data);

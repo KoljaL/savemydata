@@ -11,9 +11,15 @@ if ( is_file( './error.log' ) ) {
     unlink( './error.log' );
 }
 ini_set( "error_log", "./error.log" );
-// error_log( "Hello, errors!" );
-
 $start = microtime( true );
+
+//////////////////////////// PERMISSION SWITCH ////////////////////////////
+$PERMISSION_FILTER = false;
+$ALLOWED_AT_ALL    = false;
+$PERMISSION_FILTER = true;
+$ALLOWED_AT_ALL    = true;
+//////////////////////////// PERMISSION SWITCH ////////////////////////////
+
 /*
  * preflight for CORS
  */
@@ -150,10 +156,12 @@ if ( 'login' === $API_endpoint ) {
     $TOKEN     = json_decode( json_encode( $TOKEN ), true );
     $user_role = $TOKEN['role'];
     $user_id   = $TOKEN['id'];
-    allowed_at_all();
+    if ( $ALLOWED_AT_ALL ) {
+        allowed_at_all();
+    }
 } else {
-    // echo "no key";
-    // exit;
+    echo "Sorry, no token - no data";
+    exit;
 }
 
 /*
@@ -182,6 +190,7 @@ function allowed_at_all() {
             xor ( 'staff' === $API_param && $API_value === $user_id )
         ) {
             $response['code']    = 403;
+            $response['data']    = [];
             $response['message'] = 'not allowed';
             return_JSON( $response );
             exit;
@@ -200,7 +209,7 @@ function allowed_at_all() {
 //  ##     ##  #######     ##    ##     ##     ##       #### ########    ##    ######## ##     ##
 //
 */
-function auth_filter( $res ) {
+function permission_filter( $res ) {
     global $request, $API_endpoint, $API_param, $API_value, $user_role, $user_id;
 
     //
@@ -227,7 +236,7 @@ function auth_filter( $res ) {
     }
 
     //
-    // show the staff only his projects
+    // show the staff only his appointments
     //
     if ( 'get_appointments_as_table' === $API_endpoint && 'staff' === $user_role ) {
         foreach ( $res['data'] as $key => $value ) {
@@ -238,9 +247,69 @@ function auth_filter( $res ) {
         }
     }
 
+    //
+    // show the staff only his customer in dropdown list
+    //
+    if ( 'get_list_from' === $API_endpoint && 'customer' === $API_param && 'staff' === $user_role ) {
+        foreach ( $res['data'] as $key => $value ) {
+            if ( $res['data'][$key]['staff_id'] !== $user_id ) {
+                // print_r( $res['data'][$key]['staff_id'] );
+                unset( $res['data'][$key] );
+            }
+        }
+    }
+
     // reindex array
-    $res['data'] = array_values( $res['data'] );
+    // unterschiedung zwischen [0] und ['id] Array
+    if ( has_string_keys( $res['data'] ) ) {
+        $res['data'] = array_values( $res['data'] );
+    }
     return $res;
+}
+function has_string_keys( array $array ) {
+    return count( array_filter( array_keys( $array ), 'is_string' ) ) > 0;
+}
+/*
+//
+//  ########  ######## ######## ##     ## ########  ##    ##          ##  ######   #######  ##    ##
+//  ##     ## ##          ##    ##     ## ##     ## ###   ##          ## ##    ## ##     ## ###   ##
+//  ##     ## ##          ##    ##     ## ##     ## ####  ##          ## ##       ##     ## ####  ##
+//  ########  ######      ##    ##     ## ########  ## ## ##          ##  ######  ##     ## ## ## ##
+//  ##   ##   ##          ##    ##     ## ##   ##   ##  ####    ##    ##       ## ##     ## ##  ####
+//  ##    ##  ##          ##    ##     ## ##    ##  ##   ###    ##    ## ##    ## ##     ## ##   ###
+//  ##     ## ########    ##     #######  ##     ## ##    ##     ######   ######   #######  ##    ##
+//
+*/
+/**
+ *
+ * This function will return a JSON object to the client
+ *
+ */
+
+function return_JSON( $response ) {
+    global $request, $API_endpoint, $API_param, $API_value, $TOKEN, $PERMISSION_FILTER;
+
+    if ( $PERMISSION_FILTER ) {
+        $response = permission_filter( $response );
+    }
+
+    if ( 'reset' !== $API_endpoint ) {
+        $response['GET']['API_endpoint'] = $API_endpoint;
+        $response['GET']['API_param']    = $API_param;
+        $response['GET']['API_value']    = $API_value;
+        $response['request']             = $request;
+        $response['POST']                = $_POST;
+        $response['TOKEN']               = $TOKEN;
+
+        header( 'Access-Control-Allow-Origin: *' );
+        header( 'Content-Type: application/json; charset=UTF-8' );
+        header( 'Access-Control-Allow-Methods: POST' );
+        header( 'Access-Control-Max-Age: 3600' );
+        header( 'Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With' );
+        // deb( $response );
+        echo json_encode( $response );
+    }
+    // exit;
 }
 
 /*
@@ -1340,45 +1409,4 @@ function insert_into_db( $param, $table, $output = true ) {
     if ( $output ) {
         return_JSON( $response );
     }
-}
-
-/*
-//
-//  ########  ######## ######## ##     ## ########  ##    ##          ##  ######   #######  ##    ##
-//  ##     ## ##          ##    ##     ## ##     ## ###   ##          ## ##    ## ##     ## ###   ##
-//  ##     ## ##          ##    ##     ## ##     ## ####  ##          ## ##       ##     ## ####  ##
-//  ########  ######      ##    ##     ## ########  ## ## ##          ##  ######  ##     ## ## ## ##
-//  ##   ##   ##          ##    ##     ## ##   ##   ##  ####    ##    ##       ## ##     ## ##  ####
-//  ##    ##  ##          ##    ##     ## ##    ##  ##   ###    ##    ## ##    ## ##     ## ##   ###
-//  ##     ## ########    ##     #######  ##     ## ##    ##     ######   ######   #######  ##    ##
-//
-*/
-/**
- *
- * This function will return a JSON object to the client
- *
- */
-//  header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
-function return_JSON( $response ) {
-    global $request, $API_endpoint, $API_param, $API_value, $TOKEN;
-
-    $response = auth_filter( $response );
-
-    if ( 'reset' !== $API_endpoint ) {
-        $response['GET']['API_endpoint'] = $API_endpoint;
-        $response['GET']['API_param']    = $API_param;
-        $response['GET']['API_value']    = $API_value;
-        $response['request']             = $request;
-        $response['POST']                = $_POST;
-        $response['TOKEN']               = $TOKEN;
-
-        header( 'Access-Control-Allow-Origin: *' );
-        header( 'Content-Type: application/json; charset=UTF-8' );
-        header( 'Access-Control-Allow-Methods: POST' );
-        header( 'Access-Control-Max-Age: 3600' );
-        header( 'Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With' );
-        // deb( $response );
-        echo json_encode( $response );
-    }
-    // exit;
 }
