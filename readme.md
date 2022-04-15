@@ -1,6 +1,24 @@
 # save my data  
 a simple framework to save various data based on users
 
+
+```
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+CSS                              4           2417            169           9857
+PHP                              8            800           1453           8040
+JavaScript                      25            692            965           3899
+HTML                             2             98              5            459
+Markdown                         2             70              0            164
+JSON                             2              0              0             64
+SVG                             19              0              0             45
+-------------------------------------------------------------------------------
+SUM:                            62           4077           2592          22528
+-------------------------------------------------------------------------------
+```
+`cloc $(git ls-files) --exclude-dir=vendor`
+
 ## temporary links
 
 - [User Roles and Permissions with bitwise operators JS](https://codepen.io/monochromer/pen/OodNQm?editors=0110)

@@ -168,7 +168,12 @@ function allowed_at_all() {
 
     // if not admin or admin role
     if ( "admin" !== $user_role ) {
-        if ( in_array( $API_param, $admin_params ) ) {
+        if (
+            // check for vorbidden params
+            in_array( $API_param, $admin_params )
+            // staff view his own profile
+            xor ( 'staff' === $API_param && $API_value === $user_id )
+        ) {
             $response['code']    = 403;
             $response['message'] = 'not allowed';
             return_JSON( $response );
