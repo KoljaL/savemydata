@@ -139,8 +139,11 @@ if ( 'login' === $API_endpoint ) {
     require __DIR__.'/backup.php';
     exit;
 } elseif ( isset( $request['user_token'] ) ) {
-    $TOKEN = JWT::decode( $request['user_token'], new Key( $JWT_key, 'HS256' ) );
-    $TOKEN = json_decode( json_encode( $TOKEN ), true );
+    $TOKEN     = JWT::decode( $request['user_token'], new Key( $JWT_key, 'HS256' ) );
+    $TOKEN     = json_decode( json_encode( $TOKEN ), true );
+    $user_role = $TOKEN['role'];
+    $user_id   = $TOKEN['id'];
+    allowed_at_all();
 } else {
     // echo "no key";
     // exit;
@@ -158,20 +161,38 @@ if ( 'login' === $API_endpoint ) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 */
 
-$role         = $TOKEN['role'];
-$id           = $TOKEN['id'];
-$admin_params = ['staff', 'staff_fields'];
+function allowed_at_all() {
+    global $request, $API_endpoint, $API_param, $API_value, $user_role, $user_id;
 
-// if not admin or admin role
-if ( "0" !== $role or "1" !== $id ) {
+    $admin_params = ['staff', 'staff_fields'];
 
-    if ( in_array( $API_param, $admin_params ) ) {
-        $response['code']    = 403;
-        $response['message'] = 'not allowed';
-        return_JSON( $response );
-        exit;
+    // if not admin or admin role
+    if ( "admin" !== $user_role ) {
+        if ( in_array( $API_param, $admin_params ) ) {
+            $response['code']    = 403;
+            $response['message'] = 'not allowed';
+            return_JSON( $response );
+            exit;
+        }
     }
+}
 
+/*
+//
+//     ###    ##     ## ######## ##     ##     ######## #### ##       ######## ######## ########
+//    ## ##   ##     ##    ##    ##     ##     ##        ##  ##          ##    ##       ##     ##
+//   ##   ##  ##     ##    ##    ##     ##     ##        ##  ##          ##    ##       ##     ##
+//  ##     ## ##     ##    ##    #########     ######    ##  ##          ##    ######   ########
+//  ######### ##     ##    ##    ##     ##     ##        ##  ##          ##    ##       ##   ##
+//  ##     ## ##     ##    ##    ##     ##     ##        ##  ##          ##    ##       ##    ##
+//  ##     ##  #######     ##    ##     ##     ##       #### ########    ##    ######## ##     ##
+//
+*/
+function auth_filter( $res ) {
+    global $request, $API_endpoint, $API_param, $API_value, $user_role, $user_id;
+
+    $res['filter'] = true;
+    return $res;
 }
 
 /*
@@ -884,8 +905,8 @@ function get_appointment_as_ics( $param ) {
         // print_r($datetime_end);
         // exit;
 
-        $start        = $start;
-        $end          = $end;
+        // $start        = $start;
+        // $end          = $end;
         $current_time = date( 'Ymd\THis' );
         $title        = html_entity_decode( $appointment['projectname'], ENT_COMPAT, 'UTF-8' );
         $location     = preg_replace( '/([\,;])/', '\\\$1', $appointment['location'] );
@@ -1282,13 +1303,16 @@ function insert_into_db( $param, $table, $output = true ) {
  */
 //  header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
 function return_JSON( $response ) {
-    global $request, $API_endpoint, $API_param, $API_value, $start, $TOKEN;
+    global $request, $API_endpoint, $API_param, $API_value, $TOKEN;
+
+    $response = auth_filter( $response );
 
     if ( 'reset' !== $API_endpoint ) {
         $response['GET']['API_endpoint'] = $API_endpoint;
         $response['GET']['API_param']    = $API_param;
         $response['GET']['API_value']    = $API_value;
-        $response['POST']                = $request;
+        $response['request']             = $request;
+        $response['POST']                = $_POST;
         $response['TOKEN']               = $TOKEN;
 
         header( 'Access-Control-Allow-Origin: *' );

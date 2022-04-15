@@ -7,13 +7,13 @@ import Functions from './Functions.js';
 
 // VIEWS
 import Default from './views/Default.js';
-import UserLogin from './views/UserLogin.js';
+import Login from './views/Login.js';
 import Table from './views/Table.js';
 import Appointment from './views/Appointment.js';
 import Calendar from './views/Calendar.js';
 import Profile from './views/Profile.js';
 import Project from './views/Project.js';
-import UserProfileForm from './views/UserProfileForm.js';
+import ProfileForm from './views/ProfileForm.js';
 import LanguageSwitch from './components/LanguageSwitch.js';
 
 
@@ -46,7 +46,7 @@ async function router() {
         switch (API_page) {
 
             case '/':
-                await UserLogin.render();
+                await Login.render();
                 break;
 
             case 'staff':
@@ -66,10 +66,10 @@ async function router() {
             case 'formeditor':
                 switch (API_key) {
                     case 'staff_fields':
-                        await UserProfileForm.render(API_key)
+                        await ProfileForm.render(API_key)
                         break;
                     case 'customer_fields':
-                        await UserProfileForm.render(API_key)
+                        await ProfileForm.render(API_key)
                         break;
 
                         // default:

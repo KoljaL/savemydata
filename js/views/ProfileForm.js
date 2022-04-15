@@ -21,7 +21,7 @@ export default UserProfileForm;
  ######     ##       ##    ######## ########
 */
 let Style = async() => {
-    let styleTags = /*CSS*/ `
+    let styleTags = /*CSS*/ ` 
         #UserProfileFormWrapper {
             padding:1em;
         } 
