@@ -66,12 +66,13 @@ let Style = async() => {
 let Content = async(action) => {
     let data;
     // deb(tableName)
+    // PROJECTS
     if ('project' == tableName) {
         data = await Functions.getAPIdata('get_projects_as_table/' + tableName);
         data = data.data;
     }
-
-    if ('appointment' == tableName) {
+    // APPOINTMENTS
+    else if ('appointment' == tableName) {
         let res = await Functions.getAPIdata('get_appointments_as_table/' + tableName);
         // deb(res)
         // TODO add new fields at  the end
@@ -88,7 +89,9 @@ let Content = async(action) => {
         data = presort_data;
 
         // data = res.data;
-    } else {
+    }
+    // USER
+    else {
         data = await Functions.getAPIdata('get_data_from/' + tableName);
         data = data.data;
     }

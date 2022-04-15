@@ -6,6 +6,13 @@
 ini_set( 'display_errors', 1 );
 ini_set( 'display_startup_errors', 1 );
 error_reporting( E_ALL );
+ini_set( "log_errors", 1 );
+if ( is_file( './error.log' ) ) {
+    unlink( './error.log' );
+}
+ini_set( "error_log", "./error.log" );
+// error_log( "Hello, errors!" );
+
 $start = microtime( true );
 /*
  * preflight for CORS
@@ -163,8 +170,8 @@ if ( 'login' === $API_endpoint ) {
 
 function allowed_at_all() {
     global $request, $API_endpoint, $API_param, $API_value, $user_role, $user_id;
-
-    $admin_params = ['staff', 'staff_fields'];
+    // https://www.php.net/manual/en/control-structures.match.php
+    $admin_params = ['staff', 'staff_fields', 'customer_fields'];
 
     // if not admin or admin role
     if ( "admin" !== $user_role ) {
@@ -196,7 +203,43 @@ function allowed_at_all() {
 function auth_filter( $res ) {
     global $request, $API_endpoint, $API_param, $API_value, $user_role, $user_id;
 
-    $res['filter'] = true;
+    //
+    // show the staff only his customer
+    //
+    if ( 'get_data_from' === $API_endpoint && 'customer' === $API_param && 'staff' === $user_role ) {
+        foreach ( $res['data'] as $key => $value ) {
+            if ( $res['data'][$key]['staff_id'] !== $user_id ) {
+                unset( $res['data'][$key] );
+            }
+        }
+    }
+
+    //
+    // show the staff only his projects
+    //
+    if ( 'get_projects_as_table' === $API_endpoint && 'staff' === $user_role ) {
+        foreach ( $res['data'] as $key => $value ) {
+            if ( $res['data'][$key]['staff_id'] !== $user_id ) {
+                // print_r( $res['data'][$key]['staff_id'] );
+                unset( $res['data'][$key] );
+            }
+        }
+    }
+
+    //
+    // show the staff only his projects
+    //
+    if ( 'get_appointments_as_table' === $API_endpoint && 'staff' === $user_role ) {
+        foreach ( $res['data'] as $key => $value ) {
+            if ( $res['data'][$key]['staff_id'] !== $user_id ) {
+                // print_r( $res['data'][$key]['staff_id'] );
+                unset( $res['data'][$key] );
+            }
+        }
+    }
+
+    // reindex array
+    $res['data'] = array_values( $res['data'] );
     return $res;
 }
 
@@ -617,7 +660,6 @@ function get_projects_as_table( $param ) {
     $stmt = $db->prepare( "SELECT * FROM project $where" );
     $stmt->execute();
     $projects = $stmt->fetchAll( PDO::FETCH_ASSOC );
-
     $response = [];
     if ( $projects ) {
 
@@ -627,6 +669,7 @@ function get_projects_as_table( $param ) {
             unset( $projects[$key]['comment_staff'] );
             unset( $projects[$key]['comment_customer'] );
         }
+        // deb( $projects );
         $response['code'] = 200;
         $response['data'] = $projects;
     } else {
@@ -1125,6 +1168,15 @@ function get_geocode( $param, $output = true ) {
 //////////////////////////////////////////////////////////////////////////////////////
 */
 
+/**
+ *
+ * It takes a variable, prints it to the error log, and returns the variable
+ *
+ */
+function deb( $var ) {
+    error_log( print_r( $var, TRUE ) );
+}
+
 /*
 //
 //  ##    ##    ###    ##     ## ########    ########  ##    ##    #### ########
@@ -1325,6 +1377,7 @@ function return_JSON( $response ) {
         header( 'Access-Control-Allow-Methods: POST' );
         header( 'Access-Control-Max-Age: 3600' );
         header( 'Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With' );
+        // deb( $response );
         echo json_encode( $response );
     }
     // exit;

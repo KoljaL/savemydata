@@ -1,0 +1,6 @@
+[15-Apr-2022 22:17:11 Europe/Berlin] Hello, errors!
+[15-Apr-2022 22:17:11 Europe/Berlin] PHP Warning:  Cannot modify header information - headers already sent by (output started at /www/htdocs/w01c010a/dev.rasal.de/savemydata/php/api.php:655) in /www/htdocs/w01c010a/dev.rasal.de/savemydata/php/api.php on line 1350
+[15-Apr-2022 22:17:11 Europe/Berlin] PHP Warning:  Cannot modify header information - headers already sent by (output started at /www/htdocs/w01c010a/dev.rasal.de/savemydata/php/api.php:655) in /www/htdocs/w01c010a/dev.rasal.de/savemydata/php/api.php on line 1351
+[15-Apr-2022 22:17:11 Europe/Berlin] PHP Warning:  Cannot modify header information - headers already sent by (output started at /www/htdocs/w01c010a/dev.rasal.de/savemydata/php/api.php:655) in /www/htdocs/w01c010a/dev.rasal.de/savemydata/php/api.php on line 1352
+[15-Apr-2022 22:17:11 Europe/Berlin] PHP Warning:  Cannot modify header information - headers already sent by (output started at /www/htdocs/w01c010a/dev.rasal.de/savemydata/php/api.php:655) in /www/htdocs/w01c010a/dev.rasal.de/savemydata/php/api.php on line 1353
+[15-Apr-2022 22:17:11 Europe/Berlin] PHP Warning:  Cannot modify header information - headers already sent by (output started at /www/htdocs/w01c010a/dev.rasal.de/savemydata/php/api.php:655) in /www/htdocs/w01c010a/dev.rasal.de/savemydata/php/api.php on line 1354
