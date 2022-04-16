@@ -160,7 +160,10 @@ if ( 'login' === $API_endpoint ) {
         allowed_at_all();
     }
 } else {
-    echo "Sorry, no token - no data";
+    $response['code']    = 400;
+    $response['data']    = [];
+    $response['message'] = "no token - no data";
+    return_JSON( $response );
     exit;
 }
 
@@ -215,7 +218,16 @@ function permission_filter( $res ) {
     //
     // show the staff only his customer
     //
-    if ( 'get_data_from' === $API_endpoint && 'customer' === $API_param && 'staff' === $user_role ) {
+    if (
+        // show the staff only his customer
+        'get_data_from' === $API_endpoint && 'customer' === $API_param && 'staff' === $user_role ||
+        // show the staff only his projects
+        'get_projects_as_table' === $API_endpoint && 'staff' === $user_role ||
+        // show the staff only his appointments
+        'get_appointments_as_table' === $API_endpoint && 'staff' === $user_role ||
+        // show the staff only his customer in dropdown list
+        'get_list_from' === $API_endpoint && 'customer' === $API_param && 'staff' === $user_role
+    ) {
         foreach ( $res['data'] as $key => $value ) {
             if ( $res['data'][$key]['staff_id'] !== $user_id ) {
                 unset( $res['data'][$key] );
@@ -226,49 +238,54 @@ function permission_filter( $res ) {
     //
     // show the staff only his projects
     //
-    if ( 'get_projects_as_table' === $API_endpoint && 'staff' === $user_role ) {
-        foreach ( $res['data'] as $key => $value ) {
-            if ( $res['data'][$key]['staff_id'] !== $user_id ) {
-                // print_r( $res['data'][$key]['staff_id'] );
-                unset( $res['data'][$key] );
-            }
-        }
-    }
+    // if ( 'get_projects_as_table' === $API_endpoint && 'staff' === $user_role ) {
+    //     foreach ( $res['data'] as $key => $value ) {
+    //         if ( $res['data'][$key]['staff_id'] !== $user_id ) {
+    //             unset( $res['data'][$key] );
+    //         }
+    //     }
+    // }
 
     //
     // show the staff only his appointments
     //
-    if ( 'get_appointments_as_table' === $API_endpoint && 'staff' === $user_role ) {
-        foreach ( $res['data'] as $key => $value ) {
-            if ( $res['data'][$key]['staff_id'] !== $user_id ) {
-                // print_r( $res['data'][$key]['staff_id'] );
-                unset( $res['data'][$key] );
-            }
-        }
-    }
+    // if ( 'get_appointments_as_table' === $API_endpoint && 'staff' === $user_role ) {
+    //     foreach ( $res['data'] as $key => $value ) {
+    //         if ( $res['data'][$key]['staff_id'] !== $user_id ) {
+    //             unset( $res['data'][$key] );
+    //         }
+    //     }
+    // }
 
     //
     // show the staff only his customer in dropdown list
     //
-    if ( 'get_list_from' === $API_endpoint && 'customer' === $API_param && 'staff' === $user_role ) {
-        foreach ( $res['data'] as $key => $value ) {
-            if ( $res['data'][$key]['staff_id'] !== $user_id ) {
-                // print_r( $res['data'][$key]['staff_id'] );
-                unset( $res['data'][$key] );
-            }
-        }
-    }
+    // if ( 'get_list_from' === $API_endpoint && 'customer' === $API_param && 'staff' === $user_role ) {
+    //     foreach ( $res['data'] as $key => $value ) {
+    //         if ( $res['data'][$key]['staff_id'] !== $user_id ) {
+    //             unset( $res['data'][$key] );
+    //         }
+    //     }
+    // }
 
     // reindex array
     // unterschiedung zwischen [0] und ['id] Array
-    if ( has_string_keys( $res['data'] ) ) {
+    if ( is_array_indexed( $res['data'] ) ) {
         $res['data'] = array_values( $res['data'] );
     }
+    // deb( $res );
     return $res;
 }
-function has_string_keys( array $array ) {
-    return count( array_filter( array_keys( $array ), 'is_string' ) ) > 0;
+
+/**
+ *
+ * If the array has no string keys, then it's indexed.
+ *
+ */
+function is_array_indexed( array $array ) {
+    return count( array_filter( array_keys( $array ), 'is_string' ) ) === 0;
 }
+
 /*
 //
 //  ########  ######## ######## ##     ## ########  ##    ##          ##  ######   #######  ##    ##
