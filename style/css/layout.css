@@ -408,7 +408,7 @@ header {
 
 header img {
     width: var(--header_full_height);
-    padding: 0.75em;
+    padding: 0.25em;
 }
 
 header .page_name {

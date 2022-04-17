@@ -201,6 +201,8 @@ function allowed_at_all() {
     }
 }
 
+// SELECT * FROM mytable WHERE id IN (3,1,4)
+
 /*
 //
 //     ###    ##     ## ######## ##     ##     ######## #### ##       ######## ######## ########
@@ -215,6 +217,7 @@ function allowed_at_all() {
 function permission_filter( $res ) {
     global $request, $API_endpoint, $API_param, $API_value, $user_role, $user_id;
 
+    // $allowed_ids = [$user_id, '1'];
     //
     // show the staff only his customer
     //
@@ -230,43 +233,11 @@ function permission_filter( $res ) {
     ) {
         foreach ( $res['data'] as $key => $value ) {
             if ( $res['data'][$key]['staff_id'] !== $user_id ) {
+                // if ( !in_array( $res['data'][$key]['staff_id'], $allowed_ids ) ) {
                 unset( $res['data'][$key] );
             }
         }
     }
-
-    //
-    // show the staff only his projects
-    //
-    // if ( 'get_projects_as_table' === $API_endpoint && 'staff' === $user_role ) {
-    //     foreach ( $res['data'] as $key => $value ) {
-    //         if ( $res['data'][$key]['staff_id'] !== $user_id ) {
-    //             unset( $res['data'][$key] );
-    //         }
-    //     }
-    // }
-
-    //
-    // show the staff only his appointments
-    //
-    // if ( 'get_appointments_as_table' === $API_endpoint && 'staff' === $user_role ) {
-    //     foreach ( $res['data'] as $key => $value ) {
-    //         if ( $res['data'][$key]['staff_id'] !== $user_id ) {
-    //             unset( $res['data'][$key] );
-    //         }
-    //     }
-    // }
-
-    //
-    // show the staff only his customer in dropdown list
-    //
-    // if ( 'get_list_from' === $API_endpoint && 'customer' === $API_param && 'staff' === $user_role ) {
-    //     foreach ( $res['data'] as $key => $value ) {
-    //         if ( $res['data'][$key]['staff_id'] !== $user_id ) {
-    //             unset( $res['data'][$key] );
-    //         }
-    //     }
-    // }
 
     // reindex array
     // unterschiedung zwischen [0] und ['id] Array
