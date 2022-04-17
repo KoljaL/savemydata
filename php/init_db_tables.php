@@ -2,16 +2,27 @@
 
 /*
 //
-//  #### ##    ## #### ########    ########    ###    ########  ##       ########  ######
-//   ##  ###   ##  ##     ##          ##      ## ##   ##     ## ##       ##       ##    ##
-//   ##  ####  ##  ##     ##          ##     ##   ##  ##     ## ##       ##       ##
-//   ##  ## ## ##  ##     ##          ##    ##     ## ########  ##       ######    ######
-//   ##  ##  ####  ##     ##          ##    ######### ##     ## ##       ##             ##
-//   ##  ##   ###  ##     ##          ##    ##     ## ##     ## ##       ##       ##    ##
-//  #### ##    ## ####    ##          ##    ##     ## ########  ######## ########  ######
+//  #### ##    ## #### ########
+//   ##  ###   ##  ##     ##
+//   ##  ####  ##  ##     ##
+//   ##  ## ## ##  ##     ##
+//   ##  ##  ####  ##     ##
+//   ##  ##   ###  ##     ##
+//  #### ##    ## ####    ##
 //
 */
 
+/*
+//
+//  ######## #### ######## ##       ########   ######
+//  ##        ##  ##       ##       ##     ## ##    ##
+//  ##        ##  ##       ##       ##     ## ##
+//  ######    ##  ######   ##       ##     ##  ######
+//  ##        ##  ##       ##       ##     ##       ##
+//  ##        ##  ##       ##       ##     ## ##    ##
+//  ##       #### ######## ######## ########   ######
+//
+*/
 function init_staff_fields_table() {
     global $db;
     $db->exec( 'CREATE TABLE IF NOT EXISTS staff_fields(
@@ -44,6 +55,7 @@ function init_staff_fields_table() {
     foreach ( $stafffields as $field ) {
         insert_into_db( $field, 'staff_fields' );
     }
+
     $db->exec( 'CREATE TABLE IF NOT EXISTS customer_fields(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL DEFAULT "",
@@ -79,20 +91,16 @@ function init_staff_fields_table() {
 
 /*
 //
-//  #### ##    ## #### ########    ##     ##  ######  ######## ########  ########    ###    ########  ##       ########
-//   ##  ###   ##  ##     ##       ##     ## ##    ## ##       ##     ##    ##      ## ##   ##     ## ##       ##
-//   ##  ####  ##  ##     ##       ##     ## ##       ##       ##     ##    ##     ##   ##  ##     ## ##       ##
-//   ##  ## ## ##  ##     ##       ##     ##  ######  ######   ########     ##    ##     ## ########  ##       ######
-//   ##  ##  ####  ##     ##       ##     ##       ## ##       ##   ##      ##    ######### ##     ## ##       ##
-//   ##  ##   ###  ##     ##       ##     ## ##    ## ##       ##    ##     ##    ##     ## ##     ## ##       ##
-//  #### ##    ## ####    ##        #######   ######  ######## ##     ##    ##    ##     ## ########  ######## ########
+//   ######  ########    ###    ######## ########
+//  ##    ##    ##      ## ##   ##       ##
+//  ##          ##     ##   ##  ##       ##
+//   ######     ##    ##     ## ######   ######
+//        ##    ##    ######### ##       ##
+//  ##    ##    ##    ##     ## ##       ##
+//   ######     ##    ##     ## ##       ##
 //
 */
-/**
- *
- * Create a user table in the database
- *
- */
+
 function init_stafftable() {
     global $db;
     $db->exec( 'CREATE TABLE staff(
@@ -131,23 +139,22 @@ function init_stafftable() {
 
 /*
 //
-//  #### ##    ## #### ########     ######  ##     ##  ######  ########  #######  ##     ## ######## ########  ########    ###    ########  ##       ########
-//   ##  ###   ##  ##     ##       ##    ## ##     ## ##    ##    ##    ##     ## ###   ### ##       ##     ##    ##      ## ##   ##     ## ##       ##
-//   ##  ####  ##  ##     ##       ##       ##     ## ##          ##    ##     ## #### #### ##       ##     ##    ##     ##   ##  ##     ## ##       ##
-//   ##  ## ## ##  ##     ##       ##       ##     ##  ######     ##    ##     ## ## ### ## ######   ########     ##    ##     ## ########  ##       ######
-//   ##  ##  ####  ##     ##       ##       ##     ##       ##    ##    ##     ## ##     ## ##       ##   ##      ##    ######### ##     ## ##       ##
-//   ##  ##   ###  ##     ##       ##    ## ##     ## ##    ##    ##    ##     ## ##     ## ##       ##    ##     ##    ##     ## ##     ## ##       ##
-//  #### ##    ## ####    ##        ######   #######   ######     ##     #######  ##     ## ######## ##     ##    ##    ##     ## ########  ######## ########
+//   ######  ##     ##  ######  ########  #######  ##     ## ######## ########
+//  ##    ## ##     ## ##    ##    ##    ##     ## ###   ### ##       ##     ##
+//  ##       ##     ## ##          ##    ##     ## #### #### ##       ##     ##
+//  ##       ##     ##  ######     ##    ##     ## ## ### ## ######   ########
+//  ##       ##     ##       ##    ##    ##     ## ##     ## ##       ##   ##
+//  ##    ## ##     ## ##    ##    ##    ##     ## ##     ## ##       ##    ##
+//   ######   #######   ######     ##     #######  ##     ## ######## ##     ##
 //
 */
-/**
- * Create a table in the database
- */
 function init_customertable() {
     global $db;
     $db->exec( 'CREATE TABLE customer(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             staff_id TEXT NOT NULL DEFAULT "",
+            can_read_by TEXT NOT NULL DEFAULT "",
+            can_written_by TEXT NOT NULL DEFAULT "",
             username TEXT NOT NULL DEFAULT "",
             password TEXT NOT NULL DEFAULT "",
             firstname TEXT NOT NULL DEFAULT "",
@@ -161,8 +168,6 @@ function init_customertable() {
             comment TEXT NOT NULL DEFAULT "",
             role TEXT NOT NULL DEFAULT "",
             permission TEXT NOT NULL DEFAULT "",
-            ids_can_read TEXT NOT NULL DEFAULT "",
-            ids_can_write TEXT NOT NULL DEFAULT "",
             date TEXT NOT NULL  DEFAULT ""
         )' );
 
@@ -170,6 +175,17 @@ function init_customertable() {
     insert_into_db( $customer, 'customer' );
 }
 
+/*
+//
+//  ########  ########   #######        ## ########  ######  ########
+//  ##     ## ##     ## ##     ##       ## ##       ##    ##    ##
+//  ##     ## ##     ## ##     ##       ## ##       ##          ##
+//  ########  ########  ##     ##       ## ######   ##          ##
+//  ##        ##   ##   ##     ## ##    ## ##       ##          ##
+//  ##        ##    ##  ##     ## ##    ## ##       ##    ##    ##
+//  ##        ##     ##  #######   ######  ########  ######     ##
+//
+*/
 function init_project_table() {
     global $db;
     // create user table
@@ -178,37 +194,57 @@ function init_project_table() {
             title TEXT NOT NULL DEFAULT "",
             customer_id TEXT NOT NULL DEFAULT "",
             staff_id TEXT NOT NULL DEFAULT "",
+            can_read_by TEXT NOT NULL DEFAULT "",
+            can_written_by TEXT NOT NULL DEFAULT "",
             comment_staff TEXT NOT NULL DEFAULT "",
             comment_customer TEXT NOT NULL DEFAULT "",
-            ids_can_read TEXT NOT NULL DEFAULT "",
-            ids_can_write TEXT NOT NULL DEFAULT "",
             date TEXT NOT NULL  DEFAULT ""
         )' );
 }
-
+/*
+//
+//     ###    ########  ########   #######  #### ##    ## ######## ##     ## ######## ##    ## ########
+//    ## ##   ##     ## ##     ## ##     ##  ##  ###   ##    ##    ###   ### ##       ###   ##    ##
+//   ##   ##  ##     ## ##     ## ##     ##  ##  ####  ##    ##    #### #### ##       ####  ##    ##
+//  ##     ## ########  ########  ##     ##  ##  ## ## ##    ##    ## ### ## ######   ## ## ##    ##
+//  ######### ##        ##        ##     ##  ##  ##  ####    ##    ##     ## ##       ##  ####    ##
+//  ##     ## ##        ##        ##     ##  ##  ##   ###    ##    ##     ## ##       ##   ###    ##
+//  ##     ## ##        ##         #######  #### ##    ##    ##    ##     ## ######## ##    ##    ##
+//
+*/
 function init_appointment_table() {
     global $db;
     // create user table
     $db->exec( 'CREATE TABLE appointment(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            customer_id TEXT NOT NULL DEFAULT "",
+            project_id TEXT NOT NULL DEFAULT "",
+            staff_id TEXT NOT NULL DEFAULT "",
+            can_read_by TEXT NOT NULL DEFAULT "",
+            can_written_by TEXT NOT NULL DEFAULT "",
             title TEXT NOT NULL DEFAULT "",
             start_date TEXT NOT NULL DEFAULT "",
             start_time TEXT NOT NULL DEFAULT "",
             duration TEXT NOT NULL DEFAULT "",
-            staff_id TEXT NOT NULL DEFAULT "",
-            project_id TEXT NOT NULL DEFAULT "",
-            customer_id TEXT NOT NULL DEFAULT "",
             comment TEXT NOT NULL DEFAULT "",
             location TEXT NOT NULL DEFAULT "",
             lng TEXT NOT NULL DEFAULT "",
             lat TEXT NOT NULL DEFAULT "",
             map_link TEXT NOT NULL DEFAULT "",
-            ids_can_read TEXT NOT NULL DEFAULT "",
-            ids_can_write TEXT NOT NULL DEFAULT "",
             date TEXT NOT NULL  DEFAULT ""
         )' );
 }
-
+/*
+//
+//  ######## #### ##       ########  ######
+//  ##        ##  ##       ##       ##    ##
+//  ##        ##  ##       ##       ##
+//  ######    ##  ##       ######    ######
+//  ##        ##  ##       ##             ##
+//  ##        ##  ##       ##       ##    ##
+//  ##       #### ######## ########  ######
+//
+*/
 function init_files_table() {
     global $db;
     // create user table
@@ -236,8 +272,6 @@ function init_files_table() {
 //  ########   #######  ##     ## ##     ##    ##
 //
 */
-// CREATE DUMMY USER
-
 function create_dummy_data() {
     global $start, $db_path;
     include './dummy_content.php';
@@ -305,28 +339,29 @@ function create_dummy_customer( $count ) {
         $random_name = random_name();
         $email       = $random_name[0]."@".$random_name[1].".com";
         $customer    = [
-            'staff_id'   => get_ramdon_id_from( 'staff' ),
-            'username'   => 'C'.substr( $random_name[0], 1 ).'_'.$random_name[1],
-            'instaname'  => $random_name[1].'_'.$random_name[0],
-            'password'   => 'password',
-            'firstname'  => $random_name[0],
-            'lastname'   => $random_name[1],
-            'email'      => $email,
-            'comment'    => random_text(),
-            'phone'      => random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ).random_int( 1, 9 ).'-'.random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ).random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ),
-            'street'     => random_street(),
-            'street_nr'  => random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ),
-            'birthdate'  => random_int( 1, 30 ).'.'.random_int( 0, 12 ).'.'.random_int( 1960, 2002 ),
-            'city'       => random_city(),
-            'city_nr'    => random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ).random_int( 1, 9 ).random_int( 0, 9 ),
-            'role'       => 'customer',
-            'permission' => '10'
+            'staff_id'       => get_ramdon_id_from( 'staff' ),
+            'username'       => $random_name[0].' '.$random_name[1],
+            'instaname'      => $random_name[1].'_'.$random_name[0],
+            'password'       => 'password',
+            'firstname'      => $random_name[0],
+            'lastname'       => $random_name[1],
+            'email'          => $email,
+            'comment'        => random_text(),
+            'phone'          => random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ).random_int( 1, 9 ).'-'.random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ).random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ),
+            'street'         => random_street(),
+            'street_nr'      => random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ),
+            'birthdate'      => random_int( 1, 30 ).'.'.random_int( 0, 12 ).'.'.random_int( 1960, 2002 ),
+            'city'           => random_city(),
+            'city_nr'        => random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ).random_int( 1, 9 ).random_int( 0, 9 ),
+            'role'           => 'customer',
+            'permission'     => '10',
+            'can_read_by'    => random_int( 1, 5 ).','.random_int( 1, 5 ),
+            'can_written_by' => random_int( 1, 5 ).','.random_int( 1, 5 )
         ];
         // create_customer( $user );
         insert_into_db( $customer, 'customer' );
     }
 }
-
 /*
 //
 //  ########  ########   #######        ## ########  ######  ########
@@ -339,15 +374,27 @@ function create_dummy_customer( $count ) {
 //
 */
 function create_dummy_project( $count ) {
+    global $db;
+
+    // get real customer
+    $stmt = $db->prepare( "SELECT * FROM customer" );
+    $stmt->execute();
+    $user       = $stmt->fetchAll();
+    $count_user = count( $user );
+
     for ( $i = 0; $i < $count; $i++ ) {
-        $project = [
+        $j = rand( 0, $count_user - 1 );
+
+        $customer = [
             'title'            => random_body(),
-            'customer_id'      => get_ramdon_id_from( 'customer' ),
-            'staff_id'         => get_ramdon_id_from( 'staff' ),
+            'customer_id'      => $user[$j]['id'],
+            'staff_id'         => $user[$j]['staff_id'],
             'comment_staff'    => random_text(),
-            'comment_customer' => random_text()
+            'comment_customer' => random_text(),
+            'can_read_by'      => random_int( 1, 5 ).','.random_int( 1, 5 ),
+            'can_written_by'   => random_int( 1, 5 ).','.random_int( 1, 5 )
         ];
-        insert_into_db( $project, 'project' );
+        insert_into_db( $customer, 'project' );
     }
 }
 
@@ -364,24 +411,20 @@ function create_dummy_project( $count ) {
 */
 function create_dummy_appointment( $count, $days ) {
     global $db;
+
+    // get real projects
+    $stmt = $db->prepare( "SELECT * FROM project" );
+    $stmt->execute();
+    $user       = $stmt->fetchAll();
+    $count_user = count( $user );
+
     for ( $i = 0; $i < $count; $i++ ) {
 
-        // get real projects
-        $stmt = $db->prepare( "SELECT * FROM project" );
-        $stmt->execute();
-        $user          = $stmt->fetchAll();
-        $count_user    = count( $user );
         $j             = rand( 0, $count_user - 1 );
         $customer_id   = $user[$j]['customer_id'];
         $staff_id      = $user[$j]['staff_id'];
         $project_id    = $user[$j]['id'];
         $project_title = $user[$j]['title'];
-        // echo $customer_id;
-        // echo $staff_id;
-        // echo $project_id;
-        // exit;
-
-        // $days = 550;
         // random numbers
         if ( rand( 0, 1 ) ) {
             $random_date = date( 'Y-m-d', strtotime( '+'.mt_rand( 0, $days ).' days' ) );
@@ -393,38 +436,36 @@ function create_dummy_appointment( $count, $days ) {
         $durations       = [30, 60, 90, 120, 150, 180];
         $random_duration = $durations[mt_rand( 0, 5 )];
         // startdate
-        // $random_datetime_start = $random_date.'T'.$random_hour.':'.$random_minute;
         $random_date_start = $random_date;
         $random_time_start = $random_hour.':'.$random_minute;
-        // enddate is startdate + duration
-        // $datetime = new DateTime($random_datetime_start);
-        // $datetime->add(new DateInterval('PT'.$random_duration.'M'));
-        // $random_datetime_end = $datetime->format('Y-m-d H:i:s');
 
         $project = [
-            'start_date'  => $random_date_start,
-            'start_time'  => $random_time_start,
-            // 'start_time'  => $random_datetime_start,
-            // 'end_time'    => $random_datetime_end,
-            'duration'    => $random_duration,
-            'title'       => $project_title,
-            'staff_id'    => $staff_id,
-            'project_id'  => $project_id,
-            'customer_id' => $customer_id,
-            'comment'     => random_text()
-            // 'public'      => random_int(0, 1)
+            'start_date'     => $random_date_start,
+            'start_time'     => $random_time_start,
+            'duration'       => $random_duration,
+            'title'          => $project_title,
+            'staff_id'       => $staff_id,
+            'project_id'     => $project_id,
+            'customer_id'    => $customer_id,
+            'comment'        => random_text(),
+            'can_read_by'    => random_int( 1, 5 ).','.random_int( 1, 5 ),
+            'can_written_by' => random_int( 1, 5 ).','.random_int( 1, 5 )
         ];
         insert_into_db( $project, 'appointment' );
     }
 }
 
-/**
- *
- * It returns a random id from a table
- * @param table The name of the table you want to get a random ID from.
- * @return id of a random row from the table.
- *
- */
+/*
+//
+//  ########     ###    ##    ## ########   #######  ##     ##    #### ########
+//  ##     ##   ## ##   ###   ## ##     ## ##     ## ###   ###     ##  ##     ##
+//  ##     ##  ##   ##  ####  ## ##     ## ##     ## #### ####     ##  ##     ##
+//  ########  ##     ## ## ## ## ##     ## ##     ## ## ### ##     ##  ##     ##
+//  ##   ##   ######### ##  #### ##     ## ##     ## ##     ##     ##  ##     ##
+//  ##    ##  ##     ## ##   ### ##     ## ##     ## ##     ##     ##  ##     ##
+//  ##     ## ##     ## ##    ## ########   #######  ##     ##    #### ########
+//
+*/
 function get_ramdon_id_from( $table ) {
     global $db;
     $stmt = $db->prepare( "SELECT id FROM $table" );
