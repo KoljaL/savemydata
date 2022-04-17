@@ -201,7 +201,7 @@ let AppointmentContent = async(id) => {
             // edit and delete button
             //
             .then(() => {
-                if (Functions.getLocal('role') === '0' || Functions.getLocal('id') === userID) {
+                if (Functions.getLocal('role') !== '999') {
                     Functions.setInnerHTML('editAppointmentButton', 'Edit')
                         .then(() => {
                             document.getElementById('editAppointmentButton').dataset.lang = 'edit'

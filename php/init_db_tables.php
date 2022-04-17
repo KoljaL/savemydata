@@ -95,7 +95,6 @@ function init_staff_fields_table() {
  */
 function init_stafftable() {
     global $db;
-    // create user table
     $db->exec( 'CREATE TABLE staff(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT NOT NULL DEFAULT "",
@@ -113,7 +112,7 @@ function init_stafftable() {
             date TEXT NOT NULL DEFAULT ""
         )' );
 
-    // create first users
+    // create first staffs
     $admin = ['username' => 'Admin', 'password' => 'password', 'firstname' => 'admin', 'lastname' => 'admin', 'email' => 'admin@admin.org', 'location' => 'Masbeck 57, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'admin', 'permission' => '0', 'color' => '#e9553b'];
     insert_into_db( $admin, 'staff' );
 
@@ -146,7 +145,6 @@ function init_stafftable() {
  */
 function init_customertable() {
     global $db;
-    // create user table
     $db->exec( 'CREATE TABLE customer(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             staff_id TEXT NOT NULL DEFAULT "",
@@ -163,6 +161,8 @@ function init_customertable() {
             comment TEXT NOT NULL DEFAULT "",
             role TEXT NOT NULL DEFAULT "",
             permission TEXT NOT NULL DEFAULT "",
+            ids_can_read TEXT NOT NULL DEFAULT "",
+            ids_can_write TEXT NOT NULL DEFAULT "",
             date TEXT NOT NULL  DEFAULT ""
         )' );
 
@@ -180,6 +180,8 @@ function init_project_table() {
             staff_id TEXT NOT NULL DEFAULT "",
             comment_staff TEXT NOT NULL DEFAULT "",
             comment_customer TEXT NOT NULL DEFAULT "",
+            ids_can_read TEXT NOT NULL DEFAULT "",
+            ids_can_write TEXT NOT NULL DEFAULT "",
             date TEXT NOT NULL  DEFAULT ""
         )' );
 }
@@ -201,6 +203,8 @@ function init_appointment_table() {
             lng TEXT NOT NULL DEFAULT "",
             lat TEXT NOT NULL DEFAULT "",
             map_link TEXT NOT NULL DEFAULT "",
+            ids_can_read TEXT NOT NULL DEFAULT "",
+            ids_can_write TEXT NOT NULL DEFAULT "",
             date TEXT NOT NULL  DEFAULT ""
         )' );
 }
@@ -210,6 +214,7 @@ function init_files_table() {
     // create user table
     $db->exec( 'CREATE TABLE files(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            staff_id TEXT NOT NULL DEFAULT "",
             origin TEXT NOT NULL DEFAULT "",
             origin_id TEXT NOT NULL DEFAULT "",
             name TEXT NOT NULL DEFAULT "",

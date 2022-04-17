@@ -2,7 +2,8 @@
 
 
 
- 
+## functions of  endpoints
+
 ## login_user()
  `SELECT * FROM staff WHERE $userlogin =?`
 
@@ -83,7 +84,7 @@ then update
 ## upload_file()
 staff avatar  
  `UPDATE $usertype SET avatar=? WHERE id=?`  
- 
+
 images  
  `INSERT INTO files (origin, origin_id, path,path_thumb,type,name, date) VALUES (?,?,?,?,?,?,?)`  
 
@@ -93,3 +94,14 @@ images
 
 ## get_geocode()
  `UPDATE appointment SET location=?, lat=?, lng=?, map_link=? WHERE id=?`
+
+
+## functions
+
+## get_name_by_id()
+`SELECT id, $name FROM $table WHERE id = $id`   
+
+
+## insert_into_db()
+`INSERT OR REPLACE INTO $table ($columns_needed) VALUES ($placeholder)`   
+

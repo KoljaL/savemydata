@@ -450,6 +450,7 @@ function login_user( $request ) {
         $response['data']['user']  = $token_payload;
     } else {
         $response['code']    = 400;
+        $response['data']    = [];
         $response['message'] = 'no user found';
     }
 
@@ -493,7 +494,9 @@ function get_list_from( $param ) {
         $response['code'] = 200;
         $response['data'] = $users;
     } else {
-        $response['code']    = 400;
+        $response['code'] = 400;
+        $response['data'] = [];
+
         $response['message'] = 'no user found';
     }
 
@@ -538,7 +541,9 @@ function get_data_from( $param ) {
         $response['code'] = 200;
         $response['data'] = $form;
     } else {
-        $response['code']    = 400;
+        $response['code'] = 400;
+        $response['data'] = [];
+
         $response['table']   = $form;
         $response['message'] = 'no form profile found';
     }
@@ -626,7 +631,7 @@ function delete_entry_in( $param ) {
         $response['data'] = $count;
     } else {
         $response['code']    = 400;
-        $response['data']    = $count;
+        $response['data']    = [];
         $response['message'] = 'no user found';
     }
     return_JSON( $response );
@@ -683,6 +688,7 @@ function edit_single_field( $param ) {
         $response['data'] = $update;
     } else {
         $response['code']    = 400;
+        $response['data']    = [];
         $response['message'] = 'no field updated';
     }
 
@@ -731,7 +737,7 @@ function get_projects_as_table( $param ) {
         $response['data'] = $projects;
     } else {
         $response['code']    = 400;
-        $response['table']   = $projects;
+        $response['data']    = [];
         $response['message'] = 'no form profile found';
     }
     return_JSON( $response );
@@ -774,6 +780,7 @@ function get_project( $param ) {
         $response['data'] = $project;
     } else {
         $response['code']    = 400;
+        $response['data']    = [];
         $response['message'] = 'no form profile found';
     }
     return_JSON( $response );
@@ -817,6 +824,7 @@ function get_projects_from( $param ) {
         $response['data'] = $projects;
     } else {
         $response['code']    = 400;
+        $response['data']    = [];
         $response['message'] = 'no file found';
     }
     return_JSON( $response );
@@ -858,6 +866,7 @@ function get_appointment( $param ) {
         $response['data'] = $appointments;
     } else {
         $response['code']    = 400;
+        $response['data']    = [];
         $response['message'] = 'no file found';
     }
     return_JSON( $response );
@@ -901,6 +910,7 @@ function get_appointments_from( $param ) {
         $response['data'] = $files;
     } else {
         $response['code']    = 400;
+        $response['data']    = [];
         $response['message'] = 'no file found';
     }
     return_JSON( $response );
@@ -961,6 +971,7 @@ function get_appointments_as_table( $param ) {
         $response['data'] = $appointments;
     } else {
         $response['code']    = 400;
+        $response['data']    = [];
         $response['table']   = $appointments;
         $response['message'] = 'no dates found';
     }
@@ -1050,7 +1061,7 @@ function get_appointment_as_ics( $param ) {
         $response['data'] = $appointment;
     } else {
         $response['code']    = 400;
-        $response['table']   = $appointment;
+        $response['data']    = [];
         $response['message'] = 'no form profile found';
     }
     return_JSON( $response );
@@ -1074,7 +1085,7 @@ function get_appointment_as_ics( $param ) {
  *
  */
 function upload_file( $param ) {
-    global $db, $API_param, $API_value;
+    global $db, $API_param, $API_value, $TOKEN;
     include 'ImageResize.php';
     // set filename and dir
     $uploaddir  = 'userdata/uploads/'.$param['origin'].'/'.$param['origin_id'];
@@ -1107,14 +1118,16 @@ function upload_file( $param ) {
             // cerate thumbnail filename image.jpg -> image_thumb.jpg
             $pos              = strrpos( $uploadfile, '.' );
             $uploadfile_thumb = substr_replace( $uploadfile, '_thumb.', $pos, strlen( '.' ) );
+
             // resize & save
             $image = new \Gumlet\ImageResize( $_FILES['file']['tmp_name'] );
             $image->save( '../'.$uploadfile );
             $image->crop( 100, 100 );
             $image->save( '../'.$uploadfile_thumb );
+
             // add path to db
-            $sql = "INSERT INTO files (origin, origin_id, path,path_thumb,type,name, date) VALUES (?,?,?,?,?,?,?)";
-            $db->prepare( $sql )->execute( [$param['origin'], $param['origin_id'], $uploadfile, $uploadfile_thumb, $param['type'], $param['name'], date( 'd.m.Y H:i:s' )] );
+            $sql = "INSERT INTO files (origin, origin_id, path,path_thumb,type,name, staff_id, date) VALUES (?,?,?,?,?,?,?,?)";
+            $db->prepare( $sql )->execute( [$param['origin'], $param['origin_id'], $uploadfile, $uploadfile_thumb, $param['type'], $param['name'], $TOKEN['id'], date( 'd.m.Y H:i:s' )] );
         }
 
         $response['code']               = 200;
@@ -1125,6 +1138,7 @@ function upload_file( $param ) {
         $response['data']['$image']     = $image;
     } catch ( ImageResizeException $e ) {
         $response['code']    = 400;
+        $response['data']    = [];
         $response['message'] = $e->getMessage();
         $response['$_FILES'] = $_FILES;
         $response['$param']  = $param;
@@ -1165,6 +1179,7 @@ function get_files_from( $param ) {
         ;
     } else {
         $response['code']    = 400;
+        $response['data']    = [];
         $response['message'] = 'no file found';
     }
     return_JSON( $response );
@@ -1204,6 +1219,7 @@ function get_geocode( $param, $output = true ) {
         $db->prepare( $sql )->execute( [$param['location'], $geocode['data']['lat'], $geocode['data']['lng'], $geocode['data']['map_link'], $param['id']] );
     } else {
         $geocode['code']    = 400;
+        $geocode['data']    = [];
         $geocode['message'] = 'Location not found';
     }
     if ( $output ) {
@@ -1351,7 +1367,7 @@ function insert_into_db( $param, $table, $output = true ) {
     }
 
     //
-    // prepare amount of PLACEHOLDERS
+    // prepare amount of PLACEHOLDERS '?,?,?'
     $count       = count( $param ) + 1;
     $placeholder = '?';
     for ( $i = 1; $i < $count; $i++ ) {
@@ -1389,6 +1405,7 @@ function insert_into_db( $param, $table, $output = true ) {
         $response['param']      = $param;
     } else {
         $response['code']    = 400;
+        $response['data']    = [];
         $response['param']   = $param;
         $response['message'] = 'insert failed';
     }
