@@ -92,6 +92,9 @@ function init_db() {
     init_appointment_table();
     init_project_table();
     init_files_table();
+    init_project_sharing_table();
+    init_customer_sharing_table();
+    init_appointment_sharing_table();
 }
 
 /*
@@ -277,9 +280,9 @@ function is_array_indexed( array $array ) {
 function return_JSON( $response ) {
     global $request, $API_endpoint, $API_param, $API_value, $TOKEN, $PERMISSION_FILTER;
 
-    if ( $PERMISSION_FILTER ) {
-        $response = permission_filter( $response );
-    }
+    // if ( $PERMISSION_FILTER ) {
+    //     $response = permission_filter( $response );
+    // }
 
     if ( 'reset' !== $API_endpoint ) {
         $response['GET']['API_endpoint'] = $API_endpoint;
@@ -768,6 +771,8 @@ function get_project( $param ) {
     $project  = $stmt->fetch( PDO::FETCH_ASSOC );
     $response = [];
     if ( $project ) {
+
+        // SELECT * FROM "project" INNER JOIN customer ON customer.id = project.customer_id
         $stmt = $db->prepare( "SELECT * FROM appointment WHERE project_id = $API_param" );
         $stmt->execute();
         $appointments            = $stmt->fetchAll( PDO::FETCH_ASSOC );

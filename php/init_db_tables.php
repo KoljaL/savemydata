@@ -152,9 +152,7 @@ function init_customertable() {
     global $db;
     $db->exec( 'CREATE TABLE customer(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            staff_id TEXT NOT NULL DEFAULT "",
-            can_read_by TEXT NOT NULL DEFAULT "",
-            can_written_by TEXT NOT NULL DEFAULT "",
+            staff_id TEXT NOT NULL DEFAULT "", 
             username TEXT NOT NULL DEFAULT "",
             password TEXT NOT NULL DEFAULT "",
             firstname TEXT NOT NULL DEFAULT "",
@@ -188,14 +186,11 @@ function init_customertable() {
 */
 function init_project_table() {
     global $db;
-    // create user table
     $db->exec( 'CREATE TABLE project(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL DEFAULT "",
             customer_id TEXT NOT NULL DEFAULT "",
-            staff_id TEXT NOT NULL DEFAULT "",
-            can_read_by TEXT NOT NULL DEFAULT "",
-            can_written_by TEXT NOT NULL DEFAULT "",
+            staff_id TEXT NOT NULL DEFAULT "", 
             comment_staff TEXT NOT NULL DEFAULT "",
             comment_customer TEXT NOT NULL DEFAULT "",
             date TEXT NOT NULL  DEFAULT ""
@@ -214,14 +209,11 @@ function init_project_table() {
 */
 function init_appointment_table() {
     global $db;
-    // create user table
     $db->exec( 'CREATE TABLE appointment(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             customer_id TEXT NOT NULL DEFAULT "",
             project_id TEXT NOT NULL DEFAULT "",
-            staff_id TEXT NOT NULL DEFAULT "",
-            can_read_by TEXT NOT NULL DEFAULT "",
-            can_written_by TEXT NOT NULL DEFAULT "",
+            staff_id TEXT NOT NULL DEFAULT "", 
             title TEXT NOT NULL DEFAULT "",
             start_date TEXT NOT NULL DEFAULT "",
             start_time TEXT NOT NULL DEFAULT "",
@@ -247,7 +239,6 @@ function init_appointment_table() {
 */
 function init_files_table() {
     global $db;
-    // create user table
     $db->exec( 'CREATE TABLE files(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             staff_id TEXT NOT NULL DEFAULT "",
@@ -257,6 +248,42 @@ function init_files_table() {
             type TEXT NOT NULL DEFAULT "",
             path TEXT NOT NULL DEFAULT "",
             path_thumb TEXT NOT NULL DEFAULT "",
+            date TEXT NOT NULL  DEFAULT ""
+        )' );
+}
+
+function init_customer_sharing_table() {
+    global $db;
+    $db->exec( 'CREATE TABLE customer_sharing(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            customer_id TEXT NOT NULL DEFAULT "",
+            staff_id TEXT NOT NULL DEFAULT "",
+            can_edit TEXT NOT NULL DEFAULT "false",
+            date TEXT NOT NULL  DEFAULT ""
+        )' );
+}
+
+function init_project_sharing_table() {
+    global $db;
+    $db->exec( 'CREATE TABLE project_sharing(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            project_id TEXT NOT NULL DEFAULT "",
+            customer_id TEXT NOT NULL DEFAULT "",
+            staff_id TEXT NOT NULL DEFAULT "",
+            can_edit TEXT NOT NULL DEFAULT "false",
+            date TEXT NOT NULL  DEFAULT ""
+        )' );
+}
+
+function init_appointment_sharing_table() {
+    global $db;
+    $db->exec( 'CREATE TABLE appointment_sharing(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            pappointment_id TEXT NOT NULL DEFAULT "",
+            project_id TEXT NOT NULL DEFAULT "",
+            customer_id TEXT NOT NULL DEFAULT "",
+            staff_id TEXT NOT NULL DEFAULT "",
+            can_edit TEXT NOT NULL DEFAULT "false",
             date TEXT NOT NULL  DEFAULT ""
         )' );
 }
@@ -354,9 +381,7 @@ function create_dummy_customer( $count ) {
             'city'           => random_city(),
             'city_nr'        => random_int( 1, 9 ).random_int( 0, 9 ).random_int( 0, 9 ).random_int( 1, 9 ).random_int( 0, 9 ),
             'role'           => 'customer',
-            'permission'     => '10',
-            'can_read_by'    => random_int( 1, 5 ).','.random_int( 1, 5 ),
-            'can_written_by' => random_int( 1, 5 ).','.random_int( 1, 5 )
+            'permission'     => '10', 
         ];
         // create_customer( $user );
         insert_into_db( $customer, 'customer' );
@@ -390,9 +415,7 @@ function create_dummy_project( $count ) {
             'customer_id'      => $user[$j]['id'],
             'staff_id'         => $user[$j]['staff_id'],
             'comment_staff'    => random_text(),
-            'comment_customer' => random_text(),
-            'can_read_by'      => random_int( 1, 5 ).','.random_int( 1, 5 ),
-            'can_written_by'   => random_int( 1, 5 ).','.random_int( 1, 5 )
+            'comment_customer' => random_text(), 
         ];
         insert_into_db( $customer, 'project' );
     }
@@ -447,9 +470,7 @@ function create_dummy_appointment( $count, $days ) {
             'staff_id'       => $staff_id,
             'project_id'     => $project_id,
             'customer_id'    => $customer_id,
-            'comment'        => random_text(),
-            'can_read_by'    => random_int( 1, 5 ).','.random_int( 1, 5 ),
-            'can_written_by' => random_int( 1, 5 ).','.random_int( 1, 5 )
+            'comment'        => random_text(), 
         ];
         insert_into_db( $project, 'appointment' );
     }
