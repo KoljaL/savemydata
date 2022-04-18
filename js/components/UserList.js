@@ -37,7 +37,11 @@ export default {
 
 let getUserList = async(table) => {
     try {
-        const response = Functions.getAPIdata('get_list_from/' + table + '/id,username,staff_id');
+        let staff_id = '';
+        if (slugName === 'customer') {
+            staff_id = ',staff_id';
+        }
+        const response = Functions.getAPIdata('get_list_from/' + table + '/id,username' + staff_id);
         return response;
     } catch (err) {
         console.log('Error getting documents', err);

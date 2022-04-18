@@ -126,7 +126,7 @@ let ProjectContent = async(id) => {
             .then((res) => {
                 if (res.code === 200) {
                     let data = res.data
-                    deb(data);
+                        // deb(data);
                     document.getElementById('debug').innerHTML = JSON.stringify(data, undefined, 4);
                     Functions.pageTitle(`Project ${data.title}`)
 

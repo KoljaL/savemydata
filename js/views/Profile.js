@@ -180,7 +180,7 @@ let getUserData = async(userID) => {
                 // deb(res);
                 if (res.code === 200) {
                     const user = res.data;
-                    deb(user)
+                    // deb(user)
                     window.userName = user.username;
 
                     Functions.pageTitle(`${userName}'s Profile`);
@@ -216,10 +216,10 @@ let getUserData = async(userID) => {
                         // close last row & form 
                         innerHTML += '</div>';
                         innerHTML += '</form>';
+                        // copy to DOM
+                        Functions.setInnerHTML('Userdata', innerHTML);
                     }
 
-                    // copy to DOM
-                    Functions.setInnerHTML('Userdata', innerHTML);
 
                     // get AppointmentsList
                     Functions.getAPIdata(`get_appointments_from/${tableName}/${userID}`)

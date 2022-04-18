@@ -161,7 +161,8 @@ if ( 'login' === $API_endpoint ) {
     $TOKEN     = json_decode( json_encode( $TOKEN ), true );
     $user_role = $TOKEN['role'];
     $user_id   = $TOKEN['id'];
-    access_log();
+    $user_name = $TOKEN['username'];
+
     if ( $ALLOWED_AT_ALL ) {
         allowed_at_all();
     }
@@ -173,20 +174,39 @@ if ( 'login' === $API_endpoint ) {
     exit;
 }
 
-function access_log() {
-    global $db, $request, $API_endpoint, $API_param, $API_value, $user_role, $user_id;
+/*
+//
+//     ###     ######   ######  ########  ######   ######     ##        #######   ######
+//    ## ##   ##    ## ##    ## ##       ##    ## ##    ##    ##       ##     ## ##    ##
+//   ##   ##  ##       ##       ##       ##       ##          ##       ##     ## ##
+//  ##     ## ##       ##       ######    ######   ######     ##       ##     ## ##   ####
+//  ######### ##       ##       ##             ##       ##    ##       ##     ## ##    ##
+//  ##     ## ##    ## ##    ## ##       ##    ## ##    ##    ##       ##     ## ##    ##
+//  ##     ##  ######   ######  ########  ######   ######     ########  #######   ######
+//
+*/
+function access_log( $response ) {
+    global $db, $request, $API_endpoint, $API_param, $API_value, $user_role, $user_id, $user_name;
 
-    $user_token = $request['user_token'];
-    unset( $request['user_token'] );
+    
+    if (isset($request['user_token']) ) {
+        $user_token = $request['user_token'];
+        unset( $request['user_token'] );
+
+    } else {
+        $user_token = 'no token';
+    }
 
     $param['ip']              = $_SERVER['REMOTE_ADDR'];
     $param['HTTP_USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
+    $param['username']        = $user_name;
     $param['user_id']         = $user_id;
     $param['user_role']       = $user_role;
     $param['API_endpoint']    = $API_endpoint;
     $param['API_param']       = $API_param;
     $param['API_value']       = $API_value;
     $param['user_token']      = $user_token;
+    $param['response']        = json_encode( $response);
     $param['POST']            = json_encode( $request );
     insert_into_db( $param, 'access_log', false );
 
@@ -206,7 +226,7 @@ function access_log() {
 function allowed_at_all() {
     global $request, $API_endpoint, $API_param, $API_value, $user_role, $user_id;
     // https://www.php.net/manual/en/control-structures.match.php
-    $admin_params = ['staff', 'staff_fields', 'customer_fields'];
+    $admin_params = ['staff', 'staff_fields'];
 
     // if not admin or admin role
     if ( "admin" !== $user_role ) {
@@ -304,8 +324,9 @@ function return_JSON( $response ) {
     // if ( $PERMISSION_FILTER ) {
     //     $response = permission_filter( $response );
     // }
-
+    
     if ( 'reset' !== $API_endpoint ) {
+        access_log( $response );
         $response['GET']['API_endpoint'] = $API_endpoint;
         $response['GET']['API_param']    = $API_param;
         $response['GET']['API_value']    = $API_value;

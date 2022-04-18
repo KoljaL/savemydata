@@ -288,18 +288,32 @@ function init_appointment_sharing_table() {
         )' );
 }
 
+/*
+//
+//     ###     ######   ######  ########  ######   ######     ##        #######   ######
+//    ## ##   ##    ## ##    ## ##       ##    ## ##    ##    ##       ##     ## ##    ##
+//   ##   ##  ##       ##       ##       ##       ##          ##       ##     ## ##
+//  ##     ## ##       ##       ######    ######   ######     ##       ##     ## ##   ####
+//  ######### ##       ##       ##             ##       ##    ##       ##     ## ##    ##
+//  ##     ## ##    ## ##    ## ##       ##    ## ##    ##    ##       ##     ## ##    ##
+//  ##     ##  ######   ######  ########  ######   ######     ########  #######   ######
+//
+*/
 function init_log_table() {
     global $db;
     $db->exec( 'CREATE TABLE access_log(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            date TEXT NOT NULL  DEFAULT ""
+            "date" TEXT NOT NULL  DEFAULT "",
             ip TEXT NOT NULL DEFAULT "",
+            "username" TEXT NOT NULL DEFAULT "",
             "user_id" TEXT NOT NULL DEFAULT "",
             user_role TEXT NOT NULL DEFAULT "",
             "API_endpoint" TEXT NOT NULL DEFAULT "",
             "API_param" TEXT NOT NULL DEFAULT "",
             "API_value" TEXT NOT NULL DEFAULT "",
             "POST" TEXT NOT NULL DEFAULT "",
+            "HTTP_USER_AGENT" TEXT NOT NULL DEFAULT "",
+            "user_token" TEXT NOT NULL DEFAULT ""
         )' );
 }
 
