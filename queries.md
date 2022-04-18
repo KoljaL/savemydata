@@ -105,3 +105,63 @@ images
 ## insert_into_db()
 `INSERT OR REPLACE INTO $table ($columns_needed) VALUES ($placeholder)`   
 
+
+
+
+## example Queries
+
+select multiple foreign keys to one row
+```SQL
+SELECT s.scoreID, p.playerName, s.scoreVal,
+    w0.weaponLabel as w0Label,
+    w1.weaponLabel as w1Label
+    -- etc
+FROM Scores s
+JOIN Players p ON p.id = s.playerID
+JOIN Weapons w0 ON w0.weaponID = s.scoreW0
+JOIN Weapons w1 ON w1.weaponID = s.scoreW1
+```
+
+
+Join tables in sqlite with many to many
+```SQL 
+create table people (
+    id integer primary key autoincrement,
+);
+
+create table groups (
+    id integer primary key autoincrement,
+);
+CREATE TABLE groups_people (
+  groups_id integer,
+  people_id integer,
+  PRIMARY KEY(group_id, people_id)
+);  
+SELECT * FROM people p  
+  LEFT JOIN groups_people gp ON gp.people_id = p.id  
+  WHERE gp.groups_id = '7';
+```
+
+
+Inner Join sqlite from multiple tables
+```SQL
+SELECT 
+    DRIVER.driv_id, DRIVER.firstName, 
+    TEAMSTANDING.teamName, 
+    RESULTS.points   
+FROM 
+    TEAMSTANDING
+    INNER JOIN 
+        DRIVER
+ON 
+        TEAMSTANDING.driv_id=DRIVER.driv_id
+    INNER JOIN 
+        RESULTS 
+    ON 
+        RESULTS.driv_id=DRIVER.drv_id
+WHERE 
+    TEAMSTANDING.comp_id=2
+GROUP BY 
+    DRIVER.driv_id;
+
+```

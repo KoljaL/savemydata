@@ -126,7 +126,7 @@ let ProjectContent = async(id) => {
             .then((res) => {
                 if (res.code === 200) {
                     let data = res.data
-                        // deb(data);
+                    deb(data);
                     document.getElementById('debug').innerHTML = JSON.stringify(data, undefined, 4);
                     Functions.pageTitle(`Project ${data.title}`)
 
@@ -176,12 +176,14 @@ let ProjectContent = async(id) => {
             .then((data) => {
                 let app = AppointmentsList.render(data.appointments)
                 Functions.setInnerHTML('ProjectAppointments', app);
+                return data;
             })
             //
             // edit and delete button
             //
-            .then(() => {
-                if (Functions.getLocal('role') === '0' || Functions.getLocal('id') === userID) {
+            .then((data) => {
+                // if (Functions.getLocal('role') === 'admin' || Functions.getLocal('id') === data.staff_id) {
+                if (Functions.getLocal('role') !== 'xxx') {
                     Functions.setInnerHTML('editProjectButton', 'Edit')
                         .then(() => {
                             document.getElementById('editProjectButton').dataset.lang = 'edit'

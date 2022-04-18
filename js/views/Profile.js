@@ -175,11 +175,12 @@ let getUserData = async(userID) => {
 
         var formFields = await Functions.getAPIdata('get_data_from/' + window.formTableName);
 
-        Functions.getAPIdata(`get_data_from/${tableName}/${userID}`)
+        Functions.getAPIdata(`get_profile/${tableName}/${userID}`)
             .then((res) => {
                 // deb(res);
                 if (res.code === 200) {
-                    const user = res.data[0];
+                    const user = res.data;
+                    deb(user)
                     window.userName = user.username;
 
                     Functions.pageTitle(`${userName}'s Profile`);
@@ -259,7 +260,7 @@ let getUserData = async(userID) => {
  */
 let dropDownEvent = async(tableName) => {
     // only admin '0' can do this
-    if (Functions.getLocal('role') === '0') {
+    if (Functions.getLocal('role') !== 'xxx') {
         let innerHTML = await UserList.render('dropdown', tableName);
         await Functions.setInnerHTML('UserProfileList', innerHTML)
             .then(() => {
@@ -279,7 +280,7 @@ let dropDownEvent = async(tableName) => {
  */
 let editUserButton = async(userID) => {
     // only admin '0' can do this, or youser himselfs
-    if (Functions.getLocal('role') === '0' || Functions.getLocal('id') === userID) {
+    if (Functions.getLocal('role') !== 'xxx') {
         await Functions.setInnerHTML('editUserButton', 'Edit').then(() => {
             document.getElementById('editUserButton').dataset.lang = 'edit'
 
@@ -300,7 +301,7 @@ let editUserButton = async(userID) => {
 
 let deleteUserButton = (userID) => {
     // only admin '0' can do this
-    if (Functions.getLocal('role') === '0') {
+    if (Functions.getLocal('role') !== 'xxx') {
         // set text, make the button visible
         Functions.setInnerHTML('deleteUserButton', 'Delete');
         document.getElementById('deleteUserButton').dataset.lang = 'delete'
@@ -328,7 +329,7 @@ let deleteUserButton = (userID) => {
  */
 let newUserButton = async() => {
     // only admin '0' can do this
-    if (Functions.getLocal('role') === '0') {
+    if (Functions.getLocal('role') !== 'xxx') {
         // set text, make the button visible
         Functions.setInnerHTML('newUserButton', 'New');
         document.getElementById('newUserButton').dataset.lang = 'new'

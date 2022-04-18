@@ -114,7 +114,7 @@ let AppointmentContent = async(id) => {
             .then((res) => {
                 if (res.code === 200) {
                     let data = res.data
-                    deb(res);
+                    deb(data);
                     let map_link, map_location;
                     if (data.map_link !== '') {
                         map_link = `<a href=${data.map_link} class="icon map_icon"  target="_blanc"></a>`;

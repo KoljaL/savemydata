@@ -95,6 +95,7 @@ function init_db() {
     init_project_sharing_table();
     init_customer_sharing_table();
     init_appointment_sharing_table();
+    init_log_table();
 }
 
 /*
@@ -123,7 +124,8 @@ if ( $request ) {
 */
 if ( 'do' === $API_endpoint ) {
     // create_dummy_data();
-    get_geocode( '' );
+    join_test();
+    // get_geocode( '' );
     // get_name_by_id('staff', '1', $name = 'username');
     exit;
 }
@@ -159,6 +161,7 @@ if ( 'login' === $API_endpoint ) {
     $TOKEN     = json_decode( json_encode( $TOKEN ), true );
     $user_role = $TOKEN['role'];
     $user_id   = $TOKEN['id'];
+    access_log();
     if ( $ALLOWED_AT_ALL ) {
         allowed_at_all();
     }
@@ -170,6 +173,24 @@ if ( 'login' === $API_endpoint ) {
     exit;
 }
 
+function access_log() {
+    global $db, $request, $API_endpoint, $API_param, $API_value, $user_role, $user_id;
+
+    $user_token = $request['user_token'];
+    unset( $request['user_token'] );
+
+    $param['ip']              = $_SERVER['REMOTE_ADDR'];
+    $param['HTTP_USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
+    $param['user_id']         = $user_id;
+    $param['user_role']       = $user_role;
+    $param['API_endpoint']    = $API_endpoint;
+    $param['API_param']       = $API_param;
+    $param['API_value']       = $API_value;
+    $param['user_token']      = $user_token;
+    $param['POST']            = json_encode( $request );
+    insert_into_db( $param, 'access_log', false );
+
+}
 /*
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //     ###    ##       ##        #######  ##      ## ######## ########        ###    ########       ###    ##       ##        //
@@ -346,6 +367,10 @@ case 'delete_entry_in':
 
 case 'edit_single_field':
     edit_single_field( $request );
+    break;
+
+case 'get_profile':
+    get_profile( $request );
     break;
 
 case 'get_projects_as_table':
@@ -699,6 +724,40 @@ function edit_single_field( $param ) {
     return_JSON( $response );
 }
 
+/**
+ *
+ * Get a single appointment by ID
+ *
+ */
+function get_profile( $param ) {
+    global $db, $API_param, $API_value;
+
+    // $stmt = $db->prepare( "SELECT * FROM appointment WHERE id = :id" );
+
+    $stmt = $db->prepare( "SELECT * FROM $API_param WHERE id = :id" );
+
+    $stmt->execute( [':id' => $API_value] );
+
+    $appointments = $stmt->fetch( PDO::FETCH_ASSOC );
+
+    $response = [];
+    if ( $appointments ) {
+        // $appointments['customername']   = get_name_by_id( 'customer', $appointments['customer_id'] );
+        // $appointments['staffname']      = get_name_by_id( 'staff', $appointments['staff_id'] );
+        // $appointments['projectname']    = get_name_by_id( 'project', $appointments['project_id'], 'title' );
+        // $appointments['location_staff'] = get_name_by_id( 'staff', $appointments['staff_id'], 'location' );
+
+        $response['code'] = 200;
+        $response['data'] = $appointments;
+    } else {
+        $response['code']    = 400;
+        $response['data']    = [];
+        $response['message'] = 'no file found';
+    }
+    return_JSON( $response );
+
+}
+
 /*
 //
 //  ########  ########   #######        ## ########  ######  ########  ######     ########    ###    ########  ##       ########
@@ -747,6 +806,46 @@ function get_projects_as_table( $param ) {
 
 }
 
+function join_test() {
+    global $db, $API_param, $API_value;
+    $API_param = 1;
+
+    // $stmt = $db->prepare( "SELECT * FROM project WHERE id = $API_param" );
+    // SELECT *
+    $stmt = $db->prepare( "
+            SELECT p.*, c.username AS customername, s.username AS staffname
+            FROM project p
+            INNER JOIN customer c
+                ON p.customer_id = c.id
+            INNER JOIN staff s
+                ON p.staff_id = s.id
+            WHERE p.id = $API_param
+            " );
+    $stmt->execute();
+    $project  = $stmt->fetch( PDO::FETCH_ASSOC );
+    $response = [];
+    if ( $project ) {
+
+        // SELECT * FROM "project" INNER JOIN customer ON customer.id = project.customer_id
+        // $stmt = $db->prepare( "SELECT * FROM appointment WHERE project_id = $API_param" );
+        // $stmt->execute();
+        // $appointments            = $stmt->fetchAll( PDO::FETCH_ASSOC );
+        // $project['appointments'] = $appointments;
+
+        // $project['customername'] = get_name_by_id( 'customer', $project['customer_id'] );
+        // $project['staffname']    = get_name_by_id( 'staff', $project['staff_id'] );
+
+        $response['code'] = 200;
+        $response['data'] = $project;
+    } else {
+        $response['code']    = 400;
+        $response['data']    = [];
+        $response['message'] = 'no form profile found';
+    }
+    return_JSON( $response );
+
+}
+
 /*
 //
 //   ######   ######## ########    ########  ########   #######        ## ########  ######  ########
@@ -766,20 +865,29 @@ function get_projects_as_table( $param ) {
 function get_project( $param ) {
     global $db, $API_param, $API_value;
 
-    $stmt = $db->prepare( "SELECT * FROM project WHERE id = $API_param" );
-    $stmt->execute();
-    $project  = $stmt->fetch( PDO::FETCH_ASSOC );
+    // $stmt = $db->prepare( "SELECT * FROM project WHERE id = $API_param" );
+    $stmt = $db->prepare( "
+        SELECT p.*, c.username AS customername, s.username AS staffname
+        FROM project p
+        INNER JOIN customer c
+            ON p.customer_id = c.id
+        INNER JOIN staff s
+            ON p.staff_id = s.id
+        WHERE p.id = :id" );
+    $stmt->execute( [':id' => $API_param] );
+
+    $project = $stmt->fetch( PDO::FETCH_ASSOC );
+
     $response = [];
     if ( $project ) {
 
         // SELECT * FROM "project" INNER JOIN customer ON customer.id = project.customer_id
-        $stmt = $db->prepare( "SELECT * FROM appointment WHERE project_id = $API_param" );
-        $stmt->execute();
-        $appointments            = $stmt->fetchAll( PDO::FETCH_ASSOC );
-        $project['appointments'] = $appointments;
+        $stmt = $db->prepare( "SELECT a.id, a.start_date, a.start_time FROM appointment a WHERE project_id =?" );
+        $stmt->execute( [$API_param] );
+        $project['appointments'] = $stmt->fetchAll( PDO::FETCH_ASSOC );
 
-        $project['customername'] = get_name_by_id( 'customer', $project['customer_id'] );
-        $project['staffname']    = get_name_by_id( 'staff', $project['staff_id'] );
+        // $project['customername'] = get_name_by_id( 'customer', $project['customer_id'] );
+        // $project['staffname']    = get_name_by_id( 'staff', $project['staff_id'] );
 
         $response['code'] = 200;
         $response['data'] = $project;
@@ -805,7 +913,7 @@ function get_project( $param ) {
 */
 /**
  *
- * This function is used to get all the projects from the database
+ * This function is used to get all the projects from a cutomer or a staff
  *
  */
 function get_projects_from( $param ) {
@@ -855,17 +963,29 @@ function get_projects_from( $param ) {
 function get_appointment( $param ) {
     global $db, $API_param, $API_value;
 
-    $stmt = $db->prepare( "SELECT * FROM appointment WHERE id = :id" );
+    // $stmt = $db->prepare( "SELECT * FROM appointment WHERE id = :id" );
+
+    $stmt = $db->prepare( "
+        SELECT a.*, c.username AS customername, s.username AS staffname, s.location AS location_staff, p.title AS projectname
+        FROM appointment a
+        INNER JOIN customer c
+            ON a.customer_id = c.id
+        INNER JOIN project p
+            ON a.project_id = p.id
+        INNER JOIN staff s
+            ON a.staff_id = s.id
+        WHERE a.id = :id" );
+
     $stmt->execute( [':id' => $API_param] );
 
     $appointments = $stmt->fetch( PDO::FETCH_ASSOC );
 
     $response = [];
     if ( $appointments ) {
-        $appointments['customername']   = get_name_by_id( 'customer', $appointments['customer_id'] );
-        $appointments['staffname']      = get_name_by_id( 'staff', $appointments['staff_id'] );
-        $appointments['projectname']    = get_name_by_id( 'project', $appointments['project_id'], 'title' );
-        $appointments['location_staff'] = get_name_by_id( 'staff', $appointments['staff_id'], 'location' );
+        // $appointments['customername']   = get_name_by_id( 'customer', $appointments['customer_id'] );
+        // $appointments['staffname']      = get_name_by_id( 'staff', $appointments['staff_id'] );
+        // $appointments['projectname']    = get_name_by_id( 'project', $appointments['project_id'], 'title' );
+        // $appointments['location_staff'] = get_name_by_id( 'staff', $appointments['staff_id'], 'location' );
 
         $response['code'] = 200;
         $response['data'] = $appointments;

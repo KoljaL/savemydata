@@ -21,8 +21,8 @@ let Style = async() => {
     Functions.createStyle('Appointments_deko_style', styleTags);
 };
 let showAppointments = (Appointments) => {
-    deb(Appointments)
-        // make an array of all appointments 
+    // deb(Appointments)
+    // make an array of all appointments 
     var dates = [];
     if (Appointments.length > 0) {
         // sort by date
