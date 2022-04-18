@@ -325,7 +325,9 @@ function return_JSON( $response ) {
     //     $response = permission_filter( $response );
     // }
     
-    if ( 'reset' !== $API_endpoint ) {
+    if ( 'reset' === $API_endpoint ) {
+        return;
+    }
         access_log( $response );
         $response['GET']['API_endpoint'] = $API_endpoint;
         $response['GET']['API_param']    = $API_param;
@@ -341,7 +343,6 @@ function return_JSON( $response ) {
         header( 'Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With' );
         // deb( $response );
         echo json_encode( $response );
-    }
     // exit;
 }
 
@@ -553,24 +554,15 @@ function get_list_from( $param ) {
     return_JSON( $response );
 }
 
-/*
-//
-//   ######   ######## ########    ########  ########   #######  ######## #### ##       ########    ########  #######  ########  ##     ##
-//  ##    ##  ##          ##       ##     ## ##     ## ##     ## ##        ##  ##       ##          ##       ##     ## ##     ## ###   ###
-//  ##        ##          ##       ##     ## ##     ## ##     ## ##        ##  ##       ##          ##       ##     ## ##     ## #### ####
-//  ##   #### ######      ##       ########  ########  ##     ## ######    ##  ##       ######      ######   ##     ## ########  ## ### ##
-//  ##    ##  ##          ##       ##        ##   ##   ##     ## ##        ##  ##       ##          ##       ##     ## ##   ##   ##     ##
-//  ##    ##  ##          ##       ##        ##    ##  ##     ## ##        ##  ##       ##          ##       ##     ## ##    ##  ##     ##
-//   ######   ########    ##       ##        ##     ##  #######  ##       #### ######## ########    ##        #######  ##     ## ##     ##
-//
-*/
+
 /**
- *
- * This function is used to get all the profile form from the database
- *
+ * 
+ * returns all data from table $API_param
+ * special sharing case for customer, project and apointment
+ * 
  */
 function get_data_from( $param ) {
-    global $db, $API_param, $API_value;
+    global $db, $API_param, $API_value, $user_id;
     $table = $API_param;
 
     if ( '' !== $API_value ) {
@@ -578,7 +570,33 @@ function get_data_from( $param ) {
     } else {
         $where = '';
     }
-    $stmt = $db->prepare( "SELECT * FROM $table $where" );
+
+
+    // $stmt = $db->prepare( "
+    // SELECT p.*, c.username AS customername, s.username AS staffname
+    // FROM project p
+    // INNER JOIN customer c
+    //     ON p.customer_id = c.id
+    // INNER JOIN staff s
+    //     ON p.staff_id = s.id
+    // WHERE p.id = $API_param
+    // " );
+
+
+    if('customer' === $API_param){
+        $stmt = $db->prepare( "
+            SELECT c.* 
+                FROM customer_sharing cs 
+                INNER JOIN customer c ON cs.customer_id = c.id
+                WHERE cs.staff_id = $user_id
+            UNION
+            SELECT * 
+                FROM customer 
+                WHERE id = $user_id
+            " );
+    }else{
+        $stmt = $db->prepare( "SELECT * FROM $API_param $where" );
+    }
     $stmt->execute();
     $form = $stmt->fetchAll( PDO::FETCH_ASSOC );
 
