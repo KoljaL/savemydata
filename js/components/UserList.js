@@ -36,9 +36,12 @@ export default {
 let getUserList = async(table) => {
     try {
         let staff_id = '';
-        if (slugName === 'customer') {
+        deb(slugName)
+        if (tableName === 'customer') {
             staff_id = ',staff_id';
         }
+        // staff_id = ',staff_id';
+
         const response = Functions.getAPIdata('get_list_from/' + table + '/id,username' + staff_id);
         return response;
     } catch (err) {
