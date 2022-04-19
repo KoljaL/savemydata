@@ -532,19 +532,16 @@ function login_user($request)
 function get_list_from($param)
 {
     global $db, $API_param, $API_value,$user_id;
+    $columns = ('' !== $API_value) ? $API_value : '*';
 
-
-
-    if ('' !== $API_value) {
-        $columns = $API_value;
-    } else {
-        $columns = '*';
-    }
-
+    // if ('' !== $API_value) {
+    //     $columns = $API_value;
+    // } else {
+    //     $columns = '*';
+    // }
 
 
     $sharings = ['customer', 'project', 'appointment'];
-    
     if (in_array($API_param, $sharings)) {
         $sharing_table = $API_param.'_sharing';
         $sharing_id = $API_param.'_id';
@@ -565,17 +562,15 @@ function get_list_from($param)
         $stmt = $db->prepare("SELECT $columns FROM $API_param");
     }
 
-
-
     $stmt->execute();
-    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $list = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $stmt->closeCursor();
 
 
     $response = [];
-    if ($users) {
+    if ($list) {
         $response['code'] = 200;
-        $response['data'] = $users;
+        $response['data'] = $list;
     } else {
         $response['code'] = 400;
         $response['data'] = [];
