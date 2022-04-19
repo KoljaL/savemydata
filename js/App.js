@@ -46,7 +46,8 @@ async function router() {
         switch (API_page) {
 
             case '/':
-                await Login.render();
+                location.href = './login';
+                // await Login.render();
                 break;
 
             case 'staff':

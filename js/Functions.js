@@ -256,9 +256,11 @@ let Functions = {
             localStorage.removeItem(arr[i]);
         }
         // window.location.hash = '';
-        document.getElementById('body').classList.add('darkWrapper')
-        history.pushState('', document.title, window.location.pathname);
-        location.reload();
+        location.href = './login';
+
+        // document.getElementById('body').classList.add('darkWrapper')
+        // history.pushState('', document.title, window.location.pathname);
+        // location.reload();
     },
 
     /*

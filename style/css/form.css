@@ -132,6 +132,37 @@ input[type="color"]::-webkit-color-swatch {
     border: solid 1px #000;
 }
 
+.FF-item [type="radio"] {
+    display: none;
+}
+
+.FF-item [type="radio"]:valid+label {
+    cursor: pointer;
+    font-size: 20px!important;
+}
+
+.FF-item [type="radio"]+label::before {
+    cursor: pointer;
+    width: 15px;
+    height: 15px;
+    border-radius: 0px;
+    border: 1px solid black;
+    background-color: transparent;
+    box-shadow: 2px 2px 0 black;
+    display: block;
+    content: ' ';
+    float: left;
+    margin-right: 15px;
+    z-index: 5;
+    position: relative;
+    top: 4px;
+}
+
+.FF-item [type="radio"]:checked+label::before {
+    box-shadow: inset 0px 0px 0px 2px var(--font_2), 1px 1px 0 var(--bg_3);
+    background-color: black;
+}
+
 .FF-item textarea {
     height: 6em;
 }

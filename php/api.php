@@ -1304,6 +1304,8 @@ function upload_file( $param ) {
             $usertype = $param['avatar'];
             $sql      = "UPDATE $usertype SET avatar=? WHERE id=?";
             $db->prepare( $sql )->execute( [$uploadfile, $param['origin_id']] );
+            $uploadfile_thumb = '';
+            $param['name'] = '';
         }
         //
         // all other images
@@ -1534,6 +1536,7 @@ function insert_into_db( $param, $table, $output = true ) {
     //
     $stmt = $db->query( "PRAGMA table_info($table)" );
     $stmt->execute();
+    usleep(20);
     $table_info     = $stmt->fetchAll( PDO::FETCH_ASSOC );
     $columns_exists = [];
     foreach ( $table_info as $key => $value ) {
@@ -1588,7 +1591,7 @@ function insert_into_db( $param, $table, $output = true ) {
     // $stmt = $db->prepare("INSERT INTO $table ($columns_needed) VALUES ($placeholder)");
     $stmt = $db->prepare( "INSERT OR REPLACE INTO $table ($columns_needed) VALUES ($placeholder)" );
     $stmt->execute( $vars );
-
+    usleep(20);
     $count = $stmt->rowCount();
 
     $response = [];

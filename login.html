@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="robots" content="noindex,nofollow" />
+
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="msapplication-starturl" content="/">
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@mytwittername" />
+    <meta name="twitter:title" content="SaveMyData" />
+    <meta name="twitter:description" content="A simple framework to save various data based on users." />
+    <meta name="twitter:image" content="https://dev.rasal.de/PRL/img/screenshot.png" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="SaveMyData" />
+    <meta property="og:description" content="A simple framework to save various data based on users." />
+    <meta property="og:url" content="https://dev.rasal.de/PRL/" />
+    <meta property="og:image" content="https://dev.rasal.de/PRL/img/screenshot.png" />
+
+    <title>SaveMyData</title>
+    <meta name="description" content="A simple framework to save various data based on users." />
+    <meta name="author" content="KoljaL" />
+    <meta name="copyright" content="MIT" />
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="style/img/NeedleMachine.svg" type="image/svg+xml">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style/css/layout.css">
+    <link rel="stylesheet" href="style/css/form.css">
+
+    <style>
+
+    </style>
+</head>
+
+<body id="body">
+    <div id="PRL" style="display: block;">
+        <header>
+            <a href="https://dev.rasal.de/savemydata"><img src="style/img/NeedleMachine.svg" alt="RPL" /></a>
+            <h1 data-lang="S_title" class="page_name">S-M-D</h1>
+        </header>
+        <div id="UserLoginForm">
+            <div class="FF-row">
+                <form id="loginForm" action="" method="post" autocomplete="off">
+
+
+                    <!-- TESTING -->
+                    <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px;">
+                        <input type="radio" id="Admin" name="userlogin" value="Admin">
+                        <label for="Admin">Admin</label>
+                    </div>
+                    <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px;">
+                        <input type="radio" id="Manager" name="userlogin" value="Manager">
+                        <label for="Manager">Manager</label>
+                    </div>
+                    <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px;">
+                        <input type="radio" id="Staff 0" name="userlogin" value="Staff 0">
+                        <label for="Staff 0">Staff 0</label>
+                    </div>
+                    <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px;">
+                        <input type="radio" id="Staff 1" name="userlogin" value="Staff 1">
+                        <label for="Staff 1">Staff 1</label>
+                    </div>
+                    <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px;">
+                        <input type="radio" id="Staff 2" name="userlogin" value="Staff 2">
+                        <label for="Staff 2">Staff 2</label>
+                    </div>
+                    <input id="password" name="password" type="hidden" value="password">
+                    <!-- TESTING -->
+
+
+                    <div class="FF-item" style="flex-basis: 150px; min-width: 100px; max-width: 200px;">
+                        <input id="loginSubmit" type="submit" value="Login">
+                    </div>
+                </form>
+            </div>
+
+
+
+            <div id="UserLoginFormError" class="template hide"></div>
+        </div>
+        <!-- 
+        <div id="UserLoginForm" style="width: 300px;margin-left: auto;margin-right: auto;">
+            <div class="FF-row">
+                <form id="loginForm" action="/php/api.php" method="post" autocomplete="off">
+                    <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px;">
+                        <input id="userlogin" class="undefined" name="userlogin" type="text" placeholder="Username or Email" value="Admin" undefined="" required="">
+                        <label for="userlogin">Login</label>
+                    </div>
+                    <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px;">
+                        <input id="password" class="undefined" name="password" type="password" placeholder="secret..." value="password" undefined="" required="">
+                        <label for="password">Password</label>
+                    </div>
+                    <div class="FF-item" style="flex-basis: 150px; min-width: 100px; max-width: 200px;">
+                        <input id="loginSubmit" type="submit" value="Login">
+                    </div>
+                </form>
+            </div>
+        </div> -->
+
+
+
+
+    </div>
+    </main>
+    <script>
+        async function getAPIdata(URL, formData = '') {
+            // deb(formData)
+            // if called without the formData parameter
+            if (formData === '') {
+                formData = new FormData();
+                // deb('new FormData')
+            }
+            // almost always add the token
+            if (URL !== 'login') {
+                // deb('append user token')
+                formData.append('user_token', getLocal('token'));
+            }
+            // if fornData was just a node, make real FormData of it
+            if (!(formData instanceof FormData)) {
+                formData = new FormData(formData);
+            }
+
+            // URL = 'https://dev.rasal.de/savemydata/api/' + URL;
+            // URL = 'http://localhost/savemydata/api/' + URL;
+            // URL = 'api/' + URL;
+            URL = 'savemydata/api/' + URL;
+            formData = JSON.stringify(Object.fromEntries(formData));
+            // deb(formData)
+            const response = await fetch(URL, {
+                method: 'POST',
+                credentials: 'same-origin',
+                body: formData,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            const data = await response.json();
+            return data;
+        }
+
+        function setLocal(key, value) {
+            localStorage.setItem('SMD_' + key, value);
+        }
+
+        document.getElementById('loginSubmit').addEventListener('click', async function(event) {
+            event.preventDefault();
+            getAPIdata('login', loginForm)
+                .then((res) => {
+                    // deb(res);
+                    if (res.code === 200) {
+
+                        const user = res.data.user;
+                        document.getElementById('UserLoginForm').remove();
+
+                        // add username & avatar to sidebar
+                        // setUsername(user.username, user.id, user.avatar);
+                        // deb(user.avatar)
+
+                        // save userdata in localStorage
+                        setLocal('username', user.username);
+                        setLocal('id', user.id);
+                        setLocal('role', user.role);
+                        setLocal('permission', user.permission);
+                        setLocal('token', res.data.token);
+                        setLocal('lang', user.lang);
+                        setLocal('avatarPath', user.avatar);
+
+
+
+                        location.href = './#staff/profile/' + user.id;
+
+                    } else {
+                        document.getElementById('UserLoginFormError').innerHTML = res.message;
+                    }
+                })
+        });
+    </script>
+</body>
+
+</html>
