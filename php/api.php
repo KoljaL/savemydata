@@ -583,18 +583,38 @@ function get_data_from( $param ) {
     // " );
 
 
-    if('customer' === $API_param){
+    // if('customer' === $API_param){
+    //     $stmt = $db->prepare( "
+    //         SELECT c.* 
+    //             FROM customer_sharing cs 
+    //             INNER JOIN customer c ON cs.customer_id = c.id
+    //             WHERE cs.staff_id = $user_id
+    //         UNION
+    //         SELECT * 
+    //             FROM customer 
+    //             WHERE id = $user_id
+    //         " );
+    // }
+    
+    
+    $sharings = ['customer', 'project', 'appointment'];
+    
+    if(in_array($API_param, $sharings)){
+        $sharing_table = $API_param.'_sharing';
+        $sharing_id = $API_param.'_id';
         $stmt = $db->prepare( "
             SELECT c.* 
-                FROM customer_sharing cs 
-                INNER JOIN customer c ON cs.customer_id = c.id
+                FROM $sharing_table cs 
+                INNER JOIN $API_param c ON cs.$sharing_id = c.id
                 WHERE cs.staff_id = $user_id
             UNION
             SELECT * 
-                FROM customer 
+                FROM $API_param 
                 WHERE id = $user_id
             " );
-    }else{
+    }
+    
+    else{
         $stmt = $db->prepare( "SELECT * FROM $API_param $where" );
     }
     $stmt->execute();
@@ -814,14 +834,24 @@ function get_profile( $param ) {
  *
  */
 function get_projects_as_table( $param ) {
-    global $db, $API_param, $API_value;
+    global $db, $API_param, $API_value,$user_id;
 
     if ( '' !== $API_value ) {
         $where = ' WHERE id = '.$API_value;
     } else {
         $where = '';
     }
-    $stmt = $db->prepare( "SELECT * FROM project $where" );
+ 
+    $stmt = $db->prepare( "
+        SELECT p.* 
+            FROM project_sharing ps 
+            INNER JOIN project p ON ps.project_id = p.id
+            WHERE ps.staff_id = $user_id
+        UNION
+        SELECT * FROM project  WHERE id = $user_id
+        " );
+
+    // $stmt = $db->prepare( "SELECT * FROM project $where" );
     $stmt->execute();
     $projects = $stmt->fetchAll( PDO::FETCH_ASSOC );
     $response = [];

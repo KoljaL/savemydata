@@ -382,7 +382,7 @@ let Functions = {
                         Message.info("Value '" + el.value + "' saved");
                         setTimeout(() => {
                             el.classList.remove('successEdit')
-                        }, 1000);
+                        }, 2000);
                     }
                     // no else, so we have a chance of no extra class ;-)
                     if (400 === res.code) {

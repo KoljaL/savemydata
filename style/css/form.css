@@ -211,6 +211,7 @@ div.FF-item input:focus+label {
 /* no borders & background if input is hideEdit */
 
 .FF-item textarea.hideEdit,
+.FF-item select.hideEdit,
 .FF-item input.hideEdit {
     background: transparent !important;
     box-shadow: 4px 4px 0 transparent !important;
@@ -218,6 +219,7 @@ div.FF-item input:focus+label {
     pointer-events: none !important;
 }
 
+.FF-item select.forbiddenEdit,
 .FF-item textarea.forbiddenEdit,
 .FF-item input.forbiddenEdit {
     background: transparent !important;
@@ -229,11 +231,13 @@ div.FF-item input:focus+label {
 
 /* input border for singleEdit function */
 
+select.successEdit,
 textarea.successEdit,
 input.successEdit {
     outline: 1px solid var(--fontGreen);
 }
 
+.FF-item select.errorEdit,
 .FF-item textarea.errorEdit,
 .FF-item input.errorEdit {
     outline: 1px solid var(--fontRed);

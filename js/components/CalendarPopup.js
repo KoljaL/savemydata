@@ -2,6 +2,7 @@ import Functions from '../Functions.js';
 // import CustomerListSelect from '../components/CustomerListSelect.js';
 // import StaffListSelect from '../components/StaffListSelect.js';
 import UserList from '../components/UserList.js';
+import AppointmentState from '../components/AppointmentState.js';
 
 let Style = async() => {
     let styleTags = /*CSS*/ `
@@ -99,6 +100,15 @@ let CreateAppointmentPopup = {
                                     <option value=360>6</option>
                                 </select>
                             </div>
+                            <div class="FF-item" style="min-width:50px; flex-basis:50px; max-width:50px;">
+                                <select id="ApPoState" class="boxShadow" name="state" type="text" placeholder="" value="4" data-db="state/appointment/id/17" required="">
+                                    <option value="1">?</option>
+                                    <option value="2">!</option>
+                                    <option value="3">€</option>
+                                    <option value="4">€€</option>
+                                </select>
+                                <label data-lang="F_state" for="state" class="isTop">State</label>
+                            </div>
                         </div>
 
                         <div class=FF-row>
@@ -116,3 +126,5 @@ let CreateAppointmentPopup = {
 };
 
 export default CreateAppointmentPopup;
+
+// ${AppointmentState.text(data.state,id)}

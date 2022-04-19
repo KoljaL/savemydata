@@ -447,6 +447,7 @@ let getSchedules = async(DateRange) => {
                             customer_id: data[i].customer_id,
                             project_id: data[i].project_id,
                             appointment_id: data[i].id,
+                            appointment_state: data[i].state,
                         },
                     };
                 }
@@ -677,6 +678,7 @@ let Appointments = {
                 document.getElementById('ApPoTime').value = startTime;
                 document.getElementById('ApPoTitle').value = data.raw.title;
                 document.getElementById('ApPoDuration').value = duration;
+                document.getElementById('ApPoState').value = data.raw.appointment_state;
                 document.getElementById('ApPoText').innerHTML = data.body;
                 // create dropdown menues and fill with options
                 await CreateSchedule(data.raw.customer_id);
@@ -817,7 +819,7 @@ let Appointments = {
                 const formData = new FormData(CreateAppointmentPopupForm);
                 Functions.getAPIdata('new_entry_in/appointment', formData)
                     .then(function(res) {
-                        deb(res);
+                        // deb(res);
                         if (res.message === 'new') {
                             Message.success(`New Appointment created `);
                         }

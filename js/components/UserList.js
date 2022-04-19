@@ -3,19 +3,17 @@ import LanguageSwitch from './LanguageSwitch.js';
 
 export default {
     render: async(type, table) => {
-        let list = await getUserList(table);
-        // deb(list)
+
 
         if (table === 'staff') {
             window.slugName = 'Staff';
             window.tableName = 'staff';
-        }
-        if (table === 'customer') {
+        } else if (table === 'customer') {
             window.slugName = 'Customer';
             window.tableName = 'customer';
         }
 
-
+        let list = await getUserList(table);
 
         if ('dropdown' === type) {
             // deb(table)

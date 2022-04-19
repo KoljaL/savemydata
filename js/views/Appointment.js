@@ -1,5 +1,6 @@
 import Functions from '../Functions.js';
 import Images from '../components/Images.js';
+import AppointmentState from '../components/AppointmentState.js';
 import AppointmentsList from '../components/AppointmentsList.js';
 
 let Appointment = {
@@ -114,7 +115,7 @@ let AppointmentContent = async(id) => {
             .then((res) => {
                 if (res.code === 200) {
                     let data = res.data
-                    deb(data);
+                        // deb(data);
                     let map_link, map_location;
                     if (data.map_link !== '') {
                         map_link = `<a href=${data.map_link} class="icon map_icon"  target="_blanc"></a>`;
@@ -128,7 +129,6 @@ let AppointmentContent = async(id) => {
                     }
                     // make rows for textarea
                     let rows = data.comment.split('\n').length + 2;
-                    // deb(rows)
                     let innerHTML = /*HTML*/ `
                     <div id=AppointmentHeader>
                         <div class=Headline>
@@ -156,13 +156,20 @@ let AppointmentContent = async(id) => {
                                     <input id="firstname" class="hideEdit boxShadow" name="firstname" type="time" placeholder="" value="${data.start_time}" data-db="start_time/appointment/id/${id}" required="">
                                     <label data-lang="F_time" for="firstname">Time</label>
                                 </div>                                
-                                <div class="FF-item" style="min-width:50px; flex-basis:50px; max-width:50px;">
+                                <div class="FF-item" style="min-width:80px; flex-basis:50px; max-width:50px;">
                                     <input id="lastname" class="hideEdit boxShadow" name="lastname" type="text" placeholder="" value="${data.duration}" data-db="duration/appointment/id/${id}" required="">
                                     <label data-lang="F_duration" for="lastname">Duration</label>
                                 </div> 
+
+                                <div class="FF-item" style="min-width:150px; flex-basis:150px; max-width:150px;">
+                                ${AppointmentState.text(data.state,id)}
+                                    <label data-lang="F_state" for="state" class=isTop>State</label>
+                                </div> 
+
+
                             </div>
 
-                            <h3 data-lang="F_location">Location</h3>
+                            <h3 data-lang="H_location">Location</h3>
                             <div class="FF-row" style="padding-top:1em;margin-top:-1em;">
                                 <div class="FF-item" style="min-width:250px; flex-basis:550px; max-width:300px;">
                                     <input id="location" class="hideEdit boxShadow" name="location" type="text" placeholder="" value="${map_location}" data-db="location/appointment/id/${id}" required="">
@@ -171,7 +178,7 @@ let AppointmentContent = async(id) => {
 
                                 <div class="FF-item" style="min-width:250px; flex-basis:550px; max-width:300px;">
                                     <span class="boxShadow button" id=locationLink>${map_link}</span>
-                                    <span class="boxShadow button" id="getLocationLinkButton">get Map</span>
+                                    <span class="boxShadow button" id="getLocationLinkButton" data-lang="F_getmap">get Map</span>
                                 </div>
                             </div>
 
@@ -207,7 +214,7 @@ let AppointmentContent = async(id) => {
                             document.getElementById('editAppointmentButton').dataset.lang = 'edit'
 
                             document.getElementById('editAppointmentButton').addEventListener('click', function() {
-                                document.querySelectorAll('#AppointmentBody input,#AppointmentBody textarea, #AppointmentBody .thumbnailWrapper').forEach((input) => {
+                                document.querySelectorAll('#AppointmentBody input,#AppointmentBody textarea,#AppointmentBody select, #AppointmentBody .thumbnailWrapper').forEach((input) => {
                                     // make fields editable
                                     input.classList.toggle('hideEdit');
                                     // updata db on focusout

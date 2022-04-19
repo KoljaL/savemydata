@@ -18,6 +18,7 @@ export default {
         "Customer-Profile": 'Kunden Profil',
         "H_appointments": 'Termine',
         'H_project': 'Projekt:',
+        'H_location': 'Adresse',
         'H_projects': 'Projekte',
         // Sidebar
         'S_menu': 'Menü',
@@ -45,6 +46,7 @@ export default {
         'F_role': 'Rolle',
         'F_permission': 'Berechtigungen',
         'F_date': 'Datum',
+        'F_location': 'Anschrift',
         'F_street': 'Straße',
         'F_street_nr': 'Nr.',
         'F_city': 'Stadt',
@@ -57,7 +59,12 @@ export default {
         'F_duration': 'Dauer',
         'F_staffname': 'Mitarbeiter',
         'F_projectname': 'Projekt',
-        'F_public': 'öffentlich',
+        'F_offered': 'Angefragt',
+        'F_approved': 'Zugesagt',
+        'F_deposit_paid': 'Angezahlt',
+        'F_full_paid': 'Bezahlt',
+        'F_images': 'Bilder',
+        'F_getmap': 'Karte anlegen',
 
     },
     'en': {
@@ -79,6 +86,7 @@ export default {
         "Customer-Profile": 'Customer Profile',
         "H_appointments": 'Appointments',
         'H_project': 'Project:',
+        'H_location': 'Location',
         'H_projects': 'Projects',
         //sidebar
         'S_menu': 'Menu',
@@ -105,6 +113,7 @@ export default {
         'F_role': 'Role',
         'F_permission': 'Permission',
         'F_date': 'Date',
+        'F_location': 'Adress',
         'F_street': 'Street',
         'F_street_nr': 'No.',
         'F_city': 'City',
@@ -118,5 +127,11 @@ export default {
         'F_staffname': 'Staff',
         'F_projectname': 'Project',
         'F_public': 'Public',
+        'F_offered': 'Offered',
+        'F_approved': 'Approved',
+        'F_deposit_paid': 'Deposit Paid',
+        'F_full_paid': 'Full Paid',
+        'F_images': 'Images',
+        'F_getmap': 'get Map',
     }
 }

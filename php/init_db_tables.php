@@ -228,6 +228,7 @@ function init_appointment_table()
             lng TEXT NOT NULL DEFAULT "",
             lat TEXT NOT NULL DEFAULT "",
             map_link TEXT NOT NULL DEFAULT "",
+            state TEXT NOT NULL DEFAULT "",
             date TEXT NOT NULL  DEFAULT ""
         )');
 }
@@ -284,6 +285,8 @@ function init_project_sharing_table()
             can_edit TEXT NOT NULL DEFAULT "false",
             date TEXT NOT NULL  DEFAULT ""
         )');
+    $project_sharing = ['project_id' => '4', 'staff_id' => '5'];
+    insert_into_db($project_sharing, 'project_sharing');
 }
 
 function init_appointment_sharing_table()
@@ -516,6 +519,7 @@ function create_dummy_appointment($count, $days)
             'staff_id'    => $staff_id,
             'project_id'  => $project_id,
             'customer_id' => $customer_id,
+            'state' => random_int(1, 4),
             'comment'     => random_text()
         ];
         insert_into_db($project, 'appointment');
