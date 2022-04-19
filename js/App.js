@@ -17,7 +17,12 @@ import ProfileForm from './views/ProfileForm.js';
 import LanguageSwitch from './components/LanguageSwitch.js';
 
 
-
+let role = Functions.getLocal('role');
+// deb(role)
+if (role !== 'admin' && role !== 'manager') {
+    // document.getElementById('staffItem').remove();
+    // document.getElementById('customerProfileElements').remove();
+}
 // LanguageSwitch.render();
 // COMPONENTS
 // import CustomerListSelect from './components/CustomerListSelect.js';

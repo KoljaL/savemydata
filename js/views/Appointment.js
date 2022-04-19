@@ -142,7 +142,7 @@ let AppointmentContent = async(id) => {
                         </div>        
                     </div>
                     <h3><a href="#customer/profile/${data.customer_id}"> ${data.customername}</a></h3>
-                    <h4>Staff: <a href="#customer/profile/${data.staff_id}"> ${data.staffname}</a></h4>
+                    <h4>Staff: <a href="#staff/profile/${data.staff_id}"> ${data.staffname}</a></h4>
 
                     <div id=AppointmentBody>
                         <div id=AppointmentText>

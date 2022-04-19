@@ -181,6 +181,7 @@ let getUserData = async(userID) => {
                 if (res.code === 200) {
                     const user = res.data;
                     // deb(user)
+                    // deb(formFields)
                     window.userName = user.username;
 
                     Functions.pageTitle(`${userName}'s Profile`);
@@ -218,6 +219,8 @@ let getUserData = async(userID) => {
                         innerHTML += '</form>';
                         // copy to DOM
                         Functions.setInnerHTML('Userdata', innerHTML);
+                    } else {
+                        deb(formFields.message)
                     }
 
 

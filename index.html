@@ -44,7 +44,7 @@
 <body id="body" class="darkWrapper">
     <script>
         if (localStorage.getItem('DF_token')) {
-            document.getElementById('body').classList.remove('darkWrapper');
+            // document.getElementById('body').classList.remove('darkWrapper');
         }
     </script>
     <div id="PRL">
@@ -67,10 +67,9 @@
             <div class="sidebar_body">
                 <ul>
 
-                    <li data-link="staff/table">
+                    <li data-link="staff/table" id="staffItem">
                         <span class="link_text"><span class="icon user_icon"></span><span data-lang="S_staff">Staff</span></span>
                         <ul class="subList">
-                            <!-- <li data-link="staff/profile"><span class="link_text"><span data-lang="S_staff-profile">Staff Profile</span></span></li> -->
                             <li data-link="formeditor/staff_fields"><span class="link_text"><span  data-lang="S_profile-form">Profile Fields</span></span>
                             </li>
                         </ul>
@@ -78,18 +77,19 @@
 
                     <li data-link="customer/table">
                         <span class="link_text"><span class="icon users_icon"></span><span data-lang="S_customer">Customer</span></span>
-                        <ul class="subList">
-                            <!-- <li data-link="customer/profile"><span class="link_text"><span data-lang="S_customer-profile">Customer Profile</span></span></li> -->
+
+                        <ul class="subList" id="customerProfileElements">
                             <li data-link="formeditor/customer_fields"><span class="link_text"><span data-lang="S_profile-form">Profile Fields</span></span>
                             </li>
-
                         </ul>
+
                     </li>
 
 
                     <li data-link="project/table">
                         <span class="link_text"><span class="icon project_icon"></span><span data-lang="S_projects">Projects</span></span>
                     </li>
+
                     <li data-link="appointment/table">
                         <span class="link_text"><span class="icon appointment_icon"></span><span data-lang="S_appointment">Appointment</span></span>
                     </li>

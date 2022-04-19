@@ -226,7 +226,7 @@ function access_log( $response ) {
 function allowed_at_all() {
     global $request, $API_endpoint, $API_param, $API_value, $user_role, $user_id;
     // https://www.php.net/manual/en/control-structures.match.php
-    $admin_params = ['staff', 'staff_fields'];
+    $admin_params = ['staff'];
 
     // if not admin or admin role
     if ( "admin" !== $user_role ) {
@@ -258,39 +258,39 @@ function allowed_at_all() {
 //  ##     ##  #######     ##    ##     ##     ##       #### ########    ##    ######## ##     ##
 //
 */
-function permission_filter( $res ) {
-    global $request, $API_endpoint, $API_param, $API_value, $user_role, $user_id;
+// function permission_filter( $res ) {
+//     global $request, $API_endpoint, $API_param, $API_value, $user_role, $user_id;
 
-    // $allowed_ids = [$user_id, '1'];
-    //
-    // show the staff only his customer
-    //
-    if (
-        // show the staff only his customer
-        'get_data_from' === $API_endpoint && 'customer' === $API_param && 'staff' === $user_role ||
-        // show the staff only his projects
-        'get_projects_as_table' === $API_endpoint && 'staff' === $user_role ||
-        // show the staff only his appointments
-        'get_appointments_as_table' === $API_endpoint && 'staff' === $user_role ||
-        // show the staff only his customer in dropdown list
-        'get_list_from' === $API_endpoint && 'customer' === $API_param && 'staff' === $user_role
-    ) {
-        foreach ( $res['data'] as $key => $value ) {
-            if ( $res['data'][$key]['staff_id'] !== $user_id ) {
-                // if ( !in_array( $res['data'][$key]['staff_id'], $allowed_ids ) ) {
-                unset( $res['data'][$key] );
-            }
-        }
-    }
+//     // $allowed_ids = [$user_id, '1'];
+//     //
+//     // show the staff only his customer
+//     //
+//     if (
+//         // show the staff only his customer
+//         'get_data_from' === $API_endpoint && 'customer' === $API_param && 'staff' === $user_role ||
+//         // show the staff only his projects
+//         'get_projects_as_table' === $API_endpoint && 'staff' === $user_role ||
+//         // show the staff only his appointments
+//         'get_appointments_as_table' === $API_endpoint && 'staff' === $user_role ||
+//         // show the staff only his customer in dropdown list
+//         'get_list_from' === $API_endpoint && 'customer' === $API_param && 'staff' === $user_role
+//     ) {
+//         foreach ( $res['data'] as $key => $value ) {
+//             if ( $res['data'][$key]['staff_id'] !== $user_id ) {
+//                 // if ( !in_array( $res['data'][$key]['staff_id'], $allowed_ids ) ) {
+//                 unset( $res['data'][$key] );
+//             }
+//         }
+//     }
 
-    // reindex array
-    // unterschiedung zwischen [0] und ['id] Array
-    if ( is_array_indexed( $res['data'] ) ) {
-        $res['data'] = array_values( $res['data'] );
-    }
-    // deb( $res );
-    return $res;
-}
+//     // reindex array
+//     // unterschiedung zwischen [0] und ['id] Array
+//     if ( is_array_indexed( $res['data'] ) ) {
+//         $res['data'] = array_values( $res['data'] );
+//     }
+//     // deb( $res );
+//     return $res;
+// }
 
 /**
  *
@@ -479,7 +479,7 @@ function login_user( $request ) {
     $stmt = $db->prepare( "SELECT * FROM staff WHERE $userlogin =?" );
     $stmt->execute( [$request['userlogin']] );
     $user = $stmt->fetch();
-
+    $stmt->closeCursor();
     // if found user, create data
     $response = [];
     if ( $user && password_verify( $request['password'], $user['password'] ) ) {
@@ -538,6 +538,7 @@ function get_list_from( $param ) {
     $stmt = $db->prepare( "SELECT $columns FROM $table" );
     $stmt->execute();
     $users = $stmt->fetchAll( PDO::FETCH_ASSOC );
+    $stmt->closeCursor();
 
     $response = [];
     if ( $users ) {
@@ -619,7 +620,7 @@ function get_data_from( $param ) {
     }
     $stmt->execute();
     $form = $stmt->fetchAll( PDO::FETCH_ASSOC );
-
+$stmt->closeCursor();
     $response = [];
     if ( $form ) {
         foreach ( $form as $key => $value ) {
@@ -703,6 +704,7 @@ function delete_entry_in( $param ) {
         $stmt = $db->prepare( "SELECT * FROM $table WHERE id =? " );
         $stmt->execute( [$API_value] );
         $image      = $stmt->fetch( PDO::FETCH_ASSOC );
+        $stmt->closeCursor();
         $path       = $image['path'];
         $path_thumb = $image['path_thumb'];
         unlink( '../'.$path );
@@ -712,7 +714,7 @@ function delete_entry_in( $param ) {
     $stmt = $db->prepare( "DELETE FROM $table WHERE id =?" );
     $stmt->execute( [$id] );
     $count = $stmt->rowCount();
-
+    $stmt->closeCursor();
     if ( $count ) {
         $response['code'] = 200;
         $response['data'] = $count;
@@ -794,10 +796,9 @@ function get_profile( $param ) {
     // $stmt = $db->prepare( "SELECT * FROM appointment WHERE id = :id" );
 
     $stmt = $db->prepare( "SELECT * FROM $API_param WHERE id = :id" );
-
     $stmt->execute( [':id' => $API_value] );
-
     $appointments = $stmt->fetch( PDO::FETCH_ASSOC );
+    $stmt->closeCursor();
 
     $response = [];
     if ( $appointments ) {
@@ -854,6 +855,7 @@ function get_projects_as_table( $param ) {
     // $stmt = $db->prepare( "SELECT * FROM project $where" );
     $stmt->execute();
     $projects = $stmt->fetchAll( PDO::FETCH_ASSOC );
+    $stmt->closeCursor();
     $response = [];
     if ( $projects ) {
 
@@ -892,6 +894,7 @@ function join_test() {
             " );
     $stmt->execute();
     $project  = $stmt->fetch( PDO::FETCH_ASSOC );
+    $stmt->closeCursor();
     $response = [];
     if ( $project ) {
 
@@ -899,6 +902,7 @@ function join_test() {
         // $stmt = $db->prepare( "SELECT * FROM appointment WHERE project_id = $API_param" );
         // $stmt->execute();
         // $appointments            = $stmt->fetchAll( PDO::FETCH_ASSOC );
+        // $stmt->closeCursor();
         // $project['appointments'] = $appointments;
 
         // $project['customername'] = get_name_by_id( 'customer', $project['customer_id'] );
@@ -946,7 +950,7 @@ function get_project( $param ) {
     $stmt->execute( [':id' => $API_param] );
 
     $project = $stmt->fetch( PDO::FETCH_ASSOC );
-
+$stmt->closeCursor();
     $response = [];
     if ( $project ) {
 
@@ -954,7 +958,7 @@ function get_project( $param ) {
         $stmt = $db->prepare( "SELECT a.id, a.start_date, a.start_time FROM appointment a WHERE project_id =?" );
         $stmt->execute( [$API_param] );
         $project['appointments'] = $stmt->fetchAll( PDO::FETCH_ASSOC );
-
+        $stmt->closeCursor();
         // $project['customername'] = get_name_by_id( 'customer', $project['customer_id'] );
         // $project['staffname']    = get_name_by_id( 'staff', $project['staff_id'] );
 
@@ -999,7 +1003,7 @@ function get_projects_from( $param ) {
     $stmt->execute( [':id' => $API_value] );
 
     $projects = $stmt->fetchAll( PDO::FETCH_ASSOC );
-
+    $stmt->closeCursor();
     $response = [];
     if ( $projects ) {
         $response['code'] = 200;
@@ -1048,7 +1052,7 @@ function get_appointment( $param ) {
     $stmt->execute( [':id' => $API_param] );
 
     $appointments = $stmt->fetch( PDO::FETCH_ASSOC );
-
+    $stmt->closeCursor();
     $response = [];
     if ( $appointments ) {
         // $appointments['customername']   = get_name_by_id( 'customer', $appointments['customer_id'] );
@@ -1097,7 +1101,7 @@ function get_appointments_from( $param ) {
     $stmt->execute( [':id' => $API_value] );
 
     $files = $stmt->fetchAll( PDO::FETCH_ASSOC );
-
+    $stmt->closeCursor();
     $response = [];
     if ( $files ) {
         $response['code'] = 200;
@@ -1147,7 +1151,7 @@ function get_appointments_as_table( $param ) {
     $stmt = $db->prepare( "SELECT * FROM appointment $from_to" );
     $stmt->execute();
     $appointments = $stmt->fetchAll( PDO::FETCH_ASSOC );
-
+    $stmt->closeCursor();
     $response             = [];
     $response['$from_to'] = $from_to;
 
@@ -1200,7 +1204,7 @@ function get_appointment_as_ics( $param ) {
     $stmt = $db->prepare( "SELECT * FROM appointment $where" );
     $stmt->execute();
     $appointment = $stmt->fetch( PDO::FETCH_ASSOC );
-
+    $stmt->closeCursor();
     $response = [];
     if ( $appointment ) {
         $appointment['username']    = get_name_by_id( 'customer', $appointment['customer_id'] );
@@ -1365,7 +1369,7 @@ function get_files_from( $param ) {
     $stmt = $db->prepare( "SELECT * FROM files WHERE origin = :origin AND origin_id = :origin_id" );
     $stmt->execute( [':origin' => $API_param, ':origin_id' => $API_value] );
     $files = $stmt->fetchAll( PDO::FETCH_ASSOC );
-
+    $stmt->closeCursor();
     $response = [];
     if ( $files ) {
         $response['code'] = 200;
@@ -1470,6 +1474,7 @@ function get_name_by_id( $table, $id, $name = 'username' ) {
     $stmt = $db->prepare( "SELECT id, $name FROM $table WHERE id = $id" );
     $stmt->execute();
     $user = $stmt->fetch( PDO::FETCH_ASSOC );
+    $stmt->closeCursor();
     // print_r( $user );
     if ( isset( $user[$name] ) ) {
         return $user[$name];
@@ -1538,6 +1543,7 @@ function insert_into_db( $param, $table, $output = true ) {
     $stmt->execute();
     usleep(20);
     $table_info     = $stmt->fetchAll( PDO::FETCH_ASSOC );
+    $stmt->closeCursor();
     $columns_exists = [];
     foreach ( $table_info as $key => $value ) {
         $columns_exists[] = $table_info[$key]['name'];
