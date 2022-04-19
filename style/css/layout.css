@@ -961,3 +961,71 @@ footer .withLove img {
     max-width: 90vw;
     height: auto;
 }
+
+
+/*
+//  
+//     ###     ######   ######   #######  ########  ########  ####  #######  ##    ##
+//    ## ##   ##    ## ##    ## ##     ## ##     ## ##     ##  ##  ##     ## ###   ##
+//   ##   ##  ##       ##       ##     ## ##     ## ##     ##  ##  ##     ## ####  ##
+//  ##     ## ##       ##       ##     ## ########  ##     ##  ##  ##     ## ## ## ##
+//  ######### ##       ##       ##     ## ##   ##   ##     ##  ##  ##     ## ##  ####
+//  ##     ## ##    ## ##    ## ##     ## ##    ##  ##     ##  ##  ##     ## ##   ###
+//  ##     ##  ######   ######   #######  ##     ## ########  ####  #######  ##    ##
+//  
+*/
+
+summary {
+    font-family: 'Zilla Slab', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.1rem;
+    text-shadow: var(--text-shadow);
+    font-size: 1.17em;
+    cursor: pointer;
+    margin-left: .5em;
+    outline: none;
+    display: block;
+    padding-left: .3em;
+    position: relative;
+    cursor: pointer;
+}
+
+summary:hover {
+    color: var(--fontBlue);
+}
+
+details {
+    /* max-width: 500px; */
+    box-sizing: border-box;
+    margin-top: 5px;
+    /* background: white; */
+}
+
+details summary::-webkit-details-marker {
+    display: none;
+}
+
+details[open]>summary:before {
+    transform: rotate(90deg);
+}
+
+summary:before {
+    content: '';
+    border-width: 0.4rem;
+    border-style: solid;
+    border-color: transparent transparent transparent #fff;
+    position: absolute;
+    top: .25em;
+    left: -.5em;
+    transform: rotate(0);
+    transform-origin: 0.2rem 50%;
+    transition: 0.25s transform ease;
+}
+
+
+/* .content {
+    border-top: none;
+    padding: 10px;
+    border: 2px solid #888;
+    border-top: none;
+} */

@@ -2,6 +2,7 @@
 
 // COMMON FUCTIONS
 import ("./components/ModalMessage.js");
+// import ("./components/Accordion.js");
 import Functions from './Functions.js';
 
 
@@ -15,6 +16,7 @@ import Profile from './views/Profile.js';
 import Project from './views/Project.js';
 import ProfileForm from './views/ProfileForm.js';
 import LanguageSwitch from './components/LanguageSwitch.js';
+import Accordion from './components/Accordion.js';
 
 
 let role = Functions.getLocal('role');
@@ -133,15 +135,18 @@ async function router() {
     // when content is loaded, turn bach the opacity :-)
     await Functions.sleep(400)
         .then(() => {
+
             document.getElementById('main').classList.add('visible');
             Functions.loadingDots('body', false);
             LanguageSwitch.render();
         })
-        // .then(() => {
-        //     setTimeout(() => {
-        //         LanguageSwitch.render();
-        //     }, 500);
-        // })
+        .then(() => {
+            setTimeout(() => {
+                document.querySelectorAll('details').forEach((el) => {
+                    new Accordion(el);
+                });
+            }, 500);
+        })
 
 
 

@@ -1,6 +1,7 @@
 import Functions from '../Functions.js';
 import Images from '../components/Images.js';
 import AppointmentsList from '../components/AppointmentsList.js';
+import ShareItem from '../components/ShareItem.js';
 
 let Project = {
     render: async(id) => {
@@ -154,6 +155,9 @@ let ProjectContent = async(id) => {
                                 </div>
                             </div>
                         </div>
+    
+                        ${ShareItem.render({})}
+
                         <div style="display:flex;gap: 1em;">
                             <div id=ProjectAppointments></div>
                             <div id=ProjectImages>
