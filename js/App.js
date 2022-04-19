@@ -7,7 +7,7 @@ import Functions from './Functions.js';
 
 // VIEWS
 import Default from './views/Default.js';
-import Login from './views/Login.js';
+// import Login from './views/Login.js';
 import Table from './views/Table.js';
 import Appointment from './views/Appointment.js';
 import Calendar from './views/Calendar.js';

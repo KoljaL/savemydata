@@ -46,47 +46,40 @@
             <a href="https://dev.rasal.de/savemydata"><img src="style/img/NeedleMachine.svg" alt="RPL" /></a>
             <h1 data-lang="S_title" class="page_name">S-M-D</h1>
         </header>
-        <div id="UserLoginForm">
-            <div class="FF-row">
-                <form id="loginForm" action="" method="post" autocomplete="off">
-
-
-                    <!-- TESTING -->
-                    <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px;">
+        <div id="UserLoginForm" style="width: 450px;margin-left: auto;margin-right: auto; margin-top:10em;">
+            <form id="loginForm" action="" method="post" autocomplete="off">
+                <div class="FF-row">
+                    <div class="FF-item" style="min-width:100px; flex-basis:100px; max-width:100px;">
                         <input type="radio" id="Admin" name="userlogin" value="Admin">
                         <label for="Admin">Admin</label>
                     </div>
-                    <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px;">
+                    <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:300px;">
                         <input type="radio" id="Manager" name="userlogin" value="Manager">
                         <label for="Manager">Manager</label>
                     </div>
-                    <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px;">
+                    <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:100px;">
                         <input type="radio" id="Staff 0" name="userlogin" value="Staff 0">
                         <label for="Staff 0">Staff 0</label>
                     </div>
-                    <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px;">
+                    <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:100px;">
                         <input type="radio" id="Staff 1" name="userlogin" value="Staff 1">
                         <label for="Staff 1">Staff 1</label>
                     </div>
-                    <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px;">
+                    <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:100px;">
                         <input type="radio" id="Staff 2" name="userlogin" value="Staff 2">
                         <label for="Staff 2">Staff 2</label>
                     </div>
                     <input id="password" name="password" type="hidden" value="password">
-                    <!-- TESTING -->
-
-
-                    <div class="FF-item" style="flex-basis: 150px; min-width: 100px; max-width: 200px;">
-                        <input id="loginSubmit" type="submit" value="Login">
-                    </div>
-                </form>
-            </div>
-
-
-
-            <div id="UserLoginFormError" class="template hide"></div>
+                </div>
+                <div class="FF-item" style="flex-basis: 150px; min-width: 100px; max-width: 500px;">
+                    <input id="loginSubmit" type="submit" value="Login">
+                </div>
+            </form>
         </div>
-        <!-- 
+
+
+
+        <!-- REAL LOGIN DO NOT REMOVE 
         <div id="UserLoginForm" style="width: 300px;margin-left: auto;margin-right: auto;">
             <div class="FF-row">
                 <form id="loginForm" action="/php/api.php" method="post" autocomplete="off">
@@ -102,8 +95,9 @@
                         <input id="loginSubmit" type="submit" value="Login">
                     </div>
                 </form>
+                <div id="UserLoginFormError" class="template hide"></div>
             </div>
-        </div> -->
+        </div> REAL LOGIN DO NOT REMOVE -->
 
 
 
@@ -112,28 +106,9 @@
     </main>
     <script>
         async function getAPIdata(URL, formData = '') {
-            // deb(formData)
-            // if called without the formData parameter
-            if (formData === '') {
-                formData = new FormData();
-                // deb('new FormData')
-            }
-            // almost always add the token
-            if (URL !== 'login') {
-                // deb('append user token')
-                formData.append('user_token', getLocal('token'));
-            }
-            // if fornData was just a node, make real FormData of it
-            if (!(formData instanceof FormData)) {
-                formData = new FormData(formData);
-            }
-
-            // URL = 'https://dev.rasal.de/savemydata/api/' + URL;
-            // URL = 'http://localhost/savemydata/api/' + URL;
-            // URL = 'api/' + URL;
+            formData = new FormData(formData);
             URL = 'savemydata/api/' + URL;
             formData = JSON.stringify(Object.fromEntries(formData));
-            // deb(formData)
             const response = await fetch(URL, {
                 method: 'POST',
                 credentials: 'same-origin',
@@ -151,18 +126,13 @@
         }
 
         document.getElementById('loginSubmit').addEventListener('click', async function(event) {
+            document.getElementById('UserLoginForm').style.opacity = 0;
             event.preventDefault();
             getAPIdata('login', loginForm)
                 .then((res) => {
                     // deb(res);
                     if (res.code === 200) {
-
                         const user = res.data.user;
-                        document.getElementById('UserLoginForm').remove();
-
-                        // add username & avatar to sidebar
-                        // setUsername(user.username, user.id, user.avatar);
-                        // deb(user.avatar)
 
                         // save userdata in localStorage
                         setLocal('username', user.username);
@@ -172,12 +142,9 @@
                         setLocal('token', res.data.token);
                         setLocal('lang', user.lang);
                         setLocal('avatarPath', user.avatar);
-
-
-
                         location.href = './#staff/profile/' + user.id;
-
                     } else {
+                        document.getElementById('UserLoginForm').style.opacity = 1;
                         document.getElementById('UserLoginFormError').innerHTML = res.message;
                     }
                 })
