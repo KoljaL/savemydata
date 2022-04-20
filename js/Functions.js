@@ -277,26 +277,42 @@ let Functions = {
     /* This code is fetching the data from the API and returning it. */
     getAPIdata: async(URL, formData = '') => {
         // deb(formData)
+
         // if called without the formData parameter
         if (formData === '') {
             formData = new FormData();
             // deb('new FormData')
         }
-        // almost always add the token
-        if (URL !== 'login') {
-            // deb('append user token')
-            formData.append('user_token', Functions.getLocal('token'));
-        }
-        // if fornData was just a node, make real FormData of it
-        if (!(formData instanceof FormData)) {
-            formData = new FormData(formData);
-        }
 
+        // prepare object 
+        if (typeof formData === 'object' && !(formData instanceof FormData)) {
+            formData.user_token = Functions.getLocal('token');
+            formData = JSON.stringify(formData);
+            // deb(formData)
+        }
+        // prepare FormData
+        else {
+            // almost always add the token
+            if (URL !== 'login') {
+                // deb('append user token')
+                formData.append('user_token', Functions.getLocal('token'));
+            }
+            // if fornData was just a node, make real FormData of it
+            if (!(formData instanceof FormData)) {
+                formData = new FormData(formData);
+            }
+            formData = JSON.stringify(Object.fromEntries(formData));
+
+        } // formdata obj
+
+
+        //
+        //
+        //
         // URL = 'https://dev.rasal.de/savemydata/api/' + URL;
         // URL = 'http://localhost/savemydata/api/' + URL;
         // URL = 'api/' + URL;
         URL = 'savemydata/api/' + URL;
-        formData = JSON.stringify(Object.fromEntries(formData));
         // deb(formData)
         const response = await fetch(URL, {
             method: 'POST',

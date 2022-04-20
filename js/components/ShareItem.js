@@ -18,7 +18,7 @@ export default {
                     <div class="boxShadow FF-row content">
                         <div style="width:200px; height:100px;">
                             <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px; margin-bottom:0;">
-                                <input id="shareWith" class=boxShadow name="shareWith" type="text" placeholder="Email" required="">
+                                <input id="shareWith" class=boxShadow name="shareWith" type="text" placeholder="Email" value="manager@manager.org" required="">
                                 <label for="shareWith">Share With</label>
                             </div>
                             <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:100px; margin-top:-.5em;">
@@ -89,22 +89,32 @@ let Style = () => {
 };
 
 
-let addEvents = (data) => {
+let addEvents = (obj) => {
 
     // add eventListener only once!
-    if (body.getAttribute('shareWith') !== 'true') {
-        body.setAttribute('shareWith', true)
+    if (body.getAttribute('shareWithEvent') !== 'true') {
+        body.setAttribute('shareWithEvent', true)
         body.addEventListener('click', shareWith)
     }
 
     function shareWith(el) {
         if (el.target.id === 'shareWithSubmit') {
             if (document.getElementById('shareWith').value) {
-
                 let sharingEmail = document.getElementById('shareWith').value;
                 if (Functions.ValidateEmail(sharingEmail)) {
-                    deb(data)
+                    obj.sharingEmail = sharingEmail;
+                    deb(obj)
 
+                    Functions.getAPIdata('share_item/' + obj.type, obj)
+                        .then((res) => {
+                            if (res.code === 200) {
+                                let data = res.data
+                                Message.success(obj.type + ' <b>' + data.itemName + '</b> shared with<b> ' + data.staffName + '</b>');
+                                deb(data)
+                            } else if (res.code === 400) {
+                                Message.warn('Email not found: ' + sharingEmail);
+                            }
+                        });
                 } else {
                     Message.warn('not a valid Email: ' + sharingEmail);
                 }

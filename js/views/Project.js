@@ -85,6 +85,14 @@ let Style = async() => {
         #editProjectButton:hover{
             color: var(--fontBlue);
         }
+
+        .ProjectSharings{
+            margin-left: auto;
+        }
+        .small .ProjectSharings,
+        .medium .ProjectSharings{
+            margin-left: 0;
+        }
        
     `;
     Functions.createStyle('Project_hfdi_style', styleTags);
@@ -162,7 +170,7 @@ let ProjectContent = async(id) => {
     
 
 
-                        <div style="display:flex;gap: 2em;">
+                        <div style="display:flex;gap: 2em;flex-wrap: wrap;">
                             <div id=ProjectAppointments></div>
                             <div id=ProjectImages>
                                 <h3 data-lang="F_images">Images</h3>
@@ -171,13 +179,15 @@ let ProjectContent = async(id) => {
                                 ${Images.render({origin: 'project',origin_id:data.id})}
                                 
                             </div>
-                            ${ShareItem.render({
-                                type:'project',
-                                project_id: data.id,
-                                customer_id: data.customer_id,
-                                staff_id: data.staff_id,
-                                appointments: data.appointments,
-                            })}
+                            <div class="ProjectSharings">
+                                ${ShareItem.render({
+                                    type:'Project',
+                                    project_id: data.id,
+                                    customer_id: data.customer_id,
+                                    staff_id: data.staff_id,
+                                    appointments: data.appointments,
+                                })}
+                            </div>  
                         </div>
                     </div>
                 `;

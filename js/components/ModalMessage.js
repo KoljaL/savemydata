@@ -83,6 +83,8 @@
             pointer-events: all;
             cursor: pointer;
             box-shadow: 4px 4px 0 var(--InputShadow);
+            max-width: 90vw;
+            min-width: max-content;
         }
 
         [data-theme="dark-boxes"] .vt-card, 
@@ -156,7 +158,7 @@
         options: {
             title: undefined,
             position: toastPosition.TopCenter,
-            duration: 2000,
+            duration: 3000,
             closable: true,
             focusable: true,
             callback: undefined
