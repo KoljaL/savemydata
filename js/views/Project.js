@@ -119,7 +119,6 @@ let Content = async() => {
     <div id=ProjectWrapper>
        <div id=ProjectContent></div>
        <div id=ProjectAppointments></div>
-       <textarea rows="50" id=debug style="display:none" ></textarea>
     </div>`;
     await Functions.setInnerHTML('main', innerHTML);
 }
@@ -138,26 +137,29 @@ let ProjectContent = async(id) => {
         Functions.getAPIdata('get_project/' + id)
             .then((res) => {
                 if (res.code === 200) {
-                    let data = res.data
-                        // deb(data);
-                    document.getElementById('debug').innerHTML = JSON.stringify(data, undefined, 4);
+                    let data = res.data;
+                    // deb(data);
                     Functions.pageTitle(`Project ${data.title}`)
-
+                    let shared_staff = '';
+                    if (data.shared) {
+                        shared_staff = `shared from ${data.shared.user_name}`;
+                    }
                     // deb(data.comment_staff)
                     let rows = data.comment_staff.split('\n').length;
                     // deb(rows)
                     let innerHTML = /*HTML*/ `
                     <div id=ProjectHeader>
                         <div class=Headline>
-                            <h2 data-lang="H_project">Project: </h2>
+                            <h2 data-lang="H_project">Project:</h2>
                             <h2>&nbsp; ${data.title}</h2><br>
+                            <h4>&nbsp; ${shared_staff}</h4><br>
                         </div>
                         <div class="ActionButtons">
                             <span class=boxShadow id="editProjectButton"></span>
                             <span class=boxShadow id="deleteProjectButton"></span>
                         </div>        
                     </div>
-                    <h3><a href="#customer/profile/${data.customer_id}"> ${data.customername}</a></h3>
+                    <h3>Customer: <a href="#customer/profile/${data.customer_id}"> ${data.customername}</a></h3>
                     <div id=ProjectBody>
                         <div id=ProjectText>
                         <h3 data-lang="F_comment">Comment</h3>
@@ -194,8 +196,9 @@ let ProjectContent = async(id) => {
                     Functions.setInnerHTML('ProjectContent', innerHTML);
 
                     return data;
-                } else {
-                    document.getElementById('ProjectFormError').innerHTML = res.message;
+                } else if (res.code === 403) {
+
+                    document.getElementById('ProjectContent').innerHTML = res.message;
                 }
             })
             // show Appointments

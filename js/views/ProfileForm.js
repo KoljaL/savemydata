@@ -62,12 +62,6 @@ let Content = async() => {
 };
 
 
-
-
-
-
-
-
 let getData = async(formtable) => {
     Functions.getAPIdata('get_data_from/' + formtable)
         .then((res) => {

@@ -82,7 +82,8 @@ function init_staff_fields_table() {
         ['pos' => '20', 'row' => '2', 'name' => 'phone', 'type' => 'text', 'widths' => '100/150/300', 'edit' => 'hide', 'label' => 'phone', 'db' => 'phone/customer/id'],
         ['pos' => '10', 'row' => '3', 'name' => 'comment', 'type' => 'textarea', 'widths' => '400/550/600', 'edit' => 'hide', 'label' => 'Comment', 'db' => 'comment/customer/id'],
         ['pos' => '10', 'row' => '4', 'name' => 'role', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Role', 'db' => 'role/customer/id'],
-        ['pos' => '20', 'row' => '4', 'name' => 'permission', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Permission', 'db' => 'permission/customer/id']
+        ['pos' => '20', 'row' => '4', 'name' => 'permission', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Permission', 'db' => 'permission/customer/id'],
+        ['pos' => '30', 'row' => '4', 'name' => 'staff_id', 'type' => 'text', 'widths' => '100/100/100', 'edit' => 'hide', 'label' => 'Staff_id', 'db' => 'staff_id/customer/id']
     ];
     foreach ( $customerfields as $field ) {
         insert_into_db( $field, 'customer_fields' );
@@ -271,11 +272,12 @@ function init_customer_sharing_table() {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             share_id TEXT NOT NULL DEFAULT "",
             staff_id TEXT NOT NULL DEFAULT "",
+            share_staff_id TEXT NOT NULL DEFAULT "",
             can_edit TEXT NOT NULL DEFAULT "false",
             date TEXT NOT NULL  DEFAULT ""
         )' );
 
-    $customer_sharing = ['share_id' => '4', 'staff_id' => '5'];
+    $customer_sharing = ['share_id' => '4', 'staff_id' => '5', 'share_staff_id' => '1'];
     insert_into_db( $customer_sharing, 'customer_sharing' );
 }
 
@@ -285,10 +287,11 @@ function init_project_sharing_table() {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             share_id TEXT NOT NULL DEFAULT "",
             staff_id TEXT NOT NULL DEFAULT "",
+            share_staff_id TEXT NOT NULL DEFAULT "",
             can_edit TEXT NOT NULL DEFAULT "false",
             date TEXT NOT NULL  DEFAULT ""
         )' );
-    $project_sharing = ['share_id' => '4', 'staff_id' => '5'];
+    $project_sharing = ['share_id' => '4', 'staff_id' => '5', 'share_staff_id' => '1'];
     insert_into_db( $project_sharing, 'project_sharing' );
 }
 
@@ -298,10 +301,11 @@ function init_appointment_sharing_table() {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             share_id TEXT NOT NULL DEFAULT "",
             staff_id TEXT NOT NULL DEFAULT "",
+            share_staff_id TEXT NOT NULL DEFAULT "",
             can_edit TEXT NOT NULL DEFAULT "false",
             date TEXT NOT NULL  DEFAULT ""
         )' );
-    $appointment_sharing = ['share_id' => '4', 'staff_id' => '5'];
+    $appointment_sharing = ['share_id' => '4', 'staff_id' => '5', 'share_staff_id' => '1'];
     insert_into_db( $appointment_sharing, 'appointment_sharing' );
 }
 

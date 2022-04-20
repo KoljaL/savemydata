@@ -116,6 +116,10 @@ let AppointmentContent = async(id) => {
                 if (res.code === 200) {
                     let data = res.data
                         // deb(data);
+                    let shared_staff = '';
+                    if (data.shared) {
+                        shared_staff = `shared from ${data.shared.user_name}`;
+                    }
                     let map_link, map_location;
                     if (data.map_link !== '') {
                         map_link = `<a href=${data.map_link} class="icon map_icon"  target="_blanc"></a>`;
@@ -134,6 +138,7 @@ let AppointmentContent = async(id) => {
                         <div class=Headline>
                             <h2 data-lang="H_appointment">Appointment: </h2>
                             <h2>&nbsp; ${data.title}</h2><br>
+                            <h4>&nbsp; ${shared_staff}</h4><br>
                         </div>
                         <div class="ActionButtons">
                             <a href="api/get_appointment_as_ics/fetch/${id}"><span class="button boxShadow" id="iCalButton">iCal</span></a>

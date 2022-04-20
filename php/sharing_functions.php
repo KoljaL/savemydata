@@ -1,5 +1,7 @@
 <?php
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*
 //
 //  ########  ########   #######  ######## #### ##       ########
@@ -14,6 +16,10 @@
 function get_profile( $param ) {
     global $db, $API_param, $API_value;
 
+    if ( 'customer' === $API_param ) {
+        $shared = ismine_or_shared( 'customer', $API_value );
+    }
+
     $stmt = $db->prepare( "SELECT * FROM $API_param WHERE id = :id" );
     $stmt->execute( [':id' => $API_value] );
     $profile = $stmt->fetch( PDO::FETCH_ASSOC );
@@ -21,8 +27,10 @@ function get_profile( $param ) {
 
     $response = [];
     if ( $profile ) {
-        $response['code'] = 200;
-        $response['data'] = $profile;
+        // SHARING
+        $profile['shared'] = ( isset( $shared ) ) ? $shared : '';
+        $response['code']  = 200;
+        $response['data']  = $profile;
     } else {
         $response['code']    = 400;
         $response['data']    = [];
@@ -108,6 +116,8 @@ function get_profiles_from( $param ) {
     }
     return_JSON( $response );
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*
 //
 //  ########  ########   #######        ## ########  ######  ########
@@ -122,15 +132,16 @@ function get_profiles_from( $param ) {
 function get_project( $param ) {
     global $db, $API_param, $API_value;
 
-    // $stmt = $db->prepare( "SELECT * FROM project WHERE id = $API_param" );
-    $stmt = $db->prepare( "
-    SELECT p.*, c.username AS customername, s.username AS staffname
-    FROM project p
-    INNER JOIN customer c
-        ON p.customer_id = c.id
-    INNER JOIN staff s
-        ON p.staff_id = s.id
-    WHERE p.id = :id" );
+    $shared = ismine_or_shared( 'project', $API_param );
+
+    $stmt = $db->prepare( "--sql
+      SELECT p.*, c.username AS customername, s.username AS staffname
+      FROM project p
+      INNER JOIN customer c
+          ON p.customer_id = c.id
+      INNER JOIN staff s
+          ON p.staff_id = s.id
+      WHERE p.id = :id" );
     $stmt->execute( [':id' => $API_param] );
 
     $project = $stmt->fetch( PDO::FETCH_ASSOC );
@@ -138,13 +149,14 @@ function get_project( $param ) {
     $response = [];
     if ( $project ) {
 
-        // SELECT * FROM "project" INNER JOIN customer ON customer.id = project.customer_id
+        // SHARING
+        $project['shared'] = ( isset( $shared ) ) ? $shared : '';
+
+        // get all appointments from this project
         $stmt = $db->prepare( "SELECT a.id, a.start_date, a.start_time FROM appointment a WHERE project_id =?" );
         $stmt->execute( [$API_param] );
         $project['appointments'] = $stmt->fetchAll( PDO::FETCH_ASSOC );
         $stmt->closeCursor();
-        // $project['customername'] = get_name_by_id( 'customer', $project['customer_id'] );
-        // $project['staffname']    = get_name_by_id( 'staff', $project['staff_id'] );
 
         $response['code'] = 200;
         $response['data'] = $project;
@@ -170,13 +182,7 @@ function get_project( $param ) {
 function get_projects_as_table( $param ) {
     global $db, $API_param, $API_value, $user_id;
 
-    if ( '' !== $API_value ) {
-        $where = ' WHERE id = '.$API_value;
-    } else {
-        $where = '';
-    }
-
-    $stmt = $db->prepare( "
+    $stmt = $db->prepare( "--sql
       SELECT p.*
           FROM project_sharing ps
           INNER JOIN project p ON ps.share_id = p.id
@@ -185,7 +191,6 @@ function get_projects_as_table( $param ) {
       SELECT * FROM project  WHERE staff_id = $user_id
       " );
 
-    // $stmt = $db->prepare( "SELECT * FROM project $where" );
     $stmt->execute();
     $projects = $stmt->fetchAll( PDO::FETCH_ASSOC );
     $stmt->closeCursor();
@@ -204,7 +209,7 @@ function get_projects_as_table( $param ) {
     } else {
         $response['code']    = 400;
         $response['data']    = [];
-        $response['message'] = 'no form profile found';
+        $response['message'] = 'no profile found';
     }
     return_JSON( $response );
 }
@@ -228,7 +233,7 @@ function get_projects_from( $param ) {
     }
 
     if ( 'staff' == $API_param ) {
-        $stmt = $db->prepare( "SELECT * FROM project WHERE customer_id = :id" );
+        $stmt = $db->prepare( "SELECT * FROM project WHERE staff_id = :id" );
     }
 
     $stmt->execute( [':id' => $API_value] );
@@ -247,6 +252,8 @@ function get_projects_from( $param ) {
     return_JSON( $response );
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*
 //
 //     ###    ########  ########   #######  #### ##    ## ######## ##     ## ######## ##    ## ########
@@ -262,7 +269,9 @@ function get_projects_from( $param ) {
 function get_appointment( $param ) {
     global $db, $API_param, $API_value;
 
-    $stmt = $db->prepare( "
+    $shared = ismine_or_shared( 'appointment', $API_param );
+
+    $stmt = $db->prepare( "--sql
       SELECT a.*, c.username AS customername, s.username AS staffname, s.location AS location_staff, p.title AS projectname
       FROM appointment a
       INNER JOIN customer c
@@ -279,6 +288,8 @@ function get_appointment( $param ) {
     $stmt->closeCursor();
     $response = [];
     if ( $appointments ) {
+        $appointments['shared'] = ( isset( $shared ) ) ? $shared : '';
+
         $response['code'] = 200;
         $response['data'] = $appointments;
     } else {
@@ -381,4 +392,51 @@ function get_appointments_from( $param ) {
         $response['message'] = 'no file found';
     }
     return_JSON( $response );
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function ismine_or_shared( $table, $id ) {
+
+    if ( !is_my_item( $table, $id ) ) {
+        $shared = shared_with_me( $table.'_sharing', $id );
+        if ( !$shared ) {
+            $response['code']    = 403;
+            $response['data']    = [];
+            $response['message'] = 'not allowed to see';
+            return_JSON( $response );
+            exit;
+        } else {
+            return $shared;
+        }
+    }
+}
+function is_my_item( $table, $item_id ) {
+    global $db, $user_id;
+    $stmt = $db->prepare( "SELECT * FROM $table WHERE id = :item_id AND staff_id = :staff_id" );
+    $stmt->execute( [':item_id' => $item_id, ':staff_id' => $user_id] );
+    $data = $stmt->fetch( PDO::FETCH_ASSOC );
+    $stmt->closeCursor();
+    if ( $data ) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function shared_with_me( $table, $share_id ) {
+    global $db, $user_id;
+    $stmt = $db->prepare( "SELECT * FROM $table WHERE share_id = :share_id AND staff_id = :staff_id" );
+    $stmt->execute( [':share_id' => $share_id, ':staff_id' => $user_id] );
+    $data = $stmt->fetch( PDO::FETCH_ASSOC );
+    $stmt->closeCursor();
+    if ( $data ) {
+        $data['user_name'] = get_name_by_id( 'staff', $data['share_staff_id'] );
+
+        return $data;
+    } else {
+        return false;
+    }
 }

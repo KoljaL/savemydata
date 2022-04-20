@@ -362,7 +362,7 @@ let Functions = {
         }
         document.querySelector('nav .sidebar_userpanel').innerHTML = /*HTML*/ `
             <img src="${avatarPath}" class=boxShadow width="40" height="40">
-            <span class=username  onclick='window.location.hash ="staff/profile/"+${userID}'>${username}</span>
+            <span class=username  onclick='window.location.hash ="staff/profile/"+${userID}'>${username} [${userID}]</span>
             <span id=userLogout class="logout_icon"></span>`;
     },
 

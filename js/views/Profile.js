@@ -186,7 +186,10 @@ let getUserData = async(userID) => {
 
                     Functions.pageTitle(`${userName}'s Profile`);
 
-
+                    let shared_staff = '';
+                    if (user.shared) {
+                        shared_staff = `shared from ${user.shared.user_name}`;
+                    }
                     if (formFields.code === 200) {
                         formFields = formFields.data;
                         // deb(formFields);
@@ -201,7 +204,7 @@ let getUserData = async(userID) => {
                         });
 
                         // start with a form and the first row
-                        var innerHTML = '<form id=userProfilForm>';
+                        var innerHTML = `<span>&nbsp; ${shared_staff}</span><br><form id=userProfilForm>`;
                         innerHTML += '<div class="FF-row">';
                         var row = 1;
                         formFields.forEach((formField) => {
