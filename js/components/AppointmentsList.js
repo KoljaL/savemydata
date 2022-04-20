@@ -15,7 +15,9 @@ let Style = async() => {
     .dataTable{ 
         padding:.5em;
     }
-
+    #Appointments .numeric a{
+        white-space: nowrap;
+    }
  
     `;
     Functions.createStyle('Appointments_deko_style', styleTags);

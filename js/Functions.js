@@ -426,8 +426,15 @@ let Functions = {
         let hour = ('0' + (d.getHours())).slice(-2)
         let minute = ('0' + (d.getMinutes())).slice(-2)
         return `${day}.${month}.${year} &nbsp; ${hour}:${minute}`
-    }
+    },
 
+
+    ValidateEmail: (mail) => {
+        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
+            return (true)
+        }
+        return (false)
+    }
 
 };
 

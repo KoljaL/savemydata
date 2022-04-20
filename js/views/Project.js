@@ -41,10 +41,13 @@ let Style = async() => {
             justify-content: flex-start;
             align-items: baseline;
           }
-        .Headline h2{margin-bottom:.0em;}
-        #ProjectContent h3{margin-top:.0em;}
-
-       
+        .Headline h2{
+            margin-bottom:.0em;
+        }
+        #ProjectContent h3,
+        #ProjectContent summary{
+            margin-top:.0em;
+        }
         #ProjectText .FF-row{
             margin:0 0 1em 0;
             padding:0;
@@ -52,6 +55,7 @@ let Style = async() => {
         #ProjectText .FF-item{
             margin: 0;
         }
+   
 
 
         #deleteProjectButton:empty,
@@ -156,16 +160,24 @@ let ProjectContent = async(id) => {
                             </div>
                         </div>
     
-                        ${ShareItem.render({})}
 
-                        <div style="display:flex;gap: 1em;">
+
+                        <div style="display:flex;gap: 2em;">
                             <div id=ProjectAppointments></div>
                             <div id=ProjectImages>
                                 <h3 data-lang="F_images">Images</h3>
                                 <div id=thumbnails></div>
                                 <div id=fileUpload></div>
                                 ${Images.render({origin: 'project',origin_id:data.id})}
+                                
                             </div>
+                            ${ShareItem.render({
+                                type:'project',
+                                project_id: data.id,
+                                customer_id: data.customer_id,
+                                staff_id: data.staff_id,
+                                appointments: data.appointments,
+                            })}
                         </div>
                     </div>
                 `;
@@ -193,7 +205,7 @@ let ProjectContent = async(id) => {
                             document.getElementById('editProjectButton').dataset.lang = 'edit'
 
                             document.getElementById('editProjectButton').addEventListener('click', function() {
-                                document.querySelectorAll('#ProjectBody input,#ProjectBody textarea, #ProjectBody .thumbnailWrapper').forEach((input) => {
+                                document.querySelectorAll('#ProjectText input,#ProjectText textarea, #ProjectImages .thumbnailWrapper').forEach((input) => {
                                     // make fields editable
                                     input.classList.toggle('hideEdit');
                                     // updata db on focusout

@@ -55,7 +55,9 @@ let Style = async() => {
         font-size: 1.1em;
     }
 
-
+    #newProjectForm .FF-row.content .FF-item{
+        margin-top: 0;
+    }
     `;
     Functions.createStyle('UserTable_style', styleTags);
 };
@@ -116,9 +118,10 @@ let Content = async(action) => {
         let userList = await UserList.render('dropdown', 'customer');
         innerHTML += /*HTML*/ `
         <div id=newProject>
-        <h3>new Project</h3>
-            <form id=newProjectForm>
-                <div class="FF-row" style="max-width:max-content;">
+        <details>
+        <summary><span data-lang="H_newProject">new Project</span></summary>
+            <form id=newProjectForm class="">
+                <div class="FF-row content" style="max-width:max-content;">
                     <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px;;">
                         <input id="title" name="title" type="text" placeholder="" required="">
                         <label data-lang="F_title" for="title">Title</label>
@@ -133,6 +136,7 @@ let Content = async(action) => {
                 </div>
                 
             </form>
+        </details>
         </div>
         `;
     }

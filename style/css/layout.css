@@ -981,11 +981,11 @@ summary {
     letter-spacing: 0.1rem;
     text-shadow: var(--text-shadow);
     font-size: 1.17em;
-    cursor: pointer;
-    margin-left: .5em;
+    margin-left: 1em;
+    margin-top: 1em;
+    margin-bottom: 1em;
     outline: none;
     display: block;
-    padding-left: .3em;
     position: relative;
     cursor: pointer;
 }
@@ -995,11 +995,11 @@ summary:hover {
 }
 
 details {
-    /* max-width: 500px; */
-    box-sizing: border-box;
-    margin-top: 5px;
-    /* background: white; */
+    padding-left: 1px;
+    padding-right: 1px;
 }
+
+details[open] {}
 
 details summary::-webkit-details-marker {
     display: none;
@@ -1013,19 +1013,19 @@ summary:before {
     content: '';
     border-width: 0.4rem;
     border-style: solid;
-    border-color: transparent transparent transparent #fff;
+    border-color: transparent transparent transparent var(--font_0);
     position: absolute;
-    top: .25em;
-    left: -.5em;
+    top: .3em;
+    left: -.8em;
     transform: rotate(0);
     transform-origin: 0.2rem 50%;
     transition: 0.25s transform ease;
 }
 
+summary .content {
+    margin: .8em 0 0 0;
+}
 
-/* .content {
-    border-top: none;
-    padding: 10px;
-    border: 2px solid #888;
-    border-top: none;
-} */
+summary .content.FF-row {
+    margin: 0;
+}
