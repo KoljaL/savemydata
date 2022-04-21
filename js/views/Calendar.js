@@ -415,7 +415,8 @@ let getSchedules = async(DateRange) => {
     let formData = new FormData();
     formData.append('startDate', DateRange.startDate);
     formData.append('endDate', DateRange.endDate);
-    await Functions.getAPIdata('get_appointments_as_table', formData)
+    await Functions.getAPIdata('get_table_or_list_from/appointment', formData)
+        // await Functions.getAPIdata('get_appointments_as_table', formData)
         .then((res) => {
             // deb(res);
             if (200 === res.code) {

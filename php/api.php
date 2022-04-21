@@ -14,10 +14,8 @@ ini_set( "error_log", "./error.log" );
 $start = microtime( true );
 
 //////////////////////////// PERMISSION SWITCH ////////////////////////////
-$PERMISSION_FILTER = false;
-$ALLOWED_AT_ALL    = false;
-$PERMISSION_FILTER = true;
-$ALLOWED_AT_ALL    = true;
+$ALLOWED_AT_ALL = false;
+// $ALLOWED_AT_ALL = true;
 //////////////////////////// PERMISSION SWITCH ////////////////////////////
 
 /*
@@ -227,11 +225,7 @@ function allowed_at_all() {
  */
 
 function return_JSON( $response ) {
-    global $request, $API_endpoint, $API_param, $API_value, $TOKEN, $PERMISSION_FILTER;
-
-    // if ( $PERMISSION_FILTER ) {
-    //     $response = permission_filter( $response );
-    // }
+    global $request, $API_endpoint, $API_param, $API_value, $TOKEN;
 
     if ( 'reset' === $API_endpoint ) {
         return;
@@ -303,6 +297,10 @@ case 'edit_single_field':
 
 case 'get_profile':
     get_profile( $request );
+    break;
+
+case 'get_table_or_list_from':
+    get_table_or_list_from( $request );
     break;
 
 case 'get_projects_as_table':

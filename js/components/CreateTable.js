@@ -226,9 +226,11 @@ async function createTable(data, TableContent) {
 
                 if (key === 'project_id') {
                     project_id = element[key];
+                    // deb(project_id)
                 }
                 if (key === 'projectname') {
                     element[key] = /*MTML*/ `<a href="#project/id/${project_id}">${element[key]}</a>`;
+                    // deb(element[key])
                 }
 
                 cell.innerHTML = element[key];

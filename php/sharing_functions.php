@@ -39,7 +39,6 @@ function get_profile( $param ) {
     return_JSON( $response );
 }
 
-function get_profiles_as_table( $param ) {
 /*
 //
 //  ########    ###    ########  ##       ########
@@ -51,32 +50,74 @@ function get_profiles_as_table( $param ) {
 //     ##    ##     ## ########  ######## ########
 //
 */
-    global $db, $API_param, $API_value, $user_id;
+function get_table_or_list_from( $param ) {
+    global $db, $API_param, $API_value, $user_id, $user_role;
+    $table   = $API_param;
+    $columns = ( '' !== $API_value ) ? $API_value : '*';
+    $where   = ( '' !== $API_value ) ? ' WHERE id = '.$API_value : '';
 
-    // $stmt = $db->prepare( "
-    // SELECT p.*
-    //     FROM project_sharing ps
-    //     INNER JOIN project p ON ps.share_id = p.id
-    //     WHERE ps.staff_id = $user_id
-    // UNION
-    // SELECT * FROM project  WHERE staff_id = $user_id
-    // " );
+    if ( isset( $param['startDate'] ) ) {
+        $from_to = " AND start_date BETWEEN '$param[startDate]' AND '$param[endDate]'";
+    } else {
+        $from_to = '';
+    }
 
-    // // $stmt = $db->prepare( "SELECT * FROM project $where" );
-    // $stmt->execute();
-    // $profiles = $stmt->fetchAll( PDO::FETCH_ASSOC );
-    // $stmt->closeCursor();
-    // $response = [];
-    // if ( $profiles ) {
-    //     // deb( $profiles );
-    //     $response['code'] = 200;
-    //     $response['data'] = $profiles;
-    // } else {
-    //     $response['code']    = 400;
-    //     $response['data']    = [];
-    //     $response['message'] = 'no form profile found';
-    // }
-    // return_JSON( $response );
+    $sharings = ['customer', 'project', 'appointment'];
+
+    if ( in_array( $API_param, $sharings ) && 'admin' !== $user_role ) {
+        $sharing_table = $API_param.'_sharing';
+        $stmt          = $db->prepare( "
+          SELECT c.*
+              FROM $sharing_table cs
+              INNER JOIN $API_param c ON cs.share_id = c.id
+              WHERE cs.staff_id = $user_id
+              $from_to
+          UNION
+          SELECT *
+              FROM $API_param
+              WHERE id = $user_id
+              $from_to
+          " );
+    } else {
+        $from_to = str_replace( ' AND start_date', ' WHERE start_date', $from_to );
+        // deb( "SELECT $columns FROM $API_param $from_to" );
+        $stmt = $db->prepare( "SELECT $columns FROM $API_param  $from_to" );
+    }
+
+    $stmt->execute();
+    $data = $stmt->fetchAll( PDO::FETCH_ASSOC );
+    $stmt->closeCursor();
+    $response = [];
+    if ( $data ) {
+        if ( 'customer' === $API_param ) {
+            foreach ( $data as $key => $value ) {
+                unset( $data[$key]['password'] );
+            }
+        }
+        if ( 'project' === $API_param ) {
+            foreach ( $data as $key => $value ) {
+                $data[$key]['username'] = get_name_by_id( 'customer', $value['customer_id'] );
+                unset( $data[$key]['comment_staff'] );
+                unset( $data[$key]['comment_customer'] );
+            }
+        }
+        if ( 'appointment' === $API_param ) {
+            foreach ( $data as $key => $value ) {
+                $data[$key]['username']    = get_name_by_id( 'customer', $value['customer_id'] );
+                $data[$key]['staffname']   = get_name_by_id( 'staff', $value['staff_id'] );
+                $data[$key]['projectname'] = get_name_by_id( 'project', $value['project_id'], 'title' );
+                unset( $data[$key]['comment_staff'] );
+                unset( $data[$key]['comment_customer'] );
+            }
+        }
+        $response['code'] = 200;
+        $response['data'] = $data;
+    } else {
+        $response['code']    = 400;
+        $response['data']    = [];
+        $response['message'] = 'no data profile found';
+    }
+    return_JSON( $response );
 }
 
 /*
@@ -180,38 +221,38 @@ function get_project( $param ) {
 //
 */
 function get_projects_as_table( $param ) {
-    global $db, $API_param, $API_value, $user_id;
+    // global $db, $API_param, $API_value, $user_id;
 
-    $stmt = $db->prepare( "--sql
-      SELECT p.*
-          FROM project_sharing ps
-          INNER JOIN project p ON ps.share_id = p.id
-          WHERE ps.staff_id = $user_id
-      UNION
-      SELECT * FROM project  WHERE staff_id = $user_id
-      " );
+    // $stmt = $db->prepare( "--sql
+    //   SELECT p.*
+    //       FROM project_sharing ps
+    //       INNER JOIN project p ON ps.share_id = p.id
+    //       WHERE ps.staff_id = $user_id
+    //   UNION
+    //   SELECT * FROM project  WHERE staff_id = $user_id
+    //   " );
 
-    $stmt->execute();
-    $projects = $stmt->fetchAll( PDO::FETCH_ASSOC );
-    $stmt->closeCursor();
-    $response = [];
-    if ( $projects ) {
+    // $stmt->execute();
+    // $projects = $stmt->fetchAll( PDO::FETCH_ASSOC );
+    // $stmt->closeCursor();
+    // $response = [];
+    // if ( $projects ) {
 
-        // get the username and remove the comments
-        foreach ( $projects as $key => $value ) {
-            $projects[$key]['username'] = get_name_by_id( 'customer', $value['customer_id'] );
-            unset( $projects[$key]['comment_staff'] );
-            unset( $projects[$key]['comment_customer'] );
-        }
-        // deb( $projects );
-        $response['code'] = 200;
-        $response['data'] = $projects;
-    } else {
-        $response['code']    = 400;
-        $response['data']    = [];
-        $response['message'] = 'no profile found';
-    }
-    return_JSON( $response );
+    //     // get the username and remove the comments
+    //     foreach ( $projects as $key => $value ) {
+    //         $projects[$key]['username'] = get_name_by_id( 'customer', $value['customer_id'] );
+    //         unset( $projects[$key]['comment_staff'] );
+    //         unset( $projects[$key]['comment_customer'] );
+    //     }
+    //     // deb( $projects );
+    //     $response['code'] = 200;
+    //     $response['data'] = $projects;
+    // } else {
+    //     $response['code']    = 400;
+    //     $response['data']    = [];
+    //     $response['message'] = 'no profile found';
+    // }
+    // return_JSON( $response );
 }
 
 /*
@@ -312,48 +353,46 @@ function get_appointment( $param ) {
 //
 */
 function get_appointments_as_table( $param ) {
-    global $db, $API_param, $API_value;
+    // global $db, $API_param, $API_value;
 
-    if ( '' !== $API_value ) {
-        $where = ' WHERE id = '.$API_value;
-    } else {
-        $where = '';
-    }
+    // if ( '' !== $API_value ) {
+    //     $where = ' WHERE id = '.$API_value;
+    // } else {
+    //     $where = '';
+    // }
 
-    if ( isset( $param['startDate'] ) ) {
-        $startDate = $param['startDate'];
-        $endDate   = $param['endDate'];
-        $from_to   = "WHERE start_date BETWEEN '$startDate' AND '$endDate'";
-    } else {
-        $from_to = '';
-    }
+    // if ( isset( $param['startDate'] ) ) {
+    //     $from_to = "WHERE start_date BETWEEN '$param[startDate]' AND '$param[endDate]'";
+    // } else {
+    //     $from_to = '';
+    // }
 
-    $stmt = $db->prepare( "SELECT * FROM appointment $from_to" );
-    $stmt->execute();
-    $appointments = $stmt->fetchAll( PDO::FETCH_ASSOC );
-    $stmt->closeCursor();
-    $response             = [];
-    $response['$from_to'] = $from_to;
+    // $stmt = $db->prepare( "SELECT * FROM appointment $from_to" );
+    // $stmt->execute();
+    // $appointments = $stmt->fetchAll( PDO::FETCH_ASSOC );
+    // $stmt->closeCursor();
+    // $response             = [];
+    // $response['$from_to'] = $from_to;
 
-    if ( $appointments ) {
+    // if ( $appointments ) {
 
-        // get the username and remove the comments
-        foreach ( $appointments as $key => $value ) {
-            $appointments[$key]['username']    = get_name_by_id( 'customer', $value['customer_id'] );
-            $appointments[$key]['staffname']   = get_name_by_id( 'staff', $value['staff_id'] );
-            $appointments[$key]['projectname'] = get_name_by_id( 'project', $value['project_id'], 'title' );
-            unset( $appointments[$key]['comment_staff'] );
-            unset( $appointments[$key]['comment_customer'] );
-        }
-        $response['code'] = 200;
-        $response['data'] = $appointments;
-    } else {
-        $response['code']    = 400;
-        $response['data']    = [];
-        $response['table']   = $appointments;
-        $response['message'] = 'no dates found';
-    }
-    return_JSON( $response );
+    //     // get the username and remove the comments
+    //     foreach ( $appointments as $key => $value ) {
+    //         $appointments[$key]['username']    = get_name_by_id( 'customer', $value['customer_id'] );
+    //         $appointments[$key]['staffname']   = get_name_by_id( 'staff', $value['staff_id'] );
+    //         $appointments[$key]['projectname'] = get_name_by_id( 'project', $value['project_id'], 'title' );
+    //         unset( $appointments[$key]['comment_staff'] );
+    //         unset( $appointments[$key]['comment_customer'] );
+    //     }
+    //     $response['code'] = 200;
+    //     $response['data'] = $appointments;
+    // } else {
+    //     $response['code']    = 400;
+    //     $response['data']    = [];
+    //     $response['table']   = $appointments;
+    //     $response['message'] = 'no dates found';
+    // }
+    // return_JSON( $response );
 }
 
 /*

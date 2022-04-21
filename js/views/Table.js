@@ -70,16 +70,17 @@ let Content = async(action) => {
     // deb(tableName)
     // PROJECTS
     if ('project' == tableName) {
-        data = await Functions.getAPIdata('get_projects_as_table/' + tableName);
+        data = await Functions.getAPIdata('get_table_or_list_from/' + tableName);
         data = data.data;
     }
     // APPOINTMENTS
     else if ('appointment' == tableName) {
-        let res = await Functions.getAPIdata('get_appointments_as_table/' + tableName);
-        // deb(res)
+        let res = await Functions.getAPIdata('get_table_or_list_from/' + tableName);
+        // deb(res.data);
         // TODO add new fields at  the end
         // sort by list
-        let field_order = ["id", "title", "start_date", "start_time", "duration", "username", "projectname", "staffname", "comment", "staff_id", "customer_id", "project_id"]
+        // !!! IDs must before the name !! project_id => projectname
+        let field_order = ["id", "title", "start_date", "start_time", "duration", "customer_id", "username", "state", "project_id", "projectname", "staff_id", "staffname", "comment"]
         var presort_data = []
         res.data.forEach(d => {
             let field = field_order.reduce((obj, v) => {
@@ -89,12 +90,12 @@ let Content = async(action) => {
             presort_data.push(field)
         });
         data = presort_data;
-
+        // deb(presort_data);
         // data = res.data;
     }
     // USER
     else {
-        data = await Functions.getAPIdata('get_data_from/' + tableName);
+        data = await Functions.getAPIdata('get_table_or_list_from/' + tableName);
         data = data.data;
     }
 
