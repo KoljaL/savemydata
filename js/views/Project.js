@@ -5,6 +5,7 @@ import ShareItem from '../components/ShareItem.js';
 
 let Project = {
     render: async(id) => {
+        window.isAllowed = true;
         Functions.pageTitle(`Project`)
         await Style();
         await Content();
@@ -169,8 +170,6 @@ let ProjectContent = async(id) => {
                                 </div>
                             </div>
                         </div>
-    
-
 
                         <div style="display:flex;gap: 2em;flex-wrap: wrap;">
                             <div id=ProjectAppointments></div>
@@ -179,7 +178,6 @@ let ProjectContent = async(id) => {
                                 <div id=thumbnails></div>
                                 <div id=fileUpload></div>
                                 ${Images.render({origin: 'project',origin_id:data.id})}
-                                
                             </div>
                             <div class="ProjectSharings">
                                 ${ShareItem.render({
@@ -197,7 +195,7 @@ let ProjectContent = async(id) => {
 
                     return data;
                 } else if (res.code === 403) {
-
+                    isAllowed = false;
                     document.getElementById('ProjectContent').innerHTML = res.message;
                 }
             })
@@ -212,7 +210,7 @@ let ProjectContent = async(id) => {
             //
             .then((data) => {
                 // if (Functions.getLocal('role') === 'admin' || Functions.getLocal('id') === data.staff_id) {
-                if (Functions.getLocal('role') !== 'xxx') {
+                if (isAllowed && Functions.getLocal('role') !== 'xxx') {
                     Functions.setInnerHTML('editProjectButton', 'Edit')
                         .then(() => {
                             document.getElementById('editProjectButton').dataset.lang = 'edit'

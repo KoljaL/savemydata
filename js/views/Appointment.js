@@ -5,6 +5,7 @@ import AppointmentsList from '../components/AppointmentsList.js';
 
 let Appointment = {
     render: async(id) => {
+        window.isAllowed = true;
         Functions.pageTitle(`Appointment`)
         await Style();
         await Content();
@@ -205,8 +206,8 @@ let AppointmentContent = async(id) => {
                     Functions.setInnerHTML('AppointmentContent', innerHTML);
 
                     return data;
-                } else {
-                    deb(res.message);
+                } else if (res.code === 403) {
+                    document.getElementById('AppointmentContent').innerHTML = res.message;
                 }
             })
             //

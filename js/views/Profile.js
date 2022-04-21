@@ -9,6 +9,7 @@ import ProjectsList from '../components/ProjectsList.js';
 
 export default {
     render: async(userID, action) => {
+        window.isAllowed = true;
         if (action === 'staff') {
             window.slugName = 'Staff';
             window.tableName = 'staff';
@@ -24,11 +25,11 @@ export default {
         await Style();
         await Content(userID);
         if (tableName === 'staff') await changeAvatar(userID);
-        await getUserData(userID);
         await dropDownEvent(tableName);
         await newUserButton();
         await deleteUserButton(userID);
         await editUserButton(userID);
+        await getUserData(userID);
     },
 };
 
@@ -250,11 +251,11 @@ let getUserData = async(userID) => {
 
                             }
                         });
-                }
-                // return error message
-                else {
-                    let innerHTML = /*HTML*/ `<div id="T_UserLoginForm"> ${res.message}</div>`;
-                    Functions.setInnerHTML('Userdata', innerHTML);
+                } else if (res.code === 403) {
+                    isAllowed = false;
+                    document.getElementById('editArea').innerHTML = res.message;
+                    document.getElementById('editUserButton').remove();
+                    document.getElementById('deleteUserButton').remove();
                 }
             })
 
@@ -272,9 +273,6 @@ let dropDownEvent = async(tableName) => {
             .then(() => {
                 document.getElementById(tableName + 'ListSelect').addEventListener('change', (el) => {
                     Message.info('User Profile: ' + el.target.options[el.target.selectedIndex].text);
-                    // Message.success()
-                    // Message.error()
-                    // Message.warn()
                     window.location.hash = '#' + tableName + '/profile/' + el.target.value;
                 });
             });

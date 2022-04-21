@@ -36,7 +36,7 @@ export default {
 let getUserList = async(table) => {
     try {
         let staff_id = '';
-        deb(slugName)
+        // deb(slugName)
         if (tableName === 'customer') {
             staff_id = ',staff_id';
         }
