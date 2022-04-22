@@ -125,11 +125,11 @@ function init_stafftable() {
     $admin = ['username' => 'Admin', 'password' => 'password', 'firstname' => 'admin', 'lastname' => 'admin', 'email' => 'admin@admin.org', 'location' => 'Masbeck 57, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'admin', 'permission' => '0', 'color' => '#e9553b'];
     insert_into_db( $admin, 'staff' );
 
-    $manager = ['username' => 'Manager', 'password' => 'password', 'firstname' => 'manager', 'lastname' => 'manager', 'email' => 'manager@manager.org', 'location' => 'Stapeler Str. 41, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'manager', 'permission' => '0', 'color' => '#cb7832'];
-    insert_into_db( $manager, 'staff' );
+    // $manager = ['username' => 'Manager', 'password' => 'password', 'firstname' => 'manager', 'lastname' => 'manager', 'email' => 'manager@manager.org', 'location' => 'Stapeler Str. 41, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'manager', 'permission' => '0', 'color' => '#cb7832'];
+    // insert_into_db( $manager, 'staff' );
 
-    $staff = ['username' => 'Staff 0', 'password' => 'password', 'firstname' => 'staff', 'lastname' => 'staff', 'email' => 'staff@staff.org', 'location' => 'Stapeler Str. 41, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'staff', 'permission' => '0', 'color' => '#c9ac57'];
-    insert_into_db( $staff, 'staff' );
+    // $staff = ['username' => 'Staff 0', 'password' => 'password', 'firstname' => 'staff', 'lastname' => 'staff', 'email' => 'staff@staff.org', 'location' => 'Stapeler Str. 41, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'staff', 'permission' => '0', 'color' => '#c9ac57'];
+    // insert_into_db( $staff, 'staff' );
 
     $staff1 = ['username' => 'Staff 1', 'password' => 'password', 'firstname' => 'staff', 'lastname' => 'staff', 'email' => 'staff@staff.org', 'location' => 'Stapeler Str. 41, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'staff', 'permission' => '0', 'color' => '#988cca'];
     insert_into_db( $staff1, 'staff' );
@@ -357,9 +357,9 @@ function create_dummy_data() {
     // create_dummy_project(15000);
     // create_dummy_appointment(30000);
     // create_dummy_staff( 10 );
-    create_dummy_customer( 15 );
-    create_dummy_project( 15 );
-    create_dummy_appointment( 100, 10 );
+    create_dummy_customer( 10 );
+    create_dummy_project( 10 );
+    create_dummy_appointment( 10, 3 );
     echo "<center><h1>";
     echo round( filesize( $db_path ) / 1000, 0 )."kb of ";
     echo 'data created in: '.round(  ( microtime( true ) - $start ), 1 ).'s';
@@ -546,3 +546,6 @@ function get_ramdon_id_from( $table ) {
     $i = random_int( 0, count( $IDs ) - 1 );
     return $IDs[$i]['id'];
 }
+
+// $customer_sharing = ['share_id' => '4', 'staff_id' => '5', 'share_staff_id' => '1'];
+// insert_into_db( $customer_sharing, 'customer_sharing' );

@@ -687,7 +687,7 @@ let Appointments = {
                 document.getElementById('staffListSelect').value = data.raw.staff_id;
                 document.getElementById('customerListSelect').value = data.raw.customer_id;
                 // make links to data sites
-                document.getElementById('ApPoCustomerLink').innerHTML = /*HTML*/ `<a href="/#customer/profile/${data.raw.customer_id}">Profile</a>`;
+                document.getElementById('ApPoCustomerLink').innerHTML = /*HTML*/ `<a href="#customer/profile/${data.raw.customer_id}">Profile</a>`;
                 document.getElementById('ApPoProjectLink').innerHTML = /*HTML*/ `<a  href="#project/id/${data.raw.project_id}">Project</a>`;
                 document.getElementById('ApPoAppointmentLink').innerHTML = /*HTML*/ `<a href="#appointment/id/${data.id}">Appointment</a>`;
 

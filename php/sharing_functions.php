@@ -75,9 +75,10 @@ function get_table_or_list_from( $param ) {
           UNION
           SELECT *
               FROM $API_param
-              WHERE id = $user_id
+              WHERE staff_id = $user_id
               $from_to
           " );
+        deb( $stmt );
     } else {
         $from_to = str_replace( ' AND start_date', ' WHERE start_date', $from_to );
         // deb( "SELECT $columns FROM $API_param $from_to" );
