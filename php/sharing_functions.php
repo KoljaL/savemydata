@@ -460,7 +460,7 @@ function share_item( $param ) {
             $data['itemName']  = get_by_from( 'title', 'id', $param['shared_id'], 'project' );
             $data['staffName'] = get_by_from( 'username', 'id', $sharingEmail_ID, 'staff' );
 
-            sharing( 'project_sharing', $param['shared_id'], $sharingEmail_ID, $user_id, $param['can_edit'] );
+            $state = sharing( 'project_sharing', $param['shared_id'], $sharingEmail_ID, $user_id, $param['can_edit'] );
         }
 
     }
@@ -471,6 +471,7 @@ function share_item( $param ) {
     $response = [];
     if ( $sharingEmail_ID ) {
         $response['code'] = 200;
+        $data['state']    = $state;
         $response['data'] = $data;
     } else {
         $response['code']    = 400;
@@ -487,34 +488,82 @@ function share_item( $param ) {
  */
 function sharing( $share_table, $shared_id, $staff_id, $shared_staff_id, $can_edit ) {
     global $db;
+    $state    = [];
     $can_edit = ( 1 == $can_edit ) ? 'true' : 'false';
 
     // check if entry exists
     $stmt = $db->prepare( "SELECT id FROM $share_table WHERE staff_id = '$staff_id' AND shared_staff_id = '$shared_staff_id' " );
     $stmt->execute();
-    $data = $stmt->fetch( PDO::FETCH_ASSOC );
+    $id = $stmt->fetch( PDO::FETCH_ASSOC );
     $stmt->closeCursor();
-    // deb( "SELECT 'id' FROM $share_table WHERE 'staff_id' = '$staff_id' AND 'shared_staff_id' = '$shared_staff_id' " );
-    deb( $data );
+    // deb( $id );
 
     // if entry exists, UPDATE 'can_edit'
-    if ( $data ) {
+    if ( $id ) {
         // $stmt = $db->prepare( "INSERT INTO $share_table ('shared_id', 'staff_id','shared_staff_id','can_edit') VALUES (?,?,?,?)" );
-        $stmt = $db->prepare( "UPDATE $share_table SET can_edit='$can_edit' WHERE id='$data[id]'" );
+        $stmt = $db->prepare( "UPDATE $share_table SET can_edit='$can_edit' WHERE id='$id[id]'" );
         $stmt->execute();
-        deb( "UPDATE $share_table SET can_edit='$can_edit' WHERE id='$data[id]'" );
+        deb( "UPDATE $share_table SET can_edit='$can_edit' WHERE id='$id[id]'" );
         deb( 'update' );
+        $state = 'update';
+
     }
     //
     // if not INSERT values
     else {
         $stmt = $db->prepare( "INSERT INTO $share_table ('shared_id', 'staff_id','shared_staff_id','can_edit') VALUES (?,?,?,?)" );
         $stmt->execute( [$shared_id, $staff_id, $shared_staff_id, $can_edit] );
-        deb( 'INSERT' );
+        $state = 'new';
     }
+    return $state;
 
 }
 
+function load_sharings() {
+    global $db, $API_param, $API_value, $user_id, $user_role;
+    $table = $API_param.'_sharing';
+    $stmt  = $db->prepare( "SELECT * FROM $table WHERE shared_staff_id = '$API_value' " );
+    deb( "SELECT * FROM $table WHERE staff_id = '$API_value' " );
+    $stmt->execute();
+    $sharings = $stmt->fetchAll( PDO::FETCH_ASSOC );
+    $stmt->closeCursor();
+
+    $response = [];
+    if ( $sharings ) {
+        foreach ( $sharings as $key => $value ) {
+            if ( 'project' === $API_param || 'appointment' === $API_param ) {
+                $sharings[$key]['itemName'] = get_by_from( 'title', 'id', $sharings[$key]['shared_id'], $API_param );
+            }
+            if ( 'customer' === $API_param ) {
+                $sharings[$key]['itemName'] = get_by_from( 'username', 'id', $sharings[$key]['shared_id'], $API_param );
+            }
+            $sharings[$key]['staffName'] = get_by_from( 'username', 'id', $sharings[$key]['staff_id'], 'staff' );
+
+        }
+
+        $response['code'] = 200;
+        $response['data'] = $sharings;
+    } else {
+        $response['code']    = 400;
+        $response['data']    = [];
+        $response['message'] = 'no file found';
+    }
+    return_JSON( $response );
+}
+
+function remove_sharing() {
+    global $db, $API_param, $API_value, $user_id, $user_role;
+    $table = $API_param.'_sharing';
+
+    $stmt = $db->prepare( "DELETE FROM $table WHERE id = '$API_value' " );
+    $stmt->execute();
+    $stmt->closeCursor();
+
+    $response         = [];
+    $response['code'] = 200;
+    return_JSON( $response );
+
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -347,6 +347,14 @@ case 'share_item':
     share_item( $request );
     break;
 
+case 'load_sharings':
+    load_sharings( $request );
+    break;
+
+case 'remove_sharing':
+    remove_sharing( $request );
+    break;
+
 default:
     // echo 'Endpoint <b>'.$API_endpoint.'</b> not found';
     // exit;

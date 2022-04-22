@@ -14,7 +14,7 @@ export default {
         return /*HTML*/ `
         <div id=ShareItem>
             <details open>
-            <summary><span data-lang="H_sharing">Sharing</span></summary>
+            <summary id=loadSharings><span data-lang="H_sharing">Sharing</span></summary>
                     <div class="boxShadow FF-row content">
                         <div style="width:200px; height:100px;">
                             <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px; margin-bottom:0;">
@@ -81,7 +81,9 @@ let Style = () => {
         box-shadow: 4px 4px 0 black;
         border-radius: 0;
       }
-    
+    summary>span{
+        pointer-events: none;
+    }
 
 
     `;
@@ -91,6 +93,10 @@ let Style = () => {
 
 let addEvents = (obj) => {
 
+
+
+
+
     // add eventListener only once!
     if (body.getAttribute('shareWithEvent') !== 'true') {
         body.setAttribute('shareWithEvent', true)
@@ -98,6 +104,26 @@ let addEvents = (obj) => {
     }
 
     function shareWith(el) {
+        if (el.target.id === 'loadSharings') {
+            // deb(el.target)
+            loadSharings();
+        }
+
+        function loadSharings() {
+            Functions.getAPIdata('load_sharings/' + obj.type.toLowerCase() + '/' + Functions.getLocal('id'))
+                .then((res) => {
+                    document.getElementById('Sharings').innerHTML = '';
+                    if (res.code === 200) {
+                        let data = res.data
+                        deb(data)
+
+                        document.getElementById('Sharings').innerHTML = Object.keys(data)
+                            .map((key) => `<option value="${data[key].id}">${data[key].itemName} with ${data[key].staffName}</option>`).join('');
+                    }
+                });
+        }
+
+
         if (el.target.id === 'shareWithSubmit') {
             if (document.getElementById('shareWith').value) {
                 let sharingEmail = document.getElementById('shareWith').value;
@@ -105,14 +131,20 @@ let addEvents = (obj) => {
                 if (Functions.ValidateEmail(sharingEmail)) {
                     obj.sharingEmail = sharingEmail;
                     obj.can_edit = canEdit;
-                    deb(obj)
+                    // deb(obj)
 
                     Functions.getAPIdata('share_item/' + obj.type, obj)
                         .then((res) => {
                             if (res.code === 200) {
+                                loadSharings();
+
                                 let data = res.data
-                                Message.success(obj.type + ' <b>' + data.itemName + '</b> shared with<b> ' + data.staffName + '</b>');
-                                deb(data)
+                                if (data.state === 'new') {
+                                    Message.success(obj.type + ' <b>' + data.itemName + '</b> shared with<b> ' + data.staffName + '</b>');
+                                } else if (data.state === 'update') {
+                                    Message.success(obj.type + ' <b>' + data.itemName + '</b> updated');
+                                }
+                                deb(res)
                             } else if (res.code === 400) {
                                 Message.warn('Email not found: ' + sharingEmail);
                             }
@@ -125,6 +157,13 @@ let addEvents = (obj) => {
         }
 
         if (el.target.id === 'removeShareSubmit') {
+            let removeItem = document.getElementById('Sharings').value;
+            deb(removeItem)
+            Functions.getAPIdata('remove_sharing/' + obj.type.toLowerCase() + '/' + removeItem)
+                .then(() => {
+
+                    loadSharings();
+                })
 
         }
     }
