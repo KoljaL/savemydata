@@ -18,11 +18,11 @@ export default {
                     <div class="boxShadow FF-row content">
                         <div style="width:200px; height:100px;">
                             <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px; margin-bottom:0;">
-                                <input id="shareWith" class=boxShadow name="shareWith" type="text" placeholder="Email" value="manager@manager.org" required="">
+                                <input id="shareWith" class=boxShadow name="shareWith" type="text" placeholder="Email" value="admin@admin.org" required="">
                                 <label for="shareWith">Share With</label>
                             </div>
                             <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:100px; margin-top:-.5em;">
-                                <input type="checkbox" id="can_edit" name="can_edit" value="can_edit">
+                                <input type="checkbox" id="can_edit" name="can_edit">
                                 <label for="can_edit">Can Edit</label>
                             </div>
                         </div>
@@ -81,7 +81,7 @@ let Style = () => {
         box-shadow: 4px 4px 0 black;
         border-radius: 0;
       }
-    }
+    
 
 
     `;
@@ -101,8 +101,10 @@ let addEvents = (obj) => {
         if (el.target.id === 'shareWithSubmit') {
             if (document.getElementById('shareWith').value) {
                 let sharingEmail = document.getElementById('shareWith').value;
+                let canEdit = document.getElementById('can_edit').checked;
                 if (Functions.ValidateEmail(sharingEmail)) {
                     obj.sharingEmail = sharingEmail;
+                    obj.can_edit = canEdit;
                     deb(obj)
 
                     Functions.getAPIdata('share_item/' + obj.type, obj)
@@ -126,18 +128,4 @@ let addEvents = (obj) => {
 
         }
     }
-
-    // try {
-    //     let staff_id = '';
-    //     deb(slugName)
-    //     if (tableName === 'customer') {
-    //         staff_id = ',staff_id';
-    //     }
-    //     // staff_id = ',staff_id';
-
-    //     const response = Functions.getAPIdata('get_list_from/' + table + '/id,username' + staff_id);
-    //     return response;
-    // } catch (err) {
-    //     console.log('Error getting documents', err);
-    // }
 };

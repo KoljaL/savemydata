@@ -270,14 +270,14 @@ function init_customer_sharing_table() {
     global $db;
     $db->exec( 'CREATE TABLE customer_sharing(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            share_id TEXT NOT NULL DEFAULT "",
             staff_id TEXT NOT NULL DEFAULT "",
-            share_staff_id TEXT NOT NULL DEFAULT "",
+            shared_id TEXT NOT NULL DEFAULT "",
+            shared_staff_id TEXT NOT NULL DEFAULT "",
             can_edit TEXT NOT NULL DEFAULT "false",
             date TEXT NOT NULL  DEFAULT ""
         )' );
 
-    $customer_sharing = ['share_id' => '4', 'staff_id' => '5', 'share_staff_id' => '1'];
+    $customer_sharing = ['shared_id' => '4', 'staff_id' => '5', 'shared_staff_id' => '1'];
     insert_into_db( $customer_sharing, 'customer_sharing' );
 }
 
@@ -285,13 +285,13 @@ function init_project_sharing_table() {
     global $db;
     $db->exec( 'CREATE TABLE project_sharing(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            share_id TEXT NOT NULL DEFAULT "",
             staff_id TEXT NOT NULL DEFAULT "",
-            share_staff_id TEXT NOT NULL DEFAULT "",
+            shared_id TEXT NOT NULL DEFAULT "",
+            shared_staff_id TEXT NOT NULL DEFAULT "",
             can_edit TEXT NOT NULL DEFAULT "false",
             date TEXT NOT NULL  DEFAULT ""
         )' );
-    $project_sharing = ['share_id' => '4', 'staff_id' => '5', 'share_staff_id' => '1'];
+    $project_sharing = ['shared_id' => '4', 'staff_id' => '5', 'shared_staff_id' => '1'];
     insert_into_db( $project_sharing, 'project_sharing' );
 }
 
@@ -299,13 +299,13 @@ function init_appointment_sharing_table() {
     global $db;
     $db->exec( 'CREATE TABLE appointment_sharing(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            share_id TEXT NOT NULL DEFAULT "",
             staff_id TEXT NOT NULL DEFAULT "",
-            share_staff_id TEXT NOT NULL DEFAULT "",
+            shared_id TEXT NOT NULL DEFAULT "",
+            shared_staff_id TEXT NOT NULL DEFAULT "",
             can_edit TEXT NOT NULL DEFAULT "false",
             date TEXT NOT NULL  DEFAULT ""
         )' );
-    $appointment_sharing = ['share_id' => '4', 'staff_id' => '5', 'share_staff_id' => '1'];
+    $appointment_sharing = ['shared_id' => '4', 'staff_id' => '5', 'shared_staff_id' => '1'];
     insert_into_db( $appointment_sharing, 'appointment_sharing' );
 }
 
@@ -547,5 +547,5 @@ function get_ramdon_id_from( $table ) {
     return $IDs[$i]['id'];
 }
 
-// $customer_sharing = ['share_id' => '4', 'staff_id' => '5', 'share_staff_id' => '1'];
+// $customer_sharing = ['shared_id' => '4', 'staff_id' => '5', 'shared_staff_id' => '1'];
 // insert_into_db( $customer_sharing, 'customer_sharing' );

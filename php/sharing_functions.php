@@ -69,7 +69,7 @@ function get_table_or_list_from( $param ) {
         $stmt          = $db->prepare( "
           SELECT c.*
               FROM $sharing_table cs
-              INNER JOIN $API_param c ON cs.share_id = c.id
+              INNER JOIN $API_param c ON cs.shared_id = c.id
               WHERE cs.staff_id = $user_id
               $from_to
           UNION
@@ -227,7 +227,7 @@ function get_projects_as_table( $param ) {
     // $stmt = $db->prepare( "--sql
     //   SELECT p.*
     //       FROM project_sharing ps
-    //       INNER JOIN project p ON ps.share_id = p.id
+    //       INNER JOIN project p ON ps.shared_id = p.id
     //       WHERE ps.staff_id = $user_id
     //   UNION
     //   SELECT * FROM project  WHERE staff_id = $user_id
@@ -434,6 +434,87 @@ function get_appointments_from( $param ) {
     return_JSON( $response );
 }
 
+/*
+//
+//   ######  ##     ##    ###    ########  ########    #### ######## ######## ##     ##
+//  ##    ## ##     ##   ## ##   ##     ## ##           ##     ##    ##       ###   ###
+//  ##       ##     ##  ##   ##  ##     ## ##           ##     ##    ##       #### ####
+//   ######  ######### ##     ## ########  ######       ##     ##    ######   ## ### ##
+//        ## ##     ## ######### ##   ##   ##           ##     ##    ##       ##     ##
+//  ##    ## ##     ## ##     ## ##    ##  ##           ##     ##    ##       ##     ##
+//   ######  ##     ## ##     ## ##     ## ########    ####    ##    ######## ##     ##
+//
+*/
+function share_item( $param ) {
+    global $db, $API_param, $API_value, $user_id, $user_role;
+
+    // shareID.staff_id !== $user_id -> not allowed to share
+
+    //
+    // project
+    //
+    if ( 'Project' === $API_param ) {
+        $sharingEmail_ID = get_by_from( 'id', 'email', $param['sharingEmail'], 'staff' );
+        if ( $sharingEmail_ID ) {
+            // for response
+            $data['itemName']  = get_by_from( 'title', 'id', $param['shared_id'], 'project' );
+            $data['staffName'] = get_by_from( 'username', 'id', $sharingEmail_ID, 'staff' );
+
+            sharing( 'project_sharing', $param['shared_id'], $sharingEmail_ID, $user_id, $param['can_edit'] );
+        }
+
+    }
+
+    //
+    // response
+    //
+    $response = [];
+    if ( $sharingEmail_ID ) {
+        $response['code'] = 200;
+        $response['data'] = $data;
+    } else {
+        $response['code']    = 400;
+        $response['data']    = [];
+        $response['message'] = 'no file found';
+    }
+    return_JSON( $response );
+}
+
+/**
+ *
+ * It inserts a row into a table with the shared_id and staff_id
+ *
+ */
+function sharing( $share_table, $shared_id, $staff_id, $shared_staff_id, $can_edit ) {
+    global $db;
+    $can_edit = ( 1 == $can_edit ) ? 'true' : 'false';
+
+    // check if entry exists
+    $stmt = $db->prepare( "SELECT id FROM $share_table WHERE staff_id = '$staff_id' AND shared_staff_id = '$shared_staff_id' " );
+    $stmt->execute();
+    $data = $stmt->fetch( PDO::FETCH_ASSOC );
+    $stmt->closeCursor();
+    // deb( "SELECT 'id' FROM $share_table WHERE 'staff_id' = '$staff_id' AND 'shared_staff_id' = '$shared_staff_id' " );
+    deb( $data );
+
+    // if entry exists, UPDATE 'can_edit'
+    if ( $data ) {
+        // $stmt = $db->prepare( "INSERT INTO $share_table ('shared_id', 'staff_id','shared_staff_id','can_edit') VALUES (?,?,?,?)" );
+        $stmt = $db->prepare( "UPDATE $share_table SET can_edit='$can_edit' WHERE id='$data[id]'" );
+        $stmt->execute();
+        deb( "UPDATE $share_table SET can_edit='$can_edit' WHERE id='$data[id]'" );
+        deb( 'update' );
+    }
+    //
+    // if not INSERT values
+    else {
+        $stmt = $db->prepare( "INSERT INTO $share_table ('shared_id', 'staff_id','shared_staff_id','can_edit') VALUES (?,?,?,?)" );
+        $stmt->execute( [$shared_id, $staff_id, $shared_staff_id, $can_edit] );
+        deb( 'INSERT' );
+    }
+
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -466,14 +547,14 @@ function is_my_item( $table, $item_id ) {
     }
 }
 
-function shared_with_me( $table, $share_id ) {
+function shared_with_me( $table, $shared_id ) {
     global $db, $user_id;
-    $stmt = $db->prepare( "SELECT * FROM $table WHERE share_id = :share_id AND staff_id = :staff_id" );
-    $stmt->execute( [':share_id' => $share_id, ':staff_id' => $user_id] );
+    $stmt = $db->prepare( "SELECT * FROM $table WHERE shared_id = :shared_id AND staff_id = :staff_id" );
+    $stmt->execute( [':shared_id' => $shared_id, ':staff_id' => $user_id] );
     $data = $stmt->fetch( PDO::FETCH_ASSOC );
     $stmt->closeCursor();
     if ( $data ) {
-        $data['user_name'] = get_name_by_id( 'staff', $data['share_staff_id'] );
+        $data['user_name'] = get_name_by_id( 'staff', $data['shared_staff_id'] );
 
         return $data;
     } else {

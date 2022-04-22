@@ -182,8 +182,7 @@ let ProjectContent = async(id) => {
                             <div class="ProjectSharings">
                                 ${ShareItem.render({
                                     type:'Project',
-                                    project_id: data.id,
-                                    customer_id: data.customer_id,
+                                    shared_id: data.id,
                                     staff_id: data.staff_id,
                                     appointments: data.appointments,
                                 })}
@@ -205,7 +204,7 @@ let ProjectContent = async(id) => {
                 Functions.setInnerHTML('ProjectAppointments', app);
                 return data;
             })
-            //
+            // # tets
             // edit and delete button
             //
             .then((data) => {

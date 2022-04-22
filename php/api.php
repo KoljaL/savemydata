@@ -450,7 +450,7 @@ function get_list_from( $param ) {
         $stmt = $db->prepare( "
             SELECT c.$columns
                 FROM $sharing_table AS share
-                INNER JOIN $API_param AS c ON share.share_id = c.id
+                INNER JOIN $API_param AS c ON share.shared_id = c.id
                 WHERE share.staff_id = $user_id
             UNION
             SELECT $columns
@@ -509,7 +509,7 @@ function get_data_from( $param ) {
         $stmt          = $db->prepare( "
             SELECT c.*
                 FROM $sharing_table cs
-                INNER JOIN $API_param c ON cs.share_id = c.id
+                INNER JOIN $API_param c ON cs.shared_id = c.id
                 WHERE cs.staff_id = $user_id
             UNION
             SELECT *
@@ -929,61 +929,6 @@ function get_geocode( $param, $output = true ) {
     if ( $output ) {
         return_JSON( $geocode );
     }
-}
-
-/*
-//
-//   ######  ##     ##    ###    ########  ########    #### ######## ######## ##     ##
-//  ##    ## ##     ##   ## ##   ##     ## ##           ##     ##    ##       ###   ###
-//  ##       ##     ##  ##   ##  ##     ## ##           ##     ##    ##       #### ####
-//   ######  ######### ##     ## ########  ######       ##     ##    ######   ## ### ##
-//        ## ##     ## ######### ##   ##   ##           ##     ##    ##       ##     ##
-//  ##    ## ##     ## ##     ## ##    ##  ##           ##     ##    ##       ##     ##
-//   ######  ##     ## ##     ## ##     ## ########    ####    ##    ######## ##     ##
-//
-*/
-function share_item( $param ) {
-    global $db, $API_param, $API_value, $user_id, $user_role;
-
-    // shareID.staff_id !== $user_id -> not allowed to share
-
-    //
-    // project
-    //
-    if ( 'Project' === $API_param ) {
-        $sharingEmail_ID = get_by_from( 'id', 'email', $param['sharingEmail'], 'staff' );
-        if ( $sharingEmail_ID ) {
-            $data['itemName']  = get_by_from( 'title', 'id', $param['project_id'], 'project' );
-            $data['staffName'] = get_by_from( 'username', 'id', $sharingEmail_ID, 'staff' );
-        }
-
-    }
-
-    //
-    // response
-    //
-    $response = [];
-    if ( $sharingEmail_ID ) {
-        $response['code'] = 200;
-        $response['data'] = $data;
-    } else {
-        $response['code']    = 400;
-        $response['data']    = [];
-        $response['message'] = 'no file found';
-    }
-    return_JSON( $response );
-}
-
-/**
- *
- * It inserts a row into a table with the share_id and staff_id
- *
- */
-function sharing( $share_table, $share_id, $staff_id, $can_edit ) {
-    global $db;
-
-    $stmt = $db->prepare( "INSERT INTO $share_table 'share_id', 'staff_id' VALUES (?,?)" );
-    $stmt->execute( [$share_id, $staff_id] );
 }
 
 /*
