@@ -5,6 +5,7 @@ import LanguageSwitch from '../components/LanguageSwitch.js';
 import Images from '../components/Images.js';
 import AppointmentsList from '../components/AppointmentsList.js';
 import ProjectsList from '../components/ProjectsList.js';
+import ShareItem from '../components/ShareItem.js';
 
 
 export default {
@@ -109,8 +110,12 @@ let Content = async(userID) => {
                         <h3 data-lang="F_images">Images</h3>
                         <div id=thumbnails></div>
                         <div id=fileUpload></div>
-                        ${Images.render({origin: tableName,origin_id:userID,type:'image',name:'testname'})}
+                        ${Images.render({origin: tableName,origin_id:userID,type:'image',name:'default'})}
                     </div>
+
+                    <div class="CustomerSharings">
+                        ${ShareItem.render({type:'Customer',shared_id: userID,})}
+                    </div>  
                 </div>
             </div>
         </div>`;

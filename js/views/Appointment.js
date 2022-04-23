@@ -2,6 +2,8 @@ import Functions from '../Functions.js';
 import Images from '../components/Images.js';
 import AppointmentState from '../components/AppointmentState.js';
 import AppointmentsList from '../components/AppointmentsList.js';
+import ShareItem from '../components/ShareItem.js';
+
 
 let Appointment = {
     render: async(id) => {
@@ -80,6 +82,14 @@ let Style = async() => {
             position: relative;
             top: 4px;
           }
+
+        .AppointmentSharings{
+            margin-left: auto;
+        }
+        .small .AppointmentSharings,
+        .medium .AppointmentSharings{
+            margin-left: 0;
+        }
     `;
     Functions.createStyle('Appointment_jdow_style', styleTags);
 };
@@ -196,12 +206,17 @@ let AppointmentContent = async(id) => {
                             </div>
                         </div>
                         <br>
-                        <div id=AppointmentImages>
-                            <h3 data-lang="F_images">Images</h3>
-                            <div id=thumbnails></div>
-                            <div id=fileUpload></div>
-                            ${Images.render({origin: 'appointment',origin_id:data.id,type:'image',name:'testname'})}
-                        </div>
+                        <div style="display: flex;">
+                            <div id=AppointmentImages>
+                                <h3 data-lang="F_images">Images</h3>
+                                <div id=thumbnails></div>
+                                <div id=fileUpload></div>
+                                ${Images.render({origin: 'appointment',origin_id:data.id,type:'image',name:'AppointmentImage'})}
+                            </div>
+                            <div class="AppointmentSharings">
+                                ${ShareItem.render({type:'Appointment',shared_id: data.id})}
+                            </div>  
+                        </div>  
                     </div>`;
                     Functions.setInnerHTML('AppointmentContent', innerHTML);
 

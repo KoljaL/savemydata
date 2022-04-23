@@ -450,19 +450,40 @@ function share_item( $param ) {
 
     // shareID.staff_id !== $user_id -> not allowed to share
 
-    //
-    // project
-    //
+    if ( 'Customer' === $API_param ) {
+        // get ID from staff, whitch email is submitted
+        $sharingEmail_ID = get_by_from( 'id', 'email', $param['sharingEmail'], 'staff' );
+        if ( $sharingEmail_ID ) {
+            // for response
+            $data['itemName']  = get_by_from( 'username', 'id', $param['shared_id'], 'customer' );
+            $data['staffName'] = get_by_from( 'username', 'id', $sharingEmail_ID, 'staff' );
+            // saves the sharing in DB ang get back, if its a new or a updated entry
+            $data['state'] = sharing( 'customer_sharing', $param['shared_id'], $sharingEmail_ID, $user_id, $param['can_edit'] );
+        }
+    }
+
     if ( 'Project' === $API_param ) {
+        // get ID from staff, whitch email is submitted
         $sharingEmail_ID = get_by_from( 'id', 'email', $param['sharingEmail'], 'staff' );
         if ( $sharingEmail_ID ) {
             // for response
             $data['itemName']  = get_by_from( 'title', 'id', $param['shared_id'], 'project' );
             $data['staffName'] = get_by_from( 'username', 'id', $sharingEmail_ID, 'staff' );
-
-            $state = sharing( 'project_sharing', $param['shared_id'], $sharingEmail_ID, $user_id, $param['can_edit'] );
+            // saves the sharing in DB ang get back, if its a new or a updated entry
+            $data['state'] = sharing( 'project_sharing', $param['shared_id'], $sharingEmail_ID, $user_id, $param['can_edit'] );
         }
+    }
 
+    if ( 'Appointment' === $API_param ) {
+        // get ID from staff, whitch email is submitted
+        $sharingEmail_ID = get_by_from( 'id', 'email', $param['sharingEmail'], 'staff' );
+        if ( $sharingEmail_ID ) {
+            // for response
+            $data['itemName']  = get_by_from( 'title', 'id', $param['shared_id'], 'appointment' );
+            $data['staffName'] = get_by_from( 'username', 'id', $sharingEmail_ID, 'staff' );
+            // saves the sharing in DB ang get back, if its a new or a updated entry
+            $data['state'] = sharing( 'appointment_sharing', $param['shared_id'], $sharingEmail_ID, $user_id, $param['can_edit'] );
+        }
     }
 
     //
@@ -471,7 +492,6 @@ function share_item( $param ) {
     $response = [];
     if ( $sharingEmail_ID ) {
         $response['code'] = 200;
-        $data['state']    = $state;
         $response['data'] = $data;
     } else {
         $response['code']    = 400;
@@ -496,15 +516,11 @@ function sharing( $share_table, $shared_id, $staff_id, $shared_staff_id, $can_ed
     $stmt->execute();
     $id = $stmt->fetch( PDO::FETCH_ASSOC );
     $stmt->closeCursor();
-    // deb( $id );
 
-    // if entry exists, UPDATE 'can_edit'
+    // if entry exists, UPDATE column: 'can_edit'
     if ( $id ) {
-        // $stmt = $db->prepare( "INSERT INTO $share_table ('shared_id', 'staff_id','shared_staff_id','can_edit') VALUES (?,?,?,?)" );
         $stmt = $db->prepare( "UPDATE $share_table SET can_edit='$can_edit' WHERE id='$id[id]'" );
         $stmt->execute();
-        deb( "UPDATE $share_table SET can_edit='$can_edit' WHERE id='$id[id]'" );
-        deb( 'update' );
         $state = 'update';
 
     }

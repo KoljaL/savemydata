@@ -3,12 +3,6 @@ import LanguageSwitch from './LanguageSwitch.js';
 
 export default {
     render: (data) => {
-        // deb(data)
-        // let list = getUserList(table);
-
-        // for customer, project & appointment
-        // send email to API & validate
-        // if valide insert to db
         addEvents(data);
         Style();
         return /*HTML*/ `
@@ -43,30 +37,6 @@ export default {
         </div>`;
     },
 };
-
-
-// <div class="boxShadow FF-row content">
-// <div style="width:200px; height:100px;">
-//     <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px; margin-bottom:0;">
-//         <input id="shareWith" class=boxShadow name="shareWith" type="text" placeholder="Email" value="admin@admin.org" required="">
-//         <label for="shareWith">Share With</label>
-//     </div>
-//     <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:100px; margin-top:-.5em;">
-//         <input type="checkbox" id="can_edit" name="can_edit">
-//         <label for="can_edit">Can Edit</label>
-//     </div>
-// </div>
-// <div class="FF-item" style="flex-basis: 150px; min-width: 100px; max-width: 50px;">
-//     <input id="shareWithSubmit" class=boxShadow  type="submit" value="Send">
-// </div>
-// <div class="FF-item"style="min-width:100px; flex-basis:150px; max-width:200px; margin-bottom:0;">
-//     <label class="isTop">Sharings</label>
-//     <select id=Sharings class="boxShadow"  name="Sharings" /></select>
-// </div>
-// <div class="FF-item" style="flex-basis: 150px; min-width: 100px; max-width: 50px;">
-//     <input id="removeShareSubmit" class=boxShadow  type="submit" value="Remove">
-// </div>
-// </div>
 
 
 let Style = () => {
@@ -107,7 +77,7 @@ let Style = () => {
         box-shadow: 4px 4px 0 black;
         border-radius: 0;
       }
-    summary>span{
+    #ShareItem summary>span{
         pointer-events: none;
     }
 
@@ -119,10 +89,6 @@ let Style = () => {
 
 let addEvents = (obj) => {
 
-
-
-
-
     // add eventListener only once!
     if (body.getAttribute('shareWithEvent') !== 'true') {
         body.setAttribute('shareWithEvent', true)
@@ -130,25 +96,14 @@ let addEvents = (obj) => {
     }
 
     function shareWith(el) {
-        if (el.target.id === 'loadSharings') {
-            // deb(el.target)
-            loadSharings();
-        }
+        // load sharings at opening the summary
+        if (el.target.id === 'loadSharings') loadSharings();
 
-        function loadSharings() {
-            Functions.getAPIdata('load_sharings/' + obj.type.toLowerCase() + '/' + Functions.getLocal('id'))
-                .then((res) => {
-                    document.getElementById('Sharings').innerHTML = '';
-                    if (res.code === 200) {
-                        let data = res.data
-                            // deb(data)
-                        document.getElementById('Sharings').innerHTML = Object.keys(data)
-                            .map((key) => `<option value="${data[key].id}">${data[key].itemName} with ${data[key].staffName}</option>`).join('');
-                    }
-                });
-        }
-
-
+        /**
+         * 
+         * The event handler for the submit button.
+         * 
+         */
         if (el.target.id === 'shareWithSubmit') {
             if (document.getElementById('shareWith').value) {
                 let sharingEmail = document.getElementById('shareWith').value;
@@ -180,7 +135,11 @@ let addEvents = (obj) => {
             }
 
         }
-
+        /**
+         * 
+         * The event handler for the remove button.
+         * 
+         */
         if (el.target.id === 'removeShareSubmit') {
             let removeItem = document.getElementById('Sharings').value;
             // deb(removeItem)
@@ -190,5 +149,24 @@ let addEvents = (obj) => {
                 })
 
         }
+    }
+
+
+    /**
+     * 
+     * It gets the sharings of the current user and displays them in the dropdown
+     * 
+     */
+    function loadSharings() {
+        Functions.getAPIdata('load_sharings/' + obj.type.toLowerCase() + '/' + Functions.getLocal('id'))
+            .then((res) => {
+                if (res.code === 200) {
+                    let data = res.data
+                    document.getElementById('Sharings').innerHTML = Object.keys(data)
+                        .map((key) => `<option value="${data[key].id}">${data[key].itemName} with ${data[key].staffName}</option>`).join('');
+                } else {
+                    document.getElementById('Sharings').innerHTML = '';
+                }
+            });
     }
 };

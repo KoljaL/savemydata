@@ -180,12 +180,7 @@ let ProjectContent = async(id) => {
                                 ${Images.render({origin: 'project',origin_id:data.id})}
                             </div>
                             <div class="ProjectSharings">
-                                ${ShareItem.render({
-                                    type:'Project',
-                                    shared_id: data.id,
-                                    staff_id: data.staff_id,
-                                    appointments: data.appointments,
-                                })}
+                                ${ShareItem.render({type:'Project',shared_id: data.id})}
                             </div>  
                         </div>
                     </div>
