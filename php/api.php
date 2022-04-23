@@ -123,7 +123,11 @@ if ( $request ) {
 */
 if ( 'do' === $API_endpoint ) {
     // create_dummy_data();
-    join_test();
+    // join_test();
+    // require __DIR__.'/sharing_functions.php';
+    require __DIR__.'/init_db_tables.php';
+
+    dummy_sharing( 'customer' );
     // get_geocode( '' );
     // get_name_by_id('staff', '1', $name = 'username');
     exit;

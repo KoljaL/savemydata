@@ -128,13 +128,13 @@ function init_stafftable() {
     // $manager = ['username' => 'Manager', 'password' => 'password', 'firstname' => 'manager', 'lastname' => 'manager', 'email' => 'manager@manager.org', 'location' => 'Stapeler Str. 41, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'manager', 'permission' => '0', 'color' => '#cb7832'];
     // insert_into_db( $manager, 'staff' );
 
-    // $staff = ['username' => 'Staff 0', 'password' => 'password', 'firstname' => 'staff', 'lastname' => 'staff', 'email' => 'staff@staff.org', 'location' => 'Stapeler Str. 41, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'staff', 'permission' => '0', 'color' => '#c9ac57'];
-    // insert_into_db( $staff, 'staff' );
+    $staff = ['username' => 'Staff 0', 'password' => 'password', 'firstname' => 'staff', 'lastname' => 'staff', 'email' => 'staff0@staff.org', 'location' => 'Stapeler Str. 41, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'staff', 'permission' => '0', 'color' => '#c9ac57'];
+    insert_into_db( $staff, 'staff' );
 
-    $staff1 = ['username' => 'Staff 1', 'password' => 'password', 'firstname' => 'staff', 'lastname' => 'staff', 'email' => 'staff@staff.org', 'location' => 'Stapeler Str. 41, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'staff', 'permission' => '0', 'color' => '#988cca'];
+    $staff1 = ['username' => 'Staff 1', 'password' => 'password', 'firstname' => 'staff', 'lastname' => 'staff', 'email' => 'staff1@staff.org', 'location' => 'Stapeler Str. 41, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'staff', 'permission' => '0', 'color' => '#988cca'];
     insert_into_db( $staff1, 'staff' );
 
-    $staff2 = ['username' => 'Staff 2', 'password' => 'password', 'firstname' => 'staff', 'lastname' => 'staff', 'email' => 'staff@staff.org', 'location' => 'Stapeler Str. 41, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'staff', 'permission' => '0', 'color' => '#6a8759'];
+    $staff2 = ['username' => 'Staff 2', 'password' => 'password', 'firstname' => 'staff', 'lastname' => 'staff', 'email' => 'staff2@staff.org', 'location' => 'Stapeler Str. 41, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'staff', 'permission' => '0', 'color' => '#6a8759'];
     insert_into_db( $staff2, 'staff' );
 }
 
@@ -170,8 +170,8 @@ function init_customertable() {
             date TEXT NOT NULL  DEFAULT ""
         )' );
 
-    $customer = ['username' => 'customer', 'staff_id' => '1', 'password' => 'password', 'firstname' => 'user', 'lastname' => 'user', 'email' => 'user@user.org', 'location' => 'Stapeler Str. 41, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'customer', 'permission' => '0'];
-    insert_into_db( $customer, 'customer' );
+    // $customer = ['username' => 'customer', 'staff_id' => '1', 'password' => 'password', 'firstname' => 'user', 'lastname' => 'user', 'email' => 'user@user.org', 'location' => 'Stapeler Str. 41, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'customer', 'permission' => '0'];
+    // insert_into_db( $customer, 'customer' );
 }
 
 /*
@@ -549,3 +549,14 @@ function get_ramdon_id_from( $table ) {
 
 // $customer_sharing = ['shared_id' => '4', 'staff_id' => '5', 'shared_staff_id' => '1'];
 // insert_into_db( $customer_sharing, 'customer_sharing' );
+
+function dummy_sharing( $item ) {
+
+    $share_id        = get_ramdon_id_from( $item );
+    $shared_staff_id = get_by_from( 'staff_id', 'id', $share_id, $item );
+    $staff_id        = get_ramdon_id_from( 'staff' );
+    $sharing         = ['shared_id' => $share_id, 'staff_id' => $staff_id, 'shared_staff_id' => $shared_staff_id];
+    $sharing_table   = $item.'_sharing';
+    insert_into_db( $sharing, $sharing_table );
+
+}

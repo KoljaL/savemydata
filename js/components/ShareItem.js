@@ -4,9 +4,10 @@ import LanguageSwitch from './LanguageSwitch.js';
 export default {
     render: (data) => {
         addEvents(data);
+        // deb(data)
         Style();
         return /*HTML*/ `
-        <div id=ShareItem>
+        <div id=ShareItem data-shared_id="${data.shared_id}" data-type="${data.type}">
             <details open>
             <summary id=loadSharings><span data-lang="H_sharing">Sharing</span></summary>
                     <div class="boxShadow FF-row content">
@@ -87,7 +88,7 @@ let Style = () => {
 };
 
 
-let addEvents = (obj) => {
+let addEvents = () => {
 
     // add eventListener only once!
     if (body.getAttribute('shareWithEvent') !== 'true') {
@@ -96,8 +97,15 @@ let addEvents = (obj) => {
     }
 
     function shareWith(el) {
+        let shareData = {};
+        shareData.type = document.getElementById('ShareItem').getAttribute("data-type");
+        shareData.shared_id = document.getElementById('ShareItem').getAttribute("data-shared_id");
+        shareData.sharingEmail = document.getElementById('shareWith').value;
+        shareData.can_edit = document.getElementById('can_edit').checked;
+        // deb(shareData)
+
         // load sharings at opening the summary
-        if (el.target.id === 'loadSharings') loadSharings();
+        if (el.target.id === 'loadSharings') loadSharings(shareData);
 
         /**
          * 
@@ -106,31 +114,28 @@ let addEvents = (obj) => {
          */
         if (el.target.id === 'shareWithSubmit') {
             if (document.getElementById('shareWith').value) {
-                let sharingEmail = document.getElementById('shareWith').value;
-                let canEdit = document.getElementById('can_edit').checked;
-                if (Functions.ValidateEmail(sharingEmail)) {
-                    obj.sharingEmail = sharingEmail;
-                    obj.can_edit = canEdit;
-                    // deb(obj)
 
-                    Functions.getAPIdata('share_item/' + obj.type, obj)
+                if (Functions.ValidateEmail(shareData.sharingEmail)) {
+
+
+                    Functions.getAPIdata('share_item/' + shareData.type, shareData)
                         .then((res) => {
                             if (res.code === 200) {
-                                loadSharings();
+                                loadSharings(shareData);
 
                                 let data = res.data
                                 if (data.state === 'new') {
-                                    Message.success(obj.type + ' <b>' + data.itemName + '</b> shared with<b> ' + data.staffName + '</b>');
+                                    Message.success(shareData.type + ' <b>' + data.itemName + '</b> shared with<b> ' + data.staffName + '</b>');
                                 } else if (data.state === 'update') {
-                                    Message.success(obj.type + ' <b>' + data.itemName + '</b> updated');
+                                    Message.success(shareData.type + ' <b>' + data.itemName + '</b> updated');
                                 }
                                 // deb(res)
                             } else if (res.code === 400) {
-                                Message.warn('Email not found: ' + sharingEmail);
+                                Message.warn('Email not found: ' + shareData.sharingEmail);
                             }
                         });
                 } else {
-                    Message.warn('not a valid Email: ' + sharingEmail);
+                    Message.error('not a valid Email: ' + shareData.sharingEmail);
                 }
             }
 
@@ -143,9 +148,9 @@ let addEvents = (obj) => {
         if (el.target.id === 'removeShareSubmit') {
             let removeItem = document.getElementById('Sharings').value;
             // deb(removeItem)
-            Functions.getAPIdata('remove_sharing/' + obj.type.toLowerCase() + '/' + removeItem)
+            Functions.getAPIdata('remove_sharing/' + shareData.type.toLowerCase() + '/' + removeItem)
                 .then(() => {
-                    loadSharings();
+                    loadSharings(shareData);
                 })
 
         }
@@ -157,8 +162,9 @@ let addEvents = (obj) => {
      * It gets the sharings of the current user and displays them in the dropdown
      * 
      */
-    function loadSharings() {
-        Functions.getAPIdata('load_sharings/' + obj.type.toLowerCase() + '/' + Functions.getLocal('id'))
+    function loadSharings(shareData) {
+        deb(shareData)
+        Functions.getAPIdata('load_sharings/' + shareData.type.toLowerCase() + '/' + Functions.getLocal('id'))
             .then((res) => {
                 if (res.code === 200) {
                     let data = res.data

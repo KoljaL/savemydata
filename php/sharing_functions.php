@@ -458,7 +458,7 @@ function share_item( $param ) {
             $data['itemName']  = get_by_from( 'username', 'id', $param['shared_id'], 'customer' );
             $data['staffName'] = get_by_from( 'username', 'id', $sharingEmail_ID, 'staff' );
             // saves the sharing in DB ang get back, if its a new or a updated entry
-            $data['state'] = sharing( 'customer_sharing', $param['shared_id'], $sharingEmail_ID, $user_id, $param['can_edit'] );
+            $data['state'] = sharing( 'customer_sharing', $param['shared_id'], $user_id, $sharingEmail_ID, $param['can_edit'] );
         }
     }
 
@@ -470,7 +470,7 @@ function share_item( $param ) {
             $data['itemName']  = get_by_from( 'title', 'id', $param['shared_id'], 'project' );
             $data['staffName'] = get_by_from( 'username', 'id', $sharingEmail_ID, 'staff' );
             // saves the sharing in DB ang get back, if its a new or a updated entry
-            $data['state'] = sharing( 'project_sharing', $param['shared_id'], $sharingEmail_ID, $user_id, $param['can_edit'] );
+            $data['state'] = sharing( 'project_sharing', $param['shared_id'], $user_id, $sharingEmail_ID, $param['can_edit'] );
         }
     }
 
@@ -482,7 +482,7 @@ function share_item( $param ) {
             $data['itemName']  = get_by_from( 'title', 'id', $param['shared_id'], 'appointment' );
             $data['staffName'] = get_by_from( 'username', 'id', $sharingEmail_ID, 'staff' );
             // saves the sharing in DB ang get back, if its a new or a updated entry
-            $data['state'] = sharing( 'appointment_sharing', $param['shared_id'], $sharingEmail_ID, $user_id, $param['can_edit'] );
+            $data['state'] = sharing( 'appointment_sharing', $param['shared_id'], $user_id, $sharingEmail_ID, $param['can_edit'] );
         }
     }
 
@@ -520,6 +520,7 @@ function sharing( $share_table, $shared_id, $staff_id, $shared_staff_id, $can_ed
     // if entry exists, UPDATE column: 'can_edit'
     if ( $id ) {
         $stmt = $db->prepare( "UPDATE $share_table SET can_edit='$can_edit' WHERE id='$id[id]'" );
+        deb( "UPDATE $share_table SET can_edit='$can_edit' WHERE id='$id[id]'" );
         $stmt->execute();
         $state = 'update';
 
@@ -538,7 +539,7 @@ function sharing( $share_table, $shared_id, $staff_id, $shared_staff_id, $can_ed
 function load_sharings() {
     global $db, $API_param, $API_value, $user_id, $user_role;
     $table = $API_param.'_sharing';
-    $stmt  = $db->prepare( "SELECT * FROM $table WHERE shared_staff_id = '$API_value' " );
+    $stmt  = $db->prepare( "SELECT * FROM $table WHERE staff_id = '$API_value' " );
     deb( "SELECT * FROM $table WHERE staff_id = '$API_value' " );
     $stmt->execute();
     $sharings = $stmt->fetchAll( PDO::FETCH_ASSOC );
