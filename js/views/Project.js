@@ -171,7 +171,7 @@ let ProjectContent = async(id) => {
                             </div>
                         </div>
 
-                        <div style="display:flex;gap: 2em;flex-wrap: wrap;">
+                        <div style="display:flex;gap: 2em;flex-wrap: wrap;flex-wrap: wrap;">
                             <div id=ProjectAppointments></div>
                             <div id=ProjectImages>
                                 <h3 data-lang="F_images">Images</h3>

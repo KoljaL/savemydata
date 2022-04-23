@@ -13,7 +13,7 @@ export default {
                     <div class="boxShadow FF-row content">
                         <div style="display:flex;">
                             <div class="FF-item" style="min-width:150px; flex-basis:150px; max-width:300px; margin-bottom:0;">
-                                <input id="shareWith" class=boxShadow name="shareWith" type="text" placeholder="Email" value="admin@admin.org" required="">
+                                <input id="shareWith" class=boxShadow name="shareWith" type="text" placeholder="Email" value="staff0@staff.org" required="">
                                 <label for="shareWith">Share With</label>
                             </div>
                             <div class="FF-item" style="min-width:50px; flex-basis:50px; max-width:80px;">
@@ -97,15 +97,15 @@ let addEvents = () => {
     }
 
     function shareWith(el) {
-        let shareData = {};
-        shareData.type = document.getElementById('ShareItem').getAttribute("data-type");
-        shareData.shared_id = document.getElementById('ShareItem').getAttribute("data-shared_id");
-        shareData.sharingEmail = document.getElementById('shareWith').value;
-        shareData.can_edit = document.getElementById('can_edit').checked;
+        var shareData = {};
+
         // deb(shareData)
 
         // load sharings at opening the summary
-        if (el.target.id === 'loadSharings') loadSharings(shareData);
+        if (el.target.id === 'loadSharings') {
+            shareData = loadShareData();
+            loadSharings(shareData);
+        }
 
         /**
          * 
@@ -113,16 +113,13 @@ let addEvents = () => {
          * 
          */
         if (el.target.id === 'shareWithSubmit') {
+            shareData = loadShareData();
             if (document.getElementById('shareWith').value) {
-
                 if (Functions.ValidateEmail(shareData.sharingEmail)) {
-
-
                     Functions.getAPIdata('share_item/' + shareData.type, shareData)
                         .then((res) => {
                             if (res.code === 200) {
                                 loadSharings(shareData);
-
                                 let data = res.data
                                 if (data.state === 'new') {
                                     Message.success(shareData.type + ' <b>' + data.itemName + '</b> shared with<b> ' + data.staffName + '</b>');
@@ -147,9 +144,12 @@ let addEvents = () => {
          */
         if (el.target.id === 'removeShareSubmit') {
             let removeItem = document.getElementById('Sharings').value;
+            shareData = loadShareData();
             // deb(removeItem)
+            // deb(shareData)
             Functions.getAPIdata('remove_sharing/' + shareData.type.toLowerCase() + '/' + removeItem)
                 .then(() => {
+                    shareData = loadShareData();
                     loadSharings(shareData);
                 })
 
@@ -174,5 +174,17 @@ let addEvents = () => {
                     document.getElementById('Sharings').innerHTML = '';
                 }
             });
+    }
+
+    /**
+     * It loads the data from the form into the shareData object
+     */
+    function loadShareData() {
+        let shareData = {};
+        shareData.type = document.getElementById('ShareItem').getAttribute("data-type");
+        shareData.shared_id = document.getElementById('ShareItem').getAttribute("data-shared_id");
+        shareData.sharingEmail = document.getElementById('shareWith').value;
+        shareData.can_edit = document.getElementById('can_edit').checked;
+        return shareData;
     }
 };

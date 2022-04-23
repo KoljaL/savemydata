@@ -125,17 +125,29 @@ function init_stafftable() {
     $admin = ['username' => 'Admin', 'password' => 'password', 'firstname' => 'admin', 'lastname' => 'admin', 'email' => 'admin@admin.org', 'location' => 'Masbeck 57, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'admin', 'permission' => '0', 'color' => '#e9553b'];
     insert_into_db( $admin, 'staff' );
 
-    // $manager = ['username' => 'Manager', 'password' => 'password', 'firstname' => 'manager', 'lastname' => 'manager', 'email' => 'manager@manager.org', 'location' => 'Stapeler Str. 41, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'manager', 'permission' => '0', 'color' => '#cb7832'];
+    // $manager = ['username' => 'Manager', 'password' => 'password', 'firstname' => 'manager', 'lastname' => 'manager', 'email' => 'manager@manager.org', 'location' => 'Stapeler Str. 43, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'manager', 'permission' => '0', 'color' => '#cb7832'];
     // insert_into_db( $manager, 'staff' );
 
-    $staff = ['username' => 'Staff 0', 'password' => 'password', 'firstname' => 'staff', 'lastname' => 'staff', 'email' => 'staff0@staff.org', 'location' => 'Stapeler Str. 41, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'staff', 'permission' => '0', 'color' => '#c9ac57'];
+    $staff = ['username' => 'Staff 0', 'password' => 'password', 'firstname' => 'staff', 'lastname' => 'staff', 'email' => 'staff0@staff.org', 'location' => 'Stapeler Str. 43, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'staff', 'permission' => '0', 'color' => '#c9ac57'];
     insert_into_db( $staff, 'staff' );
 
-    $staff1 = ['username' => 'Staff 1', 'password' => 'password', 'firstname' => 'staff', 'lastname' => 'staff', 'email' => 'staff1@staff.org', 'location' => 'Stapeler Str. 41, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'staff', 'permission' => '0', 'color' => '#988cca'];
+    $staff1 = ['username' => 'Staff 1', 'password' => 'password', 'firstname' => 'staff', 'lastname' => 'staff', 'email' => 'staff1@staff.org', 'location' => 'Stapeler Str. 43, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'staff', 'permission' => '0', 'color' => '#988cca'];
     insert_into_db( $staff1, 'staff' );
 
-    $staff2 = ['username' => 'Staff 2', 'password' => 'password', 'firstname' => 'staff', 'lastname' => 'staff', 'email' => 'staff2@staff.org', 'location' => 'Stapeler Str. 41, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'staff', 'permission' => '0', 'color' => '#6a8759'];
+    $staff2 = ['username' => 'Staff 2', 'password' => 'password', 'firstname' => 'staff', 'lastname' => 'staff', 'email' => 'staff2@staff.org', 'location' => 'Stapeler Str. 43, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'staff', 'permission' => '0', 'color' => '#6a8759'];
     insert_into_db( $staff2, 'staff' );
+
+    $staff3 = ['username' => 'Staff 3', 'password' => 'password', 'firstname' => 'staff', 'lastname' => 'staff', 'email' => 'staff3@staff.org', 'location' => 'Stapeler Str. 43, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'staff', 'permission' => '0', 'color' => '#6a8759'];
+    insert_into_db( $staff3, 'staff' );
+
+    $staff4 = ['username' => 'Staff 4', 'password' => 'password', 'firstname' => 'staff', 'lastname' => 'staff', 'email' => 'staff4@staff.org', 'location' => 'Stapeler Str. 43, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'staff', 'permission' => '0', 'color' => '#6a8759'];
+    insert_into_db( $staff4, 'staff' );
+
+    $staff5 = ['username' => 'Staff 5', 'password' => 'password', 'firstname' => 'staff', 'lastname' => 'staff', 'email' => 'staff5@staff.org', 'location' => 'Stapeler Str. 43, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'staff', 'permission' => '0', 'color' => '#6a8759'];
+    insert_into_db( $staff5, 'staff' );
+
+    $staff6 = ['username' => 'Staff 6', 'password' => 'password', 'firstname' => 'staff', 'lastname' => 'staff', 'email' => 'staff6@staff.org', 'location' => 'Stapeler Str. 43, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'staff', 'permission' => '0', 'color' => '#6a8759'];
+    insert_into_db( $staff6, 'staff' );
 }
 
 /*
@@ -170,7 +182,7 @@ function init_customertable() {
             date TEXT NOT NULL  DEFAULT ""
         )' );
 
-    // $customer = ['username' => 'customer', 'staff_id' => '1', 'password' => 'password', 'firstname' => 'user', 'lastname' => 'user', 'email' => 'user@user.org', 'location' => 'Stapeler Str. 41, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'customer', 'permission' => '0'];
+    // $customer = ['username' => 'customer', 'staff_id' => '1', 'password' => 'password', 'firstname' => 'user', 'lastname' => 'user', 'email' => 'user@user.org', 'location' => 'Stapeler Str. 43, Havixbeck', 'comment' => 'lorem iopsum', 'role' => 'customer', 'permission' => '0'];
     // insert_into_db( $customer, 'customer' );
 }
 
@@ -389,7 +401,7 @@ function create_dummy_staff( $count ) {
             'lastname'   => $random_name[1],
             'instaname'  => $random_name[1].'_'.$random_name[0],
             'email'      => $email,
-            'location'   => 'Stapeler Str. 41, Havixbeck',
+            'location'   => 'Stapeler Str. 43, Havixbeck',
             'comment'    => random_text(),
             'role'       => 'staff',
             'permission' => random_int( 1, 5 ).','.random_int( 1, 5 ).','.random_int( 1, 5 ),

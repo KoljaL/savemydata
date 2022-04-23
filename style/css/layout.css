@@ -989,6 +989,7 @@ summary {
     display: block;
     position: relative;
     cursor: pointer;
+    width: max-content;
 }
 
 summary:hover {

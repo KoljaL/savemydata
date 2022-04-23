@@ -42,6 +42,7 @@ let Style = async() => {
         #T_UserLoginForm h2{
             display:inline-block;
             margin-right: 1em;
+            margin-top: 0;
         }
         #editArea{
             position: relative;
@@ -75,8 +76,15 @@ let Style = async() => {
             justify-content: space-between;
             align-items: start;
         }
+        #UserProjects:empty,
+        #UserAppointments:empty{
+            display:none;
+        }
         .ActionButtons{
-            margin-bottom: 1.5em;
+            margin-top: -2em;
+            margin-bottom: -1.5em;
+            margin-left: auto;
+            width: max-content;
         }
  
     `;
@@ -88,24 +96,32 @@ let Style = async() => {
  */
 let Content = async(userID) => {
     let innerHTML = /*HTML*/ `
-        <div id="T_UserLoginForm" class="template"> 
-            <div id=UserProfileHeader> 
-                <h2 data-lang="${slugName}-Profile">Profile</h2> 
-                <div class="ActionButtons">
-                    <div id="changeAvatar"></div>
-                    <div id=UserProfileList></div>
-                    <span id="editUserButton" class="boxShadow button"></span>
-                    <span id="newUserButton" class="boxShadow button"></span>
-                    <span id="deleteUserButton" class="boxShadow button"></span>
+        <div id="T_UserLoginForm" class="template">
+            <div id=UserProfileHeader>
+                <div style="display:flex; align-items: setAttribute;">
+                    <h2 data-lang="${slugName}-Profile">Profile</h3>
+                    <h2 id=profileName></h2>
                 </div>
+                    <div id=UserProfileList></div>
             </div>
-           
             <div id=editArea>
-                <div id=Userdata></div>
-                <div style="display:flex;gap: 1em;margin: 1em;">
+                <details>
+                    <summary id=loadSharings><span data-lang="H_sharing">Profile data</span></summary>
+
+                    <div class="ActionButtons">
+                        <div id="changeAvatar"></div>
+                        <span id="editUserButton" class="boxShadow button"></span>
+                        <span id="newUserButton" class="boxShadow button"></span>
+                        <span id="deleteUserButton" class="boxShadow button"></span>
+                    </div>
+
+                    <div id=Userdata class=content></div>
+
+                </details>
+
+                <div style="display:flex;gap: 1em;margin: 1em;flex-wrap: wrap;">
                     <div id=UserProjects></div>
                     <div id=UserAppointments></div>
-                    
                     <div id=UserImages>
                         <h3 data-lang="F_images">Images</h3>
                         <div id=thumbnails></div>
@@ -115,8 +131,9 @@ let Content = async(userID) => {
 
                     <div class="CustomerSharings">
                         ${ShareItem.render({type:'Customer',shared_id: userID,})}
-                    </div>  
+                    </div>
                 </div>
+
             </div>
         </div>`;
     await Functions.setInnerHTML('main', innerHTML);
@@ -189,7 +206,7 @@ let getUserData = async(userID) => {
                     // deb(user)
                     // deb(formFields)
                     window.userName = user.username;
-
+                    document.getElementById('profileName').innerHTML = userName;
                     Functions.pageTitle(`${userName}'s Profile`);
 
                     let shared_staff = '';

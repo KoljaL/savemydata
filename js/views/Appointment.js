@@ -206,7 +206,7 @@ let AppointmentContent = async(id) => {
                             </div>
                         </div>
                         <br>
-                        <div style="display: flex;">
+                        <div style="display: flex;flex-wrap: wrap;">
                             <div id=AppointmentImages>
                                 <h3 data-lang="F_images">Images</h3>
                                 <div id=thumbnails></div>
