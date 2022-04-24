@@ -18,7 +18,8 @@ import Project from './views/Project.js';
 import ProfileForm from './views/ProfileForm.js';
 import LanguageSwitch from './components/LanguageSwitch.js';
 import Accordion from './components/Accordion.js';
-
+import MagicMenu from './components/MagicMenu.js';
+MagicMenu.render();
 
 let role = Functions.getLocal('role');
 // deb(role)
