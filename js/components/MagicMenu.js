@@ -13,10 +13,10 @@ export default {
 
 let Content = async() => {
         let innerHTML = /*html*/ ` 
-          <div class="dropdown ">
+          <div class="MagicMenu ">
               <div class="boxShadow MMlink" id="MagicMenuButton" data-lang="F_magicMenu">
               magic Menu</div>
-              <div id="myDropdown" class="dropdown-content boxShadow">
+              <div id="MagicMenuContent" class="MagicMenu-content boxShadow">
               <span>NEW</span>
                 <a href="#Customer"><span class="icon users_icon"></span>Customer</a>
                 <a href="#Project"><span class="icon project_icon"></span>Project</a>
@@ -44,31 +44,20 @@ let Style = async() => {
     #MagicMenuButton {
       background: var(--bg_3);
       padding: .5em;
-      white-space: nowrap;
-      // font-family: 'Zilla Slab', sans-serif;
-      // font-weight:bold;
-      // font-size: 1.1em;
+      white-space: nowrap; 
       cursor:pointer;
     }
     #MagicMenuButton:hover{
       color:var(--fontBlue);
     }
-    .dropbtn {
-      background-color: #04AA6D;
-      color: white;
-      padding: 16px;
-      font-size: 16px;
-      border: none;
-      cursor: pointer;
-    }
      
-    .dropdown {
+    .MagicMenu {
       float: right;
       position: relative;
       display: inline-block;
     }
     
-    .dropdown-content { 
+    .MagicMenu-content { 
       outline: black solid 0px!important;
       position: absolute;
       min-width: 160px;
@@ -77,12 +66,12 @@ let Style = async() => {
       z-index: 1;
       background: var(--bg_3);
     }
-    .showMenu.dropdown-content {
+    .showMenu.MagicMenu-content {
       overflow: auto;
       outline: black solid 1px!important;
       padding-bottom: .5em;
     }
-    .dropdown-content > * {
+    .MagicMenu-content > * {
       color: var(--font_0);
       text-decoration: none;
       display: block;
@@ -90,28 +79,27 @@ let Style = async() => {
       overflow: hidden;
     }
 
-    .showMenu.dropdown-content >* {
+    .showMenu.MagicMenu-content >* {
       padding: .5em;
       height: 35px;
     }
 
-    .showMenu.dropdown-content >span {
+    .showMenu.MagicMenu-content >span {
       padding-top: 1em;
       font-family: 'Zilla Slab', sans-serif;
       font-weight:bold;
     }
  
-    
-    .dropdown a:hover {
+    .MagicMenu a:hover {
       color: var(--fontBlue);
     }
 
-    .dropdown a .icon {
+    .MagicMenu a .icon {
       margin-right: 10px;
       position: relative;
       top: 4px;
     }
-    .dropdown a:hover .icon {
+    .MagicMenu a:hover .icon {
     background: var(--fontBlue);
     }
     `;
@@ -126,10 +114,10 @@ let Events = async(table) => {
 
     function magicMenu(el) {
         if (el.target.id === 'MagicMenuButton') {
-            deb(document.getElementById('myDropdown').classList)
-            document.getElementById('myDropdown').classList.toggle("showMenu");
+            deb(document.getElementById('MagicMenuContent').classList)
+            document.getElementById('MagicMenuContent').classList.toggle("showMenu");
         } else {
-            document.getElementById('myDropdown').classList.remove("showMenu");
+            document.getElementById('MagicMenuContent').classList.remove("showMenu");
         }
     }
 };

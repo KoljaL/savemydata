@@ -168,6 +168,7 @@ let addEvents = () => {
             .then((res) => {
                 if (res.code === 200) {
                     let data = res.data
+                    deb(data)
                     document.getElementById('Sharings').innerHTML = Object.keys(data)
                         .map((key) => `<option value="${data[key].id}">${data[key].itemName} with ${data[key].staffName}</option>`).join('');
                 } else {

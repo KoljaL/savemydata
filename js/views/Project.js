@@ -70,7 +70,7 @@ let Style = async() => {
             font-size: 14px;
             cursor:pointer;
             color: var(--font_0);
-            // background: var(--bg_3);
+            background: var(--bg_3);
             line-height: 1.2em;
             padding: 0.3em .3em .2em .4em;
             // outline: var(--border_0) solid 1px;

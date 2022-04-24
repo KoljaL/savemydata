@@ -548,13 +548,14 @@ function load_sharings() {
     $response = [];
     if ( $sharings ) {
         foreach ( $sharings as $key => $value ) {
-            if ( 'project' === $API_param || 'appointment' === $API_param ) {
+            if ( 'project' === $API_param
+                || 'appointment' === $API_param ) {
                 $sharings[$key]['itemName'] = get_by_from( 'title', 'id', $sharings[$key]['shared_id'], $API_param );
             }
             if ( 'customer' === $API_param ) {
                 $sharings[$key]['itemName'] = get_by_from( 'username', 'id', $sharings[$key]['shared_id'], $API_param );
             }
-            $sharings[$key]['staffName'] = get_by_from( 'username', 'id', $sharings[$key]['staff_id'], 'staff' );
+            $sharings[$key]['staffName'] = get_by_from( 'username', 'id', $sharings[$key]['shared_staff_id'], 'staff' );
 
         }
 

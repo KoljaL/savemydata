@@ -661,7 +661,7 @@ nav li .link_text:hover>.icon {
 }
 
 nav li.active {
-    background: var(--bg_2);
+    background: var(--bg_1);
     box-shadow: inset -1px 0 var(--border_0);
 }
 
@@ -920,6 +920,7 @@ footer .withLove img {
     border: 1px solid black;
     margin-right: .5em;
     margin-bottom: .5em;
+    background-color: var(--bg_1);
 }
 
 [data-theme*="boxes"] .thumbnailWrapper {

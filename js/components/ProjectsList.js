@@ -14,6 +14,7 @@ let Style = async() => {
     let styleTags = /*CSS*/ `
     .dataTable{
         padding:.5em;
+        background-color: var(--bg_1);
     }
 
  

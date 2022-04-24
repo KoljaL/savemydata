@@ -64,6 +64,7 @@ fieldset {
     padding: 1em 0 0;
     margin: 1em;
     border-radius: .5em;
+    background-color: var(--bg_1);
 }
 
 [data-theme*='boxes'] .FF-row {
@@ -169,6 +170,7 @@ input[type="color"]::-webkit-color-swatch {
 
 .FF-item textarea {
     height: 6em;
+    line-height: 1.5em;
 }
 
 div.FF-item {
