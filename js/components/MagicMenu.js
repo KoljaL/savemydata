@@ -17,9 +17,12 @@ let Content = async() => {
               <div class="boxShadow MMlink" id="MagicMenuButton" data-lang="F_magicMenu">
               magic Menu</div>
               <div id="myDropdown" class="dropdown-content boxShadow">
-                <a class=MMlink href="#home"><span class="icon feedback_icon"></span>Home</a>
-                <a class=MMlink  href="#about"><span class="icon speech_icon"></span>About</a>
-                <a class=MMlink  href="#contact"><span class="icon file_icon"></span>Contact</a>
+              <span>NEW</span>
+                <a href="#Customer"><span class="icon users_icon"></span>Customer</a>
+                <a href="#Project"><span class="icon project_icon"></span>Project</a>
+                <a href="#Appointment"><span class="icon appointment_icon"></span>Appointment</a>
+              <span>EXTRA</span>
+                <a href="#Sharings"><span class="icon share_icon"></span>Sharings</a>
               </div>
           </div>`;
         await Functions.setInnerHTML('MagicMenu', innerHTML);
@@ -79,7 +82,7 @@ let Style = async() => {
       outline: black solid 1px!important;
       padding-bottom: .5em;
     }
-    .dropdown-content a {
+    .dropdown-content > * {
       color: var(--font_0);
       text-decoration: none;
       display: block;
@@ -87,10 +90,17 @@ let Style = async() => {
       overflow: hidden;
     }
 
-    .showMenu.dropdown-content a {
+    .showMenu.dropdown-content >* {
       padding: .5em;
       height: 35px;
     }
+
+    .showMenu.dropdown-content >span {
+      padding-top: 1em;
+      font-family: 'Zilla Slab', sans-serif;
+      font-weight:bold;
+    }
+ 
     
     .dropdown a:hover {
       color: var(--fontBlue);
@@ -99,7 +109,7 @@ let Style = async() => {
     .dropdown a .icon {
       margin-right: 10px;
       position: relative;
-      top: 5px;
+      top: 4px;
     }
     .dropdown a:hover .icon {
     background: var(--fontBlue);

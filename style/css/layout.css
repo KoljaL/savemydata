@@ -892,6 +892,11 @@ footer .withLove img {
     mask-image: url(../img/icons/feedback.svg);
 }
 
+.share_icon {
+    -webkit-mask-image: url(../img/icons/share.svg);
+    mask-image: url(../img/icons/share.svg);
+}
+
 
 /*
 //  
