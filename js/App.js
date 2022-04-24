@@ -8,6 +8,7 @@ import Functions from './Functions.js';
 
 // VIEWS
 import Default from './views/Default.js';
+import Feedback from './views/Feedback.js';
 // import Login from './views/Login.js';
 import Table from './views/Table.js';
 import Appointment from './views/Appointment.js';
@@ -60,13 +61,13 @@ async function router() {
             case 'staff':
                 switch (API_key) {
                     case 'profile':
-                        await Profile.render(API_value, API_page)
+                        await Profile.render(API_value, API_page);
                         break;
                     case 'table':
-                        await Table.render(API_page)
+                        await Table.render(API_page);
                         break;
                     default:
-                        await Table.render()
+                        await Table.render();
                         break;
                 }
                 break;
@@ -74,10 +75,10 @@ async function router() {
             case 'formeditor':
                 switch (API_key) {
                     case 'staff_fields':
-                        await ProfileForm.render(API_key)
+                        await ProfileForm.render(API_key);
                         break;
                     case 'customer_fields':
-                        await ProfileForm.render(API_key)
+                        await ProfileForm.render(API_key);
                         break;
 
                         // default:
@@ -89,10 +90,10 @@ async function router() {
             case 'customer':
                 switch (API_key) {
                     case 'profile':
-                        await Profile.render(API_value, API_page)
+                        await Profile.render(API_value, API_page);
                         break;
                     case 'table':
-                        await Table.render(API_page)
+                        await Table.render(API_page);
                         break;
                 }
                 break;
@@ -100,10 +101,10 @@ async function router() {
             case 'project':
                 switch (API_key) {
                     case 'id':
-                        await Project.render(API_value)
+                        await Project.render(API_value);
                         break;
                     case 'table':
-                        await Table.render(API_page)
+                        await Table.render(API_page);
                         break;
                 }
                 break;
@@ -111,17 +112,22 @@ async function router() {
             case 'appointment':
                 switch (API_key) {
                     case 'id':
-                        await Appointment.render(API_value)
+                        await Appointment.render(API_value);
                         break;
                     case 'table':
-                        await Table.render(API_page)
+                        await Table.render(API_page);
                         break;
                 }
                 break;
 
 
             case 'calendar':
-                await Calendar.render(API_key, API_value)
+                await Calendar.render(API_key, API_value);
+                break;
+
+
+            case 'feedback':
+                await Feedback.render();
                 break;
 
 

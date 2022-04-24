@@ -359,6 +359,10 @@ case 'remove_sharing':
     remove_sharing( $request );
     break;
 
+case 'send_feedback':
+    send_feedback( $request );
+    break;
+
 default:
     // echo 'Endpoint <b>'.$API_endpoint.'</b> not found';
     // exit;
@@ -1244,6 +1248,25 @@ function join_test() {
         $response['code']    = 400;
         $response['data']    = [];
         $response['message'] = 'no form profile found';
+    }
+    return_JSON( $response );
+}
+
+function send_feedback( $param ) {
+    $mailbody   = $param['mailBody'];
+    $mailadress = get_by_from( 'email', 'id', $param['userId'], 'staff' );
+    $username   = get_by_from( 'username', 'id', $param['userId'], 'staff' );
+    $header     = 'From: '.$mailadress."\r\n".'Reply-To: '.$mailadress."\r\n".'X-Mailer: PHP/'.phpversion();
+    $send       = mail( 'lasar@rasal.de', $username, $param['mailBody'], $header );
+
+    if ( $send ) {
+
+        $response['code'] = 200;
+        $response['data']['username'] = $username;
+    } else {
+        $response['code']    = 400;
+        $response['data']    = [];
+        $response['message'] = 'please enter text';
     }
     return_JSON( $response );
 }
