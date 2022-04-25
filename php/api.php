@@ -775,7 +775,11 @@ function get_appointment_as_ics( $param ) {
         if ( 'fetch' === $API_param ) {
             header( 'Content-type: text/calendar; charset=utf-8' );
             header( 'Content-Disposition: attachment; filename=mohawk-event.ics' );
-            echo $ics_content;
+            // echo $ics_content;
+            $response['code'] = 200;
+            $response['data'] = $ics_content;
+            echo json_encode( $response );
+
             exit;
         }
 

@@ -122,8 +122,8 @@ let Content = async(userID) => {
                     <div id=UserAppointments></div>
                     <div id=UserImages>
                         <h3 data-lang="F_images">Images</h3>
-                        <div id=thumbnails></div>
                         <div id=fileUpload></div>
+                        <div id=thumbnails></div>
                         ${Images.render({origin: tableName,origin_id:userID,type:'image',name:'default'})}
                     </div>
 
@@ -135,7 +135,7 @@ let Content = async(userID) => {
             </div>
         </div>`;
     await Functions.setInnerHTML('main', innerHTML);
-    document.querySelector('.CustomerSharings').remove();
+    if (tableName === 'staff') document.querySelector('.CustomerSharings').remove();
 
 };
 

@@ -59,7 +59,6 @@ async function router() {
 
             case '/':
                 location.href = './login';
-                // await Login.render();
                 break;
 
             case 'staff':
@@ -87,10 +86,6 @@ async function router() {
                     case 'customer_fields':
                         await ProfileForm.render(API_key);
                         break;
-
-                        // default:
-                        //     await Table.render()
-                        //     break;
                 }
                 break;
 

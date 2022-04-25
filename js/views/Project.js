@@ -28,70 +28,68 @@ export default Project;
 */
 let Style = async() => {
     let styleTags = /*CSS*/ `
-        #ProjectWrapper {
+    #ProjectWrapper {
             padding:1em;
         }   
-        #ProjectHeader {
+        #ProjectWrapper #ProjectHeader {
             display: flex;
             justify-content:space-between;
             align-items: baseline;
             flex-wrap: wrap;
           }
-        .Headline {
+          #ProjectWrapper .Headline {
             display: flex;
             justify-content: flex-start;
             align-items: baseline;
           }
-        .Headline h2{
+          #ProjectWrapper .Headline h2{
             margin-bottom:.0em;
         }
-        #ProjectContent h3,
-        #ProjectContent summary{
+        #ProjectWrapper #ProjectContent h3,
+        #ProjectWrapper #ProjectContent summary{
             margin-top:.0em;
         }
-        #ProjectText .FF-row{
+        #ProjectWrapper #ProjectText .FF-row{
             margin:0 0 1em 0;
             padding:0;
         }
-        #ProjectText .FF-item{
+        #ProjectWrapper #ProjectText .FF-item{
             margin: 0;
         }
    
 
 
-        #deleteProjectButton:empty,
-        #editProjectButton:empty{
+        #ProjectWrapper #deleteProjectButton:empty,
+        #ProjectWrapper #editProjectButton:empty{
             border: none;
             outline: none;
             background: transparent;
         }
-        #deleteProjectButton,
-        #editProjectButton{ 
+        #ProjectWrapper #deleteProjectButton,
+        #ProjectWrapper #editProjectButton{ 
             font-size: 14px;
             cursor:pointer;
             color: var(--font_0);
             background: var(--bg_3);
             line-height: 1.2em;
             padding: 0.3em .3em .2em .4em;
-            // outline: var(--border_0) solid 1px;
             transition: all 0.5s ease-in-out;
-            // border-radius: 0.2em;
             font-size: 1em;
             margin-left: 1em;
         }
-        #deleteProjectButton:hover{
+        #ProjectWrapper #deleteProjectButton:hover{
             color: var(--fontRed);
         }
          
-        #editProjectButton:hover{
+        #ProjectWrapper #editProjectButton:hover{
             color: var(--fontBlue);
         }
 
-        .ProjectSharings{
+        #ProjectWrapper .ProjectSharings{
             margin-left: auto;
         }
-        .small .ProjectSharings,
-        .medium .ProjectSharings{
+        .small #ProjectWrapper .ProjectSharings,
+        .medium #ProjectWrapper .ProjectSharings{
             margin-left: 0;
         }
        

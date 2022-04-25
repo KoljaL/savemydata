@@ -311,8 +311,8 @@ let Functions = {
         //
         // URL = 'https://dev.rasal.de/savemydata/api/' + URL;
         // URL = 'http://localhost/savemydata/api/' + URL;
-        // URL = 'api/' + URL;
-        URL = 'savemydata/api/' + URL;
+        URL = 'api/' + URL;
+        // URL = 'savemydata/api/' + URL;
         // deb(formData)
         const response = await fetch(URL, {
             method: 'POST',
@@ -450,6 +450,18 @@ let Functions = {
             return (true)
         }
         return (false)
+    },
+
+
+    downloadToFile: (content, filename) => {
+        const a = document.createElement('a');
+        const file = new Blob([content], { type: 'text/plain' });
+
+        a.href = URL.createObjectURL(file);
+        a.download = filename;
+        a.click();
+
+        URL.revokeObjectURL(a.href);
     }
 
 };

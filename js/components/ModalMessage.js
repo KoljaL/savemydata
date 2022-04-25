@@ -132,6 +132,7 @@
     `
 
     const styleSheet = document.createElement("style")
+    styleSheet.id = 'ModalMessage_hqor_Style';
     styleSheet.innerText = styles.replace((/  |\r\n|\n|\r/gm), "")
     document.head.appendChild(styleSheet)
 

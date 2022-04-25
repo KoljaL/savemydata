@@ -152,7 +152,8 @@ let AppointmentContent = async(id) => {
                             <h4>&nbsp; ${shared_staff}</h4><br>
                         </div>
                         <div class="ActionButtons">
-                            <a href="api/get_appointment_as_ics/fetch/${id}"><span class="button boxShadow" id="iCalButton">iCal</span></a>
+                            <a href="api/get_appointment_as_ics/fetch/${id}"><span class="button boxShadow" id="iCalButtonxx">iCal</span></a>
+                            <span data-appointment-id="${id}" class="button boxShadow" id="iCalButton">iCal</span>
                             <span class="boxShadow button" id="editAppointmentButton"></span>
                             <span class="boxShadow button" id="deleteAppointmentButton"></span>
                         </div>        
@@ -277,6 +278,23 @@ let AppointmentContent = async(id) => {
                                 }
                             });
                     })
+
+                    //
+                    // ICAL DOWNLOAD
+                    //
+                    document.getElementById('iCalButton').addEventListener('click', () => {
+                        Functions.getAPIdata('get_appointment_as_ics/fetch/' + id)
+                            .then((res) => {
+                                if (res.code === 200) {
+                                    let data = res.data
+                                        // deb(data);
+                                    Functions.downloadToFile(data, 'appointment.ics', );
+                                }
+                            });
+                    });
+
+
+
                 }
             });
 

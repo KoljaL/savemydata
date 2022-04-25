@@ -12,10 +12,11 @@ export default {
  */
 let Style = async() => {
     let styleTags = /*CSS*/ `
-    .dataTable{ 
+  
+    #Appointments .dataTable{
         padding:.5em;
+        margin-top:1em;
     }
-    
     #Appointments > div{
         background-color: var(--bg_1);
 
@@ -38,7 +39,12 @@ let showAppointments = (Appointments) => {
         dates = Appointments.sort(function(a, b) { return new Date(b.start_date) - new Date(a.start_date); });
         // deb(dates)
         // create table
-        let HTML = /*HTML*/ `<div id=Appointments><h3 data-lang="H_appointments">Appointments</h3><div class=boxShadow><table class="dataTable">`;
+        let HTML = /*HTML*/ `
+            <div id=Appointments>
+                <h3 data-lang="H_appointments">Appointments</h3>
+                <a href="#appointment/new/${Appointments[0].customer_id}" class="button boxShadow">new Appointment</a>
+                    <div class=boxShadow>
+                        <table class="dataTable">`;
         dates.forEach((date) => {
             let datetime = date.start_date + ' ' + date.start_time;
             HTML += /*HTML*/ `<tr><td class=numeric ><a href="#appointment/id/${date.id}">${Functions.formatDate(datetime)}</a></td></tr>`;

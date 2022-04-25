@@ -7,7 +7,6 @@ import LanguageSwitch from '../components/LanguageSwitch.js';
 
 let Project = {
     render: async(id) => {
-        deb(id)
         window.isAllowed = true;
         Functions.pageTitle(`New Project`)
         await Style();
@@ -129,34 +128,29 @@ let Events = async(id) => {
 
         let innerHTML = await UserList.render('dropdown', 'customer');
         await Functions.setInnerHTML('UserProfileList', innerHTML);
-        if (id) {
-
-        }
+        if (id) document.getElementById('customerListSelect').value = id;
 
 
-        document.getElementById('newProjectButton').addEventListener('click', (button) => {
+        document.getElementById('newProjectButton').addEventListener('click', (e) => {
+            e.preventDefault();
             // send all inputfields to API & get directed to the new users profile
             if (document.getElementById('title').value !== '' && document.getElementById('customerListSelect').value !== '') {
-                // if (document.getElementById('title').value !== '') {
-                // deb(document.getElementById('customerListSelect').value)
-
                 let ProjectForm = document.getElementById('ProjectForm');
                 ProjectForm = new FormData(ProjectForm);
                 ProjectForm.append('staff_id', Functions.getLocal('id'));
                 ProjectForm.append('customer_id', document.getElementById('customerListSelect').value);
-                Functions.getAPIdata('new_entry_in/project', ProjectForm).then((res) => {
-                    // deb(res)
-                    if (res.code === 200) {
-                        Message.success(`New Project created`)
+
+                Functions.getAPIdata('new_entry_in/project', ProjectForm)
+                    .then((res) => {
                         deb(res)
-                        window.location.hash = `#project/id/${res.data.id}`;
-                    }
-                });
+                        if (res.code === 200) {
+                            Message.success('New Project created')
+                            window.location.hash = `#project/id/${res.data.id}`;
+                        }
+                    });
             } else {
                 Message.warn('Please enter a Title and select a Customer');
             }
-
-
             LanguageSwitch.render();
         }); // eventListener
 

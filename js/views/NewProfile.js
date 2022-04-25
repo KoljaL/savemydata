@@ -154,9 +154,9 @@ let newUserButton = async() => {
                 userProfilForm = new FormData(userProfilForm);
                 userProfilForm.append('staff_id', Functions.getLocal('id'));
                 Functions.getAPIdata('new_entry_in/' + tableName, userProfilForm).then((res) => {
-                    // deb(res)
+                    deb(res)
                     if (res.code === 200) {
-                        Message.success('New User created')
+                        Message.success('New User created');
                         window.location.hash = `#${tableName}/profile/${res.data.id}`;
                     }
                 });
