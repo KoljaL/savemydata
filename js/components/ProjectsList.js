@@ -14,10 +14,10 @@ let Style = async() => {
     let styleTags = /*CSS*/ `
     .dataTable{
         padding:.5em;
+    }
+    #Projects > div{
         background-color: var(--bg_1);
     }
-
- 
     `;
     Functions.createStyle('Projects_deko_style', styleTags);
 };

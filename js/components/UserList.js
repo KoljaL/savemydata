@@ -27,8 +27,6 @@ export default {
                     <option value="" hidden disabled selected data-lang="select-${slugName}">Select ${slugName}</option>
                     ${innerHTML}
                 </select> `;
-            LanguageSwitch.render();
-
         }
     },
 };

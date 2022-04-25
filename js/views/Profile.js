@@ -27,7 +27,6 @@ export default {
         await Content(userID);
         if (tableName === 'staff') await changeAvatar(userID);
         await dropDownEvent(tableName);
-        await newUserButton();
         await deleteUserButton(userID);
         await editUserButton(userID);
         await getUserData(userID);
@@ -111,7 +110,6 @@ let Content = async(userID) => {
                     <div class="ActionButtons">
                         <div id="changeAvatar"></div>
                         <span id="editUserButton" class="boxShadow button"></span>
-                        <span id="newUserButton" class="boxShadow button"></span>
                         <span id="deleteUserButton" class="boxShadow button"></span>
                     </div>
 
@@ -347,50 +345,5 @@ let deleteUserButton = (userID) => {
     // if not admin, delete this button
     else {
         document.getElementById('deleteUserButton').remove();
-    }
-};
-
-/**
- * It adds a new user to the database. newUserButton
- */
-let newUserButton = async() => {
-    // only admin '0' can do this
-    if (Functions.getLocal('role') !== 'xxx') {
-        // set text, make the button visible
-        Functions.setInnerHTML('newUserButton', 'New');
-        document.getElementById('newUserButton').dataset.lang = 'new'
-        document.getElementById('newUserButton').dataset.action = 'new'
-
-        document.getElementById('newUserButton').addEventListener('click', (button) => {
-            // send all inputfields to API & get directed to the new users profile
-            if ('save' === button.target.dataset.action) {
-                let userProfilForm = document.getElementById('userProfilForm');
-                userProfilForm = new FormData(userProfilForm);
-                userProfilForm.append('table', tableName);
-                Functions.getAPIdata('newuser', userProfilForm).then((res) => {
-                    // deb(res)
-                    if (res.code === 200) {
-                        Message.success('New User created')
-                        window.location.hash = `#${tableName}/profile/${res.data.id}`;
-                    }
-                });
-            } // save
-
-            // delete all form values, make them editable & remove the data-db for singeedit
-            if ('new' === button.target.dataset.action) {
-                document.getElementById('editUserButton').remove();
-                document.getElementById('deleteUserButton').remove();
-                document.querySelectorAll('#editArea input,#editArea textarea').forEach((input) => {
-                    delete input.dataset.db;
-                    input.value = '';
-                    input.classList.remove('hideEdit');
-                    button.target.innerHTML = 'Save';
-                    document.getElementById('newUserButton').dataset.lang = 'save'
-                    document.getElementById('newUserButton').dataset.action = 'save'
-
-                });
-            } //new
-            LanguageSwitch.render();
-        }); // eventListener
     }
 };

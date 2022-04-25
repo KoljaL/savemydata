@@ -20,6 +20,5 @@ export default {
             <select id="state" class="hideEdit boxShadow" name="state" type="text" placeholder="" value="${value}" data-db="state/appointment/id/${id}" required="">
                 ${options}
             </select>`;
-        LanguageSwitch.render();
     },
 };

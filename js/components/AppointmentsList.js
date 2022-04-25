@@ -14,8 +14,13 @@ let Style = async() => {
     let styleTags = /*CSS*/ `
     .dataTable{ 
         padding:.5em;
-        background-color: var(--bg_1);
     }
+    
+    #Appointments > div{
+        background-color: var(--bg_1);
+
+    }
+    
     #Appointments .numeric a{
         white-space: nowrap;
     }

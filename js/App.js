@@ -14,6 +14,8 @@ import Table from './views/Table.js';
 import Appointment from './views/Appointment.js';
 import Calendar from './views/Calendar.js';
 import Profile from './views/Profile.js';
+import NewProfile from './views/NewProfile.js';
+
 import Project from './views/Project.js';
 import ProfileForm from './views/ProfileForm.js';
 import LanguageSwitch from './components/LanguageSwitch.js';
@@ -64,6 +66,9 @@ async function router() {
                     case 'profile':
                         await Profile.render(API_value, API_page);
                         break;
+                    case 'new':
+                        await NewProfile.render(API_value, API_page);
+                        break;
                     case 'table':
                         await Table.render(API_page);
                         break;
@@ -92,6 +97,9 @@ async function router() {
                 switch (API_key) {
                     case 'profile':
                         await Profile.render(API_value, API_page);
+                        break;
+                    case 'new':
+                        await NewProfile.render(API_value, API_page);
                         break;
                     case 'table':
                         await Table.render(API_page);
