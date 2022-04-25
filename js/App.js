@@ -17,6 +17,7 @@ import Profile from './views/Profile.js';
 import NewProfile from './views/NewProfile.js';
 
 import Project from './views/Project.js';
+import NewProject from './views/NewProject.js';
 import ProfileForm from './views/ProfileForm.js';
 import LanguageSwitch from './components/LanguageSwitch.js';
 import Accordion from './components/Accordion.js';
@@ -111,6 +112,9 @@ async function router() {
                 switch (API_key) {
                     case 'id':
                         await Project.render(API_value);
+                        break;
+                    case 'new':
+                        await NewProject.render(API_value);
                         break;
                     case 'table':
                         await Table.render(API_page);

@@ -279,10 +279,6 @@ case 'login':
     login_user( $request );
     break;
 
-case 'newuser':
-    new_entry_in( $request );
-    break;
-
 case 'get_list_from':
     get_list_from( $request );
     break;
@@ -441,9 +437,6 @@ function login_user( $request ) {
     return_JSON( $response );
 }
 
-function newuser( $request ) {
-
-}
 /*
 //
 //   ######   ######## ########    ##       ####  ######  ########    ######## ########   #######  ##     ##
@@ -589,10 +582,9 @@ function new_entry_in( $param ) {
     $table    = $API_param;
     unset( $param['user_id'] );
     unset( $param['user_token'] );
-    // create_user( $param );
+
     deb( $param );
     insert_into_db( $param, $table );
-    // function insert_into_db( $param, $table, $output = true ) {
 
     if ( 'appointment' === $API_param ) {
         // get location from staff from appointment

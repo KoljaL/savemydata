@@ -135,6 +135,8 @@ let Content = async(userID) => {
             </div>
         </div>`;
     await Functions.setInnerHTML('main', innerHTML);
+    document.querySelector('.CustomerSharings').remove();
+
 };
 
 

@@ -49,7 +49,7 @@ let Style = async() => {
             position:relative;
             left:1em; 
             top:.5em; 
-            padding:.5em;
+            padding:.5em 1em;
         }
         #newUserButton:hover{ 
             color: var(--fontGreen);
@@ -74,14 +74,8 @@ let Content = async() => {
                 <h2 data-lang="New_${slugName}-Profile">New Profile</h3>
             </div>
             <div id=editArea>
- 
-                    <div id=Userdata class=content></div>
-                  
-                    <span id="newUserButton" class="boxShadow button">Save</span>
-
-
-       
-
+                <div id=Userdata class=content></div>
+                <span id="newUserButton" class="boxShadow button">Save</span>
             </div>
         </div>`;
     await Functions.setInnerHTML('main', innerHTML);
@@ -159,7 +153,7 @@ let newUserButton = async() => {
                 let userProfilForm = document.getElementById('userProfilForm');
                 userProfilForm = new FormData(userProfilForm);
                 userProfilForm.append('staff_id', Functions.getLocal('id'));
-                Functions.getAPIdata('newuser/' + tableName, userProfilForm).then((res) => {
+                Functions.getAPIdata('new_entry_in/' + tableName, userProfilForm).then((res) => {
                     // deb(res)
                     if (res.code === 200) {
                         Message.success('New User created')

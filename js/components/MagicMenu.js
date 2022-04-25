@@ -19,8 +19,8 @@ let Content = async() => {
               <div id="MagicMenuContent" class="MagicMenu-content boxShadow">
               <span>NEW</span>
                 <a href="#customer/new"><span class="icon users_icon"></span>Customer</a>
-                <a href="#Project"><span class="icon project_icon"></span>Project</a>
-                <a href="#Appointment"><span class="icon appointment_icon"></span>Appointment</a>
+                <a href="#project/new"><span class="icon project_icon"></span>Project</a>
+                <a href="#appointment/new"><span class="icon appointment_icon"></span>Appointment</a>
               <span>EXTRA</span>
                 <a href="#Sharings"><span class="icon share_icon"></span>Sharings</a>
               </div>
