@@ -12,6 +12,7 @@ import Feedback from './views/Feedback.js';
 // import Login from './views/Login.js';
 import Table from './views/Table.js';
 import Appointment from './views/Appointment.js';
+import NewAppointment from './views/NewAppointment.js';
 import Calendar from './views/Calendar.js';
 import Profile from './views/Profile.js';
 import NewProfile from './views/NewProfile.js';
@@ -121,6 +122,9 @@ async function router() {
                 switch (API_key) {
                     case 'id':
                         await Appointment.render(API_value);
+                        break;
+                    case 'new':
+                        await NewAppointment.render(API_value);
                         break;
                     case 'table':
                         await Table.render(API_page);

@@ -236,6 +236,7 @@ div.FF-item label {
 
 div.FF-item label.isTop,
 div.FF-item textarea:not(:placeholder-shown)+label,
+div.FF-item select:valid+label,
 div.FF-item input:valid+label,
 div.FF-item input:focus+label {
     transition: all 0.5s ease-in-out;
@@ -243,6 +244,10 @@ div.FF-item input:focus+label {
     left: -.2em;
     font-size: 0.9em;
     color: var(--font_2);
+}
+
+div.FF-item select+label {
+    pointer-events: none;
 }
 
 

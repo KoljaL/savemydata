@@ -38,6 +38,7 @@ let Style = async() => {
             justify-content:space-between;
             align-items: baseline;
             flex-wrap: wrap;
+            margin-top: -1em;
           }
         .Headline {
             display: flex;
@@ -152,8 +153,7 @@ let AppointmentContent = async(id) => {
                             <h4>&nbsp; ${shared_staff}</h4><br>
                         </div>
                         <div class="ActionButtons">
-                            <a href="api/get_appointment_as_ics/fetch/${id}"><span class="button boxShadow" id="iCalButtonxx">iCal</span></a>
-                            <span data-appointment-id="${id}" class="button boxShadow" id="iCalButton">iCal</span>
+                            <span class="boxShadow button" id="iCalButton" data-appointment-id="${id}">iCal</span>
                             <span class="boxShadow button" id="editAppointmentButton"></span>
                             <span class="boxShadow button" id="deleteAppointmentButton"></span>
                         </div>        
@@ -295,7 +295,7 @@ let AppointmentContent = async(id) => {
 
 
 
-                }
+                } // check role
             });
 
     } //AppointmentContent
