@@ -13,6 +13,7 @@ let NewAppointment = {
         await Style();
         await Content();
         await NewAppointmentContent(id);
+        newAppointmentButton();
     }
 };
 
@@ -35,11 +36,11 @@ let Style = async() => {
         #NewAppointmentWrapper {
             padding:1em;
         }    
-        #NewAppointmentText .FF-row{
+        #NewAppointmentForm .FF-row{
             padding: 1em 1em 1em 0;
             margin: 1em 0;
         }
-        #NewAppointmentText .FF-item{
+        #NewAppointmentForm .FF-item{
             margin: 0 1em 0 1em;
         }
  
@@ -50,6 +51,15 @@ let Style = async() => {
             align-items: baseline;
             flex-wrap: wrap;
           }
+          #newAppointmentButton{
+            position:relative;
+            left:1em; 
+            top:.5em; 
+            padding:.5em 1em;
+        }
+        #newAppointmentButton:hover{ 
+            color: var(--fontGreen);
+        }
     `;
     Functions.createStyle('NewAppointment_jdow_style', styleTags);
 };
@@ -79,7 +89,7 @@ let Content = async() => {
 
             </div>     
         </div>     
-        <div id=NewAppointmentText>
+        <form id=NewAppointmentForm>
         <div class="FF-row">
 
             <div class="FF-item">
@@ -95,10 +105,7 @@ let Content = async() => {
                 <input id="title" class="boxShadow" name="title" type="text" required="">
                 <label class="isTop" data-lang="F_title" for="title">Titel</label>    
             </div>
-            <div class="FF-item"  style="max-width:300px;">
-                <input id="location" class="boxShadow" name="location" type="text" required="">
-                <label class="isTop" data-lang="F_location" for="location">Adress</label>    
-            </div> 
+
         </div>
             <div class=FF-row>
                 <div class="FF-item" style="max-width:140px;">
@@ -130,15 +137,19 @@ let Content = async() => {
                         <option value=480>8</option>
                     </select>
                 </div>
-            <div class="FF-item" style="min-width:150px; flex-basis:150px; max-width:150px;">
-                <select id="state" class="boxShadow" name="state" type="text" placeholder="" value="3" required="">
-                    <option value="1">Offered</option>
-                    <option value="2">Approved</option>
-                    <option value="3">Deposit Paid</option>
-                    <option value="4">Full Paid</option>
-                </select>
-                <label data-lang="F_state" for="state" class="isTop">State</label>
-            </div>
+                <div class="FF-item" style="min-width:150px; flex-basis:150px; max-width:150px;">
+                    <select id="state" class="boxShadow" name="state" type="text" placeholder="" value="3" required="">
+                        <option value="1">Offered</option>
+                        <option value="2">Approved</option>
+                        <option value="3">Deposit Paid</option>
+                        <option value="4">Full Paid</option>
+                    </select>
+                    <label data-lang="F_state" for="state" class="isTop">State</label>
+                </div>  
+                <div class="FF-item"  style="max-width:300px;">
+                    <input id="location" class="boxShadow" name="location" type="text" required="">
+                    <label class="isTop" data-lang="F_location" for="location">Adress</label>    
+                </div> 
             </div>
             <div class="FF-row">
                 <div class="FF-item" style="min-width:250px; flex-basis:550px; max-width:100%;">
@@ -147,9 +158,8 @@ let Content = async() => {
                 </div>
             </div>
         </div>
-        <br>
- 
-        </div>   
+            <span id="newAppointmentButton" class="boxShadow button">Save</span>
+        </form>   
      
     </div>`;
     await Functions.setInnerHTML('main', innerHTML);
@@ -214,3 +224,42 @@ function getcustomerprojects(customer_id) {
             }
         })
 } //getcustomerprojects
+
+
+/**
+ * It adds a new Appointment to the database. 
+ */
+let newAppointmentButton = async() => {
+    // only admin '0' can do this
+    if (Functions.getLocal('role') !== 'xxx') {
+
+        document.getElementById('newAppointmentButton').addEventListener('click', (button) => {
+            // send all inputfields to API & get directed to the new users profile
+            if (
+                document.getElementById('customerListSelect').value !== '' &&
+                document.getElementById('customerProjects').value !== '' &&
+                document.getElementById('title').value !== '' &&
+                document.getElementById('ApPoDate').value !== '' &&
+                document.getElementById('ApPoTime').value !== '' &&
+                document.getElementById('ApPoDuration').value !== ''
+            ) {
+
+                let newAppointmentForm = document.getElementById('NewAppointmentForm');
+                newAppointmentForm = new FormData(newAppointmentForm);
+                newAppointmentForm.append('staff_id', Functions.getLocal('id'));
+                Functions.getAPIdata('new_entry_in/appointment', newAppointmentForm)
+                    .then((res) => {
+                        deb(res)
+                        if (res.code === 200) {
+                            Message.success('New Appointment created');
+                            window.location.hash = `#appointment/id/${res.data.id}`;
+                        }
+                    });
+            } else {
+                Message.warn('Please fill out all fields');
+            }
+
+
+        }); // eventListener
+    }
+};

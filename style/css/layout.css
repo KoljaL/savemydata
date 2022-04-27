@@ -31,6 +31,52 @@
     --fontRed: #e9553b;
     --fontGreen: #6a8759;
     --text-shadow: 0.1em 0.1em black;
+    /* Snazzy Light */
+    --SL_black: #565869;
+    --SL_gray: #9194a2;
+    --SL_okka: #cf9c00;
+    --SL_red: #ff5c57;
+    --SL_pink: #f767bb;
+    --SL_blue: #09a1ed;
+    --SL_bluegreen: #13bbb7;
+    --SL_green: #2dae58;
+    /* hyper-snazzy */
+    --HS_black: #282a36;
+    --HS_red: #ff5c57;
+    --HS_green: #5af78e;
+    --HS_yellow: #f3f99d;
+    --HS_blue: #57c7ff;
+    --HS_pink: #ff6ac1;
+    --HS_lightblue: #9aedfe;
+    --HS_lightgrey: #f1f1f0;
+    /* ONE dark */
+    --OD_black: #282c33;
+    --OD_red: #e06b74;
+    --OD_green: #98c379;
+    --OD_yellow: #e5c07a;
+    --OD_blue: #62aeef;
+    --OD_violet: #c778dd;
+    --OD_bluegreen: #55b6c2;
+    --OD_grey: #abb2bf;
+    /* FlatColor */
+    --FC_almostwhite: #cbe3e7;
+    --FC_white: #fbfcfc;
+    --FC_grey: #565575;
+    --FC_black: #100e23;
+    --FC_lightred: #ff8080;
+    --FC_red: #ff5458;
+    --FC_lightgreen: #95ffa4;
+    --FC_green: #62d196;
+    --FC_lightyellow: #ffe9aa;
+    --FC_yellow: #ffb378;
+    --FC_lightblue: #91ddff;
+    --FC_blue: #65b2ff;
+    --FC_lightviolet: #c991e1;
+    --FC_violet: #906cff;
+    --FC_lightcyan: #aaffe4;
+    --cyan: #63f2f1;
+    --FC_lightcyangray: #cbe3e7;
+    --FC_lightbluegray: #a6b3cc;
 }
 
 
