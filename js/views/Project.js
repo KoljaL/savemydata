@@ -193,7 +193,8 @@ let ProjectContent = async(id) => {
             })
             // show Appointments
             .then((data) => {
-                let app = AppointmentsList.render(data.appointments)
+                // deb(data)
+                let app = AppointmentsList.render(data.appointments, data.customer_id, data.id)
                 Functions.setInnerHTML('ProjectAppointments', app);
                 return data;
             })

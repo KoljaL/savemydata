@@ -52,7 +52,7 @@ let getImages = (d) => {
                         <input for=uploadFileForm type="hidden" name="origin_id" id="upload_origin_id"  value="${d.origin_id}" />
                         <input for=uploadFileForm type="hidden" name="type" id="upload_type"  value="${d.type}" />
                         <input for=uploadFileForm type="hidden" name="name" id="upload_name"  value="${d.name}" />
-                        <label class="button boxShadow" for="uploadFile">upload</label>
+                        <label class="button boxShadow" for="uploadFile">new Image</label>
                         <input for=uploadFileForm id="uploadFile" type="file" accept="image/*" capture="camera" style="display:none">
                     </form> `;
             Functions.setInnerHTML('fileUpload', innerHTML);

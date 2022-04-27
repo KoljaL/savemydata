@@ -16,6 +16,7 @@ import NewAppointment from './views/NewAppointment.js';
 import Calendar from './views/Calendar.js';
 import Profile from './views/Profile.js';
 import NewProfile from './views/NewProfile.js';
+import Sharings from './views/Sharings.js';
 
 import Project from './views/Project.js';
 import NewProject from './views/NewProject.js';
@@ -23,13 +24,14 @@ import ProfileForm from './views/ProfileForm.js';
 import LanguageSwitch from './components/LanguageSwitch.js';
 import Accordion from './components/Accordion.js';
 import MagicMenu from './components/MagicMenu.js';
+
 MagicMenu.render();
 
 let role = Functions.getLocal('role');
 // deb(role)
 if (role !== 'admin' && role !== 'manager') {
-    // document.getElementById('staffItem').remove();
-    // document.getElementById('customerProfileElements').remove();
+    document.getElementById('staffItem').remove();
+    document.getElementById('customerProfileElements').remove();
 }
 // LanguageSwitch.render();
 // COMPONENTS
@@ -137,6 +139,10 @@ async function router() {
                 await Calendar.render(API_key, API_value);
                 break;
 
+
+            case 'sharings':
+                await Sharings.render();
+                break;
 
             case 'feedback':
                 await Feedback.render();

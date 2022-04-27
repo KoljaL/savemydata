@@ -2,9 +2,9 @@ import Functions from '../Functions.js';
 import LanguageSwitch from './LanguageSwitch.js';
 
 export default {
-    render: (Appointments) => {
+    render: (Appointments, customer_id, project_id = '') => {
         Style();
-        return showAppointments(Appointments);
+        return showAppointments(Appointments, customer_id, project_id);
     },
 };
 /**
@@ -29,9 +29,11 @@ let Style = async() => {
     `;
     Functions.createStyle('Appointments_deko_style', styleTags);
 };
-let showAppointments = (Appointments) => {
+let showAppointments = (Appointments, customer_id, project_id) => {
     // deb(Appointments)
     // make an array of all appointments 
+    let IDs = customer_id;
+    if (project_id !== '') IDs = customer_id + ',' + project_id;
     var dates = [];
     if (Appointments.length > 0) {
         // sort by date
@@ -42,19 +44,24 @@ let showAppointments = (Appointments) => {
         let HTML = /*HTML*/ `
             <div id=Appointments>
                 <h3 data-lang="H_appointments">Appointments</h3>
-                <a href="#appointment/new/${Appointments[0].customer_id}" class="button boxShadow">new Appointment</a>
+                <a href="#appointment/new/${IDs}" class="button boxShadow">new Appointment</a>
                     <div class=boxShadow>
                         <table class="dataTable">`;
+
+        // Appointment rows
         dates.forEach((date) => {
             let datetime = date.start_date + ' ' + date.start_time;
             HTML += /*HTML*/ `<tr><td class=numeric ><a href="#appointment/id/${date.id}">${Functions.formatDate(datetime)}</a></td></tr>`;
         });
+
         HTML += /*HTML*/ `</table></div></div>`;
         return HTML;
     } else {
-        let HTML = /*HTML*/ `<div id=Appointments><h3 data-lang="H_appointments">Appointments</h3><div class=boxShadow><table class="dataTable">`;
-        HTML += /*HTML*/ `<tr><td class=numeric ><span>not yet</span></td></tr></table></div></div>`;
-        return HTML;
+        return /*HTML*/ `
+            <div id=Appointments>
+                <h3 data-lang="H_appointments">Appointments</h3>
+                <a href="#appointment/new/${IDs}" class="button boxShadow">new Appointment</a>
+            </div>`;
     }
 
 }

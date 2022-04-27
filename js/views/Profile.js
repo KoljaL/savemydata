@@ -77,7 +77,7 @@ let Style = async() => {
         }
         #UserProjects:empty,
         #UserAppointments:empty{
-            display:none;
+            // display:none;
         }
         .ActionButtons{
             margin-top: -2em;
@@ -105,7 +105,7 @@ let Content = async(userID) => {
             </div>
             <div id=editArea>
                 <details>
-                    <summary id=loadSharings><span data-lang="H_sharing">Profile data</span></summary>
+                    <summary id=openProfile><span data-lang="H_sharing">Profile data</span></summary>
 
                     <div class="ActionButtons">
                         <div id="changeAvatar"></div>
@@ -254,24 +254,37 @@ let getUserData = async(userID) => {
                     Functions.getAPIdata(`get_appointments_from/${tableName}/${userID}`)
                         .then((res) => {
                             // deb(res);
+                            let app;
                             if (res.code === 200) {
                                 // deb(res.data)
-                                let app = AppointmentsList.render(res.data)
-                                Functions.setInnerHTML('UserAppointments', app);
-
+                                app = AppointmentsList.render(res.data, userID)
+                            } else {
+                                app = /*HTML*/ `
+                                <div id=Projects>
+                                    <h3 data-lang="H_appointments">Appointments</h3>
+                                    <a href="#appointment/new/${userID}" class="button boxShadow">new Appointment</a>
+                                </div>`;
                             }
+                            Functions.setInnerHTML('UserAppointments', app);
                         });
 
                     // get ProjectsList
                     Functions.getAPIdata(`get_projects_from/${tableName}/${userID}`)
                         .then((res) => {
                             // deb(res);
+                            let Projects
                             if (res.code === 200) {
                                 // deb(res.data)
-                                let app = ProjectsList.render(res.data)
-                                Functions.setInnerHTML('UserProjects', app);
-
+                                Projects = ProjectsList.render(res.data)
+                            } else {
+                                Projects = /*HTML*/ `
+                                <div id=Projects>
+                                    <h3 data-lang="H_projects">Projects</h3>
+                                    <a href="#project/new/${userID}" class="button boxShadow">new Project</a>
+                                </div>`;
                             }
+                            Functions.setInnerHTML('UserProjects', Projects);
+
                         });
                 } else if (res.code === 403) {
                     isAllowed = false;

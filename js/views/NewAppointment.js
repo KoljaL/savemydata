@@ -9,7 +9,7 @@ import UserList from '../components/UserList.js';
 let NewAppointment = {
     render: async(id) => {
         window.isAllowed = true;
-        Functions.pageTitle(`NewAppointment`)
+        Functions.pageTitle(`New Appointment`)
         await Style();
         await Content();
         await NewAppointmentContent(id);
@@ -179,12 +179,15 @@ let NewAppointmentContent = async(id) => {
         let project_id = id[1];
         // preselect cudtomer
         if (customer_id) {
-            document.getElementById('customerListSelect').value = customer_id;
             getcustomerprojects(customer_id)
+            document.getElementById('customerListSelect').value = customer_id;
         }
         // preselect project
         if (project_id) {
+            deb(project_id)
+
             document.getElementById('customerProjects').value = project_id;
+            document.getElementById('customerProjects').selectedIndex = project_id;
         }
         // change projects if customer changes
         document.getElementById('customerListSelect').addEventListener('change', (el) => {

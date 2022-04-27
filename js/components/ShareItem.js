@@ -8,7 +8,7 @@ export default {
         Style();
         return /*HTML*/ `
         <div id=ShareItem data-shared_id="${data.shared_id}" data-type="${data.type}">
-            <details open>
+            <details>
             <summary id=loadSharings><span data-lang="H_sharing">Sharing</span></summary>
                     <div class="boxShadow FF-row content">
                         <div style="display:flex;">
@@ -163,7 +163,7 @@ let addEvents = () => {
      * 
      */
     function loadSharings(shareData) {
-        deb(shareData)
+        // deb(shareData)
         Functions.getAPIdata('load_sharings/' + shareData.type.toLowerCase() + '/' + Functions.getLocal('id'))
             .then((res) => {
                 if (res.code === 200) {

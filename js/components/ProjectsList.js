@@ -21,7 +21,7 @@ let Style = async() => {
         background-color: var(--bg_1);
     }
     `;
-    Functions.createStyle('Projects_deko_style', styleTags);
+    Functions.createStyle('Projects_dhuo_style', styleTags);
 };
 let showProjects = (Projects) => {
     // deb(Projects)
@@ -44,8 +44,6 @@ let showProjects = (Projects) => {
         });
         HTML += /*HTML*/ `</table></div></div>`;
         return HTML;
-    } else {
-        return 'no Projects';
     }
 
 }

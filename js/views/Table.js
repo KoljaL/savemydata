@@ -115,7 +115,7 @@ let Content = async(action) => {
      *  Used to create a new project. 
      * 
      */
-    if ('project' == tableName) {
+    if ('project_xxx' == tableName) {
         let userList = await UserList.render('dropdown', 'customer');
         innerHTML += /*HTML*/ `
         <div id=newProject>

@@ -22,7 +22,7 @@ let Content = async() => {
                 <a href="#project/new"><span class="icon project_icon"></span>Project</a>
                 <a href="#appointment/new"><span class="icon appointment_icon"></span>Appointment</a>
               <span>EXTRA</span>
-                <a href="#Sharings"><span class="icon share_icon"></span>Sharings</a>
+                <a href="#sharings"><span class="icon share_icon"></span>Sharings</a>
               </div>
           </div>`;
         await Functions.setInnerHTML('MagicMenu', innerHTML);
