@@ -108,6 +108,7 @@ let Content = async(action) => {
         <div id="UserTableWrapper" class="template"> 
             <div id="UserTable">${await CreateTable.render(data,action)}</div>
         </div>`;
+    Functions.setInnerHTML('main', innerHTML);
 
 
     /**
@@ -141,7 +142,6 @@ let Content = async(action) => {
         </div>
         `;
     }
-    Functions.setInnerHTML('main', innerHTML);
 };
 
 

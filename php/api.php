@@ -122,12 +122,13 @@ if ( $request ) {
  * Just for deveopment
 */
 if ( 'do' === $API_endpoint ) {
+    // require __DIR__.'/sharing_functions.php';
+    // require __DIR__.'/init_db_tables.php';
+    // dummy_sharing( 'customer', 10 );
     // create_dummy_data();
     // join_test();
-    // require __DIR__.'/sharing_functions.php';
-    require __DIR__.'/init_db_tables.php';
 
-    dummy_sharing( 'customer' );
+    // dummy_sharing( 'customer' );
     // get_geocode( '' );
     // get_name_by_id('staff', '1', $name = 'username');
     exit;
@@ -350,7 +351,7 @@ case 'get_geocode':
 case 'all_sharings':
     all_sharings( $request );
     break;
-    
+
 case 'share_item':
     share_item( $request );
     break;
