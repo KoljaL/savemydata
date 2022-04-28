@@ -347,6 +347,10 @@ case 'get_geocode':
     get_geocode( $request );
     break;
 
+case 'all_sharings':
+    all_sharings( $request );
+    break;
+    
 case 'share_item':
     share_item( $request );
     break;
@@ -1192,6 +1196,10 @@ function insert_into_db( $param, $table, $output = true ) {
     // INSERT INTO
     //
     // $stmt = $db->prepare("INSERT INTO $table ($columns_needed) VALUES ($placeholder)");
+    deb( $table );
+    deb( $columns_needed );
+    deb( $placeholder );
+    deb( "INSERT OR REPLACE INTO $table ($columns_needed) VALUES ($placeholder)" );
     $stmt = $db->prepare( "INSERT OR REPLACE INTO $table ($columns_needed) VALUES ($placeholder)" );
     $stmt->execute( $vars );
     usleep( 20 );

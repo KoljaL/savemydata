@@ -482,6 +482,8 @@ header .page_name {
 main {
     overflow-y: scroll;
     opacity: 0;
+    /* width: 600px; */
+    max-width: max-content;
 }
 
 main h1:first-of-type,

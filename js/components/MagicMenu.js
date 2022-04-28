@@ -4,8 +4,8 @@ import LanguageSwitch from './LanguageSwitch.js';
 export default {
     render: async(type, table) => {
         Style();
+        await Content();
         Events();
-        Content();
         LanguageSwitch.render();
     }
 
@@ -19,6 +19,7 @@ let Content = async() => {
               <div id="MagicMenuContent" class="MagicMenu-content boxShadow">
               <span>NEW</span>
                 <a href="#customer/new"><span class="icon users_icon"></span>Customer</a>
+                <a href="#staff/new" id=newStaff></a>
                 <a href="#project/new"><span class="icon project_icon"></span>Project</a>
                 <a href="#appointment/new"><span class="icon appointment_icon"></span>Appointment</a>
               <span>EXTRA</span>
@@ -102,10 +103,19 @@ let Style = async() => {
     .MagicMenu a:hover .icon {
     background: var(--fontBlue);
     }
+
+    #newStaff:empty{
+      display:none;
+    }
     `;
     Functions.createStyle('Upload_Images_hdze_style', styleTags);
 };
-let Events = async(table) => {
+let Events = async() => {
+    // admin can create new staffs 
+    if (Functions.getLocal('role') === 'admin') {
+        let innerHTML = /*HTML*/ `<span class="icon user_icon"></span>Staff `;
+        await Functions.setInnerHTML('newStaff', innerHTML);
+    }
     // add eventListener only once!
     if (body.getAttribute('magicMenuEvent') !== 'true') {
         body.setAttribute('magicMenuEvent', true)

@@ -6,7 +6,7 @@ let Sharings = {
         Functions.pageTitle(`Sharings`)
         await Style();
         await Content();
-        // await Login();
+        await Data();
     }
 };
 
@@ -56,7 +56,8 @@ let Style = async() => {
 let Content = async() => {
     let innerHTML = /*HTML*/ `
     <div id=SharingsWrapper>
- F_staffname
+ Sharings
+ <textarea rows=100 cols=50 id=SharingsText></textarea>
     </div>`;
     await Functions.setInnerHTML('main', innerHTML);
 }
@@ -71,21 +72,19 @@ let Content = async() => {
 ##       ##     ## ##    ##   ##  ##   ###
 ########  #######   ######   #### ##    ##
 */
-let Login = async() => {
-    document.getElementById('loginSubmit').addEventListener('click', async function(event) {
-        event.preventDefault();
-        // getAPIdata (endpoint, formID)
-        Functions.getAPIdata('login', loginForm)
-            .then((res) => {
-                // deb(res);
-                if (res.code === 200) {
+let Data = async() => {
 
-                } else {
-                    document.getElementById('SharingsFormError').innerHTML = res.message;
-                }
-            })
-            .then(() => {
-                document.getElementById('userLogout').addEventListener('click', Functions.flushLocal);
-            });
-    });
+    // getAPIdata (endpoint, formID)
+    Functions.getAPIdata('all_sharings')
+        .then((res) => {
+            if (res.code === 200) {
+                let data = res.data;
+                deb(res)
+                deb(data)
+                document.getElementById('SharingsText').innerHTML = JSON.stringify(data, undefined, 4);;
+
+            } else {
+                document.getElementById('SharingsText').innerHTML = res.message;
+            }
+        })
 }

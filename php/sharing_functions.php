@@ -582,6 +582,76 @@ function remove_sharing() {
     return_JSON( $response );
 
 }
+/*
+//
+//     ###    ##       ##           ######  ##     ##    ###    ########  #### ##    ##  ######    ######
+//    ## ##   ##       ##          ##    ## ##     ##   ## ##   ##     ##  ##  ###   ## ##    ##  ##    ##
+//   ##   ##  ##       ##          ##       ##     ##  ##   ##  ##     ##  ##  ####  ## ##        ##
+//  ##     ## ##       ##           ######  ######### ##     ## ########   ##  ## ## ## ##   ####  ######
+//  ######### ##       ##                ## ##     ## ######### ##   ##    ##  ##  #### ##    ##        ##
+//  ##     ## ##       ##          ##    ## ##     ## ##     ## ##    ##   ##  ##   ### ##    ##  ##    ##
+//  ##     ## ######## ########     ######  ##     ## ##     ## ##     ## #### ##    ##  ######    ######
+//
+*/
+function all_sharings() {
+    global $db, $API_param, $API_value, $user_id, $user_role;
+    $sharings = false;
+    $response = [];
+
+    // CUSTOMER
+    $stmt = $db->prepare( "SELECT * FROM customer_sharing WHERE staff_id = '$user_id' " );
+    $stmt->execute();
+    $customer = $stmt->fetchAll( PDO::FETCH_ASSOC );
+    $stmt->closeCursor();
+    if ( $customer ) {
+        $sharings = true;
+        foreach ( $customer as $key => $value ) {
+            $customer[$key]['shared_with']  = get_by_from( 'username', 'id', $customer[$key]['shared_staff_id'], 'staff' );
+            $customer[$key]['sharing_name'] = get_by_from( 'username', 'id', $customer[$key]['shared_id'], 'customer' );
+            $customer[$key]['sharing_type'] = 'Customer';
+        }
+        $response['data']['customers'] = $customer;
+    }
+
+    // PROJECTS
+    $stmt = $db->prepare( "SELECT * FROM project_sharing WHERE staff_id = '$user_id' " );
+    $stmt->execute();
+    $projects = $stmt->fetchAll( PDO::FETCH_ASSOC );
+    $stmt->closeCursor();
+    if ( $projects ) {
+        $sharings = true;
+        foreach ( $projects as $key => $value ) {
+            $projects[$key]['shared_with']  = get_by_from( 'username', 'id', $projects[$key]['shared_staff_id'], 'staff' );
+            $projects[$key]['sharing_name'] = get_by_from( 'title', 'id', $projects[$key]['shared_id'], 'project' );
+            $projects[$key]['sharing_type'] = 'Project';
+        }
+        $response['data']['projects'] = $projects;
+    }
+
+    // APPOINTMENTS
+    $stmt = $db->prepare( "SELECT * FROM appointment_sharing WHERE staff_id = '$user_id' " );
+    $stmt->execute();
+    $appointments = $stmt->fetchAll( PDO::FETCH_ASSOC );
+    $stmt->closeCursor();
+    if ( $appointments ) {
+        $sharings = true;
+        foreach ( $appointments as $key => $value ) {
+            $appointments[$key]['shared_with']  = get_by_from( 'username', 'id', $appointments[$key]['shared_staff_id'], 'staff' );
+            $appointments[$key]['sharing_name'] = get_by_from( 'title', 'id', $appointments[$key]['shared_id'], 'project' );
+            $appointments[$key]['sharing_type'] = 'Appointment';
+        }
+        $response['data']['appointments'] = $appointments;
+    }
+
+    if ( $sharings ) {
+        $response['code'] = 200;
+    } else {
+        $response['code']    = 400;
+        $response['data']    = [];
+        $response['message'] = 'no sharings found';
+    }
+    return_JSON( $response );
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
