@@ -606,11 +606,14 @@ function all_sharings() {
     if ( $customer ) {
         $sharings = true;
         foreach ( $customer as $key => $value ) {
-            $customer[$key]['shared_with']  = get_by_from( 'username', 'id', $customer[$key]['shared_staff_id'], 'staff' );
-            $customer[$key]['sharing_name'] = get_by_from( 'username', 'id', $customer[$key]['shared_id'], 'customer' );
-            $customer[$key]['sharing_type'] = 'Customer';
+            $shared_user               = get_by_from( 'username', 'id', $customer[$key]['shared_id'], 'customer' );
+            $cust[$key]['shared_user'] = "<a href='#customer/profile/".$customer[$key]['shared_id']."'>".$shared_user."</a>";
+
+            $shared_with               = get_by_from( 'username', 'id', $customer[$key]['shared_staff_id'], 'staff' );
+            $shared_with_email         = get_by_from( 'email', 'id', $customer[$key]['shared_staff_id'], 'staff' );
+            $cust[$key]['shared_with'] = "<a href='mailto:".$shared_with_email."'>".$shared_with."</a>";
         }
-        $response['data']['customers'] = $customer;
+        $response['data']['customers'] = $cust;
     }
 
     // PROJECTS
@@ -621,11 +624,14 @@ function all_sharings() {
     if ( $projects ) {
         $sharings = true;
         foreach ( $projects as $key => $value ) {
-            $projects[$key]['shared_with']  = get_by_from( 'username', 'id', $projects[$key]['shared_staff_id'], 'staff' );
-            $projects[$key]['sharing_name'] = get_by_from( 'title', 'id', $projects[$key]['shared_id'], 'project' );
-            $projects[$key]['sharing_type'] = 'Project';
+            $shared_project              = get_by_from( 'title', 'id', $projects[$key]['shared_id'], 'project' );
+            $pro[$key]['shared_project'] = "<a href='#project/id/".$projects[$key]['shared_id']."'>".$shared_project."</a>";
+
+            $shared_with              = get_by_from( 'username', 'id', $projects[$key]['shared_staff_id'], 'staff' );
+            $shared_with_email        = get_by_from( 'email', 'id', $projects[$key]['shared_staff_id'], 'staff' );
+            $pro[$key]['shared_with'] = "<a href='mailto:".$shared_with_email."'>".$shared_with."</a>";
         }
-        $response['data']['projects'] = $projects;
+        $response['data']['projects'] = $pro;
     }
 
     // APPOINTMENTS
@@ -636,11 +642,18 @@ function all_sharings() {
     if ( $appointments ) {
         $sharings = true;
         foreach ( $appointments as $key => $value ) {
-            $appointments[$key]['shared_with']  = get_by_from( 'username', 'id', $appointments[$key]['shared_staff_id'], 'staff' );
-            $appointments[$key]['sharing_name'] = get_by_from( 'title', 'id', $appointments[$key]['shared_id'], 'project' );
-            $appointments[$key]['sharing_type'] = 'Appointment';
+            // $appointments[$key]['shared_with']  = get_by_from( 'username', 'id', $appointments[$key]['shared_staff_id'], 'staff' );
+            $date = get_by_from( 'start_date', 'id', $appointments[$key]['shared_id'], 'appointment' );
+            $time = get_by_from( 'start_time', 'id', $appointments[$key]['shared_id'], 'appointment' );
+
+            $shared_project                  = get_by_from( 'title', 'id', $appointments[$key]['shared_id'], 'appointment' );
+            $app[$key]['shared_appointment'] = "<span class=numeric>".$date." ".$time."</span>&nbsp;&nbsp;&nbsp; <a href='#appointment/id/".$appointments[$key]['shared_id']."'> ".$shared_project."</a>";
+
+            $shared_with              = get_by_from( 'username', 'id', $appointments[$key]['shared_staff_id'], 'staff' );
+            $shared_with_email        = get_by_from( 'email', 'id', $appointments[$key]['shared_staff_id'], 'staff' );
+            $app[$key]['shared_with'] = "<a href='mailto:".$shared_with_email."'>".$shared_with."</a>";
         }
-        $response['data']['appointments'] = $appointments;
+        $response['data']['appointments'] = $app;
     }
 
     if ( $sharings ) {

@@ -66,6 +66,11 @@ export default {
         'F_images': 'Bilder',
         'F_getmap': 'Karte anlegen',
 
+        'F_shared_user': 'geteilte Kunden',
+        'F_shared_project': 'geteilte Projekte',
+        'F_shared_appointment': 'geteilte Termine',
+        'F_shared_with': 'geteilt mit',
+
     },
     'en': {
         // common
@@ -133,5 +138,10 @@ export default {
         'F_full_paid': 'Full Paid',
         'F_images': 'Images',
         'F_getmap': 'get Map',
+
+        'F_shared_user': 'shared Customers',
+        'F_shared_project': 'shared Projects',
+        'F_shared_appointment': 'shared Appointments',
+        'F_shared_with': 'shared with',
     }
 }

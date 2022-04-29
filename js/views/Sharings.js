@@ -29,10 +29,12 @@ let Style = async() => {
         #SharingsWrapper {
             padding:1em;
         } 
-        #SharingsWrapper li{
-            padding:.5em;
-            margin-left:1em;
+        #SharingsWrapper h2{
+            margin-top:2em;
         } 
+        #SharingsWrapper #TableHeader .FF-item {
+            margin-top: 1.8em;
+          }
        
     `;
     Functions.createStyle('Sharings_style', styleTags);
@@ -60,24 +62,28 @@ let Content = async() => {
         <div id=sharedCustomer></div>
         <div id=sharedProject></div>
         <div id=sharedAppointment></div>
-        <textarea rows=100 cols=50 id=SharingsText></textarea>
     </div>`;
     await Functions.setInnerHTML('main', innerHTML);
 }
 
 
 /**
- * This function is used to render the content of the page
+ * It gets all the data from the API and then renders it in the table
  */
 let Data = async() => {
     let data;
     data = await Functions.getAPIdata('all_sharings')
     data = data.data;
 
-
-    Functions.setInnerHTML('sharedCustomer', `${await CreateTable.render(data.customers,'customer')}`);
-    Functions.setInnerHTML('sharedProject', `${await CreateTable.render(data.projects,'project')}`);
-    Functions.setInnerHTML('sharedAppointment', `${await CreateTable.render(data.appointments,'appointment')}`);
+    if (data.customers) {
+        Functions.setInnerHTML('sharedCustomer', `${await CreateTable.render(data.customers,'customer')}`);
+    }
+    if (data.projects) {
+        Functions.setInnerHTML('sharedProject', `${await CreateTable.render(data.projects,'project')}`);
+    }
+    if (data.appointments) {
+        Functions.setInnerHTML('sharedAppointment', `${await CreateTable.render(data.appointments,'appointment')}`);
+    }
 
 
 };

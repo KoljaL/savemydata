@@ -149,10 +149,10 @@ let Content = async(data) => {
 
 
 async function createTable(data, TableContent) {
-    deb(data)
-        // https://www.valentinog.com/blog/html-table/
+    // deb(data) 
+    // https://www.valentinog.com/blog/html-table/
     let head = Object.keys(data[0]);
-
+    // deb(head)
     let thead = TableContent.createTHead();
     let row = thead.insertRow();
     row.classList.add('headerRow');
@@ -178,7 +178,7 @@ async function createTable(data, TableContent) {
                     user_id = element[key];
                 }
                 if (key === 'username') {
-                    element[key] = /*MTML*/ `<a href="#${tableName}/profile/${user_id}">${element[key]}</a>`;
+                    element[key] = /*HTML*/ `<a href="#${tableName}/profile/${user_id}">${element[key]}</a>`;
                 }
                 cell.innerHTML = element[key];
             }
@@ -188,14 +188,14 @@ async function createTable(data, TableContent) {
                     project_id = element[key];
                 }
                 if (key === 'username') {
-                    element[key] = /*MTML*/ `<a href="#customer/profile/${project_id}">${element[key]}</a>`;
+                    element[key] = /*HTML*/ `<a href="#customer/profile/${project_id}">${element[key]}</a>`;
                 }
 
                 if (key === 'id') {
                     project_id = element[key];
                 }
                 if (key === 'title') {
-                    element[key] = /*MTML*/ `<a href="#${tableName}/id/${project_id}">${element[key]}</a>`;
+                    element[key] = /*HTML*/ `<a href="#${tableName}/id/${project_id}">${element[key]}</a>`;
                 }
                 cell.innerHTML = element[key];
             }
@@ -205,14 +205,14 @@ async function createTable(data, TableContent) {
                     customer_id = element[key];
                 }
                 if (key === 'username') {
-                    element[key] = /*MTML*/ `<a href="#customer/profile/${customer_id}">${element[key]}</a>`;
+                    element[key] = /*HTML*/ `<a href="#customer/profile/${customer_id}">${element[key]}</a>`;
                 }
 
                 if (key === 'id') {
                     appointment_id = element[key];
                 }
                 if (key === 'title') {
-                    element[key] = /*MTML*/ `<a href="#${tableName}/id/${appointment_id}">${element[key]}</a>`;
+                    element[key] = /*HTML*/ `<a href="#${tableName}/id/${appointment_id}">${element[key]}</a>`;
                 }
 
 
@@ -220,7 +220,7 @@ async function createTable(data, TableContent) {
                     staff_id = element[key];
                 }
                 if (key === 'staffname') {
-                    element[key] = /*MTML*/ `<a href="#staff/profile/${staff_id}">${element[key]}</a>`;
+                    element[key] = /*HTML*/ `<a href="#staff/profile/${staff_id}">${element[key]}</a>`;
                 }
 
 
@@ -229,7 +229,7 @@ async function createTable(data, TableContent) {
                     // deb(project_id)
                 }
                 if (key === 'projectname') {
-                    element[key] = /*MTML*/ `<a href="#project/id/${project_id}">${element[key]}</a>`;
+                    element[key] = /*HTML*/ `<a href="#project/id/${project_id}">${element[key]}</a>`;
                     // deb(element[key])
                 }
 

@@ -294,8 +294,8 @@ function init_customer_sharing_table() {
             date TEXT NOT NULL  DEFAULT ""
         )' );
 
-    $customer_sharing = ['shared_id' => '4', 'staff_id' => '5', 'shared_staff_id' => '1'];
-    insert_into_db( $customer_sharing, 'customer_sharing' );
+    // $customer_sharing = ['shared_id' => '4', 'staff_id' => '5', 'shared_staff_id' => '1'];
+    // insert_into_db( $customer_sharing, 'customer_sharing' );
 }
 
 function init_project_sharing_table() {
@@ -308,8 +308,8 @@ function init_project_sharing_table() {
             can_edit TEXT NOT NULL DEFAULT "false",
             date TEXT NOT NULL  DEFAULT ""
         )' );
-    $project_sharing = ['shared_id' => '4', 'staff_id' => '5', 'shared_staff_id' => '1'];
-    insert_into_db( $project_sharing, 'project_sharing' );
+    // $project_sharing = ['shared_id' => '4', 'staff_id' => '5', 'shared_staff_id' => '1'];
+    // insert_into_db( $project_sharing, 'project_sharing' );
 }
 
 function init_appointment_sharing_table() {
@@ -322,8 +322,8 @@ function init_appointment_sharing_table() {
             can_edit TEXT NOT NULL DEFAULT "false",
             date TEXT NOT NULL  DEFAULT ""
         )' );
-    $appointment_sharing = ['shared_id' => '4', 'staff_id' => '5', 'shared_staff_id' => '1'];
-    insert_into_db( $appointment_sharing, 'appointment_sharing' );
+    // $appointment_sharing = ['shared_id' => '4', 'staff_id' => '5', 'shared_staff_id' => '1'];
+    // insert_into_db( $appointment_sharing, 'appointment_sharing' );
 }
 
 /*
@@ -546,6 +546,28 @@ function create_dummy_appointment( $count, $days ) {
         insert_into_db( $project, 'appointment' );
     }
 }
+/*
+//
+//   ######  ##     ##    ###    ########  #### ##    ##  ######
+//  ##    ## ##     ##   ## ##   ##     ##  ##  ###   ## ##    ##
+//  ##       ##     ##  ##   ##  ##     ##  ##  ####  ## ##
+//   ######  ######### ##     ## ########   ##  ## ## ## ##   ####
+//        ## ##     ## ######### ##   ##    ##  ##  #### ##    ##
+//  ##    ## ##     ## ##     ## ##    ##   ##  ##   ### ##    ##
+//   ######  ##     ## ##     ## ##     ## #### ##    ##  ######
+//
+*/
+function dummy_sharing( $item, $count ) {
+    for ( $i = 0; $i < $count; $i++ ) {
+        $share_id        = get_ramdon_id_from( $item );
+        $shared_staff_id = get_by_from( 'staff_id', 'id', $share_id, $item );
+        $staff_id        = get_ramdon_id_from( 'staff' );
+        $sharing         = ['shared_id' => $share_id, 'staff_id' => $staff_id, 'shared_staff_id' => $shared_staff_id];
+        $sharing_table   = $item.'_sharing';
+        insert_into_db( $sharing, $sharing_table );
+    }
+
+}
 
 /*
 //
@@ -566,19 +588,4 @@ function get_ramdon_id_from( $table ) {
     // print_r( $IDs );
     $i = random_int( 0, count( $IDs ) - 1 );
     return $IDs[$i]['id'];
-}
-
-// $customer_sharing = ['shared_id' => '4', 'staff_id' => '5', 'shared_staff_id' => '1'];
-// insert_into_db( $customer_sharing, 'customer_sharing' );
-
-function dummy_sharing( $item, $count ) {
-    for ( $i = 0; $i < $count; $i++ ) {
-        $share_id        = get_ramdon_id_from( $item );
-        $shared_staff_id = get_by_from( 'staff_id', 'id', $share_id, $item );
-        $staff_id        = get_ramdon_id_from( 'staff' );
-        $sharing         = ['shared_id' => $share_id, 'staff_id' => $staff_id, 'shared_staff_id' => $shared_staff_id];
-        $sharing_table   = $item.'_sharing';
-        insert_into_db( $sharing, $sharing_table );
-    }
-
 }
