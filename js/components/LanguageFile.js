@@ -23,6 +23,7 @@ export default {
         // Sidebar
         'S_menu': 'Menü',
         'S_staff': 'Mitarbeiter',
+        'S_calendar': 'Kalender',
         'S_staff-profile': 'Mitarbeiterprofil',
         'S_profile-form': 'Profil Elemente',
         'S_customer': 'Kunden',
@@ -96,6 +97,7 @@ export default {
         //sidebar
         'S_menu': 'Menu',
         'S_staff': 'Staff',
+        'S_calendar': 'Calendar',
         'S_staff-profile': 'Staffprofile',
         'S_profile-form': 'Profile Elements',
         'S_customer': 'Customer',

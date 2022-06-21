@@ -374,12 +374,12 @@ function create_dummy_data() {
     // create_dummy_project(15000);
     // create_dummy_appointment(30000);
     // create_dummy_staff( 10 );
-    create_dummy_customer( 10 );
-    create_dummy_project( 10 );
-    create_dummy_appointment( 10, 3 );
-    dummy_sharing( 'customer', 20 );
-    dummy_sharing( 'project', 20 );
-    dummy_sharing( 'appointment', 20 );
+    create_dummy_customer( 1 );
+    create_dummy_project( 1 );
+    create_dummy_appointment( 1, 3 );
+    dummy_sharing( 'customer', 1 );
+    dummy_sharing( 'project', 1 );
+    dummy_sharing( 'appointment', 1 );
 
     echo "<center><h1>";
     echo round( filesize( $db_path ) / 1000, 0 )."kb of ";

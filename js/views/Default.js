@@ -56,7 +56,7 @@ let Style = async() => {
 let Content = async() => {
     let innerHTML = /*HTML*/ `
     <div id=DefaultWrapper>
-       <h2>Save my data</h2>
+       <h2>Save my data2</h2>
        <p>CRM on its own<br>link to repo at the bottom</p>
        <h3>works now</h3>
             <li>two themes in two colors</li>
