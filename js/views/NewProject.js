@@ -133,7 +133,8 @@ let Events = async(id) => {
 
         document.getElementById('newProjectButton').addEventListener('click', (e) => {
             e.preventDefault();
-            // send all inputfields to API & get directed to the new users profile
+            deb(document.getElementById('customerListSelect').value)
+                // send all inputfields to API & get directed to the new users profile
             if (document.getElementById('title').value !== '' && document.getElementById('customerListSelect').value !== '') {
                 let ProjectForm = document.getElementById('ProjectForm');
                 ProjectForm = new FormData(ProjectForm);

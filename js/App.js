@@ -49,7 +49,7 @@ async function router() {
     const API_value = request.value || '';
     // deb(request);
 
-    // remove the opycity class, wait, call async switch :-)
+    // remove the opacity class, wait, call async switch :-)
     Functions.loadingDots('body', true)
     document.getElementById('main').classList.remove('visible');
     await Functions.sleep(200);

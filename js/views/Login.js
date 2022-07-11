@@ -69,7 +69,6 @@ let Content = async() => {
             <form id="loginForm" action="" method="post" autocomplete="off">
 
             <!-- TESTING -->
- <!-- login 
                 <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px;">
                     <input type="radio" id="Admin" name="userlogin" value="Admin">
                     <label for="Admin">Admin</label>
@@ -91,14 +90,15 @@ let Content = async() => {
                     <label for="Staff 2">Staff 2</label>
                 </div>
                 <input id="password" name="password" type="hidden" value="password" >
-                -->
+              
                 <!-- TESTING -->
 
+ <!-- login 
                
                 ${Form.inputText({name: "userlogin",type: "text",widths: "100/150/200", label: "Login",placeholder: "Username or Email",value: "Admin",})}
                 ${Form.inputText({name: "password",type: "password",widths: "100/150/200",label: "Password",placeholder: "secret...",value: "password",})}
               
-
+  -->
                     <div class="FF-item" style="flex-basis: 150px; min-width: 100px; max-width: 200px;">
                         <input id="loginSubmit"  type="submit" value="Login">
                     </div>

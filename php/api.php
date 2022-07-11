@@ -13,6 +13,12 @@ if ( is_file( './error.log' ) ) {
 ini_set( "error_log", "./error.log" );
 $start = microtime( true );
 
+// AUTOINCLUDE
+//foreach (glob("folder/*.php") as $filename) { 
+//    include $filename; 
+//} 
+// AUTOINCLUDE
+
 //////////////////////////// PERMISSION SWITCH ////////////////////////////
 $ALLOWED_AT_ALL = false;
 // $ALLOWED_AT_ALL = true;
@@ -21,6 +27,7 @@ $ALLOWED_AT_ALL = false;
 /*
  * preflight for CORS
  */
+// https://github.com/mikecao/flight/issues/425
 if ( 'OPTIONS' === $_SERVER['REQUEST_METHOD'] ) {
     header( 'Access-Control-Allow-Origin: *' );
     header( 'Access-Control-Allow-Methods: *' );
@@ -50,7 +57,11 @@ $JWT_key = 'example_key';
 //
 */
 /*
- * Splitting the URI into an array to get the endpoint
+ * Splitting the URI into an array to get endpoint, parameter and value
+ * http://example.com/api/get_profile/staff/1
+ * $API_endpoint = get_profile
+ * $API_param = staff
+ * $API_value = 1
  */
 $uri          = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
 $uri          = explode( '/', $uri );
@@ -589,6 +600,7 @@ function new_entry_in( $param ) {
     unset( $param['user_token'] );
 
     deb( $param );
+   // print_r($param);
     insert_into_db( $param, $table );
 
     if ( 'appointment' === $API_param ) {
@@ -632,7 +644,7 @@ function delete_entry_in( $param ) {
         unlink( '../'.$path );
         unlink( '../'.$path_thumb );
     }
-
+    // TODO add else switch for non files?
     $stmt = $db->prepare( "DELETE FROM $table WHERE id =?" );
     $stmt->execute( [$id] );
     $count = $stmt->rowCount();
@@ -690,7 +702,7 @@ function edit_single_field( $param ) {
     $sql    = "UPDATE $param[table] SET $param[update]=? WHERE $param[where]=?";
     $stmt   = $db->prepare( $sql );
     $update = $stmt->execute( [$param['value'], $param['equal']] );
-    // count is the way to get 'true' if row is updated
+    // rowCount is the way to get 'true' if row is updated
     $count = $stmt->rowCount();
 
     if ( $count ) {
@@ -1265,7 +1277,7 @@ function join_test() {
     }
     return_JSON( $response );
 }
-
+// TODO replace with PHPmailer for sending mails to other servers
 function send_feedback( $param ) {
     $mailbody   = $param['mailBody'];
     $mailadress = get_by_from( 'email', 'id', $param['userId'], 'staff' );

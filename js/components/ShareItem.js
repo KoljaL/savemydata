@@ -116,7 +116,7 @@ let addEvents = () => {
             shareData = loadShareData();
             if (document.getElementById('shareWith').value) {
                 if (Functions.ValidateEmail(shareData.sharingEmail)) {
-                    Functions.getAPIdata('share_item/' + shareData.type, shareData)
+                    Functions.getAPIdata('share_item/' + shareData.type.toLowerCase(), shareData)
                         .then((res) => {
                             if (res.code === 200) {
                                 loadSharings(shareData);
@@ -164,7 +164,8 @@ let addEvents = () => {
      */
     function loadSharings(shareData) {
         // deb(shareData)
-        Functions.getAPIdata('load_sharings/' + shareData.type.toLowerCase() + '/' + Functions.getLocal('id'))
+        // Functions.getAPIdata('load_sharings/' + shareData.type.toLowerCase() + '/' + Functions.getLocal('id'))
+        Functions.getAPIdata('load_sharings/' + shareData.type.toLowerCase() + '/' + shareData.shared_id)
             .then((res) => {
                 if (res.code === 200) {
                     let data = res.data
