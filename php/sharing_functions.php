@@ -595,7 +595,7 @@ function all_sharings()
     $response = [];
 
     // CUSTOMER
-    $stmt = $db->prepare("SELECT * FROM customer_sharing WHERE staff_id = '$user_id' ");
+    $stmt = $db->prepare("SELECT * FROM customer_sharing WHERE shared_staff_id = '$user_id' ");
     $stmt->execute();
     $customer = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $stmt->closeCursor();
@@ -605,15 +605,15 @@ function all_sharings()
             $shared_user               = get_by_from('username', 'id', $customer[$key]['shared_id'], 'customer');
             $cust[$key]['shared_user'] = "<a href='#customer/profile/".$customer[$key]['shared_id']."'>".$shared_user."</a>";
 
-            $shared_with               = get_by_from('username', 'id', $customer[$key]['shared_staff_id'], 'staff');
-            $shared_with_email         = get_by_from('email', 'id', $customer[$key]['shared_staff_id'], 'staff');
+            $shared_with               = get_by_from('username', 'id', $customer[$key]['staff_id'], 'staff');
+            $shared_with_email         = get_by_from('email', 'id', $customer[$key]['staff_id'], 'staff');
             $cust[$key]['shared_with'] = "<a href='mailto:".$shared_with_email."'>".$shared_with."</a>";
         }
         $response['data']['customers'] = $cust;
     }
 
     // PROJECTS
-    $stmt = $db->prepare("SELECT * FROM project_sharing WHERE staff_id = '$user_id' ");
+    $stmt = $db->prepare("SELECT * FROM project_sharing WHERE shared_staff_id = '$user_id' ");
     $stmt->execute();
     $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $stmt->closeCursor();
@@ -623,15 +623,15 @@ function all_sharings()
             $shared_project              = get_by_from('title', 'id', $projects[$key]['shared_id'], 'project');
             $pro[$key]['shared_project'] = "<a href='#project/id/".$projects[$key]['shared_id']."'>".$shared_project."</a>";
 
-            $shared_with              = get_by_from('username', 'id', $projects[$key]['shared_staff_id'], 'staff');
-            $shared_with_email        = get_by_from('email', 'id', $projects[$key]['shared_staff_id'], 'staff');
+            $shared_with              = get_by_from('username', 'id', $projects[$key]['staff_id'], 'staff');
+            $shared_with_email        = get_by_from('email', 'id', $projects[$key]['staff_id'], 'staff');
             $pro[$key]['shared_with'] = "<a href='mailto:".$shared_with_email."'>".$shared_with."</a>";
         }
         $response['data']['projects'] = $pro;
     }
 
     // APPOINTMENTS
-    $stmt = $db->prepare("SELECT * FROM appointment_sharing WHERE staff_id = '$user_id' ");
+    $stmt = $db->prepare("SELECT * FROM appointment_sharing WHERE shared_staff_id = '$user_id' ");
     $stmt->execute();
     $appointments = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $stmt->closeCursor();
@@ -645,8 +645,8 @@ function all_sharings()
             $shared_project                  = get_by_from('title', 'id', $appointments[$key]['shared_id'], 'appointment');
             $app[$key]['shared_appointment'] = "<span class=numeric>".$date." ".$time."</span>&nbsp;&nbsp;&nbsp; <a href='#appointment/id/".$appointments[$key]['shared_id']."'> ".$shared_project."</a>";
 
-            $shared_with              = get_by_from('username', 'id', $appointments[$key]['shared_staff_id'], 'staff');
-            $shared_with_email        = get_by_from('email', 'id', $appointments[$key]['shared_staff_id'], 'staff');
+            $shared_with              = get_by_from('username', 'id', $appointments[$key]['staff_id'], 'staff');
+            $shared_with_email        = get_by_from('email', 'id', $appointments[$key]['staff_id'], 'staff');
             $app[$key]['shared_with'] = "<a href='mailto:".$shared_with_email."'>".$shared_with."</a>";
         }
         $response['data']['appointments'] = $app;
