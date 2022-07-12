@@ -130,9 +130,15 @@ let Events = async(id) => {
         await Functions.setInnerHTML('UserProfileList', innerHTML);
         if (id) document.getElementById('customerListSelect').value = id;
 
+        if (body.getAttribute('addNewProject') !== 'true') {
+            body.setAttribute('addNewProject', true)
+            document.getElementById('newProjectButton').addEventListener('click', addNewProject)
+        }
 
-        document.getElementById('newProjectButton').addEventListener('click', (e) => {
-            e.preventDefault();
+
+
+        function addNewProject() {
+            // this.preventDefault();
             deb(document.getElementById('customerListSelect').value)
                 // send all inputfields to API & get directed to the new users profile
             if (document.getElementById('title').value !== '' && document.getElementById('customerListSelect').value !== '') {
@@ -153,7 +159,7 @@ let Events = async(id) => {
                 Message.warn('Please enter a Title and select a Customer');
             }
             LanguageSwitch.render();
-        }); // eventListener
+        } // eventListener
 
 
 
