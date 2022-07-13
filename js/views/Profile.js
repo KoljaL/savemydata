@@ -215,7 +215,7 @@ let getUserData = async(userID) => {
                     }
                     if (formFields.code === 200) {
                         formFields = formFields.data;
-                        // deb(formFields);
+                        deb(formFields);
 
                         // sort by position
                         formFields.sort((a, b) => {
@@ -230,6 +230,10 @@ let getUserData = async(userID) => {
                         var innerHTML = `<span>&nbsp; ${shared_staff}</span><br><form id=userProfilForm>`;
                         innerHTML += '<div class="FF-row">';
                         var row = 1;
+                        if (Functions.getLocal('role') !== 'admin') {
+                            formFields = formFields.filter(f => f.name !== 'permission');
+                            formFields = formFields.filter(f => f.name !== 'role');
+                        }
                         formFields.forEach((formField) => {
                             // for the next row, close the old one and open the new row
                             if (formField.row * 1 > row) {
@@ -302,7 +306,7 @@ let getUserData = async(userID) => {
  */
 let dropDownEvent = async(tableName) => {
     // only admin '0' can do this
-    if (Functions.getLocal('role') !== 'xxx') {
+    if (Functions.getLocal('role') === 'admin') {
         let innerHTML = await UserList.render('dropdown', tableName);
         await Functions.setInnerHTML('UserProfileList', innerHTML)
             .then(() => {

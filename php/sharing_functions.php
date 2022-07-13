@@ -15,7 +15,7 @@
 */
 function get_profile($param)
 {
-    global $db, $API_param, $API_value;
+    global $db, $API_param, $API_value,$user_role;
 
     if ('customer' === $API_param) {
         $shared = ismine_or_shared('customer', $API_value);
@@ -28,6 +28,10 @@ function get_profile($param)
 
     $response = [];
     if ($profile) {
+        if ('admin' !== $user_role) {
+            $profile['role'] = '';
+            $profile['permission'] = '';
+        }
         // SHARING
         $profile['shared'] = (isset($shared)) ? $shared : '';
         $response['code']  = 200;
