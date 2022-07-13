@@ -390,7 +390,11 @@ let Functions = {
             formData.append('table', db[1]);
             formData.append('where', db[2]);
             formData.append('equal', db[3]);
-            formData.append('value', el.value);
+            if (el.value) {
+                formData.append('value', el.value);
+            } else {
+                formData.append('value', el.innerText);
+            }
 
             Functions.getAPIdata('edit_single_field', formData)
                 .then((res) => {

@@ -194,6 +194,8 @@ function checkUserLoggedIn() {
         document.getElementById('body').classList.remove('darkWrapper');
         // set logout Button
         document.getElementById('userLogout').addEventListener('click', Functions.flushLocal);
+        // set header link to profile
+        document.getElementById('headerlink').href = "#staff/profile/" + Functions.getLocal('id');
         return false;
     } else {
         return '/';

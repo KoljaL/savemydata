@@ -92,6 +92,15 @@ let Style = async() => {
         .medium #ProjectWrapper .ProjectSharings{
             margin-left: 0;
         }
+
+        #projectTitle.hideEdit{
+            color: var(--font_0);
+            background: var(--bg_3); 
+            border: none;
+            outline: var(--border_0) solid 1px;
+            transition: all 0.5s ease-in-out;
+            border-radius: 0.2em;
+        }
        
     `;
     Functions.createStyle('Project_hfdi_style', styleTags);
@@ -150,7 +159,7 @@ let ProjectContent = async(id) => {
                     <div id=ProjectHeader>
                         <div class=Headline>
                             <h2 data-lang="H_project">Project:</h2>
-                            <h2>&nbsp; ${data.title}</h2><br>
+                            <h2 id=projectTitle data-db="title/project/id/${id}">&nbsp; ${data.title}</h2><br>
                             <h4>&nbsp; ${shared_staff}</h4><br>
                         </div>
                         <div class="ActionButtons">
@@ -209,9 +218,16 @@ let ProjectContent = async(id) => {
                             document.getElementById('editProjectButton').dataset.lang = 'edit'
 
                             document.getElementById('editProjectButton').addEventListener('click', function() {
-                                document.querySelectorAll('#ProjectText input,#ProjectText textarea, #ProjectImages .thumbnailWrapper').forEach((input) => {
+                                document.querySelectorAll('#ProjectText input,#ProjectText textarea, #ProjectImages .thumbnailWrapper, #projectTitle').forEach((input) => {
                                     // make fields editable
                                     input.classList.toggle('hideEdit');
+                                    if (!input.value) {
+                                        if (input.classList.contains('hideEdit')) {
+                                            input.contentEditable = true;
+                                        } else {
+                                            input.contentEditable = false;
+                                        }
+                                    }
                                     // updata db on focusout
                                     input.removeEventListener('focusout', singeEditEvent)
                                     input.addEventListener('focusout', singeEditEvent)
