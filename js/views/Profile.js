@@ -85,6 +85,11 @@ let Style = async() => {
             margin-left: auto;
             width: max-content;
         }
+
+        .sharedFrom{
+            position:relative;
+            top:-40px;
+        }
  
     `;
     Functions.createStyle('UserProfile_8284_style', styleTags);
@@ -100,6 +105,7 @@ let Content = async(userID) => {
                 <div style="display:flex; align-items: setAttribute;">
                     <h2 data-lang="${slugName}-Profile">Profile</h3>
                     <h2 id=profileName></h2>
+                    <h4 id=sharedStuff style="position: relative; top: -13px;">&nbsp;</h4><br>
                 </div>
                     <div id=UserProfileList></div>
             </div>
@@ -211,7 +217,7 @@ let getUserData = async(userID) => {
 
                     let shared_staff = '';
                     if (user.shared) {
-                        shared_staff = `shared from ${user.shared.user_name}`;
+                        document.getElementById('sharedStuff').innerHTML = `shared from ${user.shared.user_name}`;
                     }
                     if (formFields.code === 200) {
                         formFields = formFields.data;
@@ -227,7 +233,8 @@ let getUserData = async(userID) => {
                         });
 
                         // start with a form and the first row
-                        var innerHTML = `<span>&nbsp; ${shared_staff}</span><br><form id=userProfilForm>`;
+                        // var innerHTML = `<span class=sharedFrom >&nbsp; ${shared_staff}</span><br><form id=userProfilForm>`;
+                        var innerHTML = `<form id=userProfilForm>`;
                         innerHTML += '<div class="FF-row">';
                         var row = 1;
                         if (Functions.getLocal('role') !== 'admin') {

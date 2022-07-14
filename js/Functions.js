@@ -394,6 +394,7 @@ let Functions = {
                 formData.append('value', el.value);
             } else {
                 formData.append('value', el.innerText);
+                el.value = el.innerText;
             }
 
             Functions.getAPIdata('edit_single_field', formData)

@@ -142,7 +142,7 @@ let Content = async() => {
 ########  #######   ######   #### ##    ##
 */
 let ProjectContent = async(id) => {
-        Functions.getAPIdata('get_project/' + id)
+        Functions.getAPIdata(`get_project/${id}`)
             .then((res) => {
                 if (res.code === 200) {
                     let data = res.data;
@@ -195,7 +195,7 @@ let ProjectContent = async(id) => {
                     Functions.setInnerHTML('ProjectContent', innerHTML);
 
                     return data;
-                } else if (res.code === 403) {
+                } else if (res.code === 400) {
                     isAllowed = false;
                     document.getElementById('ProjectContent').innerHTML = res.message;
                 }

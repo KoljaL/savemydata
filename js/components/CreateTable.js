@@ -150,6 +150,11 @@ let Content = async(data) => {
 
 async function createTable(data, TableContent) {
     // deb(data) 
+
+    // error handling if there is no data in data
+    if (!data[0]) {
+        return
+    }
     // https://www.valentinog.com/blog/html-table/
     let head = Object.keys(data[0]);
     // deb(head)

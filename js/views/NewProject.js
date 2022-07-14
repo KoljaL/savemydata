@@ -101,7 +101,7 @@ let Content = async() => {
                     </div>
                 <br>
                     <div class="FF-item" style="min-width:250px; flex-basis:550px; max-width:100%;">
-                        <textarea id="comment" rows="5" style="height: max-content;"  name="comment" type="textarea" placeholder=""  required=""></textarea>
+                        <textarea id="comment" rows="5" style="height: max-content;"  name="comment_staff" type="textarea" placeholder=""  required=""></textarea>
                         <label for="comment">Comment</label>
                     </div>
                 </div>
@@ -132,13 +132,17 @@ let Events = async(id) => {
 
         if (body.getAttribute('addNewProject') !== 'true') {
             body.setAttribute('addNewProject', true)
-            document.getElementById('newProjectButton').addEventListener('click', addNewProject)
+            document.getElementById('newProjectButton').addEventListener('click', (el) => {
+                    addNewProject(el)
+                }
+
+            )
         }
 
 
 
-        function addNewProject() {
-            // this.preventDefault();
+        function addNewProject(el) {
+            el.preventDefault();
             deb(document.getElementById('customerListSelect').value)
                 // send all inputfields to API & get directed to the new users profile
             if (document.getElementById('title').value !== '' && document.getElementById('customerListSelect').value !== '') {

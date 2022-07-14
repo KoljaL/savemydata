@@ -1,5 +1,13 @@
 <?php
 
+
+
+// staff_id = mit wem wurde geteilt
+// shared_id = was wurde geteilt
+// shared_staff_id = wer hat geteilt
+
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*
@@ -535,7 +543,7 @@ function load_sharings()
 {
     global $db, $API_param, $API_value, $user_id, $user_role;
     $table = $API_param.'_sharing';
-    $stmt  = $db->prepare("SELECT * FROM $table WHERE shared_id = '$API_value' ");
+    $stmt  = $db->prepare("SELECT * FROM $table WHERE shared_id = '$API_value' AND shared_staff_id = '$user_id' ");
     deb("SELECT * FROM $table WHERE shared_id = '$API_value' ");
     $stmt->execute();
     $sharings = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -545,7 +553,7 @@ function load_sharings()
     if ($sharings) {
         foreach ($sharings as $key => $value) {
         
-        // get itemname (customername or title) from shared object
+            // get itemname (customername or title) from shared object
             $itemName = ('customer' === $API_param) ? 'username' : 'title';
             $sharings[$key]['itemName'] = get_by_from($itemName, 'id', $sharings[$key]['shared_id'], $API_param);
                     
