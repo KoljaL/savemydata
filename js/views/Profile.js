@@ -335,7 +335,7 @@ let editUserButton = async(userID) => {
             document.getElementById('editUserButton').dataset.lang = 'edit'
 
             document.getElementById('editUserButton').addEventListener('click', function() {
-                document.querySelectorAll('#editArea input,#editArea textarea, #editArea .thumbnailWrapper').forEach((input) => {
+                document.querySelectorAll('#userProfilForm input, #userProfilForm textarea, #editArea .thumbnailWrapper').forEach((input) => {
                     // make fields editable
                     input.classList.toggle('hideEdit');
                     // updata db on focusout

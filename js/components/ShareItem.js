@@ -16,7 +16,7 @@ export default {
                                 <input id="shareWith" class=boxShadow name="shareWith" type="text" placeholder="Email" value="staff0@staff.org" required="">
                                 <label for="shareWith">Share With</label>
                             </div>
-                            <div class="FF-item" style="min-width:50px; flex-basis:50px; max-width:80px;">
+                            <div class="FF-item" style="opacity:0;  min-width:50px; flex-basis:50px; max-width:80px;">
                                 <input type="checkbox" id="can_edit" name="can_edit">
                                 <label for="can_edit">Can Edit</label>
                             </div>

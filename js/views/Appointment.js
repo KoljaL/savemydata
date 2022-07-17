@@ -236,7 +236,7 @@ let AppointmentContent = async(id) => {
                             document.getElementById('editAppointmentButton').dataset.lang = 'edit'
 
                             document.getElementById('editAppointmentButton').addEventListener('click', function() {
-                                document.querySelectorAll('#AppointmentBody input,#AppointmentBody textarea,#AppointmentBody select, #AppointmentBody .thumbnailWrapper').forEach((input) => {
+                                document.querySelectorAll('#AppointmentText input,#AppointmentText textarea,#AppointmentText select, #AppointmentBody .thumbnailWrapper').forEach((input) => {
                                     // make fields editable
                                     input.classList.toggle('hideEdit');
                                     // updata db on focusout
