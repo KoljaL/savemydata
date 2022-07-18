@@ -514,7 +514,7 @@ function sharing($share_table, $shared_id, $staff_id, $shared_staff_id, $can_edi
     $can_edit = (1 == $can_edit) ? 'true' : 'false';
 
     // check if entry exists
-    $stmt = $db->prepare("SELECT id FROM $share_table WHERE staff_id = '$staff_id' AND shared_staff_id = '$shared_staff_id' ");
+    $stmt = $db->prepare("SELECT id FROM $share_table WHERE staff_id = '$staff_id' AND shared_staff_id = '$shared_staff_id' AND shared_id = '$shared_id'");
     $stmt->execute();
     $id = $stmt->fetch(PDO::FETCH_ASSOC);
     $stmt->closeCursor();
@@ -525,6 +525,7 @@ function sharing($share_table, $shared_id, $staff_id, $shared_staff_id, $can_edi
         deb("UPDATE $share_table SET can_edit='$can_edit' WHERE id='$id[id]'");
         $stmt->execute();
         $state = 'update';
+        $state = $id;
     }
     //
     // if not INSERT values

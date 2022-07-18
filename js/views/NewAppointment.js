@@ -191,7 +191,9 @@ let NewAppointmentContent = async(id) => {
         }
         // change projects if customer changes
         document.getElementById('customerListSelect').addEventListener('change', (el) => {
-                deb(el.target.value)
+                // deb(el.target.value)
+                // deb(el.target.options[el.tar'get.value].text)
+                // deb(el.target.options[el.target.Value].text);
                 getcustomerprojects(el.target.value)
             })
             // get adress 
