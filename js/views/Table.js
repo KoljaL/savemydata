@@ -29,7 +29,6 @@ export default {
         Functions.pageTitle(`${slugName} Table`);
         await Style();
         await Content(action);
-        await newItem();
     },
 };
 
@@ -110,64 +109,6 @@ let Content = async(action) => {
         </div>`;
     Functions.setInnerHTML('main', innerHTML);
 
-
-    /**
-     * 
-     *  Used to create a new project. 
-     * 
-     */
-    if ('project_xxx' == tableName) {
-        let userList = await UserList.render('dropdown', 'customer');
-        innerHTML += /*HTML*/ `
-        <div id=newProject>
-        <details>
-        <summary><span data-lang="H_newProject">new Project</span></summary>
-            <form id=newProjectForm class="">
-                <div class="FF-row content" style="max-width:max-content;">
-                    <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px;;">
-                        <input id="title" name="title" type="text" placeholder="" required="">
-                        <label data-lang="F_title" for="title">Title</label>
-                    </div>
-                    <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:200px;;">
-                        ${userList} 
-                    </div> 
-                    <div class="FF-item" style="min-width:100px; flex-basis:150px; max-width:100px;;">
-                        <input id=newProjectButton class="button" type="submit" value=send>
-                    </div>
-                        <input type="hidden" name=staff_id value="${Functions.getLocal('id')}">
-                </div>
-                
-            </form>
-        </details>
-        </div>
-        `;
-    }
-};
-
-
-let newItem = async() => {
-    // add eventListener only once!
-    if (body.getAttribute('newProjectEvent') !== 'true') {
-        body.setAttribute('newProjectEvent', true)
-        body.addEventListener('click', newProjectEvent)
-    }
-
-    function newProjectEvent(el) {
-        // send new project form
-        if (el.target.id === 'newProjectButton') {
-            event.preventDefault();
-            let form = el.target.form;
-            if (Functions.validForm(form)) {
-                let newEntryForm = new FormData(form);
-                Functions.getAPIdata('new_entry_in/project', newEntryForm)
-                    .then((res) => {
-                        deb(res)
-                        if (res.code === 200) {
-                            Message.success('New Project created')
-                            window.location.hash = `#project/id/${res.data.id}`;
-                        }
-                    });
-            } else { Message.error('Fill all Fields') }
-        }
-    }
+    // WAS AN ADD NEW PROJECT BUTTON 
+    // REMOVED 18.07. 13:50 because useless and makes bugs
 };

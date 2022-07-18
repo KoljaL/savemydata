@@ -133,10 +133,8 @@ let Events = async(id) => {
         if (body.getAttribute('addNewProject') !== 'true') {
             body.setAttribute('addNewProject', true)
             document.getElementById('newProjectButton').addEventListener('click', (el) => {
-                    addNewProject(el)
-                }
-
-            )
+                addNewProject(el)
+            })
         }
 
 
