@@ -37,7 +37,8 @@ export default {
  */
 let Style = async() => {
     let styleTags = /*CSS*/ ` 
-    /* table.project .staff_id,*/
+    table.project .staff_id,
+    table.customer .staff_id,
     table.appointment .staff_id,
     table.appointment .project_id,
     table.appointment .customer_id,
