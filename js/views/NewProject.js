@@ -132,6 +132,7 @@ let Events = async(id) => {
         await Functions.setInnerHTML('UserProfileList', innerHTML);
         if (id) document.getElementById('customerListSelect').value = id;
         deb(document.getElementById('customerListSelect').value)
+            // deb(getEventListeners(document.querySelector("#newProjectButton")))
         if (body.getAttribute('addNewProject') !== 'true') {
             body.setAttribute('addNewProject', true)
             document.getElementById('newProjectButton').addEventListener('click', (event) => {
@@ -159,8 +160,16 @@ let Events = async(id) => {
                     .then((res) => {
                         deb(res)
                         if (res.code === 200) {
-                            Message.success('New Project created')
-                            window.location.hash = `#project/id/${res.data.id}`;
+                            Message.success('New Project created');
+                            // TODO the new pagey removes (why?) the eventlistener for the newProjectButton
+                            // so we do a page refresh
+                            // window.location.hash = `#project/id/${res.data.id}`;
+                            // DIRTY SOLUTION
+                            let url = window.location.href;
+                            url = url.split('#')[0];
+                            // deb(url);
+                            window.location.href = `${url}#project/id/${res.data.id}`;
+                            location.reload();
                         }
                     });
             } else {
