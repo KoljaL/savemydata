@@ -97,6 +97,7 @@ if (!file_exists($db_path)) {
 function init_db()
 {
     require __DIR__.'/init_db_tables.php';
+    init_log_table();
     init_customertable();
     init_stafftable();
     init_staff_fields_table();
@@ -106,7 +107,6 @@ function init_db()
     init_project_sharing_table();
     init_customer_sharing_table();
     init_appointment_sharing_table();
-    init_log_table();
 }
 
 /*
@@ -153,6 +153,16 @@ if ('reset' === $API_endpoint) {
     init_db();
     create_dummy_data();
 }
+
+if ('delete' === $API_endpoint) {
+    if (is_file($db_path)) {
+        unlink($db_path);
+    }
+    $db = new PDO('sqlite:'.$db_path);
+    init_db();
+    die('db deleted');
+}
+
 
 /*
 //
@@ -246,7 +256,7 @@ function return_JSON($response)
 {
     global $request, $API_endpoint, $API_param, $API_value, $TOKEN;
 
-    if ('reset' === $API_endpoint) {
+    if ('reset' === $API_endpoint or 'delete' === $API_endpoint) {
         return;
     }
     access_log($response);
