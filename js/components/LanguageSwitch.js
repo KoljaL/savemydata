@@ -51,12 +51,20 @@ let Content = async() => {
  * SWITCH
  */
 let Switch = async() => {
-    document.body.addEventListener('change', (el) => {
-        if (el.target && el.target.id === 'selectLanguage') {
-            // deb(el.target.value)
-            changeLanguage(el.target.value);
-        }
-    });
+
+
+    if (body.getAttribute('selectLanguageEvent') !== 'true') {
+        body.setAttribute('selectLanguageEvent', true)
+        document.body.addEventListener('change', (el) => {
+            if (el.target && el.target.id === 'selectLanguage') {
+                changeLanguage(el.target.value);
+            }
+        });
+    }
+
+
+
+
 };
 
 

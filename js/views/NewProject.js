@@ -101,13 +101,15 @@ let Content = async() => {
                     </div>
                 <br>
                     <div class="FF-item" style="min-width:250px; flex-basis:550px; max-width:100%;">
-                        <textarea id="comment" rows="5" style="height: max-content;"  name="comment_staff" type="textarea" placeholder=""  required=""></textarea>
+                        <textarea id="comment" rows="5" style="height: max-content;"  name="comment_staff" type="textarea" placeholder=""  ></textarea>
                         <label for="comment">Comment</label>
                     </div>
                 </div>
 
                 <div class="FF-item" style="flex-basis: 150px; min-width: 100px; max-width: 50px; margin-left: 0;">
-                    <input id="newProjectButton" class=boxShadow  type="submit" value="Save">
+                    <span id="newProjectButton" class="boxShadow button">Save</span>
+
+                  <!--  <button id="newProjectButton" class=boxShadow  type="submit" value="Save">Save</button>-->
                 </div>
             </form> 
         </div>`;
@@ -129,26 +131,30 @@ let Events = async(id) => {
         let innerHTML = await UserList.render('dropdown', 'customer');
         await Functions.setInnerHTML('UserProfileList', innerHTML);
         if (id) document.getElementById('customerListSelect').value = id;
-
+        deb(document.getElementById('customerListSelect').value)
         if (body.getAttribute('addNewProject') !== 'true') {
             body.setAttribute('addNewProject', true)
-            document.getElementById('newProjectButton').addEventListener('click', (el) => {
-                addNewProject(el)
+            document.getElementById('newProjectButton').addEventListener('click', (event) => {
+                // event.preventDefault();
+                deb('newProject')
+                addNewProject(event);
+
             })
         }
 
 
 
-        function addNewProject(el) {
-            el.preventDefault();
-            deb(document.getElementById('customerListSelect').value)
-                // send all inputfields to API & get directed to the new users profile
+        function addNewProject(event) {
+            // event.preventDefault();
+            deb(event);
+            deb(document.getElementById('customerListSelect').value);
+            // send all inputfields to API & get directed to the new users profile
             if (document.getElementById('title').value !== '' && document.getElementById('customerListSelect').value !== '') {
                 let ProjectForm = document.getElementById('ProjectForm');
                 ProjectForm = new FormData(ProjectForm);
                 ProjectForm.append('staff_id', Functions.getLocal('id'));
                 ProjectForm.append('customer_id', document.getElementById('customerListSelect').value);
-
+                Functions.debFormData(ProjectForm);
                 Functions.getAPIdata('new_entry_in/project', ProjectForm)
                     .then((res) => {
                         deb(res)
